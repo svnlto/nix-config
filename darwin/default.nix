@@ -38,7 +38,7 @@
       done
     '';
 
-    dock.text = dockConfigScript selectedDockApps;
+    # Dock configuration is now handled in dock.nix
 
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
@@ -50,11 +50,9 @@
       echo "Running brew upgrade --cask --greedy..." >&2
       su ${username} -c '/opt/homebrew/bin/brew upgrade --cask --greedy' >&2
 
-      echo "==== Configuring Dock ====" >&2
-      # Also use su for dockutil commands
-      su ${username} -c '${dockConfigScript selectedDockApps}' >&2
+      # Dock configuration is now handled in dock.nix
 
-      echo "==== Homebrew and dock configuration completed ====" >&2
+      echo "==== Homebrew update completed ====" >&2
     '';
   };
 

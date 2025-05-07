@@ -12,11 +12,10 @@ let
       "/Applications/Arc.app"
       "/Applications/Spotify.app"
       "/Applications/Visual Studio Code.app"
-      "/Applications/iTerm.app"
     ];
 
     # Default configuration (used if no host-specific config exists)
-    "default" = [ "/Applications/Arc.app" "/Applications/Spotify.app" ];
+    "default" = [ ];
 
     # Example for another Mac (uncomment and customize as needed)
     # "work-mac" = [
@@ -34,17 +33,40 @@ let
     dockAppsByHost.${hostname}
   else
     dockAppsByHost.default;
-
-  # Build the dock configuration script
-  dockConfigScript = apps: ''
-    ${dockutil} --remove all --no-restart
-    ${lib.concatStringsSep "\n" (map (app: ''
-      ${dockutil} --add "${app}" --no-restart
-    '') apps)}
-    killall Dock
-  '';
 in {
-  # Export the dock apps and configuration script for use in default.nix
-  _module.args.selectedDockApps = selectedDockApps;
-  _module.args.dockConfigScript = dockConfigScript;
+  # Export the configuration through options instead of _module.args
+  options = { };
+
+  # Create a proper module configuration
+  config = {
+    system.activationScripts = {
+      dock.text = let
+        # Build the dock configuration script
+        dockConfigScript = apps: ''
+          ${dockutil} --remove all --no-restart
+          ${lib.concatStringsSep "\n" (map (app: ''
+            ${dockutil} --add "${app}" --no-restart
+          '') apps)}
+          killall Dock
+        '';
+      in dockConfigScript selectedDockApps;
+
+      # Update the postActivation script to use our dock config
+      postActivation.text = lib.mkAfter ''
+        echo "==== Configuring Dock ====" >&2
+        # Use su for dockutil commands
+        su ${username} -c '${
+          let
+            dockConfigScript = apps: ''
+              ${dockutil} --remove all --no-restart
+              ${lib.concatStringsSep "\n" (map (app: ''
+                ${dockutil} --add "${app}" --no-restart
+              '') apps)}
+              killall Dock
+            '';
+          in dockConfigScript selectedDockApps
+        }' >&2
+      '';
+    };
+  };
 }
