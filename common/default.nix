@@ -22,9 +22,13 @@
     keep-going = true; # Continue building derivations if one fails
     log-lines = 50; # Show more log lines for better debugging
     max-jobs = "auto"; # Set to optimal number for the system
-    auto-optimise-store = true; # Automatically optimize the store (saves space)
+    # auto-optimise-store = true; # Removed: Known to corrupt the Nix Store
     connect-timeout = 10; # Shorter connection timeout
   };
+
+  # Set up automatic store optimization (replacing auto-optimise-store)
+  nix.optimise.automatic = true;
+  nix.optimise.interval = "24h"; # Run optimization every 24 hours
 
   # Additional Nix daemon options for containerized environments
   nix.extraOptions = ''
