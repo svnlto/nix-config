@@ -27,6 +27,8 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
 ├── nix.conf              # Global Nix settings
 ├── common/               # Shared configuration
 │   └── default.nix       # Common packages and settings
+│   └── git/              # Git configuration scripts
+│       └── setup-local-config.sh # Script to set up Git local configuration
 ├── darwin/               # macOS specific configuration
 │   ├── default.nix       # Main configuration for macOS
 │   ├── homebrew.nix      # Homebrew packages and settings
@@ -127,6 +129,29 @@ This configuration allows for multiple macOS hosts with different settings:
    ~/.config/nix/ubuntu-orbstack/setup-linuxbrew.sh
    ```
 
+5. Set up Git local configuration:
+   ```bash
+   # Option 1: Use the interactive setup script (recommended)
+   chmod +x ~/.config/nix/common/git/setup-local-config.sh
+   ~/.config/nix/common/git/setup-local-config.sh
+   
+   # Option 2: Create manually
+   if [ ! -f ~/.gitconfig.local ]; then
+     cat > ~/.gitconfig.local << EOF
+# Local Git configuration - NOT tracked in Git
+# This file contains your personal Git configuration, including email
+
+[user]
+    name = Your Name
+    email = your.email@example.com
+EOF
+     echo "Created ~/.gitconfig.local template - please edit with your information"
+   fi
+   
+   # Edit the file with your personal information
+   nano ~/.gitconfig.local
+   ```
+
 ## 🔄 Usage
 
 ### 🔁 Updating the System
@@ -164,6 +189,7 @@ nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack
 - ⚙️ Change macOS settings: Edit `darwin/defaults.nix`
 - 📱 Customize dock applications: Edit your host configuration in `flake.nix`
 - 🐧 Configure Ubuntu environment: Edit `ubuntu-orbstack/home.nix`
+- 🔑 Update Git personal settings: Edit `~/.gitconfig.local`
 
 ## ✨ Features
 
@@ -200,6 +226,31 @@ The configuration uses a modular approach to manage:
 - 🌐 Common packages across platforms
 - 💻 Platform-specific packages
 - 👤 User-specific configurations
+
+### 🔐 Privacy-Focused Git Configuration
+
+The Git configuration is designed with privacy in mind:
+
+- Shared, version-controlled Git config in `common/git/config.nix`
+- Personal information stored in a local, untracked `~/.gitconfig.local` file
+- Automatically creates a template `~/.gitconfig.local` file during first run
+- Prevents exposing your email address in public repositories
+
+Example `.gitconfig.local`:
+```
+# Local Git configuration - NOT tracked in Git
+# This file contains your personal Git configuration, including email
+
+[user]
+    name = Your Name
+    email = your.email@example.com
+
+# You can add other private Git configurations here
+[github]
+    user = yourusername
+```
+
+The system will automatically include this file in your Git configuration.
 
 ## 💡 Tips and Tricks
 

@@ -1,6 +1,8 @@
 { config, pkgs, username, ... }:
 
 {
+  imports = [ ./git ./zsh ];
+
   # Common packages for all platforms
   environment.systemPackages = with pkgs; [
     ack
