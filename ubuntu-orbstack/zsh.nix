@@ -1,37 +1,32 @@
 { config, lib, pkgs, username, ... }:
 
-{
+let
+  # Import shared ZSH configuration
+  sharedZsh = import ../common/zsh/shared.nix;
+in {
   # Ubuntu-specific ZSH configuration for home-manager
 
   # Install Oh My Posh theme
-  home.file.".config/oh-my-posh/default.omp.json".source = ../common/zsh/default.omp.json;
+  home.file.".config/oh-my-posh/default.omp.json".source =
+    ../common/zsh/default.omp.json;
 
   # Home Manager ZSH configuration
   programs.zsh = {
     enable = true;
-    
+
     # Basic zsh options
     enableCompletion = true;
     autosuggestion.enable = true;
-    
-    # Ubuntu-specific ZSH aliases
-    shellAliases = {
-      # Base aliases
-      reloadcli = "source $HOME/.zshrc";
-      ll = "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
-      vim = "nvim";
-      t = "terraform";
-      c = "clear";
-      cat = "bat";
-      hh = "hstr";
-      tree = "tree -C";
-      
+
+    # Shared aliases plus Ubuntu-specific ones
+    shellAliases = sharedZsh.commonAliases // {
       # Ubuntu-specific aliases
       ls = "ls --color=auto";
       update = "sudo apt update && sudo apt upgrade";
-      nixswitch = "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack";
+      nixswitch =
+        "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack";
     };
-    
+
     # ZSH history configuration
     history = {
       size = 100000;
@@ -41,57 +36,37 @@
       share = true;
       extended = true;
     };
-    
+
     # ZSH initialization script (shared + Ubuntu-specific)
     initExtra = ''
-      # Where to find the zsh history
+      # Shared history settings
       export HIST_STAMPS="dd/mm/yyyy"
       export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-      # Locales
-      export LANG=en_GB.UTF-8
-      export LC_ALL=en_GB.UTF-8
+      # Shared locale settings
+      ${sharedZsh.localeSettings}
 
-      # default node.js environment
+      # Default node.js environment
       export NODE_ENV="dev"
 
-      # set up hh colours
-      export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
+      # Shared ZSH options
+      ${sharedZsh.zshOptions}
 
-      # ZSH options
-      setopt hist_reduce_blanks # remove superfluous blanks from history items
-      setopt share_history # share history between different instances of the shell
-      setopt auto_cd # cd by typing directory name if it's not a command
-      setopt correct_all # autocorrect commands
-      setopt auto_list # automatically list choices on ambiguous completion
-      setopt auto_menu # automatically use menu completion
-      setopt always_to_end # move cursor to end if word had one match
-      setopt complete_in_word # allow completion from within a word/phrase
+      # Shared history options
       setopt HIST_EXPIRE_DUPS_FIRST
       setopt EXTENDED_HISTORY
       setopt APPEND_HISTORY
       setopt SHARE_HISTORY
 
-      # ZSH styles
-      zstyle ':completion:*' menu select # select completions with arrow keys
-      zstyle ':completion:*' group-name '' # group results by category
-      zstyle ':completion:::::' completer _expand _complete _ignored _approximate # enable approximate matches for completion
-      zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
-      zstyle ':completion:*' accept-exact '*'
-      zstyle ':completion:*' use-cache on
-      zstyle ':completion:*' cache-path ~/.cache/zsh
+      # Shared completion settings
+      ${sharedZsh.completionSettings}
 
-      # Key bindings
-      bindkey -s "\C-r" "\C-a hstr -- \C-j"
-      bindkey '\e[A' history-search-backward
-      bindkey '\e[B' history-search-forward
+      # Shared key bindings
+      ${sharedZsh.keyBindings}
 
-      # Initialize zoxide
-      eval "$(zoxide init --cmd cd zsh)"
+      # Shared tool initialization 
+      ${sharedZsh.toolInit}
 
-      # Initialize oh-my-posh
-      eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
-      
       # Linuxbrew configuration
       if [ -d "/home/linuxbrew/.linuxbrew" ]; then
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -101,7 +76,7 @@
         # Brew-related aliases
         alias brewup='brew update && brew upgrade'
       fi
-      
+
       # Load NVM if installed
       if [ -d "$HOME/.nvm" ]; then
         export NVM_DIR="$HOME/.nvm"
@@ -116,15 +91,8 @@
       fi
     '';
   };
-  
-  # Ensure necessary packages are installed
-  home.packages = with pkgs; [
-    zoxide      # Smart directory navigation
-    hstr        # History search
-    bat         # Better cat
-    eza         # Modern ls replacement
-    oh-my-posh  # Prompt theme engine
-    tree        # Directory tree view
-    neovim      # Modern vim
-  ];
+
+  # Install necessary packages from shared config
+  home.packages = with pkgs;
+    map (name: builtins.getAttr name pkgs) sharedZsh.commonPackages;
 }
