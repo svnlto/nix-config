@@ -23,7 +23,7 @@ in {
 
   # Install required packages from shared config
   environment.systemPackages = with pkgs;
-    map (name: builtins.getAttr name pkgs) sharedZsh.commonPackages;
+    map (name: builtins.getAttr name pkgs) sharedZsh.packages;
 
   # Configure ZSH through environment.shellInit
   environment.shellInit = ''
@@ -33,10 +33,10 @@ in {
   # Configure ZSH specifically with shared settings
   programs.zsh.shellInit = ''
     # Common history settings
-    ${sharedZsh.historySettings}
+    ${sharedZsh.history}
 
     # Common locale settings
-    ${sharedZsh.localeSettings}
+    ${sharedZsh.locale}
 
     # default node.js environment
     export NODE_ENV="dev"
@@ -47,16 +47,16 @@ in {
     # Common history options are in shellInit
 
     # Common ZSH options
-    ${sharedZsh.zshOptions}
+    ${sharedZsh.options}
 
     # Common completion settings
-    ${sharedZsh.completionSettings}
+    ${sharedZsh.completion}
 
     # Common key bindings
-    ${sharedZsh.keyBindings}
+    ${sharedZsh.keybindings}
 
     # Common tool initialization
-    ${sharedZsh.toolInit}
+    ${sharedZsh.tools}
 
     # macOS-specific settings
     if command -v pbcopy >/dev/null 2>&1; then
@@ -66,7 +66,7 @@ in {
   '';
 
   # Common aliases from shared config plus macOS-specific ones
-  environment.shellAliases = sharedZsh.commonAliases // {
+  environment.shellAliases = sharedZsh.aliases // {
     # macOS-specific aliases
     brewup = "brew update && brew upgrade";
     nixswitch =

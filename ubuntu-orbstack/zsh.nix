@@ -19,7 +19,7 @@ in {
     autosuggestion.enable = true;
 
     # Shared aliases plus Ubuntu-specific ones
-    shellAliases = sharedZsh.commonAliases // {
+    shellAliases = sharedZsh.aliases // {
       # Ubuntu-specific aliases
       ls = "ls --color=auto";
       update = "sudo apt update && sudo apt upgrade";
@@ -44,55 +44,33 @@ in {
       export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
       # Shared locale settings
-      ${sharedZsh.localeSettings}
+      ${sharedZsh.locale}
 
       # Default node.js environment
       export NODE_ENV="dev"
 
       # Shared ZSH options
-      ${sharedZsh.zshOptions}
+      ${sharedZsh.options}
 
       # Shared history options
       setopt HIST_EXPIRE_DUPS_FIRST
       setopt EXTENDED_HISTORY
-      setopt APPEND_HISTORY
       setopt SHARE_HISTORY
 
       # Shared completion settings
-      ${sharedZsh.completionSettings}
+      ${sharedZsh.completion}
 
       # Shared key bindings
-      ${sharedZsh.keyBindings}
+      ${sharedZsh.keybindings}
 
-      # Shared tool initialization 
-      ${sharedZsh.toolInit}
-
-      # Linuxbrew configuration
-      if [ -d "/home/linuxbrew/.linuxbrew" ]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        export HOMEBREW_NO_AUTO_UPDATE=1  # Prevent auto updates to avoid conflicts
-        export HOMEBREW_NO_INSTALL_CLEANUP=1  # Prevent automatic cleanup
-        
-        # Brew-related aliases
-        alias brewup='brew update && brew upgrade'
-      fi
-
-      # Load NVM if installed
-      if [ -d "$HOME/.nvm" ]; then
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-      fi
-
-      # Ubuntu/Linux-specific commands and settings
-      if command -v xclip >/dev/null 2>&1; then
-        alias copy='xclip -selection clipboard'
-        alias paste='xclip -selection clipboard -o'
-      fi
+      # Tool initializations
+      ${sharedZsh.tools}
     '';
   };
 
-  # Install necessary packages from shared config
+  # Ubuntu-specific packages plus shared packages
   home.packages = with pkgs;
-    map (name: builtins.getAttr name pkgs) sharedZsh.commonPackages;
+    (map (name: builtins.getAttr name pkgs) sharedZsh.packages) ++ [
+      # Ubuntu-specific packages
+    ];
 }

@@ -2,8 +2,8 @@
 # nix-darwin and home-manager without modification
 
 {
-  # Common ZSH alias definitions used by both platforms
-  commonAliases = {
+  # Common shell aliases defined as a regular Nix attribute set
+  aliases = {
     reloadcli = "source $HOME/.zshrc";
     ll =
       "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
@@ -15,7 +15,7 @@
   };
 
   # Common packages needed for ZSH setup on both platforms
-  commonPackages = [
+  packages = [
     "zoxide" # Smart directory navigation
     "hstr" # History search
     "bat" # Better cat
@@ -26,7 +26,7 @@
   ];
 
   # Common ZSH history settings
-  historySettings = ''
+  history = ''
     # History configuration
     export HISTFILE=$HOME/.zsh_history
     export HIST_SIZE=100000
@@ -44,14 +44,14 @@
   '';
 
   # Common locale settings
-  localeSettings = ''
+  locale = ''
     # Locales
     export LANG=en_GB.UTF-8
     export LC_ALL=en_GB.UTF-8
   '';
 
   # Common ZSH option settings
-  zshOptions = ''
+  options = ''
     # Directory navigation
     setopt auto_cd             # cd by typing directory name if it's not a command
     setopt correct_all         # autocorrect commands
@@ -64,7 +64,7 @@
   '';
 
   # Common ZSH completion styling
-  completionSettings = ''
+  completion = ''
     # Completion styling - using double quotes for nix string compatibility
     zstyle ":completion:*" menu select # select completions with arrow keys
     zstyle ":completion:*" group-name "" # group results by category
@@ -78,7 +78,7 @@
   '';
 
   # Common key bindings
-  keyBindings = ''
+  keybindings = ''
     # Key bindings
     bindkey -s "\C-r" "\C-a hstr -- \C-j"
     bindkey '\e[A' history-search-backward
@@ -86,7 +86,7 @@
   '';
 
   # Tool initialization commands
-  toolInit = ''
+  tools = ''
     # Initialize zoxide
     eval "$(zoxide init --cmd cd zsh)"
 
