@@ -1,6 +1,8 @@
 { config, pkgs, username, ... }:
 
 {
+  imports = [ ./zsh.nix ];
+
   # Home Manager packages for server (CLI only)
   home.packages = with pkgs; [
     # Server-appropriate packages
@@ -19,16 +21,7 @@
 
   # Program configurations
   programs = {
-    zsh = {
-      enable = true;
-      shellAliases = {
-        ll = "ls -l";
-        la = "ls -la";
-      };
-
-      # Set up custom zshrc handling
-      initExtra = builtins.readFile ./zshrc-custom;
-    };
+    # ZSH is now configured through the imported zsh.nix file
 
     git = {
       enable = true;

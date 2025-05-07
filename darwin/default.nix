@@ -13,7 +13,7 @@ let
     killall Dock
   '';
 in {
-  imports = [ ./homebrew.nix ./defaults.nix ];
+  imports = [ ./homebrew.nix ./defaults.nix ./zsh.nix ];
 
   # macOS specific packages
   environment.systemPackages = with pkgs; [ oh-my-posh eza hstr ];
@@ -55,7 +55,7 @@ in {
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
 
-      # Run Homebrew commands as the user with proper environment setup and send output to stderr (visible in console)
+      # Run Homebrew commands as the user with proper environment setup and send output to stderr
       echo "Running brew update..." >&2
       su ${username} -c '/opt/homebrew/bin/brew update' >&2
 
