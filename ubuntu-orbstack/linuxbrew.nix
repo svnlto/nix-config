@@ -7,11 +7,12 @@
     # Basic tools and dependencies
     brews = [
       "gcc"
-      "pyenv"
-      "node"
-      "tree"
-      "wget"
-      "jq"
+      "nvm"
+      "tfenv"
+      "trivy"
+      "pre-commit"
+      "nvm"
+      "awscli"
       # Add more command-line packages as needed
     ];
 
