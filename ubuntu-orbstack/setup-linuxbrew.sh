@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to install Linuxbrew on Ubuntu
+# Script to install Linuxbrew on Ubuntu and packages from linuxbrew.nix
 
 set -e
 
@@ -21,15 +21,35 @@ else
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-# Install some basic Linuxbrew packages
-brew install gcc
+# Extract package lists from linuxbrew.nix
+echo "Reading package lists from linuxbrew.nix..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Use nix-instantiate to extract brews from linuxbrew.nix
+BREWS=$(nix-instantiate --eval -E "let pkgs = import <nixpkgs> {}; linuxbrewConfig = import $SCRIPT_DIR/linuxbrew.nix { inherit pkgs; config = {}; }; in builtins.concatStringsSep \" \" linuxbrewConfig.linuxbrew.brews" | tr -d '"')
+
+# Use nix-instantiate to extract taps from linuxbrew.nix (if any)
+TAPS=$(nix-instantiate --eval -E "let pkgs = import <nixpkgs> {}; linuxbrewConfig = import $SCRIPT_DIR/linuxbrew.nix { inherit pkgs; config = {}; }; in builtins.concatStringsSep \" \" (if builtins.hasAttr \"taps\" linuxbrewConfig.linuxbrew then linuxbrewConfig.linuxbrew.taps else [])" 2>/dev/null | tr -d '"' || echo "")
+
+# Install taps if any are defined
+if [ ! -z "$TAPS" ]; then
+  echo "Installing taps: $TAPS"
+  for tap in $TAPS; do
+    brew tap "$tap"
+  done
+fi
+
+# Install brew packages
+echo "Installing brew packages: $BREWS"
+for brew in $BREWS; do
+  brew install "$brew" || echo "Failed to install $brew, continuing..."
+done
 
 echo ""
 echo "Linuxbrew has been installed and configured."
-echo "You can now use 'brew' commands to install packages."
-echo ""
+echo "Packages from linuxbrew.nix have been installed."
 echo "Note: When using both Nix and Linuxbrew, be aware of potential PATH conflicts."
 echo "Your zshrc has been configured to work with both package managers."
 echo ""
-echo "To apply the configuration, run:"
-echo "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack"
+echo "To apply the Home Manager configuration, run:"
+echo "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu"
