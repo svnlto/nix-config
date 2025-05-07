@@ -23,7 +23,6 @@ rec {
     "eza" # Modern ls replacement
     "oh-my-posh" # Prompt theme engine
     "tree" # Directory tree view
-    "neovim" # Modern vim
   ];
 
   # Common ZSH history settings

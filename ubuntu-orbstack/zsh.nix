@@ -24,7 +24,7 @@ in {
       ls = "ls --color=auto";
       update = "sudo apt update && sudo apt upgrade";
       nixswitch =
-        "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack";
+        "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu";
     };
 
     # ZSH history configuration
@@ -38,7 +38,8 @@ in {
     };
 
     # ZSH initialization script (shared + Ubuntu-specific)
-    initExtra = ''
+    # Using initContent instead of deprecated initExtra
+    initContent = ''
       # Shared history settings
       export HIST_STAMPS="dd/mm/yyyy"
       export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
@@ -68,9 +69,11 @@ in {
     '';
   };
 
-  # Ubuntu-specific packages plus shared packages
+  # Ubuntu-specific packages (removing duplicated packages)
   home.packages = with pkgs;
-    (map (name: builtins.getAttr name pkgs) sharedZsh.packages) ++ [
+    [
       # Ubuntu-specific packages
+      # Note: We're not using sharedZsh.packages here to avoid duplication
+      # as these packages are already included in common configuration
     ];
 }
