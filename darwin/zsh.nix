@@ -27,9 +27,6 @@ in {
   environment.shellInit = ''
     # This is loaded for all shells
   '';
-
-  # Add macOS-specific ZSH configuration
-  environment.loginShell = "zsh";
   
   # Configure ZSH specifically with shared settings
   programs.zsh.shellInit = ''
