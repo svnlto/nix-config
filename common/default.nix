@@ -28,7 +28,7 @@
 
   # Set up automatic store optimization (replacing auto-optimise-store)
   nix.optimise.automatic = true;
-  nix.optimise.interval = "24h"; # Run optimization every 24 hours
+  nix.settings.auto-optimise-store = false; # Disable the deprecated option
 
   # Additional Nix daemon options for containerized environments
   nix.extraOptions = ''

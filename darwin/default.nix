@@ -1,11 +1,14 @@
 { config, pkgs, lib, username, hostname, dockApps ? [ ], ... }:
 
 let
+  # Use the actual path to dockutil instead of pkgs.homebrew
+  dockutil = "/opt/homebrew/bin/dockutil";
+
   # Build the dock configuration script from the list of apps
   dockConfigScript = apps: ''
-    ${pkgs.homebrew}/bin/dockutil --remove all --no-restart
+    ${dockutil} --remove all --no-restart
     ${lib.concatStringsSep "\n" (map (app: ''
-      ${pkgs.homebrew}/bin/dockutil --add "${app}" --no-restart
+      ${dockutil} --add "${app}" --no-restart
     '') apps)}
     killall Dock
   '';
