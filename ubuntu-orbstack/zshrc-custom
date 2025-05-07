@@ -1,0 +1,47 @@
+# Custom zshrc configuration for Ubuntu OrbStack
+
+# Linuxbrew configuration
+if [ -d "/home/linuxbrew/.linuxbrew" ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  export HOMEBREW_NO_AUTO_UPDATE=1     # Prevent auto updates to avoid conflicts
+  export HOMEBREW_NO_INSTALL_CLEANUP=1 # Prevent automatic cleanup
+fi
+
+# Set PATH to include user's private bin if it exists
+if [ -d "$HOME/bin" ]; then
+  PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ]; then
+  PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Load NVM if installed
+if [ -d "$HOME/.nvm" ]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+# Useful aliases
+alias ls='ls --color=auto'
+alias ll='ls -la'
+alias grep='grep --color=auto'
+alias nixswitch='nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack'
+alias update='sudo apt update && sudo apt upgrade'
+alias brewup='brew update && brew upgrade'
+
+# Better history management
+HISTSIZE=10000
+HISTFILESIZE=20000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt EXTENDED_HISTORY
+
+# Custom prompt
+PROMPT='%F{green}%n@%m%f:%F{blue}%~%f$ '
+
+# Add your custom configurations below
+# ===================================

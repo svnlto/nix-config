@@ -1,0 +1,21 @@
+# Nix build outputs
+result
+result-*
+
+# Direnv
+.direnv
+
+# Editor temporary files
+*~
+\#*\#
+.\#*
+.*.swp
+.vscode/
+
+# macOS files
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.log
