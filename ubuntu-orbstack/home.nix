@@ -5,7 +5,6 @@
 
   # Home Manager packages for server (CLI only)
   home.packages = with pkgs; [
-    # Server-appropriate packages
     tmux
     htop
     ripgrep
@@ -17,14 +16,16 @@
     ncdu # disk usage analyzer
     mosh # mobile shell with roaming
     nmap
+    aws-cli2
+    docker
+    docker-compose
+    nvm
+    tfenv
+    pre-commit
   ];
 
   # Program configurations
   programs = {
-    # ZSH is now configured through the imported zsh.nix file
-
-    # Git is now configured through the imported git.nix file
-
     # Configure neovim
     neovim = {
       enable = true;

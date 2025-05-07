@@ -58,26 +58,10 @@
 
       # Standalone home-manager configuration for Ubuntu OrbStack
       # Install with:
-      # $ nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack
+      # $ nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu
       homeConfigurations = {
         # Main Ubuntu configuration that works for both regular Ubuntu and OrbStack
         "ubuntu" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            ./ubuntu-orbstack/home.nix
-            {
-              home = {
-                username = "sven";
-                homeDirectory = "/home/sven";
-                stateVersion = "23.11";
-              };
-            }
-          ];
-          extraSpecialArgs = { username = "sven"; };
-        };
-
-        # Keep the original entry for backward compatibility
-        "ubuntu-orbstack" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
             ./ubuntu-orbstack/home.nix
