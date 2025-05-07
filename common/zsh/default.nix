@@ -1,9 +1,13 @@
-# This file serves as a proper NixOS module for ZSH configuration
+# This file defines a proper NixOS module for ZSH configuration
 { config, lib, pkgs, ... }:
 
-# A simple and empty module that doesn't cause errors
-# The actual shared ZSH configuration is imported directly by 
-# darwin/zsh.nix and ubuntu-orbstack/zsh.nix
-{
-  # No configuration is set here to avoid conflicts between nix-darwin and home-manager
+let
+  # Import the shared configuration, but don't return it directly
+  sharedZsh = import ./shared.nix;
+in {
+  # Export the shared config for use by other modules
+  _module.args.zshShared = sharedZsh;
+
+  # No direct configuration is set here to avoid conflicts
+  # Each platform will use the shared config in its own way
 }

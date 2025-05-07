@@ -1,5 +1,5 @@
 # macOS-specific Git configuration
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, gitShared ? { }, ... }:
 
 let
   # Template for local Git configuration with private information
@@ -54,6 +54,9 @@ let
     result-*
   '';
 in {
+  # Apply the shared git configuration for macOS (nix-darwin)
+  programs.git = gitShared.gitConfig or { };
+
   # Create .gitignore file
   system.activationScripts.gitignore = {
     text = ''

@@ -1,5 +1,5 @@
 # Ubuntu-specific Git configuration
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, gitShared ? { }, ... }:
 
 let
   # Template for local Git configuration with private information
@@ -54,6 +54,9 @@ let
     result-*
   '';
 in {
+  # Apply the shared git configuration for Ubuntu (home-manager)
+  programs.git = gitShared.gitConfig or { };
+
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
 

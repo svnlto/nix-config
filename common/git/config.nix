@@ -1,9 +1,9 @@
 # Shared Git configuration
 { config, lib, pkgs, username, ... }:
 
-{
-  # Basic Git configuration that works on both platforms
-  programs.git = {
+let
+  # Define shared git configuration that will be used by both platforms
+  gitConfig = {
     enable = true;
 
     # User details - Using placeholder that will be overridden by local config
@@ -78,4 +78,13 @@
     # Include local Git configuration file for private settings
     includes = [{ path = "~/.gitconfig.local"; }];
   };
+
+  # Test for which platform we're on
+  isHomeManager = lib.hasAttr "home" config;
+  isDarwin = lib.hasAttr "darwinConfig" config || lib.hasAttr "security" config
+    || lib.hasAttr "system" config;
+  # Return different configurations based on the platform
+in {
+  # Common config exports to be used by both platforms as needed
+  _module.args.gitShared = { inherit gitConfig; };
 }
