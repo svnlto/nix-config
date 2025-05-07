@@ -1,6 +1,20 @@
-# 🚀 Cross-Platform Nix Configuration
+# 🚀 My Cross-Platform Nix Setup
 
-This repository contains a flexible Nix configuration for managing multiple systems in a consistent way:
+## 🏗️ Why I Built This
+
+Hey! This is just my Nix setup that I've put together over time to make coding easier. I got some ideas from Mitchell Hashimoto's approach to dev environments and tweaked things to work for me.
+
+I like to keep my Mac clean and organized while still having access to all the tools I need for development. That's why I set things up this way: I use my Mac for everyday tasks, but I do all my actual coding and development work in an OrbStack Ubuntu VM.
+
+Here's why I love this setup:
+
+- **My host stays clean** - No more dependency issues
+- **I can experiment freely** - Breaking my dev environment doesn't affect my system
+- **It's consistent** - My dev environment feels the same on all my devices
+- **Best of both worlds** - macOS for daily tasks, Linux for development
+- **My settings follow me everywhere** - Shared ZSH configs keep my shell experience consistent
+
+This is my take on a flexible Nix configuration that manages both my macOS system and my Ubuntu development VM. It works for me, and maybe it'll give you some ideas for your own setup!
 
 - 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications
 - 🐧 **Linux/Ubuntu**: Using Home Manager for user environment configuration

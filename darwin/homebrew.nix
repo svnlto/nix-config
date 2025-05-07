@@ -6,6 +6,7 @@
     taps = [ "FelixKratz/formulae" ];
     brews = [ "mas" "dockutil" ];
     casks = [
+      # customize this list to your needs
       "1password"
       "1password-cli"
       "setapp"

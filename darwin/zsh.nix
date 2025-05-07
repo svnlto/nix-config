@@ -11,7 +11,9 @@ in {
     text = ''
       echo "Setting up Oh My Posh theme..."
       mkdir -p /Users/${username}/.config/oh-my-posh
-      cp ${../common/zsh/default.omp.json} /Users/${username}/.config/oh-my-posh/default.omp.json
+      cp ${
+        ../common/zsh/default.omp.json
+      } /Users/${username}/.config/oh-my-posh/default.omp.json
       chown ${username}:staff /Users/${username}/.config/oh-my-posh/default.omp.json
     '';
   };
@@ -27,7 +29,7 @@ in {
   environment.shellInit = ''
     # This is loaded for all shells
   '';
-  
+
   # Configure ZSH specifically with shared settings
   programs.zsh.shellInit = ''
     # Common history settings
@@ -39,34 +41,35 @@ in {
     # default node.js environment
     export NODE_ENV="dev"
   '';
-  
+
   # ZSH interactive shell configuration with shared settings
   programs.zsh.interactiveShellInit = ''
     # Common history options are in shellInit
 
     # Common ZSH options
     ${sharedZsh.zshOptions}
-    
+
     # Common completion settings
     ${sharedZsh.completionSettings}
-    
+
     # Common key bindings
     ${sharedZsh.keyBindings}
-    
+
     # Common tool initialization
     ${sharedZsh.toolInit}
-    
+
     # macOS-specific settings
     if command -v pbcopy >/dev/null 2>&1; then
       alias copy='pbcopy'
       alias paste='pbpaste'
     fi
   '';
-  
+
   # Common aliases from shared config plus macOS-specific ones
   environment.shellAliases = sharedZsh.commonAliases // {
     # macOS-specific aliases
     brewup = "brew update && brew upgrade";
-    nixswitch = "darwin-rebuild switch --flake ~/.config/nix#${config.networking.hostName}";
+    nixswitch =
+      "darwin-rebuild switch --flake ~/.config/nix#${config.networking.hostName}";
   };
 }
