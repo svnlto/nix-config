@@ -19,8 +19,8 @@
     awscli2
     docker
     docker-compose
-    nvm
-    tfenv
+    # nvm
+    # tfenv
     pre-commit
   ];
 
