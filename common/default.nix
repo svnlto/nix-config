@@ -1,7 +1,7 @@
 { config, pkgs, username, ... }:
 
 {
-  imports = [ ./git ./zsh ];
+  imports = [ ./git ./zsh ]; # Put back ./zsh import
 
   # Common packages for all platforms
   environment.systemPackages = with pkgs; [
