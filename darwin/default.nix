@@ -1,10 +1,16 @@
 { config, pkgs, lib, username, hostname, ... }:
 
 {
-  imports = [ ./homebrew.nix ./defaults.nix ./zsh.nix ./dock.nix ./git.nix ];
+  imports = [ ./homebrew.nix ./defaults.nix ./zsh.nix ./dock.nix ];
 
   # macOS specific packages
-  environment.systemPackages = with pkgs; [ oh-my-posh eza hstr ];
+  environment.systemPackages = with pkgs; [
+    oh-my-posh
+    eza
+    hstr
+    git # Added Git as a system package
+    diff-so-fancy # Added diff-so-fancy for Git
+  ];
 
   # Enable alternative shell support
   programs.zsh.enable = true;
