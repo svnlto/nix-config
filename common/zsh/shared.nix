@@ -8,7 +8,6 @@
     ll =
       "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
     vim = "nvim";
-    t = "terraform";
     c = "clear";
     cat = "bat";
     hh = "hstr";
