@@ -1,7 +1,7 @@
 { config, pkgs, username, ... }:
 
 {
-  imports = [ ./zsh ]; # Put back ./zsh import
+  imports = [ ./zsh ]; # Only import ZSH, not Git
 
   # Common packages for all platforms
   environment.systemPackages = with pkgs; [
@@ -24,7 +24,6 @@
     keep-going = true; # Continue building derivations if one fails
     log-lines = 50; # Show more log lines for better debugging
     max-jobs = "auto"; # Set to optimal number for the system
-    # auto-optimise-store = true; # Removed: Known to corrupt the Nix Store
     connect-timeout = 10; # Shorter connection timeout
   };
 
