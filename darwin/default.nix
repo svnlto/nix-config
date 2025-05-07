@@ -1,19 +1,7 @@
-{ config, pkgs, lib, username, hostname, dockApps ? [ ], ... }:
+{ config, pkgs, lib, username, hostname, ... }:
 
-let
-  # Use the actual path to dockutil instead of pkgs.homebrew
-  dockutil = "/opt/homebrew/bin/dockutil";
-
-  # Build the dock configuration script from the list of apps
-  dockConfigScript = apps: ''
-    ${dockutil} --remove all --no-restart
-    ${lib.concatStringsSep "\n" (map (app: ''
-      ${dockutil} --add "${app}" --no-restart
-    '') apps)}
-    killall Dock
-  '';
-in {
-  imports = [ ./homebrew.nix ./defaults.nix ./zsh.nix ];
+{
+  imports = [ ./homebrew.nix ./defaults.nix ./zsh.nix ./dock.nix ];
 
   # macOS specific packages
   environment.systemPackages = with pkgs; [ oh-my-posh eza hstr ];
@@ -50,7 +38,7 @@ in {
       done
     '';
 
-    dock.text = dockConfigScript dockApps;
+    dock.text = dockConfigScript selectedDockApps;
 
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
@@ -64,7 +52,7 @@ in {
 
       echo "==== Configuring Dock ====" >&2
       # Also use su for dockutil commands
-      su ${username} -c '${dockConfigScript dockApps}' >&2
+      su ${username} -c '${dockConfigScript selectedDockApps}' >&2
 
       echo "==== Homebrew and dock configuration completed ====" >&2
     '';

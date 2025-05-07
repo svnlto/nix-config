@@ -22,23 +22,15 @@
       darwinSystem = { hostname ? "macbook", # Generic default hostname
         username ? "user", # Generic default username
         system ? "aarch64-darwin", # Default to Apple Silicon
-        dockApps ? [ # Default dock applications
-          "/Applications/Arc.app"
-          "/Applications/Spotify.app"
-        ], extraModules ? [ ] # Allow additional modules
+        extraModules ? [ ] # Allow additional modules
         }:
         nix-darwin.lib.darwinSystem {
           inherit system;
           modules = [
             ./common
             ./darwin
-            # Pass hostname and dock apps to configuration
-            {
-              networking.hostName = hostname;
-
-              # Pass the dock applications to the module
-              _module.args.dockApps = dockApps;
-            }
+            # Pass hostname to configuration
+            { networking.hostName = hostname; }
           ] ++ extraModules;
           specialArgs = {
             inherit inputs self hostname;
@@ -55,12 +47,6 @@
         "Rick" = darwinSystem {
           hostname = "Rick";
           username = "svenlito";
-          dockApps = [
-            "/Applications/Arc.app"
-            "/Applications/Spotify.app"
-            "/Applications/Visual Studio Code.app"
-            "/Applications/iTerm.app"
-          ];
         };
 
         # Example for another Mac (commented out as reference)
