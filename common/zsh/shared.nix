@@ -1,8 +1,8 @@
 # This file contains truly shared ZSH configuration that works in both
 # nix-darwin and home-manager without modification
 
-# Return a simple attribute set instead of a NixOS module
-{
+# Return a simple attribute set for direct import by other modules
+rec {
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     reloadcli = "source $HOME/.zshrc";
@@ -99,4 +99,10 @@
     # HSTR colors
     export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
   '';
+
+  # Module metadata
+  meta = {
+    description =
+      "Shared ZSH configuration for both nix-darwin and home-manager";
+  };
 }

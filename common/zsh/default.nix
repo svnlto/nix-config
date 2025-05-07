@@ -1,9 +1,9 @@
-# ZSH common configuration module
+# This file is a proper NixOS module that re-exports the shared ZSH configuration
 { config, lib, pkgs, ... }:
 
-# This is a proper NixOS module that both nix-darwin and home-manager can import
 {
-  # Empty module that doesn't set any configuration
-  # The actual ZSH configuration is imported directly by darwin/zsh.nix and ubuntu-orbstack/zsh.nix
-  # This file exists just to make importing ./common/zsh as a module work without errors
+  # This is an empty NixOS module
+  # It doesn't set any configuration options itself
+  # The shared ZSH configuration is imported directly by darwin/zsh.nix and ubuntu-orbstack/zsh.nix
+  # This file exists to satisfy the directory import in common/default.nix
 }
