@@ -26,18 +26,26 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
 ├── flake.nix             # Main entry point for the Nix flake
 ├── nix.conf              # Global Nix settings
 ├── common/               # Shared configuration
-│   └── default.nix       # Common packages and settings
-│   └── git/              # Git configuration scripts
-│       └── setup-local-config.sh # Script to set up Git local configuration
+│   ├── default.nix       # Common packages and settings
+│   └── zsh/              # Shared ZSH configuration
+│       ├── default.nix   # ZSH module definition
+│       ├── default.omp.json # Oh-My-Posh theme
+│       └── shared.nix    # Shared ZSH settings
 ├── darwin/               # macOS specific configuration
 │   ├── default.nix       # Main configuration for macOS
 │   ├── homebrew.nix      # Homebrew packages and settings
-│   └── defaults.nix      # macOS system preferences
+│   ├── defaults.nix      # macOS system preferences
+│   ├── dock.nix          # Dock configuration
+│   └── zsh.nix           # macOS-specific ZSH setup
 └── ubuntu-orbstack/      # Ubuntu configuration (used for both generic Ubuntu and OrbStack)
     ├── default.nix       # System configuration
     ├── home.nix          # User environment via Home Manager
+    ├── git.nix           # Ubuntu-specific Git configuration
+    ├── zsh.nix           # Ubuntu-specific ZSH setup
     ├── setup-linuxbrew.sh # Script to set up Linuxbrew
-    └── zshrc-custom      # Custom ZSH configuration
+    ├── zshrc-custom      # Custom ZSH configuration
+    └── scripts/          # Utility scripts
+        └── setup-local-config.sh # Script to set up Git local configuration
 ```
 
 ## 🛠️ Installation
@@ -132,8 +140,8 @@ This configuration allows for multiple macOS hosts with different settings:
 5. Set up Git local configuration:
    ```bash
    # Option 1: Use the interactive setup script (recommended)
-   chmod +x ~/.config/nix/common/git/setup-local-config.sh
-   ~/.config/nix/common/git/setup-local-config.sh
+   chmod +x ~/.config/nix/ubuntu-orbstack/scripts/setup-local-config.sh
+   ~/.config/nix/ubuntu-orbstack/scripts/setup-local-config.sh
    
    # Option 2: Create manually
    if [ ! -f ~/.gitconfig.local ]; then
@@ -231,10 +239,12 @@ The configuration uses a modular approach to manage:
 
 The Git configuration is designed with privacy in mind:
 
-- Shared, version-controlled Git config in `common/git/config.nix`
+- Complete Git config for Ubuntu in `ubuntu-orbstack/git.nix`
 - Personal information stored in a local, untracked `~/.gitconfig.local` file
 - Automatically creates a template `~/.gitconfig.local` file during first run
 - Prevents exposing your email address in public repositories
+
+For macOS, Git is installed as a system package without specialized configuration.
 
 Example `.gitconfig.local`:
 ```
