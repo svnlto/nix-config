@@ -90,10 +90,8 @@ rec {
     # Initialize zoxide
     eval "$(zoxide init --cmd cd zsh)"
 
-    # Initialize oh-my-posh (conditionally for non-Apple Terminal)
-    if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
-      eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
-    fi
+    # Initialize oh-my-posh (removed terminal condition to ensure theme always loads)
+    eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
 
     # HSTR colors
     export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
