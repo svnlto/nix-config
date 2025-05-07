@@ -53,6 +53,15 @@
       IdentityAgent "~/.ssh/agent.sock"
   '';
 
+  # Add Linuxbrew setup as part of home-manager activation
+  home.activation.setupLinuxbrew =
+    let scriptPath = toString ./setup-linuxbrew.sh;
+    in config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      echo "Running Linuxbrew setup script..."
+      chmod +x ${scriptPath}
+      ${scriptPath}
+    '';
+
   # Required for home-manager
   home.stateVersion = "23.11";
 }

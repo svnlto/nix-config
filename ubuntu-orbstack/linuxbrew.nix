@@ -7,10 +7,11 @@
     # Basic tools and dependencies
     brews = [
       "gcc"
+      "pyenv"
+      "node"
+      "tree"
+      "wget"
       "jq"
-      "nvm"
-      "tfenv"
-      "pre-commit"
       # Add more command-line packages as needed
     ];
 
@@ -19,5 +20,13 @@
       # Add any taps you need, for example:
       # "homebrew/core"
     ];
+
+    # Settings for update behavior (similar to macOS)
+    onActivation = {
+      autoUpdate = true; # Update homebrew itself
+      upgrade = true; # Upgrade all packages
+      cleanup =
+        "zap"; # Remove unused packages (options: "none", "uninstall", "zap")
+    };
   };
 }
