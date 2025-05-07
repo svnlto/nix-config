@@ -16,7 +16,7 @@
     ncdu # disk usage analyzer
     mosh # mobile shell with roaming
     nmap
-    aws-cli2
+    awscli2
     docker
     docker-compose
     nvm
