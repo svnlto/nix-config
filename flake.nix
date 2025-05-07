@@ -49,8 +49,8 @@
       # Generic macOS configuration - can be customized with hostname and user
       darwinConfigurations = {
         # Default configuration
-        "macbook" = darwinSystem {};
-        
+        "macbook" = darwinSystem { };
+
         # Your current machine
         "Sauron" = darwinSystem {
           hostname = "Sauron";
@@ -62,7 +62,7 @@
             "/Applications/iTerm.app"
           ];
         };
-        
+
         # Example for another Mac (commented out as reference)
         # "work-mac" = darwinSystem {
         #   hostname = "work-mac";

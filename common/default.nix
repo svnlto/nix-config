@@ -17,8 +17,7 @@
     trusted-users = [ "root" username ];
 
     # Settings to improve lock handling
-    use-case-hack =
-      true; # Better handle edge cases in containerized environments
+    use-case-hack = true; # Better handle edge cases in containers
     fallback = true; # Allow fallback to build if binary substitute fails
     keep-going = true; # Continue building derivations if one fails
     log-lines = 50; # Show more log lines for better debugging
