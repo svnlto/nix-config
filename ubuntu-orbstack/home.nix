@@ -1,7 +1,7 @@
 { config, pkgs, username, ... }:
 
 {
-  imports = [ ./zsh.nix ];
+  imports = [ ./zsh.nix ./git.nix ];
 
   # Home Manager packages for server (CLI only)
   home.packages = with pkgs; [
@@ -23,11 +23,7 @@
   programs = {
     # ZSH is now configured through the imported zsh.nix file
 
-    git = {
-      enable = true;
-      userName = "Sven Lito";
-      userEmail = "your-email@example.com";
-    };
+    # Git is now configured through the imported git.nix file
 
     # Configure neovim
     neovim = {

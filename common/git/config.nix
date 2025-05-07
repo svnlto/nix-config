@@ -1,14 +1,13 @@
-# Shared Git configuration for Ubuntu environment
+# Shared Git configuration
 { config, lib, pkgs, username, ... }:
 
-let
-  isHomeManager = lib.hasAttr "home" config;
-  sharedGitConfig = {
+{
+  # Basic Git configuration that works on both platforms
+  programs.git = {
     enable = true;
 
     # User details - Using placeholder that will be overridden by local config
     userName = "Your Name";
-    # Use a placeholder email that will be overridden by local config
     userEmail = "user@example.com";
 
     # Git configuration
@@ -79,74 +78,4 @@ let
     # Include local Git configuration file for private settings
     includes = [{ path = "~/.gitconfig.local"; }];
   };
-
-  sharedGitignore = ''
-    # OS files
-    .DS_Store
-    .DS_Store?
-    ._*
-    .Spotlight-V100
-    .Trashes
-    ehthumbs.db
-    Thumbs.db
-
-    # Editor files
-    .vscode/
-    .idea/
-    *.swp
-    *.swo
-    *~
-
-    # Environment files
-    .env
-    .env.local
-
-    # Build artifacts
-    node_modules/
-    dist/
-    build/
-    target/
-
-    # Logs
-    *.log
-    npm-debug.log*
-
-    # Dependency lock files
-    package-lock.json
-    yarn.lock
-    pnpm-lock.yaml
-
-    # Nix
-    result
-    result-*
-  '';
-
-  # Template for local Git configuration with private information
-  localGitConfigTemplate = ''
-    # Local Git configuration - NOT tracked in Git
-    # This file contains your personal Git configuration, including email
-
-    [user]
-        name = Your Name
-        email = your.email@example.com
-  '';
-  # Only configure Git for Home Manager (Ubuntu)
-in lib.mkIf isHomeManager {
-  programs.git = sharedGitConfig;
-  home.file.".gitignore".text = sharedGitignore;
-
-  # Create template for local Git configuration (but don't overwrite if exists)
-  home.activation.createGitLocalConfig =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          if [ ! -f ~/.gitconfig.local ]; then
-            echo "Creating template for local git configuration..."
-            cat > ~/.gitconfig.local << EOF
-      ${localGitConfigTemplate}
-      EOF
-            echo "⚠️  IMPORTANT: Please edit ~/.gitconfig.local to set your email address ⚠️"
-          fi
-    '';
-
-  # Make sure diff-so-fancy is installed
-  home.packages = with pkgs; [ diff-so-fancy ];
 }

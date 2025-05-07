@@ -1,5 +1,7 @@
+# This git module is the entry point for common git functionality
+{ config, lib, pkgs, username, ... }:
+
 {
-  # This file imports the Git configuration module
-  # It allows the common configuration to import the entire git directory easily
+  # Simply import the git config directly as a module
   imports = [ ./config.nix ];
 }
