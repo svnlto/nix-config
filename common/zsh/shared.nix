@@ -2,7 +2,7 @@
 # nix-darwin and home-manager without modification
 
 # Return a simple attribute set instead of a NixOS module
-rec {
+{
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     reloadcli = "source $HOME/.zshrc";
