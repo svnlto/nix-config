@@ -12,7 +12,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  # Installation notes for Ubuntu OrbStack:
+  # Installation notes for containerized Ubuntu environments (like OrbStack):
   # Install Nix with:
   # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --extra-conf "sandbox = false" --extra-conf='filter-syscalls = false' --init none --no-confirm
 
@@ -52,8 +52,8 @@
         "macbook" = darwinSystem { };
 
         # Your current machine
-        "Sauron" = darwinSystem {
-          hostname = "Sauron";
+        "Rick" = darwinSystem {
+          hostname = "Rick";
           username = "svenlito";
           dockApps = [
             "/Applications/Arc.app"
@@ -70,23 +70,11 @@
         # };
       };
 
-      # Build Ubuntu OrbStack configuration using:
-      # $ nixos-rebuild switch --flake ~/.config/nix#ubuntu-orbstack
-      nixosConfigurations."ubuntu-orbstack" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules =
-          [ ./common ./ubuntu-orbstack home-manager.nixosModules.home-manager ];
-        specialArgs = {
-          inherit inputs self;
-          username = "sven";
-        };
-      };
-
       # Standalone home-manager configuration for Ubuntu OrbStack
       # Install with:
       # $ nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack
-      homeConfigurations."ubuntu-orbstack" =
-        home-manager.lib.homeManagerConfiguration {
+      homeConfigurations = {
+        "ubuntu-orbstack" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
             ./ubuntu-orbstack/home.nix
@@ -100,5 +88,28 @@
           ];
           extraSpecialArgs = { username = "sven"; };
         };
+
+        # Example for a work Ubuntu machine
+        # "work-ubuntu" = home-manager.lib.homeManagerConfiguration {
+        #   pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        #   modules = [
+        #     ./ubuntu-orbstack/home.nix
+        #     {
+        #       home = {
+        #         username = "workuser";
+        #         homeDirectory = "/home/workuser";
+        #         stateVersion = "23.11";
+        #       };
+        #       # Customize packages for work environment
+        #       home.packages = with pkgs; [
+        #         postgresql
+        #         redis
+        #         docker-compose
+        #       ];
+        #     }
+        #   ];
+        #   extraSpecialArgs = { username = "workuser"; };
+        # };
+      };
     };
 }

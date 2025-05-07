@@ -1,11 +1,11 @@
-# Cross-Platform Nix Configuration
+# 🚀 Cross-Platform Nix Configuration
 
 This repository contains a flexible Nix configuration for managing multiple systems in a consistent way:
 
-- **macOS**: Using nix-darwin for system configuration and Homebrew for applications
-- **Ubuntu OrbStack**: Using Home Manager for user environment configuration
+- 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications
+- 🐧 **Linux/Ubuntu**: Using Home Manager for user environment configuration
 
-## Structure
+## 📁 Structure
 
 ```
 .
@@ -17,29 +17,30 @@ This repository contains a flexible Nix configuration for managing multiple syst
 │   ├── default.nix       # Main configuration for macOS
 │   ├── homebrew.nix      # Homebrew packages and settings
 │   └── defaults.nix      # macOS system preferences
-└── ubuntu-orbstack/      # Ubuntu OrbStack configuration
+└── ubuntu-orbstack/      # Ubuntu configuration (used for both generic Ubuntu and OrbStack)
     ├── default.nix       # System configuration
     ├── home.nix          # User environment via Home Manager
     ├── setup-linuxbrew.sh # Script to set up Linuxbrew
     └── zshrc-custom      # Custom ZSH configuration
 ```
 
-## Installation
+## 🛠️ Installation
 
-### Prerequisites
+### ✅ Prerequisites
 
 - Install Nix package manager:
-  - macOS: `sh <(curl -L https://nixos.org/nix/install)`
-  - Ubuntu: See below for OrbStack-specific installation
+  - 🍎 macOS: `sh <(curl -L https://nixos.org/nix/install)`
+  - 🐧 Linux: `sh <(curl -L https://nixos.org/nix/install) --daemon`
+  - 🐧 Containerized Linux (e.g., OrbStack): See below for specialized installation
 
-### macOS Setup
+### 🍎 macOS Setup
 
 1. Install Nix and nix-darwin:
    ```bash
    # Install Nix
    sh <(curl -L https://nixos.org/nix/install)
    
-   # Enable flakes
+   # Enable flakes (minimal bootstrap configuration)
    mkdir -p ~/.config/nix
    echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
    
@@ -60,7 +61,7 @@ This repository contains a flexible Nix configuration for managing multiple syst
    darwin-rebuild switch --flake ~/.config/nix#macbook
    ```
 
-### Creating a New macOS Host Configuration
+### ✨ Creating a New macOS Host Configuration
 
 This configuration allows for multiple macOS hosts with different settings:
 
@@ -82,9 +83,14 @@ This configuration allows for multiple macOS hosts with different settings:
    darwin-rebuild switch --flake ~/.config/nix#your-hostname
    ```
 
-### Ubuntu OrbStack Setup
+### 🐧 Ubuntu/Linux Setup
 
-1. Install Nix with OrbStack-specific settings:
+1. Install Nix (standard installation):
+   ```bash
+   sh <(curl -L https://nixos.org/nix/install) --daemon
+   ```
+
+   For containerized environments (like OrbStack):
    ```bash
    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --extra-conf "sandbox = false" --extra-conf='filter-syscalls = false' --init none --no-confirm
    ```
@@ -97,6 +103,7 @@ This configuration allows for multiple macOS hosts with different settings:
 
 3. Apply the Home Manager configuration:
    ```bash
+   # For generic Ubuntu setup
    nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack
    ```
 
@@ -106,11 +113,11 @@ This configuration allows for multiple macOS hosts with different settings:
    ~/.config/nix/ubuntu-orbstack/setup-linuxbrew.sh
    ```
 
-## Usage
+## 🔄 Usage
 
-### Updating the System
+### 🔁 Updating the System
 
-#### macOS:
+#### 🍎 macOS:
 ```bash
 # Pull latest changes
 git pull
@@ -119,7 +126,7 @@ git pull
 darwin-rebuild switch --flake ~/.config/nix#macbook
 ```
 
-#### Ubuntu OrbStack:
+#### 🐧 Linux/Ubuntu:
 ```bash
 # Pull latest changes
 git pull
@@ -128,25 +135,25 @@ git pull
 nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu-orbstack
 ```
 
-### Making Changes
+### ✏️ Making Changes
 
 1. Modify the relevant configuration files
 2. Commit your changes: `git commit -am "Description of changes"`
 3. Push to your repository: `git push`
 4. Apply the changes using the commands above
 
-### Common Tasks
+### 🧩 Common Tasks
 
-- Add a new package to all systems: Edit `common/default.nix`
-- Add a macOS-specific package: Edit `darwin/default.nix`
-- Add a Homebrew cask: Edit `darwin/homebrew.nix`
-- Change macOS settings: Edit `darwin/defaults.nix`
-- Customize dock applications: Edit your host configuration in `flake.nix`
-- Configure Ubuntu environment: Edit `ubuntu-orbstack/home.nix`
+- 📦 Add a new package to all systems: Edit `common/default.nix`
+- 🍎 Add a macOS-specific package: Edit `darwin/default.nix`
+- 🍺 Add a Homebrew cask: Edit `darwin/homebrew.nix`
+- ⚙️ Change macOS settings: Edit `darwin/defaults.nix`
+- 📱 Customize dock applications: Edit your host configuration in `flake.nix`
+- 🐧 Configure Ubuntu environment: Edit `ubuntu-orbstack/home.nix`
 
-## Features
+## ✨ Features
 
-### Customizable Dock Applications
+### 📱 Customizable Dock Applications
 
 Each macOS host can have its own set of dock applications:
 
@@ -173,24 +180,24 @@ Each macOS host can have its own set of dock applications:
 };
 ```
 
-### Cross-Platform Package Management
+### 🔄 Cross-Platform Package Management
 
 The configuration uses a modular approach to manage:
-- Common packages across platforms
-- Platform-specific packages
-- User-specific configurations
+- 🌐 Common packages across platforms
+- 💻 Platform-specific packages
+- 👤 User-specific configurations
 
-## Tips and Tricks
+## 💡 Tips and Tricks
 
-- **Lock Issues in OrbStack**: If you encounter Nix store lock issues in OrbStack, try increasing the timeout:
+- 🔒 **Lock Issues in OrbStack**: If you encounter Nix store lock issues in OrbStack, try increasing the timeout:
   ```bash
   nix --option stalled-download-timeout 600 run home-manager/master -- switch --flake .#ubuntu-orbstack
   ```
 
-- **VSCode Integration**: Use Remote SSH rather than Remote Containers for working with OrbStack
+- 👨‍💻 **VSCode Integration**: Use Remote SSH rather than Remote Containers for working with OrbStack
 
-- **Working with Both Nix and Homebrew**: Be aware of potential PATH conflicts when using both package managers; the default configuration puts Homebrew ahead of Nix in the PATH
+- 🔄 **Working with Both Nix and Homebrew**: Be aware of potential PATH conflicts when using both package managers; the default configuration puts Homebrew ahead of Nix in the PATH
 
-## License
+## 📄 License
 
 This configuration is personal but freely available under the MIT license. Feel free to use it as inspiration for your own setup.
