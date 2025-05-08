@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, pkgs, username, lib, ... }:
 
 {
   imports = [ ./zsh.nix ./git.nix ];
@@ -23,7 +23,6 @@
     terraform-docs
     terraform-ls
 
-    # System utilities - removed Rust tools: ripgrep, fd, bat
     tmux
     htop
     jq
@@ -56,10 +55,16 @@
       escapeTime = 0;
       historyLimit = 50000;
     };
-  };
 
-  # Explicitly disable fish
-  programs.fish.enable = false;
+    # Explicitly disable fish using mkForce to override any imported configs
+    fish.enable = lib.mkForce false;
+
+    direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      enableFishIntegration = lib.mkForce false;
+    };
+  };
 
   home.file.".ssh/config".text = ''
     Host *

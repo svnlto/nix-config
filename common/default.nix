@@ -1,7 +1,7 @@
 { config, pkgs, username, ... }:
 
 {
-  imports = [ ./zsh ]; # Only import ZSH, not Git
+  imports = [ ./zsh ];
 
   # Common packages for all platforms
   environment.systemPackages = with pkgs; [
@@ -31,6 +31,9 @@
     log-lines = 50; # Show more log lines for better debugging
     max-jobs = "auto"; # Set to optimal number for the system
     connect-timeout = 10; # Shorter connection timeout
+
+    # Increase download buffer size (fix for download buffer warning)
+    download-buffer-size = 32768; # 32MB buffer (default is 16MB)
   };
 
   # Set up automatic store optimization (replacing auto-optimise-store)
@@ -44,6 +47,9 @@
     builders-use-substitutes = true
     # Retry locking store if contention occurs
     narinfo-cache-negative-ttl = 0
+
+    # Alternative location for download buffer size if the setting above doesn't work
+    download-buffer-size = 32768
   '';
 
   # Allow unfree software across platforms

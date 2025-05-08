@@ -6,7 +6,6 @@ let
   gitConfig = {
     enable = true;
 
-    # User details - Using actual name that can be overridden by local config
     userName = "Sven Lito";
     userEmail = "svenlito@gmail.com";
 

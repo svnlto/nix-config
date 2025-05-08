@@ -21,13 +21,10 @@ in {
     # Enable Oh My Zsh
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" ]; # Use the git plugin for standard git aliases
+      plugins = [ "git" ];
     };
 
     shellAliases = sharedZsh.aliases // {
-      # Vagrant-specific aliases
-      ls = "ls --color=auto";
-      update = "sudo apt update && sudo apt upgrade";
       nixswitch =
         "nix run home-manager/master -- switch --flake ~/.config/nix#vagrant";
     };
