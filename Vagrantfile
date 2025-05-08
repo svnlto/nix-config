@@ -90,9 +90,16 @@ EOL'
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
     
-    # Clone configuration directly 
+    # Clone configuration with better handling for reprovisioning
     echo "=== Setting up configuration ==="
     mkdir -p $HOME/.config
+    
+    # Handle existing directory on reprovisioning
+    if [ -d "$HOME/.config/nix" ]; then
+      echo "Found existing nix config directory, backing it up..."
+      mv $HOME/.config/nix $HOME/.config/nix.bak.$(date +%s)
+    fi
+    
     git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
     
     # Verify flake.nix exists
@@ -103,18 +110,22 @@ EOL'
     
     # Set proper permissions for the config directory
     sudo chown -R vagrant:vagrant $HOME/.config/nix
-    # Combined find command to set permissions in one pass
-    find $HOME/.config/nix -type d -exec chmod 755 {} \; -o -type f -exec chmod 644 {} \;
+    # Fix the find command with proper syntax
+    find $HOME/.config/nix -type d -exec chmod 755 {} \\;
+    find $HOME/.config/nix -type f -exec chmod 644 {} \\;
     
     # Create minimal ZSH environment to ensure we can login 
     # Home Manager will replace this later
     echo "Setting up minimal ZSH environment..."
+    # Ensure we can write to .zshenv
+    rm -f $HOME/.zshenv
     cat > $HOME/.zshenv <<EOL
 # Source Nix environment
 if [ -e /etc/profile.d/nix.sh ]; then
   . /etc/profile.d/nix.sh
 fi
 EOL
+    chmod 644 $HOME/.zshenv
     
     # Set ZSH as default shell
     echo "Setting ZSH as default shell..."
@@ -123,12 +134,15 @@ EOL
     # Create a minimal .zshrc to ensure the shell works
     # This will be overwritten by home-manager once it's properly set up
     echo "Creating temporary .zshrc..."
+    # Ensure we can write to .zshrc
+    rm -f $HOME/.zshrc
     cat > $HOME/.zshrc <<EOL
 # This is a temporary .zshrc that will be replaced by home-manager
 # when you manually run: home-manager switch --flake ~/.config/nix#vagrant
 export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
+    chmod 644 $HOME/.zshrc
 
     # Run home-manager switch command AFTER creating the minimal .zshrc
     # This way home-manager can safely replace it with its own configuration
