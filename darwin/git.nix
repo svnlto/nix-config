@@ -2,71 +2,69 @@
 { config, lib, pkgs, username, ... }:
 
 {
-  # Home Manager Git configuration for macOS
-  home-manager.users.${username}.programs.git = {
+  # Git configuration for macOS
+  programs.git = {
     enable = true;
-
-    # User details with your actual name
     userName = "Sven Lito";
     userEmail = "me@svenlito.com";
-
-    # Git configuration
-    extraConfig = {
-      init.defaultBranch = "main";
-      pull.rebase = true;
-      push.autoSetupRemote = true;
-      core = {
-        editor = "nvim";
-        excludesfile = "~/.gitignore";
-        autocrlf = "input";
-        quotepath = false;
-        compression = 9;
-        preloadindex = true;
-        pager = "diff-so-fancy | less --tabs=2 -RFX";
-      };
-      merge = {
-        tool = "vscode";
-        conflictstyle = "diff3";
-      };
-      mergetool.vscode = { cmd = "code --wait $MERGED"; };
-      diff = {
-        tool = "vscode";
-        colorMoved = "default";
-      };
-      difftool.vscode = { cmd = "code --wait --diff $LOCAL $REMOTE"; };
-      commit = {
-        gpgsign = false; # Set to true if you use GPG signing
-      };
-      rerere = { enabled = true; };
-      help = { autocorrect = 10; };
-      color = {
-        ui = "always";
-        diff = {
-          meta = "yellow";
-          frag = "magenta bold";
-          commit = "yellow bold";
-          old = "red bold";
-          new = "green bold";
-          whitespace = "red reverse";
-        };
-        "diff-highlight" = {
-          oldNormal = "red bold";
-          oldHighlight = "red bold 52";
-          newNormal = "green bold";
-          newHighlight = "green bold 22";
-        };
-      };
-    };
-
-    # No Git aliases here - using Oh My Zsh git plugin aliases instead
-    aliases = { };
-
-    # Include local Git configuration file for private settings if needed
-    includes = [{ path = "~/.gitconfig.local"; }];
+    package = pkgs.git;
   };
 
+  # This allows any user to have the Git configuration
+  environment.etc."gitconfig".text = ''
+    [user]
+      name = Sven Lito
+      email = me@svenlito.com
+    [init]
+      defaultBranch = main
+    [pull]
+      rebase = true
+    [push]
+      autoSetupRemote = true
+    [core]
+      editor = nvim
+      excludesfile = ~/.gitignore
+      autocrlf = input
+      quotepath = false
+      compression = 9
+      preloadindex = true
+      pager = diff-so-fancy | less --tabs=2 -RFX
+    [merge]
+      tool = vscode
+      conflictstyle = diff3
+    [mergetool "vscode"]
+      cmd = code --wait $MERGED
+    [diff]
+      tool = vscode
+      colorMoved = default
+    [difftool "vscode"]
+      cmd = code --wait --diff $LOCAL $REMOTE
+    [commit]
+      gpgsign = false
+    [rerere]
+      enabled = true
+    [help]
+      autocorrect = 10
+    [color]
+      ui = always
+    [color "diff"]
+      meta = yellow
+      frag = magenta bold
+      commit = yellow bold
+      old = red bold
+      new = green bold
+      whitespace = red reverse
+    [color "diff-highlight"]
+      oldNormal = red bold
+      oldHighlight = red bold 52
+      newNormal = green bold
+      newHighlight = green bold 22
+    [include]
+      path = ~/.gitconfig.local
+  '';
+
   # Create common .gitignore file
-  home-manager.users.${username}.home.file.".gitignore".text = ''
+  environment.etc."gitignore".text = ''
     # OS files
     .DS_Store
     .DS_Store?
@@ -105,5 +103,14 @@
     # Nix
     result
     result-*
+  '';
+
+  # System activation script to copy gitignore to user's home directory
+  system.activationScripts.gitConfig = ''
+    mkdir -p /Users/${username}/.config/git
+    cp ${
+      config.environment.etc."gitignore".source
+    } /Users/${username}/.gitignore
+    chown ${username}:staff /Users/${username}/.gitignore
   '';
 }
