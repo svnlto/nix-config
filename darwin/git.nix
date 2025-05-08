@@ -2,15 +2,10 @@
 { config, lib, pkgs, username, ... }:
 
 {
-  # Git configuration for macOS
-  programs.git = {
-    enable = true;
-    userName = "Sven Lito";
-    userEmail = "me@svenlito.com";
-    package = pkgs.git;
-  };
+  # Add Git to system packages
+  environment.systemPackages = with pkgs; [ git diff-so-fancy ];
 
-  # This allows any user to have the Git configuration
+  # This creates a global Git configuration
   environment.etc."gitconfig".text = ''
     [user]
       name = Sven Lito
@@ -25,7 +20,7 @@
       editor = nvim
       excludesfile = ~/.gitignore
       autocrlf = input
-      quotepath = false
+      quotePath = false
       compression = 9
       preloadindex = true
       pager = diff-so-fancy | less --tabs=2 -RFX
@@ -105,9 +100,14 @@
     result-*
   '';
 
-  # System activation script to copy gitignore to user's home directory
+  # System activation script to copy gitconfig and gitignore to user's home directory
   system.activationScripts.gitConfig = ''
-    mkdir -p /Users/${username}/.config/git
+    echo "Setting up Git configuration..." >&2
+    cp ${
+      config.environment.etc."gitconfig".source
+    } /Users/${username}/.gitconfig
+    chown ${username}:staff /Users/${username}/.gitconfig
+
     cp ${
       config.environment.etc."gitignore".source
     } /Users/${username}/.gitignore
