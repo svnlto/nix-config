@@ -54,8 +54,6 @@
       oldHighlight = red bold 52
       newNormal = green bold
       newHighlight = green bold 22
-    [include]
-      path = ~/.gitconfig.local
   '';
 
   # Create common .gitignore file

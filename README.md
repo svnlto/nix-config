@@ -150,10 +150,32 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ip addr show | grep "inet " | grep -v 127.0.0.1
    ```
 
-4. Connect with VS Code (this is where the magic happens):
+4. Connect with VS Code Remote-SSH:
    - Install the "Remote - SSH" extension in VS Code
-   - Add a new SSH host: `ssh vagrant@VM_IP_ADDRESS` (password: `vagrant`)
+   - Your SSH configuration is automatically maintained by the Nix configuration in `darwin/default.nix`
+   - The SSH config includes all the settings needed to connect to your Vagrant VM:
+     ```
+     Host nix-dev
+       HostName 127.0.0.1
+       User vagrant
+       Port 2222
+       UserKnownHostsFile /dev/null
+       StrictHostKeyChecking no
+       PasswordAuthentication no
+       IdentityFile /Users/svenlito/.config/nix/.vagrant/machines/default/utm/private_key
+       IdentitiesOnly yes
+       LogLevel FATAL
+       ForwardAgent yes
+       PubkeyAcceptedKeyTypes +ssh-rsa
+       HostKeyAlgorithms +ssh-rsa
+     ```
+   
+   - In VS Code, open the Command Palette (⇧⌘P) and run "Remote-SSH: Connect to Host..."
+   - Select "nix-dev" from the list
    - Open the `/vagrant` folder - it's synced with your host's nix config
+   - Or open `~/.config/nix` to work directly with your configuration
+
+   **Note**: The SSH configuration is automatically applied during system activation, so any changes made to the configuration in `darwin/default.nix` will be applied when you run `darwin-rebuild switch`.
 
 5. Some handy VM commands:
    ```bash
@@ -399,7 +421,6 @@ Here's how to do all the usual stuff:
 - ⚙️ Tweaking macOS settings: Look in `darwin/defaults.nix`
 - 📱 Changing dock icons: Find your host in `flake.nix`
 - 🐧 Adding stuff to your VM: Edit `vagrant/home.nix`
-- 🔑 Updating your Git identity: Edit `~/.gitconfig.local`
 - 🖥️ Changing VM settings: It's all in `Vagrantfile`
 - 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
 
@@ -438,33 +459,6 @@ I've set things up so I can easily manage:
 - 🌐 Tools I want everywhere (in `common/`)
 - 💻 Stuff specific to each platform (in `darwin/` and `vagrant/`)
 - 👤 My personal preferences and settings
-
-### 🔐 Privacy-Focused Git Configuration
-
-I'm big on privacy, so I've set up Git in a smart way:
-
-- All the common Git config lives in `vagrant/git.nix`
-- Your personal details (email, name) go in a separate `~/.gitconfig.local` file
-- This file isn't tracked in Git, so your email stays private
-- The system creates a template for you to fill in on first run
-
-For my Mac, I keep it simple with just the standard Git package.
-
-Here's what your `.gitconfig.local` might look like:
-```
-# Local Git configuration - NOT tracked in Git
-# This file contains your personal Git configuration, including email
-
-[user]
-    name = Your Name
-    email = your.email@example.com
-
-# You can add other private Git configurations here
-[github]
-    user = yourusername
-```
-
-The system picks this up automatically, so you never have to worry about it!
 
 ### 📦 Custom Nix Overlays
 

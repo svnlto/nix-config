@@ -64,8 +64,6 @@
 
   # SSH configuration
   environment.etc."user-ssh-config".source = pkgs.writeText "ssh-config" ''
-    Include ~/.orbstack/ssh/config
-
     Host *
       AddKeysToAgent yes
       IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
@@ -74,6 +72,20 @@
       ServerAliveInterval 20
       ServerAliveCountMax 10
       TCPKeepAlive yes
+    Host nix-dev
+      HostName 127.0.0.1
+      User vagrant
+      Port 2222
+      UserKnownHostsFile /dev/null
+      StrictHostKeyChecking no
+      PasswordAuthentication no
+      IdentityFile /Users/svenlito/.config/nix/.vagrant/machines/default/utm/private_key
+      IdentitiesOnly yes
+      LogLevel FATAL
+      ForwardAgent yes
+      PubkeyAcceptedKeyTypes +ssh-rsa
+      HostKeyAlgorithms +ssh-rsa
+
   '';
 
   system.activationScripts.userSshConfig.text = ''

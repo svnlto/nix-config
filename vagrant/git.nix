@@ -59,9 +59,6 @@ let
 
     # No Git aliases here - using Oh My Zsh git plugin aliases instead
     aliases = { };
-
-    # Include local Git configuration file for private settings
-    includes = [{ path = "~/.gitconfig.local"; }];
   };
 
   # Common .gitignore content
