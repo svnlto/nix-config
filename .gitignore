@@ -19,3 +19,4 @@ result-*
 *.tmp
 *.temp
 *.log
+.vagrant

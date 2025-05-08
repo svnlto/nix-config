@@ -60,6 +60,7 @@ in {
       # Tool initializations
       ${sharedZsh.tools}
 
+<<<<<<< HEAD:.vagrant/zsh.nix
       # NVM setup
       export NVM_DIR="$HOME/.nvm"
       if [ -d "$NVM_DIR" ]; then
@@ -72,6 +73,11 @@ in {
         source "${pkgs.nvm}/share/nvm/nvm.sh"
         source "${pkgs.nvm}/share/nvm/bash_completion"
       fi
+=======
+      export NVM_DIR="$HOME/.nvm"
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+>>>>>>> d4488eb12b39c28a7a9b7fa9045cff1b089a5ad7:ubuntu-orbstack/zsh.nix
     '';
   };
 
