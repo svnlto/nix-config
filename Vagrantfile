@@ -8,9 +8,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   
-  # UTM Provider Configuration
+  # UTM Provider Configuration - INCREASE RESOURCES
   config.vm.provider "utm" do |utm|
-    utm.memory = "4096"
+    utm.memory = "6144"  # Increase memory for Rust builds
     utm.cpus = 4
     utm.name = "nix-dev-vm"
     utm.directory_share_mode = "virtFS"
@@ -36,6 +36,10 @@ Vagrant.configure("2") do |config|
     # Create projects directory with correct permissions
     mkdir -p /home/vagrant/projects
     chown -R vagrant:vagrant /home/vagrant/projects
+    
+    # Optimize system for Rust compilation
+    echo 'vm.swappiness=10' >> /etc/sysctl.conf
+    sysctl -p
   SHELL
 
   # User provisioning (as vagrant user)
@@ -66,15 +70,71 @@ Vagrant.configure("2") do |config|
       git clone https://github.com/svnlto/nix-config.git nix
     fi
     
-    # Enable flakes
+    # Enable flakes and optimize Nix for builds
     mkdir -p $HOME/.config/nix
-    echo "experimental-features = nix-command flakes" > $HOME/.config/nix/nix.conf
+    cat > $HOME/.config/nix/nix.conf <<EOL
+experimental-features = nix-command flakes
+substituters = https://cache.nixos.org https://nix-community.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+trusted-substituters = true
+max-jobs = 3
+cores = 1
+download-buffer-size = 32768
+builders-use-substitutes = true
+http-connections = 25
+keep-outputs = true
+keep-derivations = true
+EOL
     
-    # Install home-manager and apply configuration
-    echo "=== Setting up Home Manager ==="
+    # Create initial minimal profile with non-Rust alternatives
+    echo "=== Creating minimal home configuration ==="
+    mkdir -p $HOME/.config/home-manager
+    cat > $HOME/.config/home-manager/home.nix <<EOL
+{ config, pkgs, lib, ... }:
+{
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+
+  # Minimal configuration - just essential tools 
+  home.username = "vagrant";
+  home.homeDirectory = "/home/vagrant";
+  home.stateVersion = "23.11";
+  
+  # Essential packages only - no Rust-based tools
+  home.packages = with pkgs; [
+    git 
+    zsh
+    tmux
+    wget
+    curl
+  ];
+  
+  # Explicitly disable fish
+  programs.fish.enable = lib.mkForce false;
+  
+  # Configure direnv without fish integration
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    enableFishIntegration = false;
+  };
+}
+EOL
+    
+    # First install minimal home-manager without Rust tools
+    echo "=== Installing minimal Home Manager config ==="
     export NIXPKGS_ALLOW_UNFREE=1
     nix run home-manager/master -- init --no-flake
-    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
+    home-manager switch
+    
+    # Then switch to the full configuration with optimizations for Rust builds
+    echo "=== Switching to full Home Manager config ==="
+    LOCALE_ARCHIVE="" home-manager switch --flake $HOME/.config/nix#vagrant \
+      --impure \
+      --option binary-caches-parallel-connections 5 \
+      --option narinfo-cache-positive-ttl 43200 \
+      --option builders-use-substitutes true
     
     # Set up SSH keys directory
     mkdir -p $HOME/.ssh
@@ -91,7 +151,6 @@ Vagrant.configure("2") do |config|
       . /etc/profile.d/nix.sh
     fi
     
-    # Show helpful message
     echo ""
     echo "======================================================="
     echo " Development environment is ready!"
