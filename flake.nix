@@ -135,7 +135,7 @@
                 stateVersion = "23.11";
               };
               nixpkgs.config.allowUnfree = true;
-              
+
               # Explicitly specify nix.package for home-manager
               nix = {
                 package = nixpkgs.legacyPackages.aarch64-linux.nix;

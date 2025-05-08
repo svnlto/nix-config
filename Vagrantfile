@@ -69,12 +69,24 @@ Vagrant.configure("2") do |config|
       git clone https://github.com/svnlto/nix-config.git nix
     fi
     
-    # Minimal Nix bootstrap configuration to enable flakes
+    # Minimal Nix bootstrap configuration to enable flakes (system-wide)
     mkdir -p /etc/nix
     sudo tee /etc/nix/nix.conf > /dev/null <<EOL
 experimental-features = nix-command flakes
 trusted-users = root vagrant
 EOL
+    
+    # Prepare home-manager setup by removing potential conflicting files
+    echo "=== Preparing for home-manager ==="
+    rm -f $HOME/.config/nix/nix.conf
+    mkdir -p $HOME/.config/home-manager-backup
+    
+    # Move any potentially conflicting files to backup directory
+    for file in $HOME/.zshrc $HOME/.zprofile $HOME/.config/nix/nix.conf; do
+      if [ -f "$file" ]; then
+        mv "$file" $HOME/.config/home-manager-backup/
+      fi
+    done
     
     # Restart the Nix daemon to apply basic settings
     sudo systemctl restart nix-daemon
@@ -98,8 +110,22 @@ EOL
     mkdir -p $HOME/.ssh
     chmod 700 $HOME/.ssh
     
-    # Set ZSH as default shell
+    # Set ZSH as default shell and ensure proper ZSH configuration
     sudo chsh -s $(which zsh) vagrant
+    
+    # Create or update .zprofile to source the home-manager environment
+    cat > $HOME/.zprofile <<EOL
+# Source home-manager session variables
+if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+EOL
+
+    # Ensure proper zshrc linking
+    if [ -f "$HOME/.config/home-manager/zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
+      rm -f $HOME/.zshrc
+      ln -sf $HOME/.config/home-manager/zshrc $HOME/.zshrc
+    fi
   SHELL
 
   # Run a minimal startup script
@@ -107,6 +133,23 @@ EOL
     # Ensure nix environment is available
     if [ -f "/etc/profile.d/nix.sh" ]; then
       . /etc/profile.d/nix.sh
+    fi
+    
+    # Check and fix ZSH configuration if needed
+    if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && [ ! -f "$HOME/.zprofile" ]; then
+      echo "Setting up ZSH profile..."
+      cat > $HOME/.zprofile <<EOL
+# Source home-manager session variables
+if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+EOL
+    fi
+    
+    # Reload ZSH configuration if needed
+    if [ -f "$HOME/.zshrc" ] && [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+      echo "Reloading ZSH environment..."
+      source $HOME/.zshrc
     fi
     
     echo ""
