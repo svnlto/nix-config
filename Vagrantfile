@@ -37,17 +37,6 @@ Vagrant.configure("2") do |config|
     # Optimize system
     echo 'vm.swappiness=10' >> /etc/sysctl.conf
     sysctl -p
-
-    # Set up system-wide Nix config with experimental features
-    mkdir -p /etc/nix
-    cat > /etc/nix/nix.conf <<EOL
-experimental-features = nix-command flakes
-trusted-users = root vagrant
-EOL
-
-    # Ensure proper ownership of Nix config
-    chown root:root /etc/nix/nix.conf
-    chmod 644 /etc/nix/nix.conf
   SHELL
 
   # User provisioning script
@@ -61,7 +50,22 @@ EOL
     echo "=== Installing Nix ==="
     sh <(curl -L https://nixos.org/nix/install) --daemon
     
-    # Ensure Nix environment is loaded
+    # Create system Nix configuration with experimental features
+    # This needs to be done RIGHT AFTER Nix installation
+    sudo mkdir -p /etc/nix
+    echo 'experimental-features = nix-command flakes' | sudo tee /etc/nix/nix.conf
+    echo 'trusted-users = root vagrant' | sudo tee -a /etc/nix/nix.conf
+    sudo chown root:root /etc/nix/nix.conf
+    sudo chmod 644 /etc/nix/nix.conf
+    
+    # Create user-specific Nix configuration as well
+    mkdir -p $HOME/.config/nix
+    echo 'experimental-features = nix-command flakes' > $HOME/.config/nix/nix.conf
+    
+    # Restart the Nix daemon to apply settings BEFORE sourcing Nix
+    sudo systemctl restart nix-daemon
+    
+    # NOW source Nix environment (after config has been created & daemon restarted)
     if [ -e /etc/profile.d/nix.sh ]; then
       . /etc/profile.d/nix.sh
     fi
@@ -69,6 +73,8 @@ EOL
     # Verify Nix is working with experimental features
     echo "Checking Nix version and features..."
     nix --version
+    echo "Testing experimental features directly..."
+    nix-env --version  # Should work without extra flags now
     
     # Basic Git configuration
     git config --global init.defaultBranch main
@@ -83,15 +89,7 @@ EOL
     fi
     
     # Clean up potentially conflicting files with proper permissions
-    rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv $HOME/.config/nix/nix.conf
-    
-    # Restart the Nix daemon to apply settings
-    sudo systemctl restart nix-daemon
-    
-    # Re-source Nix profile after daemon restart
-    if [ -e /etc/profile.d/nix.sh ]; then
-      . /etc/profile.d/nix.sh
-    fi
+    rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv
     
     # Setup home-manager
     echo "=== Setting up Home Manager ==="
@@ -99,11 +97,19 @@ EOL
     
     # Apply the flake configuration with explicit experimental features
     echo "=== Switching to Home Manager configuration ==="
-    nix --extra-experimental-features nix-command --extra-experimental-features flakes run home-manager/master -- init --no-flake
+    # Create temporary home-manager configuration directory to prevent errors
+    mkdir -p $HOME/.config/home-manager
     
-    LOCALE_ARCHIVE="" nix --extra-experimental-features nix-command --extra-experimental-features flakes run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
+    # First initialize home-manager
+    echo "Initializing home-manager..."
+    nix run home-manager/master -- init --no-flake || true
+    
+    # Then switch to the configuration
+    echo "Switching to home-manager configuration..."
+    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
     
     # Create zshenv with proper permissions
+    echo "Setting up ZSH environment..."
     touch $HOME/.zshenv
     chmod 644 $HOME/.zshenv
     cat > $HOME/.zshenv <<EOL
@@ -118,6 +124,7 @@ fi
 EOL
     
     # Set ZSH as default shell
+    echo "Setting ZSH as default shell..."
     sudo chsh -s $(which zsh) vagrant
   SHELL
 
