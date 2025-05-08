@@ -144,10 +144,7 @@
                 };
               };
 
-              # Move the fish override inside the module where pkgs is available
-              programs.fish = {
-                enable = false; # Disable fish explicitly
-              };
+              programs.fish = { enable = false; };
 
               nixpkgs.overlays = [
                 (final: prev: {

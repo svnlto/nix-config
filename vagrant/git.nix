@@ -7,7 +7,7 @@ let
     enable = true;
 
     userName = "Sven Lito";
-    userEmail = "svenlito@gmail.com";
+    userEmail = "me@svenlito.com";
 
     # Git configuration
     extraConfig = {

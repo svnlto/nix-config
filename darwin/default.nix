@@ -8,17 +8,14 @@
     oh-my-posh
     eza
     hstr
-    git # Added Git as a system package
-    diff-so-fancy # Added diff-so-fancy for Git
+    git
+    diff-so-fancy
   ];
 
-  # Enable alternative shell support
   programs.zsh.enable = true;
 
-  # Set Git commit hash for darwin-version
   system.configurationRevision = lib.mkIf (builtins ? currentSystem) null;
 
-  # Used for backwards compatibility
   system.stateVersion = 5;
 
   ids.gids.nixbld = 30000;
@@ -43,8 +40,6 @@
         ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
       done
     '';
-
-    # Dock configuration is now handled in dock.nix
 
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
@@ -99,10 +94,8 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  # Use hostname from flake parameters
   networking.hostName = hostname;
 
   users.users.${username} = {

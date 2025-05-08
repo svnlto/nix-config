@@ -11,11 +11,9 @@ in {
   home.homeDirectory = "/Users/${username}";
   home.stateVersion = "23.11";
 
-  # Enable Oh My Zsh with Git plugin
   programs.zsh = {
     enable = true;
 
-    # Enable Oh My Zsh with Git plugin
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
