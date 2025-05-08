@@ -8,6 +8,10 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   
+  # Fix SSH authentication issues
+  config.ssh.insert_key = true
+  config.ssh.forward_agent = true
+  
   # UTM Provider Configuration
   config.vm.provider "utm" do |utm|
     utm.memory = "8192"
@@ -37,6 +41,11 @@ Vagrant.configure("2") do |config|
     # Optimize system
     echo 'vm.swappiness=10' >> /etc/sysctl.conf
     sysctl -p
+    
+    # Fix SSH permissions
+    chmod 700 /home/vagrant/.ssh
+    chmod 600 /home/vagrant/.ssh/authorized_keys
+    chown -R vagrant:vagrant /home/vagrant/.ssh
   SHELL
 
   # User provisioning script
@@ -53,14 +62,22 @@ Vagrant.configure("2") do |config|
     # Create system Nix configuration with experimental features
     # This needs to be done RIGHT AFTER Nix installation
     sudo mkdir -p /etc/nix
-    echo 'experimental-features = nix-command flakes' | sudo tee /etc/nix/nix.conf
-    echo 'trusted-users = root vagrant' | sudo tee -a /etc/nix/nix.conf
+    sudo bash -c 'cat > /etc/nix/nix.conf << EOL
+experimental-features = nix-command flakes
+trusted-users = root vagrant
+EOL'
     sudo chown root:root /etc/nix/nix.conf
     sudo chmod 644 /etc/nix/nix.conf
     
     # Create user-specific Nix configuration as well
     mkdir -p $HOME/.config/nix
-    echo 'experimental-features = nix-command flakes' > $HOME/.config/nix/nix.conf
+    cat > $HOME/.config/nix-user.conf <<EOL
+experimental-features = nix-command flakes
+EOL
+    # Use sudo to avoid permission issues
+    sudo cp $HOME/.config/nix-user.conf $HOME/.config/nix/nix.conf
+    sudo chown vagrant:vagrant $HOME/.config/nix/nix.conf
+    sudo chmod 644 $HOME/.config/nix/nix.conf
     
     # Restart the Nix daemon to apply settings BEFORE sourcing Nix
     sudo systemctl restart nix-daemon
@@ -80,30 +97,35 @@ Vagrant.configure("2") do |config|
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
     
-    # Clone configuration
-    echo "=== Setting up configuration ==="
-    mkdir -p $HOME/.config
-
     # Clean up potentially conflicting files with proper permissions
-    rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv
-
+    sudo rm -f $HOME/.zshrc* $HOME/.zprofile* $HOME/.zshenv*
+    
     # Install basic tools directly (this skips home-manager for now)
     echo "=== Installing basic tools ==="
-    nix-env -iA nixpkgs.zsh
-
-    # Make sure we get a proper clone with flake.nix
+    # Skip installing zsh directly to avoid conflicts later
+    
+    # Clone configuration with clean setup
+    echo "=== Setting up configuration ==="
+    # Remove any existing config
     if [ -d "$HOME/.config/nix" ]; then
       echo "Removing existing nix config directory..."
-      rm -rf "$HOME/.config/nix"
+      # Move git repo instead of deleting to preserve changes
+      sudo mv $HOME/.config/nix $HOME/.config/nix.old
     fi
-
-    git clone https://github.com/svnlto/nix-config.git $HOME/.config/nix
-
+    
+    # Fresh clone of configuration
+    git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
+    
     # Verify flake.nix exists
     if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
-      echo "ERROR: flake.nix not found in repository. Please check your nix-config repository."
+      echo "WARNING: flake.nix not found in repository!"
       exit 1
     fi
+    
+    # Set proper permissions for the config directory
+    sudo chown -R vagrant:vagrant $HOME/.config/nix
+    find $HOME/.config/nix -type d -exec chmod 755 {} \;
+    find $HOME/.config/nix -type f -exec chmod 644 {} \;
     
     # Create zshenv with proper permissions
     echo "Setting up ZSH environment..."
@@ -130,14 +152,16 @@ export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
 
-    # Remove directly installed zsh to avoid conflicts with home-manager
-    echo "=== Removing directly installed zsh to avoid conflicts ==="
-    nix-env -e zsh || echo "zsh not installed directly, which is fine"
-
-    # Run home-manager switch command with backup option
+    # Run home-manager switch command AFTER creating the minimal .zshrc
+    # This way home-manager can safely replace it with its own configuration
     echo "=== Setting up Home Manager ==="
     echo "Running home-manager switch command..."
-    nix run home-manager/master -- switch -b backup --flake ~/.config/nix#vagrant --impure
+    # Use a unique backup extension to avoid conflicts
+    NIXPKGS_ALLOW_UNFREE=1 nix run home-manager/master -- switch -b backup.$RANDOM --flake ~/.config/nix#vagrant --impure || {
+      echo "Home Manager switch failed. Manual intervention may be needed."
+      echo "Try running the following command after logging in:"
+      echo "nix run home-manager/master -- switch -b backup.$(date +%s) --flake ~/.config/nix#vagrant --impure"
+    }
   SHELL
 
   # Minimal startup message with instructions
@@ -156,7 +180,7 @@ EOL
     else
       echo "NOTE: Home Manager setup didn't complete successfully."
       echo "To manually run the home-manager setup:"
-      echo "  nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure"
+      echo "  nix run home-manager/master -- switch -b backup.$(date +%s) --flake ~/.config/nix#vagrant --impure"
       echo ""
     fi
   SHELL
