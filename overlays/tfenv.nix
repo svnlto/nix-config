@@ -1,23 +1,35 @@
 final: prev: {
   tfenv = prev.stdenv.mkDerivation {
     name = "tfenv";
-    version = "v3.0.0"; # You can update this version as needed
+    version = "v3.0.0";
 
     src = prev.fetchFromGitHub {
       owner = "tfutils";
       repo = "tfenv";
-      rev = "v3.0.0"; # Match this with the version above
+      rev = "v3.0.0";
       sha256 = "0jvs7bk2gaspanb4qpxzd4m2ya5pz3d1izam6k7lw30hyn7mlnnq";
     };
 
     buildInputs = [ prev.bash ];
 
     installPhase = ''
-      mkdir -p $out/bin
-      cp -r * $out/
-      # Don't create symbolic links, rely on PATH to find the binaries
-      # Make sure bin scripts are executable
-      chmod +x $out/bin/*
+      mkdir -p $out/bin $out/share/tfenv
+      cp -r * $out/share/tfenv
+
+      cat > $out/bin/tfenv <<EOF
+      #!/usr/bin/env bash
+      export TFENV_CONFIG_DIR="\$HOME/.tfenv"
+      export TFENV_ROOT="$out/share/tfenv"
+      export TFENV_DATA_DIR="\$TFENV_CONFIG_DIR"
+
+      # Create user data directory if needed
+      mkdir -p "\$TFENV_CONFIG_DIR/versions"
+
+      exec "$out/share/tfenv/bin/tfenv" "\$@"
+      EOF
+      chmod +x $out/bin/tfenv
+
+      ln -s $out/bin/tfenv $out/bin/terraform
     '';
 
     meta = with prev.lib; {

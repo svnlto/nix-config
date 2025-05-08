@@ -123,7 +123,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
 1. First, grab the basics:
    ```bash
    # Apply your nix-darwin config to install UTM and Vagrant
-   darwin-rebuild switch --flake ~/.config/nix#Rick
+   darwin-rebuild switch --flake ~/.config/nix#macbook
    
    # Install the Vagrant UTM plugin
    vagrant plugin install vagrant-utm
@@ -204,18 +204,20 @@ I've set up two super handy version managers in the VM that make switching betwe
 
 ### 🔗 Browser Forwarding
 
-This is a cool trick! When you're deep into coding in your VM and need to authenticate with GitHub CLI or any other tool that pops open a browser, you don't want to be stuck. My setup automatically forwards those browser requests to your Mac. No more copying and pasting URLs - just click and go! The `browser-forward` overlay handles all this magic behind the scenes.
+When working in your VM and using tools like GitHub CLI that need to open a browser for authentication, you don't want to be stuck copying and pasting URLs. This setup automatically forwards browser requests to your host machine, making the experience seamless. The `browser-forward` overlay handles this transparently.
 
 ## 🔄 Usage
 
 ### 🔁 Updating the System
+
+Keeping everything up to date is super simple:
 
 #### 🍎 macOS:
 ```bash
 # Pull latest changes
 git pull
 
-# Apply configuration (replace macbook with your hostname)
+# Apply configuration 
 darwin-rebuild switch --flake ~/.config/nix#macbook
 ```
 
@@ -227,34 +229,38 @@ git pull
 # Rebuild VM with latest configuration
 vagrant provision
 
-# Alternative: Apply Home Manager configuration directly in VM
-nix run home-manager/master -- switch --flake ~/.config/nix#vagrant
+# Or if you're already in the VM, you can run:
+nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
 ```
 
 ### ✏️ Making Changes
 
-1. Modify the relevant configuration files
-2. Commit your changes: `git commit -am "Description of changes"`
-3. Push to your repository: `git push`
-4. Apply the changes using the commands above
+Tweaking things is easy:
+
+1. Make your changes to the config files
+2. Save your work with: `git commit -am "What I changed"`
+3. Share it with: `git push`
+4. Apply your changes with the commands above
 
 ### 🧩 Common Tasks
 
-- 📦 Add a new package to all systems: Edit `common/default.nix`
-- 🍎 Add a macOS-specific package: Edit `darwin/default.nix`
-- 🍺 Add a Homebrew package: Edit `darwin/homebrew.nix`
-- ⚙️ Change macOS settings: Edit `darwin/defaults.nix`
-- 📱 Customize dock applications: Edit your host configuration in `flake.nix`
-- 🐧 Configure VM environment: Edit `vagrant/home.nix`
-- 🔑 Update Git personal settings: Edit `~/.gitconfig.local`
-- 🖥️ Customize Vagrant VM: Edit `Vagrantfile`
-- 🔄 Add a Nix overlay: Create a new file in `overlays/` and reference it in `flake.nix`
+Here's how to do all the usual stuff:
+
+- 📦 Adding packages everywhere: Just edit `common/default.nix`
+- 🍎 Adding Mac-only packages: Edit `darwin/default.nix`
+- 🍺 Need a GUI app via Homebrew? Edit `darwin/homebrew.nix`
+- ⚙️ Tweaking macOS settings: Look in `darwin/defaults.nix`
+- 📱 Changing dock icons: Find your host in `flake.nix`
+- 🐧 Adding stuff to your VM: Edit `vagrant/home.nix`
+- 🔑 Updating your Git identity: Edit `~/.gitconfig.local`
+- 🖥️ Changing VM settings: It's all in `Vagrantfile`
+- 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
 
 ## ✨ Features
 
 ### 📱 Customizable Dock Applications
 
-Each macOS host can have its own set of dock applications:
+I love being able to have different dock setups for different Macs:
 
 ```nix
 "macbook-work" = darwinSystem {
@@ -281,23 +287,23 @@ Each macOS host can have its own set of dock applications:
 
 ### 🔄 Cross-Platform Package Management
 
-The configuration uses a modular approach to manage:
-- 🌐 Common packages across platforms
-- 💻 Platform-specific packages
-- 👤 User-specific configurations
+I've set things up so I can easily manage:
+- 🌐 Tools I want everywhere (in `common/`)
+- 💻 Stuff specific to each platform (in `darwin/` and `vagrant/`)
+- 👤 My personal preferences and settings
 
 ### 🔐 Privacy-Focused Git Configuration
 
-The Git configuration is designed with privacy in mind:
+I'm big on privacy, so I've set up Git in a smart way:
 
-- Complete Git config for the Vagrant VM in `vagrant/git.nix`
-- Personal information stored in a local, untracked `~/.gitconfig.local` file
-- Automatically creates a template `~/.gitconfig.local` file during first run
-- Prevents exposing your email address in public repositories
+- All the common Git config lives in `vagrant/git.nix`
+- Your personal details (email, name) go in a separate `~/.gitconfig.local` file
+- This file isn't tracked in Git, so your email stays private
+- The system creates a template for you to fill in on first run
 
-For macOS, Git is installed as a system package without specialized configuration.
+For my Mac, I keep it simple with just the standard Git package.
 
-Example `.gitconfig.local`:
+Here's what your `.gitconfig.local` might look like:
 ```
 # Local Git configuration - NOT tracked in Git
 # This file contains your personal Git configuration, including email
@@ -311,28 +317,30 @@ Example `.gitconfig.local`:
     user = yourusername
 ```
 
-The system will automatically include this file in your Git configuration.
+The system picks this up automatically, so you never have to worry about it!
 
 ### 📦 Custom Nix Overlays
 
-The configuration includes custom Nix overlays for tools that aren't available in the standard nixpkgs:
+Sometimes the standard Nix packages don't have exactly what you need, or they're not up to date. That's where my custom overlays come in:
 
-- **tfenv**: Terraform version manager
-- **nvm**: Node.js version manager
-- **browser-forward**: Utility to forward browser requests from SSH sessions to the host
+- **tfenv**: My go-to for managing multiple Terraform versions
+- **nvm**: Keeps Node.js versions under control
+- **browser-forward**: My little trick for forwarding browser requests from SSH sessions to your Mac
 
-These overlays make it easy to add and manage tools that might not be available or up-to-date in the standard Nix repositories.
+These make life so much easier when you're working across multiple projects with different requirements.
 
 ## 💡 Tips and Tricks
 
-- 🔄 **Working with Both Nix and Homebrew**: Be aware of potential PATH conflicts when using both package managers; the default configuration puts Homebrew ahead of Nix in the PATH
+Here are a few things I've learned along the way:
 
-- 🖥️ **VSCode Integration**: Use the Remote SSH extension to connect to your Vagrant VM and work on your projects with full VS Code functionality
+- 🔄 **Nix + Homebrew Harmony**: Keep an eye on your PATH - I've set Homebrew to take precedence, but you might want to adjust this
 
-- 🌐 **Browser Forwarding**: When working in the VM via VS Code and using tools that need to open a browser (like `gh auth login`), the browser-forward utility will automatically open the URL in your host machine's browser
+- 🖥️ **VS Code Remote SSH**: The Remote SSH extension makes working in the VM feel just like working locally
 
-- 🔧 **Managing Multiple Terraform Versions**: Use tfenv to switch between different versions of Terraform for different projects
+- 🌐 **Browser Integration**: When you're in VS Code and run something like `gh auth login`, browser links will open automatically on your host machine
+
+- 🔧 **Multiple Terraform Versions**: Use tfenv to easily switch between different versions of Terraform for various projects
 
 ## 📄 License
 
-This configuration is personal but freely available under the MIT license. Feel free to use it as inspiration for your own setup.
+This setup is my personal configuration, but I'm sharing it under the MIT license. Feel free to borrow ideas, adapt it, or use it as inspiration for your own perfect dev environment!
