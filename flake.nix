@@ -68,7 +68,7 @@
                     };
 
                     # Additional ZSH initialization
-                    initExtra = ''
+                    initContent = ''
                       # Source common settings
                       ${sharedZsh.options}
                       ${sharedZsh.keybindings}
