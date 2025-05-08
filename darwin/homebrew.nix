@@ -32,10 +32,8 @@
       "vcv-rack"
       "ableton-live-standard"
       "transmission"
-
-      # Virtualization tools
       "virtualbox"
-      "utm" # Free and open-source virtualization
+      "utm"
       "hashicorp/tap/hashicorp-vagrant"
       "vagrant"
     ];

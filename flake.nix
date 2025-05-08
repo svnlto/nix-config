@@ -36,6 +36,8 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit username; };
+              # Add backup file extension to avoid conflicts
+              home-manager.backupFileExtension = "backup";
 
               # Inline Home Manager configuration
               home-manager.users.${username} = { config, lib, pkgs, ... }:
