@@ -16,17 +16,6 @@ Vagrant.configure("2") do |config|
     utm.directory_share_mode = "virtFS"
   end
   
-  # Improved synced folder configuration
-  config.vm.synced_folder ".", "/home/vagrant/.config/nix-host", exclude: ["result"]
-  config.vm.synced_folder "/Users/svenlito/Sites", "/home/vagrant/projects"
-
-  # Fix permissions for synced folders (run before other provisioners)
-  config.vm.provision "shell", privileged: true, run: "always", inline: <<-SHELL
-    echo "=== Fixing permissions for synced folders ==="
-    chown -R vagrant:vagrant /home/vagrant/.config/nix-host
-    chown -R vagrant:vagrant /home/vagrant/projects
-  SHELL
-
   # System provisioning (with root privileges)
   config.vm.provision "shell", privileged: true, inline: <<-SHELL
     echo "=== Setting up system dependencies ==="
@@ -43,6 +32,10 @@ Vagrant.configure("2") do |config|
 
     # Make sure vagrant user has sudo privileges
     echo "vagrant ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vagrant
+    
+    # Create projects directory with correct permissions
+    mkdir -p /home/vagrant/projects
+    chown -R vagrant:vagrant /home/vagrant/projects
   SHELL
 
   # User provisioning (as vagrant user)
@@ -58,7 +51,25 @@ Vagrant.configure("2") do |config|
     # Source the nix profile
     . /etc/profile.d/nix.sh
     
+    # Set up Git with proper credentials
+    echo "=== Setting up Git ==="
+    git config --global init.defaultBranch main
+    git config --global core.editor "vim"
+    
+    # Create directory structure and clone nix config repository
+    echo "=== Cloning nix configuration repository ==="
+    mkdir -p $HOME/.config
+    cd $HOME/.config
+    
+    # Clone your nix configuration repo
+    # Check if directory exists first to avoid errors on provisioning reruns
+    if [ ! -d "$HOME/.config/nix" ]; then
+      # Replace with your actual repository URL
+      git clone https://github.com/svnlto/nix-config.git nix
+    fi
+    
     # Enable flakes
+    mkdir -p $HOME/.config/nix
     echo "experimental-features = nix-command flakes" > $HOME/.config/nix/nix.conf
     
     # Install home-manager
@@ -78,21 +89,16 @@ Vagrant.configure("2") do |config|
     fi
     mkdir -p $HOME/.config/oh-my-posh
     
+    # Set up SSH keys directory
+    mkdir -p $HOME/.ssh
+    chmod 700 $HOME/.ssh
+    
     # Set ZSH as default shell
     sudo chsh -s $(which zsh) vagrant
   SHELL
 
   # Run a simpler script on every startup to ensure proper configuration
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
-    # Sync any changes from the host to the VM's local copy
-    echo "=== Syncing configuration from host ==="
-    mkdir -p $HOME/.config/nix
-    rsync -av --exclude='.git' --exclude='result' $HOME/.config/nix-host/ $HOME/.config/nix/
-    
-    # Ensure Git is not trying to track changes in the copied directory
-    touch $HOME/.config/nix/.git/info/exclude
-    echo "*" > $HOME/.config/nix/.git/info/exclude
-    
     # Ensure proper ZSH configuration on every startup
     if [ -f "$HOME/.config/home-manager/zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
       echo "Fixing ZSH configuration links..."
@@ -104,5 +110,13 @@ Vagrant.configure("2") do |config|
     if [ -f "/etc/profile.d/nix.sh" ]; then
       . /etc/profile.d/nix.sh
     fi
+    
+    # Show helpful message
+    echo ""
+    echo "======================================================="
+    echo " Development environment is ready!"
+    echo " - Projects directory: ~/projects"
+    echo " - Nix config: ~/.config/nix"
+    echo "======================================================="
   SHELL
 end
