@@ -56,13 +56,10 @@
       escapeTime = 0;
       historyLimit = 50000;
     };
-
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
   };
+
+  # Explicitly disable fish
+  programs.fish.enable = false;
 
   home.file.".ssh/config".text = ''
     Host *
