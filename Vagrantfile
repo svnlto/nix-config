@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "utm/ubuntu-24.04"
   config.vm.hostname = "nix-dev"
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
   
   # UTM Provider Configuration
   config.vm.provider "utm" do |utm|
@@ -15,8 +16,16 @@ Vagrant.configure("2") do |config|
     utm.directory_share_mode = "virtFS"
   end
   
-  # Synced folder configuration - exclude the result symlink
-  config.vm.synced_folder ".", "/vagrant", exclude: ["result"]
+  # Improved synced folder configuration
+  config.vm.synced_folder ".", "/home/vagrant/.config/nix-host", exclude: ["result"]
+  config.vm.synced_folder "/Users/svenlito/Sites", "/home/vagrant/projects"
+
+  # Fix permissions for synced folders (run before other provisioners)
+  config.vm.provision "shell", privileged: true, run: "always", inline: <<-SHELL
+    echo "=== Fixing permissions for synced folders ==="
+    chown -R vagrant:vagrant /home/vagrant/.config/nix-host
+    chown -R vagrant:vagrant /home/vagrant/projects
+  SHELL
 
   # System provisioning (with root privileges)
   config.vm.provision "shell", privileged: true, inline: <<-SHELL
@@ -49,43 +58,8 @@ Vagrant.configure("2") do |config|
     # Source the nix profile
     . /etc/profile.d/nix.sh
     
-    # Copy configuration to ~/.config/nix
-    echo "=== Setting up Nix configuration ==="
-    mkdir -p $HOME/.config/nix
-    
-    # Copy files excluding result symlink
-    cd /vagrant
-    find . -type f -not -path "*/\\.*" -not -path "*/result/*" -not -name "result" | while read file; do
-      mkdir -p "$HOME/.config/nix/$(dirname "$file")"
-      cp "$file" "$HOME/.config/nix/$file"
-    done
-    
     # Enable flakes
     echo "experimental-features = nix-command flakes" > $HOME/.config/nix/nix.conf
-    
-    # Get the SHA256 hash for tfenv
-    echo "=== Getting SHA256 hash for tfenv ==="
-    nix-shell -p nix-prefetch-git --command "nix-prefetch-git --url https://github.com/tfutils/tfenv.git --rev v3.0.0" > $HOME/tfenv-hash.json
-    TFENV_HASH=$(cat $HOME/tfenv-hash.json | grep -o '"sha256": "[^"]*"' | cut -d'"' -f4)
-    echo "tfenv SHA256 hash: $TFENV_HASH"
-    
-    # Get the SHA256 hash for nvm
-    echo "=== Getting SHA256 hash for nvm ==="
-    nix-shell -p nix-prefetch-git --command "nix-prefetch-git --url https://github.com/nvm-sh/nvm.git --rev v0.39.7" > $HOME/nvm-hash.json
-    NVM_HASH=$(cat $HOME/nvm-hash.json | grep -o '"sha256": "[^"]*"' | cut -d'"' -f4)
-    echo "nvm SHA256 hash: $NVM_HASH"
-    
-    # Update the tfenv overlay with the correct hash
-    if [ -f "$HOME/.config/nix/overlays/tfenv.nix" ]; then
-      echo "Updating tfenv.nix with the correct hash..."
-      sed -i 's|sha256 = "[^"]*"|sha256 = "'"$TFENV_HASH"'"|' $HOME/.config/nix/overlays/tfenv.nix
-    fi
-    
-    # Update the nvm overlay with the correct hash
-    if [ -f "$HOME/.config/nix/overlays/nvm.nix" ]; then
-      echo "Updating nvm.nix with the correct hash..."
-      sed -i 's|sha256 = "[^"]*"|sha256 = "'"$NVM_HASH"'"|' $HOME/.config/nix/overlays/nvm.nix
-    fi
     
     # Install home-manager
     echo "=== Setting up Home Manager ==="
@@ -110,6 +84,15 @@ Vagrant.configure("2") do |config|
 
   # Run a simpler script on every startup to ensure proper configuration
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
+    # Sync any changes from the host to the VM's local copy
+    echo "=== Syncing configuration from host ==="
+    mkdir -p $HOME/.config/nix
+    rsync -av --exclude='.git' --exclude='result' $HOME/.config/nix-host/ $HOME/.config/nix/
+    
+    # Ensure Git is not trying to track changes in the copied directory
+    touch $HOME/.config/nix/.git/info/exclude
+    echo "*" > $HOME/.config/nix/.git/info/exclude
+    
     # Ensure proper ZSH configuration on every startup
     if [ -f "$HOME/.config/home-manager/zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
       echo "Fixing ZSH configuration links..."
