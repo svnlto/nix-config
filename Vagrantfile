@@ -69,37 +69,30 @@ Vagrant.configure("2") do |config|
       git clone https://github.com/svnlto/nix-config.git nix
     fi
     
-    # Setup Nix configuration
-    mkdir -p $HOME/.config/nix
-    cat > $HOME/.config/nix/nix.conf <<EOL
+    # Minimal Nix bootstrap configuration to enable flakes
+    mkdir -p /etc/nix
+    sudo tee /etc/nix/nix.conf > /dev/null <<EOL
 experimental-features = nix-command flakes
-substituters = https://cache.nixos.org https://nix-community.cachix.org
-trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-trusted-substituters = true
 trusted-users = root vagrant
-max-jobs = 3
-cores = 1
-download-buffer-size = 32768
-builders-use-substitutes = true
-http-connections = 25
-keep-outputs = true
-keep-derivations = true
 EOL
+    
+    # Restart the Nix daemon to apply basic settings
+    sudo systemctl restart nix-daemon
+    
+    # Source nix profile again after daemon restart
+    . /etc/profile.d/nix.sh
     
     # Install home-manager and apply configuration
     echo "=== Setting up Home Manager ==="
     export NIXPKGS_ALLOW_UNFREE=1
     
-    # Apply configuration with optimizations
+    # Apply configuration with home-manager
     echo "=== Applying configuration with Home Manager ==="
     nix run home-manager/master -- init --no-flake
     
     # Apply the flake configuration
-    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant \
-      --impure \
-      --option binary-caches-parallel-connections 5 \
-      --option narinfo-cache-positive-ttl 43200 \
-      --option builders-use-substitutes true
+    echo "=== Switching to Home Manager configuration ==="
+    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
     
     # Set up SSH keys directory
     mkdir -p $HOME/.ssh
