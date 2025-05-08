@@ -89,7 +89,7 @@ Vagrant.configure("2") do |config|
     
     # Install basic tools directly (this skips home-manager for now)
     echo "=== Installing basic tools ==="
-    nix-env -iA nixpkgs.zsh nixpkgs.git
+    nix-env -iA nixpkgs.zsh
     
     if [ ! -d "$HOME/.config/nix" ]; then
       git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
@@ -127,11 +127,10 @@ export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
 
-    # Run home-manager switch command AFTER creating the minimal .zshrc
-    # This way home-manager can safely replace it with its own configuration
+    # Run home-manager switch command with backup option
     echo "=== Setting up Home Manager ==="
     echo "Running home-manager switch command..."
-    nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
+    nix run home-manager/master -- switch -b backup --flake ~/.config/nix#vagrant --impure
   SHELL
 
   # Minimal startup message with instructions

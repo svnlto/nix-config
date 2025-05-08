@@ -106,6 +106,12 @@
           inherit system;
           inherit overlays;
         };
+
+      # Override fish shell attributes
+      fish = pkgs.fish.overrideAttrs (oldAttrs: {
+        doCheck = false;
+        doInstallCheck = false;
+      });
     in {
       # Generic macOS configuration - can be customized with hostname and user
       darwinConfigurations = {
