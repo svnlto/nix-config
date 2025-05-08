@@ -8,9 +8,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   
-  # UTM Provider Configuration - INCREASE RESOURCES
+  # UTM Provider Configuration
   config.vm.provider "utm" do |utm|
-    utm.memory = "6144"  # Increase memory for Rust builds
+    utm.memory = "6144"  # Increased for better Rust compilation performance
     utm.cpus = 4
     utm.name = "nix-dev-vm"
     utm.directory_share_mode = "virtFS"
@@ -33,11 +33,11 @@ Vagrant.configure("2") do |config|
     # Make sure vagrant user has sudo privileges
     echo "vagrant ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vagrant
     
-    # Create projects directory with correct permissions
+    # Create projects directory
     mkdir -p /home/vagrant/projects
     chown -R vagrant:vagrant /home/vagrant/projects
     
-    # Optimize system for Rust compilation
+    # Optimize system for builds
     echo 'vm.swappiness=10' >> /etc/sysctl.conf
     sysctl -p
   SHELL
@@ -55,22 +55,21 @@ Vagrant.configure("2") do |config|
     # Source the nix profile
     . /etc/profile.d/nix.sh
     
-    # Set up Git with proper credentials
+    # Set up Git
     echo "=== Setting up Git ==="
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
     
-    # Create directory structure and clone nix config repository
+    # Clone nix configuration repository
     echo "=== Cloning nix configuration repository ==="
     mkdir -p $HOME/.config
     cd $HOME/.config
     
-    # Clone your nix configuration repo
     if [ ! -d "$HOME/.config/nix" ]; then
       git clone https://github.com/svnlto/nix-config.git nix
     fi
     
-    # Enable flakes and optimize Nix for builds
+    # Setup Nix configuration
     mkdir -p $HOME/.config/nix
     cat > $HOME/.config/nix/nix.conf <<EOL
 experimental-features = nix-command flakes
@@ -86,51 +85,16 @@ keep-outputs = true
 keep-derivations = true
 EOL
     
-    # Create initial minimal profile with non-Rust alternatives
-    echo "=== Creating minimal home configuration ==="
-    mkdir -p $HOME/.config/home-manager
-    cat > $HOME/.config/home-manager/home.nix <<EOL
-{ config, pkgs, lib, ... }:
-{
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
-
-  # Minimal configuration - just essential tools 
-  home.username = "vagrant";
-  home.homeDirectory = "/home/vagrant";
-  home.stateVersion = "23.11";
-  
-  # Essential packages only - no Rust-based tools
-  home.packages = with pkgs; [
-    git 
-    zsh
-    tmux
-    wget
-    curl
-  ];
-  
-  # Explicitly disable fish
-  programs.fish.enable = lib.mkForce false;
-  
-  # Configure direnv without fish integration
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    enableBashIntegration = true;
-    enableFishIntegration = false;
-  };
-}
-EOL
-    
-    # First install minimal home-manager without Rust tools
-    echo "=== Installing minimal Home Manager config ==="
+    # Install home-manager and apply configuration
+    echo "=== Setting up Home Manager ==="
     export NIXPKGS_ALLOW_UNFREE=1
-    nix run home-manager/master -- init --no-flake
-    home-manager switch
     
-    # Then switch to the full configuration with optimizations for Rust builds
-    echo "=== Switching to full Home Manager config ==="
-    LOCALE_ARCHIVE="" home-manager switch --flake $HOME/.config/nix#vagrant \
+    # Apply configuration with optimizations
+    echo "=== Applying configuration with Home Manager ==="
+    nix run home-manager/master -- init --no-flake
+    
+    # Apply the flake configuration
+    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant \
       --impure \
       --option binary-caches-parallel-connections 5 \
       --option narinfo-cache-positive-ttl 43200 \
