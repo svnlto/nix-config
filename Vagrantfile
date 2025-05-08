@@ -80,26 +80,29 @@ Vagrant.configure("2") do |config|
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
     
-    # Clone configuration (shallow clone to avoid dirty tree issues)
+    # Clone configuration
     echo "=== Setting up configuration ==="
     mkdir -p $HOME/.config
-    
+
     # Clean up potentially conflicting files with proper permissions
     rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv
-    
+
     # Install basic tools directly (this skips home-manager for now)
     echo "=== Installing basic tools ==="
     nix-env -iA nixpkgs.zsh
-    
-    if [ ! -d "$HOME/.config/nix" ]; then
-      git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
-      
-      # Verify flake.nix exists
-      if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
-        echo "Warning: flake.nix not found in repository, trying full clone..."
-        rm -rf $HOME/.config/nix
-        git clone https://github.com/svnlto/nix-config.git $HOME/.config/nix
-      fi
+
+    # Make sure we get a proper clone with flake.nix
+    if [ -d "$HOME/.config/nix" ]; then
+      echo "Removing existing nix config directory..."
+      rm -rf "$HOME/.config/nix"
+    fi
+
+    git clone https://github.com/svnlto/nix-config.git $HOME/.config/nix
+
+    # Verify flake.nix exists
+    if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
+      echo "ERROR: flake.nix not found in repository. Please check your nix-config repository."
+      exit 1
     fi
     
     # Create zshenv with proper permissions
