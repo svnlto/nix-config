@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   
   # UTM Provider Configuration
   config.vm.provider "utm" do |utm|
-    utm.memory = "6144"  # Increased for better Rust compilation performance
+    utm.memory = "8192"  # Increase to 8GB for better Rust compilation
     utm.cpus = 4
     utm.name = "nix-dev-vm"
     utm.directory_share_mode = "virtFS"

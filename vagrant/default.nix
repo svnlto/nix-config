@@ -6,6 +6,15 @@
   # VM-specific packages
   environment.systemPackages = with pkgs; [ docker curl wget htop ];
 
+  # Environment variables
+  environment.variables = {
+    # Rust compilation optimizations
+    RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache"; # Use compilation cache
+    CARGO_INCREMENTAL = "1"; # Enable incremental builds
+    RUST_BACKTRACE = "1"; # Better error reporting
+    RUSTFLAGS = "-C target-cpu=native"; # Optimize for your CPU
+  };
+
   # Basic system settings
   networking.hostName = "nix-dev";
   time.timeZone = "Asia/Bangkok";
@@ -20,15 +29,14 @@
       cores = 1;
       trusted-substituters = true;
       builders-use-substitutes = true;
+      fallback = true;
       http-connections = 25;
 
       # Binary caches
       substituters =
         [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
+      substituters-priority =
+        [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     };
     extraOptions = ''
       experimental-features = nix-command flakes
