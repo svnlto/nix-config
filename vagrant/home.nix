@@ -5,19 +5,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Common and Vagrant-specific packages
+  # Vagrant-specific packages (removed Rust-based tools)
   home.packages = with pkgs; [
-    # Common CLI utilities (from common)
-    oh-my-posh
-    hstr
-    eza
-    ack
-    zoxide
-    bat
-    gh
-    nixfmt-classic
-    diff-so-fancy
-
     # Vagrant-specific development tools
     git
     gnumake
@@ -34,23 +23,21 @@
     terraform-docs
     terraform-ls
 
-    # System utilities
+    # System utilities - removed Rust tools: ripgrep, fd, bat
     tmux
     htop
-    ripgrep
-    fd
     jq
     fzf
     tree
     unzip
     nmap
-    awscli2
     docker
     docker-compose
     kubectl
     kubernetes-helm
     wget
     pre-commit
+    awscli2
   ];
 
   # Program configurations

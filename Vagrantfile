@@ -62,7 +62,6 @@ Vagrant.configure("2") do |config|
     cd $HOME/.config
     
     # Clone your nix configuration repo
-    # Check if directory exists first to avoid errors on provisioning reruns
     if [ ! -d "$HOME/.config/nix" ]; then
       git clone https://github.com/svnlto/nix-config.git nix
     fi
@@ -71,22 +70,11 @@ Vagrant.configure("2") do |config|
     mkdir -p $HOME/.config/nix
     echo "experimental-features = nix-command flakes" > $HOME/.config/nix/nix.conf
     
-    # Install home-manager
+    # Install home-manager and apply configuration
     echo "=== Setting up Home Manager ==="
-    nix run home-manager/master -- init --no-flake
-    
-    # Apply configuration
-    echo "=== Applying configuration with Home Manager ==="
-    rm -f $HOME/.zshrc
     export NIXPKGS_ALLOW_UNFREE=1
+    nix run home-manager/master -- init --no-flake
     LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
-    
-    # Install Oh-My-Posh
-    if ! command -v oh-my-posh &> /dev/null; then
-      echo "=== Installing Oh My Posh ==="
-      curl -s https://ohmyposh.dev/install.sh | bash -s
-    fi
-    mkdir -p $HOME/.config/oh-my-posh
     
     # Set up SSH keys directory
     mkdir -p $HOME/.ssh
@@ -96,15 +84,8 @@ Vagrant.configure("2") do |config|
     sudo chsh -s $(which zsh) vagrant
   SHELL
 
-  # Run a simpler script on every startup to ensure proper configuration
+  # Run a minimal startup script
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
-    # Ensure proper ZSH configuration on every startup
-    if [ -f "$HOME/.config/home-manager/zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
-      echo "Fixing ZSH configuration links..."
-      rm -f $HOME/.zshrc
-      ln -sf $HOME/.config/home-manager/zshrc $HOME/.zshrc
-    fi
-    
     # Ensure nix environment is available
     if [ -f "/etc/profile.d/nix.sh" ]; then
       . /etc/profile.d/nix.sh
