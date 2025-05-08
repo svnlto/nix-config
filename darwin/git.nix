@@ -1,14 +1,14 @@
-# Ubuntu-specific Git configuration
+# macOS-specific Git configuration
 { config, lib, pkgs, username, ... }:
 
-let
-  # Complete Git configuration for Ubuntu
-  gitConfig = {
+{
+  # Home Manager Git configuration for macOS
+  home-manager.users.${username}.programs.git = {
     enable = true;
 
-    # User details - Using actual name that can be overridden by local config
+    # User details with your actual name
     userName = "Sven Lito";
-    userEmail = "svenlito@gmail.com";
+    userEmail = "me@svenlito.com";
 
     # Git configuration
     extraConfig = {
@@ -61,22 +61,12 @@ let
     # No Git aliases here - using Oh My Zsh git plugin aliases instead
     aliases = { };
 
-    # Include local Git configuration file for private settings
+    # Include local Git configuration file for private settings if needed
     includes = [{ path = "~/.gitconfig.local"; }];
   };
 
-  # Template for local Git configuration with private information
-  localGitConfigTemplate = ''
-    # Local Git configuration - NOT tracked in Git
-    # This file contains your personal Git configuration, including email
-
-    [user]
-        name = Sven Lito
-        email = svenlito@gmail.com
-  '';
-
-  # Common .gitignore content
-  sharedGitignore = ''
+  # Create common .gitignore file
+  home-manager.users.${username}.home.file.".gitignore".text = ''
     # OS files
     .DS_Store
     .DS_Store?
@@ -116,22 +106,4 @@ let
     result
     result-*
   '';
-in {
-  # Apply the git configuration for Ubuntu (home-manager)
-  programs.git = gitConfig;
-
-  # Create .gitignore file
-  home.file.".gitignore".text = sharedGitignore;
-
-  # Create template for local Git configuration (but don't overwrite if exists)
-  home.activation.createGitLocalConfig =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            if [ ! -f ~/.gitconfig.local ]; then
-              echo "Creating template for local git configuration..."
-              cat > ~/.gitconfig.local << EOF
-      ${localGitConfigTemplate}
-      EOF
-              echo "⚠️  IMPORTANT: Please edit ~/.gitconfig.local to set your email address ⚠️"
-            fi
-    '';
 }
