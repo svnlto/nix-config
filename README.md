@@ -21,6 +21,8 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
 
 ## 📁 Structure
 
+Here's how I've organized everything:
+
 ```
 .
 ├── flake.nix             # Main entry point for the Nix flake
@@ -56,13 +58,17 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
 
 ### ✅ Prerequisites
 
-- Install Nix package manager:
+Before you dive in, you'll need:
+
+- Nix package manager:
   - 🍎 macOS: `sh <(curl -L https://nixos.org/nix/install)`
   - 🐧 Linux: `sh <(curl -L https://nixos.org/nix/install) --daemon`
 
 ### 🍎 macOS Setup
 
-1. Install Nix and nix-darwin:
+Setting up on macOS is pretty straightforward:
+
+1. First, let's get Nix and nix-darwin installed:
    ```bash
    # Install Nix
    sh <(curl -L https://nixos.org/nix/install)
@@ -76,13 +82,13 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
    ./result/bin/darwin-installer
    ```
 
-2. Clone this repository:
+2. Grab my config:
    ```bash
    git clone https://github.com/svnlto/nix-config.git ~/.config/nix
    cd ~/.config/nix
    ```
 
-3. Apply the configuration:
+3. Apply it to your Mac:
    ```bash
    # For the default configuration (hostname: macbook)
    darwin-rebuild switch --flake ~/.config/nix#macbook
@@ -90,9 +96,9 @@ This is my take on a flexible Nix configuration that manages both my macOS syste
 
 ### ✨ Creating a New macOS Host Configuration
 
-This configuration allows for multiple macOS hosts with different settings:
+Want to use this on multiple Macs? No problem! You can have different settings for each:
 
-1. Add your host to flake.nix under darwinConfigurations:
+1. Add your Mac to flake.nix under darwinConfigurations:
    ```nix
    "your-hostname" = darwinSystem {
      hostname = "your-hostname";
@@ -105,82 +111,100 @@ This configuration allows for multiple macOS hosts with different settings:
    };
    ```
 
-2. Apply the configuration:
+2. Then just apply it:
    ```bash
    darwin-rebuild switch --flake ~/.config/nix#your-hostname
    ```
 
 ### 🖥️ UTM + Vagrant Setup (Apple Silicon)
 
-For Apple Silicon Macs, a powerful combination is using UTM with Vagrant. This gives you the declarative VM management of Vagrant with UTM's native performance on M-series chips:
+Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM + Vagrant is a match made in heaven. You get the speed of native ARM virtualization with the convenience of Vagrant's declarative VM management:
 
-1. Install the prerequisites:
+1. First, grab the basics:
    ```bash
-   # Apply your nix-darwin configuration to install UTM and Vagrant
+   # Apply your nix-darwin config to install UTM and Vagrant
    darwin-rebuild switch --flake ~/.config/nix#Rick
    
    # Install the Vagrant UTM plugin
    vagrant plugin install vagrant-utm
    ```
 
-2. Launch the VM:
+2. Fire up the VM:
    ```bash
    cd ~/.config/nix
    vagrant up
    ```
    
-   **Note**: When you do this for the first time:
-   - UTM will raise a popup
-   - Your terminal will ask for permission with a y/N prompt
-   - Approve the download of the VM image
-   - Once completed, you may need to manually mount the project folder in UTM's "Shared Directory" section
+   **Heads up**: The first time you do this:
+   - UTM will ask for permission (just say yes)
+   - Your terminal will ask if you want to download the VM image (say yes to that too)
+   - It'll download the Ubuntu ARM64 VM image (~600MB)
+   - Then it'll set up Nix and all your dev tools automatically
 
-3. Connect to the VM:
+3. Jump into the VM:
    ```bash
+   # Quick way - SSH from your terminal
    vagrant ssh
+   
+   # Or get the VM's IP for connecting with VS Code
+   ip addr show | grep "inet " | grep -v 127.0.0.1
    ```
 
-4. Work with your VM:
+4. Connect with VS Code (this is where the magic happens):
+   - Install the "Remote - SSH" extension in VS Code
+   - Add a new SSH host: `ssh vagrant@VM_IP_ADDRESS` (password: `vagrant`)
+   - Open the `/vagrant` folder - it's synced with your host's nix config
+
+5. Some handy VM commands:
    ```bash
-   vagrant suspend  # Pause the VM
-   vagrant resume   # Resume a suspended VM
-   vagrant halt     # Stop the VM
-   vagrant destroy  # Delete the VM
+   vagrant suspend  # Take a coffee break (pauses the VM)
+   vagrant resume   # Back to work! (resumes the VM)
+   vagrant halt     # Calling it a day (stops the VM)
+   vagrant destroy  # Starting fresh (deletes the VM)
+   vagrant provision # Apply new config changes
    ```
 
-5. After connecting to the VM, you can use Visual Studio Code's Remote SSH extension to connect to the VM and work on your projects.
+6. Made some config tweaks? Apply them like this:
+   ```bash
+   # From your Mac
+   vagrant provision
+   
+   # Or from inside the VM
+   cd ~/.config/nix
+   nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
+   ```
 
 ### 🔧 Version Manager Setup
 
-The VM comes with two version managers pre-installed via Nix overlays:
+I've set up two super handy version managers in the VM that make switching between different versions of tools a breeze:
 
-1. **tfenv** - Terraform Version Manager
+1. **tfenv** - For all your Terraform needs:
    ```bash
-   # Install a specific version of Terraform
+   # Grab any Terraform version you want
    tfenv install 1.5.0
    
-   # Use a specific version
+   # Switch versions with a single command
    tfenv use 1.5.0
    
-   # List installed versions
+   # See what you've got installed
    tfenv list
    ```
 
-2. **nvm** - Node Version Manager
+2. **nvm** - For juggling Node.js versions:
    ```bash
-   # Install a specific version of Node.js
+   # Install Node versions like candy
    nvm install 18
    
-   # Use a specific version
+   # Hop between versions instantly
    nvm use 16
    
-   # List installed versions
+   # Check what you've got
    nvm list
    ```
 
 ### 🔗 Browser Forwarding
 
-When using tools like GitHub CLI that need to open a browser (for authentication, etc.), the system is configured to forward browser requests to your host machine when working via VSCode SSH. This is handled automatically by the `browser-forward` overlay.
+This is a cool trick! When you're deep into coding in your VM and need to authenticate with GitHub CLI or any other tool that pops open a browser, you don't want to be stuck. My setup automatically forwards those browser requests to your Mac. No more copying and pasting URLs - just click and go! The `browser-forward` overlay handles all this magic behind the scenes.
 
 ## 🔄 Usage
 
