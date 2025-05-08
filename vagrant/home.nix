@@ -3,6 +3,9 @@
 {
   imports = [ ./zsh.nix ./git.nix ];
 
+  # Explicitly tell home-manager not to manage nix.conf
+  xdg.configFile."nix/nix.conf".enable = false;
+
   nixpkgs.config.allowUnfree = true;
 
   # Add to your nix.conf or as nix.settings in configuration

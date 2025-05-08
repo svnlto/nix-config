@@ -108,7 +108,19 @@ EOL
     echo "=== Setting up configuration ==="
     # Remove any existing config
     if [ -d "$HOME/.config/nix" ]; then
-      echo "Removing existing nix config directory..."
+      echo "Existing Nix config directory found, preparing for update..."
+      
+      # Handle the nix.conf file specifically to prevent git conflicts
+      # This runs only on subsequent provisions
+      if [ -L "$HOME/.config/nix/nix.conf" ]; then
+        echo "Resetting nix.conf to avoid git conflicts..."
+        cd "$HOME/.config/nix"
+        git checkout -- nix.conf || true
+        # Keep a backup of our version before removing the symlink
+        cp -f nix.conf nix.conf.content
+        git reset -- nix.conf
+      fi
+      
       # Move git repo instead of deleting to preserve changes
       sudo mv $HOME/.config/nix $HOME/.config/nix.old
     fi
@@ -162,6 +174,21 @@ EOL
       echo "Try running the following command after logging in:"
       echo "nix run home-manager/master -- switch -b backup.$(date +%s) --flake ~/.config/nix#vagrant --impure"
     }
+  SHELL
+
+  # Add a special provision step just for git cleanup
+  config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
+    # Ensure git repo stays clean by dealing with problematic files after home-manager runs
+    if [ -L "$HOME/.config/nix/nix.conf" ] && [ -d "$HOME/.config/nix/.git" ]; then
+      echo "=== Cleaning up git conflicts ==="
+      cd "$HOME/.config/nix"
+      
+      # Reset git repo state
+      git reset --heard HEAD
+      
+      # Remove any backup files that might create conflicts
+      find "$HOME/.config/nix" -name "*.backup.*" -delete
+    fi
   SHELL
 
   # Minimal startup message with instructions
