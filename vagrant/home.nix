@@ -21,7 +21,7 @@
     # Tools needed by zsh configuration
     zoxide
     oh-my-posh
-    eza  # Modern ls replacement
+    eza # Modern ls replacement
 
     # Vagrant-specific development tools
     git

@@ -29,7 +29,38 @@ final: prev: {
       EOF
       chmod +x $out/bin/tfenv
 
-      ln -s $out/bin/tfenv $out/bin/terraform
+      # Create additional utility commands for tfenv but keep terraform separate
+      cat > $out/bin/tf <<EOF
+      #!/usr/bin/env bash
+      export TFENV_CONFIG_DIR="\$HOME/.tfenv"
+      export TFENV_ROOT="$out/share/tfenv"
+      export TFENV_DATA_DIR="\$TFENV_CONFIG_DIR"
+
+      # Create user data directory if needed
+      mkdir -p "\$TFENV_CONFIG_DIR/versions"
+
+      # Find the active terraform version
+      if [ -f "\$TFENV_CONFIG_DIR/version" ]; then
+        VERSION=\$(cat "\$TFENV_CONFIG_DIR/version")
+        TERRAFORM="\$TFENV_CONFIG_DIR/versions/\$VERSION/terraform"
+        if [ -x "\$TERRAFORM" ]; then
+          exec "\$TERRAFORM" "\$@"
+        fi
+      fi
+
+      # Fallback to system terraform if tfenv version not found
+      if command -v /run/current-system/sw/bin/terraform &>/dev/null; then
+        exec /run/current-system/sw/bin/terraform "\$@"
+      elif command -v ${prev.terraform}/bin/terraform &>/dev/null; then
+        exec ${prev.terraform}/bin/terraform "\$@"
+      else
+        echo "No terraform installation found. Please run 'tfenv install' first." >&2
+        exit 1
+      fi
+      EOF
+      chmod +x $out/bin/tf
+
+      # Don't override the system terraform command anymore
     '';
 
     meta = with prev.lib; {
