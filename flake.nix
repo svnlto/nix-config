@@ -106,12 +106,6 @@
           inherit system;
           inherit overlays;
         };
-
-      # Override fish shell attributes
-      fish = pkgs.fish.overrideAttrs (oldAttrs: {
-        doCheck = false;
-        doInstallCheck = false;
-      });
     in {
       # Generic macOS configuration - can be customized with hostname and user
       darwinConfigurations = {
@@ -149,6 +143,21 @@
                   experimental-features = [ "nix-command" "flakes" ];
                 };
               };
+
+              # Move the fish override inside the module where pkgs is available
+              programs.fish = {
+                enable = false; # Disable fish explicitly
+              };
+
+              nixpkgs.overlays = [
+                (final: prev: {
+                  # Override fish package properly inside the module
+                  fish = prev.fish.overrideAttrs (oldAttrs: {
+                    doCheck = false;
+                    doInstallCheck = false;
+                  });
+                })
+              ];
             }
           ];
           extraSpecialArgs = { username = "vagrant"; };
