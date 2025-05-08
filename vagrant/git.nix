@@ -65,16 +65,6 @@ let
     includes = [{ path = "~/.gitconfig.local"; }];
   };
 
-  # Template for local Git configuration with private information
-  localGitConfigTemplate = ''
-    # Local Git configuration - NOT tracked in Git
-    # This file contains your personal Git configuration, including email
-
-    [user]
-        name = Sven Lito
-        email = svenlito@gmail.com
-  '';
-
   # Common .gitignore content
   sharedGitignore = ''
     # OS files
@@ -122,16 +112,4 @@ in {
 
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
-
-  # Create template for local Git configuration (but don't overwrite if exists)
-  home.activation.createGitLocalConfig =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            if [ ! -f ~/.gitconfig.local ]; then
-              echo "Creating template for local git configuration..."
-              cat > ~/.gitconfig.local << EOF
-      ${localGitConfigTemplate}
-      EOF
-              echo "⚠️  IMPORTANT: Please edit ~/.gitconfig.local to set your email address ⚠️"
-            fi
-    '';
 }
