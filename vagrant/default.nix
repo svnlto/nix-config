@@ -45,6 +45,12 @@
     '';
   };
 
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowBroken = false;
+    preferBinaryCaches = true;
+  };
+
   # User configuration
   users.users.${username} = {
     isNormalUser = true;
@@ -78,4 +84,11 @@
 
   # System configuration
   system.stateVersion = "23.11";
+
+  # Package overrides
+  packageOverrides = pkgs: {
+    rustc = pkgs.rustc.override {
+      version = "1.73.0";
+    }; # Use a version with good binary cache coverage
+  };
 }
