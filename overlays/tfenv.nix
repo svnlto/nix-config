@@ -1,5 +1,5 @@
 final: prev: {
-  tfenv = prev.stdenv.mkDerivation {
+  tfenv = prev.stdenvNoCC.mkDerivation rec {
     pname = "tfenv";
     version = "v3.0.0";
 
@@ -10,21 +10,28 @@ final: prev: {
       sha256 = "0jvs7bk2gaspanb4qpxzd4m2ya5pz3d1izam6k7lw30hyn7mlnnq";
     };
 
-    buildInputs = with prev; [ bash ];
+    dontConfigure = true;
+    dontBuild = true;
 
-    nativeBuildInputs = with prev; [ makeWrapper ];
+    nativeBuildInputs = [ prev.makeWrapper ];
 
     installPhase = ''
-      mkdir -p $out/bin $out/share/tfenv
-      cp -r * $out/share/tfenv
+      mkdir -p $out
+      cp -r * $out
+    '';
 
-      makeWrapper $out/share/tfenv/bin/tfenv $out/bin/tfenv \
-        --set TFENV_CONFIG_DIR "$HOME/.tfenv" \
-        --set TFENV_ROOT "$out/share/tfenv" \
-        --set TFENV_DATA_DIR "$HOME/.tfenv" \
-        --prefix PATH : ${prev.lib.makeBinPath (with prev; [ curl unzip ])}
+    # TFENV_CONFIG_DIR is only set if not already specified.
+    # Using '--run export ...' instead of the builtin --set-default, since
+    # expanding $HOME fails with --set-default.
+    fixupPhase = ''
+      wrapProgram $out/bin/tfenv \
+      --prefix PATH : "${prev.lib.makeBinPath [ prev.unzip prev.curl ]}" \
+      --run 'export TFENV_CONFIG_DIR="''${TFENV_CONFIG_DIR:-$HOME/.tfenv}"' \
+      --run 'mkdir -p $TFENV_CONFIG_DIR'
 
-      # Do not symlink terraform -> tfenv
+      wrapProgram $out/bin/terraform \
+      --run 'export TFENV_CONFIG_DIR="''${TFENV_CONFIG_DIR:-$HOME/.tfenv}"' \
+      --run 'mkdir -p $TFENV_CONFIG_DIR'
     '';
 
     meta = with prev.lib; {
@@ -32,7 +39,6 @@ final: prev: {
       homepage = "https://github.com/tfutils/tfenv";
       license = licenses.mit;
       platforms = platforms.unix;
-      maintainers = [ ];
     };
   };
 }

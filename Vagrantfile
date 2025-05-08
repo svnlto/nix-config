@@ -184,7 +184,7 @@ EOL
       cd "$HOME/.config/nix"
       
       # Reset git repo state
-      git reset --heard HEAD
+      git reset --head HEAD
       
       # Remove any backup files that might create conflicts
       find "$HOME/.config/nix" -name "*.backup.*" -delete
