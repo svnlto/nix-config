@@ -64,7 +64,6 @@ Vagrant.configure("2") do |config|
     # Clone your nix configuration repo
     # Check if directory exists first to avoid errors on provisioning reruns
     if [ ! -d "$HOME/.config/nix" ]; then
-      # Replace with your actual repository URL
       git clone https://github.com/svnlto/nix-config.git nix
     fi
     
