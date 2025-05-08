@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
     utm.directory_share_mode = "virtFS"
   end
   
-  # Main provisioning script - combines system and user setup
+  # System provisioning script
   config.vm.provision "shell", inline: <<-SHELL
     # System dependencies and settings
     echo "=== Setting up system ==="
@@ -38,48 +38,58 @@ Vagrant.configure("2") do |config|
     echo 'vm.swappiness=10' >> /etc/sysctl.conf
     sysctl -p
 
-    # Switch to user for personal setup
-    su - vagrant <<'USERSCRIPT'
-      # Environment variables
-      export HOME=/home/vagrant
-      export LANG=en_US.UTF-8
-      export LC_ALL=en_US.UTF-8
-      
-      # Install Nix
-      echo "=== Installing Nix ==="
-      sh <(curl -L https://nixos.org/nix/install) --daemon
-      . /etc/profile.d/nix.sh
-      
-      # Basic Git configuration
-      git config --global init.defaultBranch main
-      git config --global core.editor "vim"
-      
-      # Clone configuration
-      echo "=== Setting up configuration ==="
-      mkdir -p $HOME/.config
-      cd $HOME/.config
-      
-      if [ ! -d "$HOME/.config/nix" ]; then
-        git clone https://github.com/svnlto/nix-config.git nix
-      fi
-      
-      # Clean up potentially conflicting files
-      rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.config/nix/nix.conf
-      
-      # Minimal system-wide Nix config
-      sudo mkdir -p /etc/nix
-      echo "experimental-features = nix-command flakes" | sudo tee /etc/nix/nix.conf
-      echo "trusted-users = root vagrant" | sudo tee -a /etc/nix/nix.conf
-      sudo systemctl restart nix-daemon
-      
-      # Setup home-manager
-      echo "=== Setting up Home Manager ==="
-      export NIXPKGS_ALLOW_UNFREE=1
-      nix run home-manager/master -- init --no-flake
-      LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
-      
-      # Create minimal zshenv for proper environment sourcing
-      cat > $HOME/.zshenv <<EOL
+    # Minimal system-wide Nix config (only what's needed to bootstrap)
+    mkdir -p /etc/nix
+    cat > /etc/nix/nix.conf <<EOL
+experimental-features = nix-command flakes
+trusted-users = root vagrant
+EOL
+  SHELL
+
+  # User provisioning script
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    # Environment variables
+    export HOME=/home/vagrant
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    
+    # Install Nix
+    echo "=== Installing Nix ==="
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    . /etc/profile.d/nix.sh
+    
+    # Basic Git configuration
+    git config --global init.defaultBranch main
+    git config --global core.editor "vim"
+    
+    # Clone configuration (shallow clone to avoid dirty tree issues)
+    echo "=== Setting up configuration ==="
+    mkdir -p $HOME/.config
+    
+    if [ ! -d "$HOME/.config/nix" ]; then
+      git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
+    fi
+    
+    # Clean up potentially conflicting files with proper permissions
+    rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv $HOME/.config/nix/nix.conf
+    
+    # Restart the Nix daemon to apply settings
+    sudo systemctl restart nix-daemon
+    . /etc/profile.d/nix.sh
+    
+    # Setup home-manager
+    echo "=== Setting up Home Manager ==="
+    export NIXPKGS_ALLOW_UNFREE=1
+    
+    # Apply the flake configuration
+    echo "=== Switching to Home Manager configuration ==="
+    nix run home-manager/master -- init --no-flake
+    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
+    
+    # Create zshenv with proper permissions
+    touch $HOME/.zshenv
+    chmod 644 $HOME/.zshenv
+    cat > $HOME/.zshenv <<EOL
 # Source Nix environment
 if [ -e /etc/profile.d/nix.sh ]; then
   . /etc/profile.d/nix.sh
@@ -89,14 +99,13 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
   . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 fi
 EOL
-      
-      # Set ZSH as default shell
-      sudo chsh -s $(which zsh) vagrant
-USERSCRIPT
+    
+    # Set ZSH as default shell
+    sudo chsh -s $(which zsh) vagrant
   SHELL
 
   # Minimal startup message
-  config.vm.provision "shell", run: "always", inline: <<-SHELL
+  config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo ""
     echo "=== Development environment ready ==="
     echo "Use 'vagrant ssh' to connect with your ZSH configuration"
