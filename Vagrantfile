@@ -91,22 +91,9 @@ Vagrant.configure("2") do |config|
     # Clean up potentially conflicting files with proper permissions
     rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv
     
-    # Setup home-manager
-    echo "=== Setting up Home Manager ==="
-    export NIXPKGS_ALLOW_UNFREE=1
-    
-    # Apply the flake configuration with explicit experimental features
-    echo "=== Switching to Home Manager configuration ==="
-    # Create temporary home-manager configuration directory to prevent errors
-    mkdir -p $HOME/.config/home-manager
-    
-    # First initialize home-manager
-    echo "Initializing home-manager..."
-    nix run home-manager/master -- init --no-flake || true
-    
-    # Then switch to the configuration
-    echo "Switching to home-manager configuration..."
-    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
+    # Install basic tools directly (this skips home-manager for now)
+    echo "=== Installing basic tools ==="
+    nix-env -iA nixpkgs.zsh nixpkgs.git
     
     # Create zshenv with proper permissions
     echo "Setting up ZSH environment..."
@@ -117,21 +104,34 @@ Vagrant.configure("2") do |config|
 if [ -e /etc/profile.d/nix.sh ]; then
   . /etc/profile.d/nix.sh
 fi
-# Source home-manager session variables
-if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-fi
 EOL
     
     # Set ZSH as default shell
     echo "Setting ZSH as default shell..."
     sudo chsh -s $(which zsh) vagrant
+    
+    # Create a minimal .zshrc to ensure the shell works
+    # This will be overwritten by home-manager once it's properly set up
+    echo "Creating temporary .zshrc..."
+    cat > $HOME/.zshrc <<EOL
+# This is a temporary .zshrc that will be replaced by home-manager
+# when you manually run: home-manager switch --flake ~/.config/nix#vagrant
+export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
+export PATH=\$PATH:\$HOME/.nix-profile/bin
+EOL
   SHELL
 
-  # Minimal startup message
+  # Minimal startup message with instructions
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo ""
-    echo "=== Development environment ready ==="
-    echo "Use 'vagrant ssh' to connect with your ZSH configuration"
+    echo "=== Development environment partially ready ==="
+    echo "The VM has been set up with Nix and basic tools."
+    echo ""
+    echo "To complete your home-manager setup, connect to the VM using:"
+    echo "  vagrant ssh"
+    echo ""
+    echo "Then run the following command:"
+    echo "  nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure"
+    echo ""
   SHELL
 end
