@@ -174,6 +174,153 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
    ```
 
+### ☁️ AWS EC2 + Ubuntu Setup
+
+Want to take your development environment to the cloud? Here's how to set up your Nix configuration on an EC2 instance:
+
+1. Launch an Ubuntu EC2 instance:
+   - Use Ubuntu Server 22.04 LTS or newer (ARM64 for Graviton instances)
+   - Recommended: t4g.medium or better for decent performance
+   - You can keep the instance completely private in a private subnet
+   - Make sure the instance has internet access through a NAT gateway
+
+2. Install Tailscale on your EC2 instance:
+   ```bash
+   # Add Tailscale's package repository
+   curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+   curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+   
+   # Install Tailscale
+   sudo apt-get update
+   sudo apt-get install -y tailscale
+   
+   # Start and authenticate Tailscale
+   # This will output a URL to authenticate your instance
+   sudo tailscale up
+   
+   # Open the URL in your browser and authenticate the machine
+   # Once authenticated, note the tailscale hostname (e.g., "ec2-dev.example.tailnet.ts.net")
+   tailscale status
+   ```
+
+3. Install Tailscale on your local machine:
+   - macOS: `brew install tailscale`
+   - Visit https://tailscale.com/download for other platforms
+   - Run `tailscale up` and authenticate
+   - Verify connectivity with `tailscale ping ec2-hostname`
+
+4. Install Nix with multi-user support:
+   ```bash
+   # Update system packages first
+   sudo apt update && sudo apt upgrade -y
+   
+   # Install required dependencies
+   sudo apt install -y curl git xz-utils
+   
+   # Install Nix with daemon (multi-user install)
+   sh <(curl -L https://nixos.org/nix/install) --daemon
+   
+   # Reload shell to get Nix in PATH
+   . /etc/profile.d/nix.sh
+   ```
+
+5. Clone your configuration:
+   ```bash
+   mkdir -p ~/.config
+   git clone https://github.com/svnlto/nix-config.git ~/.config/nix
+   cd ~/.config/nix
+   ```
+
+6. Create EC2-specific configuration:
+   - Modify your `flake.nix` to add an EC2 configuration:
+     ```nix
+     homeConfigurations = {
+       # ...existing vagrant configuration...
+       
+       # EC2 instance configuration
+       "ec2" = home-manager.lib.homeManagerConfiguration {
+         pkgs = nixpkgsWithOverlays "aarch64-linux";
+         modules = [
+           ./vagrant/home.nix  # Reuse Vagrant config as base
+           ./ec2/home.nix      # EC2-specific overrides
+           {
+             home = {
+               username = "ubuntu";
+               homeDirectory = "/home/ubuntu";
+               stateVersion = "23.11";
+             };
+             nixpkgs.config.allowUnfree = true;
+           }
+         ];
+         extraSpecialArgs = { username = "ubuntu"; };
+       };
+     };
+     ```
+
+   - Create a directory for EC2-specific configuration:
+     ```bash
+     mkdir -p ~/.config/nix/ec2
+     ```
+
+   - Create a basic `ec2/home.nix` file:
+     ```nix
+     { config, pkgs, username, ... }:
+
+     {
+       # EC2-specific configuration
+       # This will override or extend the base vagrant configuration
+       
+       # Additional packages specific to EC2 environment
+       home.packages = with pkgs; [
+         awscli2
+         amazon-ecr-credential-helper
+       ];
+       
+       # EC2-specific Git configuration
+       programs.git.extraConfig = {
+         credential.helper = "!aws codecommit credential-helper $@";
+         credential.UseHttpPath = true;
+       };
+     }
+     ```
+
+7. Enable Nix flakes and apply the configuration:
+   ```bash
+   # Enable flakes
+   mkdir -p ~/.config/nix
+   echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+   
+   # Apply the EC2-specific configuration
+   export NIXPKGS_ALLOW_UNFREE=1
+   nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
+   ```
+
+8. Connect with VS Code:
+   - Install the "Remote - SSH" extension in VS Code
+   - Add a new SSH configuration by editing your SSH config file:
+     ```
+     Host ec2-dev
+       HostName ec2-hostname.tailnet.ts.net
+       User ubuntu
+       ForwardAgent yes
+     ```
+   - Connect to "ec2-dev" from the Remote SSH extension
+   - Open your projects folder and enjoy your cloud development environment!
+
+9. To update your configuration:
+   ```bash
+   cd ~/.config/nix
+   git pull
+   nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
+   ```
+
+With this Tailscale-powered setup, you get all the benefits of a cloud development environment with none of the security headaches:
+- Keep your EC2 instance completely private (no public IP needed)
+- Secure, encrypted connections between all your devices
+- Connection works even if the instance's IP changes
+- Get consistent development environments across your entire team
+- Access your environment securely from anywhere
+
 ### 🔧 Version Manager Setup
 
 I've set up two super handy version managers in the VM that make switching between different versions of tools a breeze:
