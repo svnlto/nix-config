@@ -38,12 +38,16 @@ Vagrant.configure("2") do |config|
     echo 'vm.swappiness=10' >> /etc/sysctl.conf
     sysctl -p
 
-    # Minimal system-wide Nix config (only what's needed to bootstrap)
+    # Set up system-wide Nix config with experimental features
     mkdir -p /etc/nix
     cat > /etc/nix/nix.conf <<EOL
 experimental-features = nix-command flakes
 trusted-users = root vagrant
 EOL
+
+    # Ensure proper ownership of Nix config
+    chown root:root /etc/nix/nix.conf
+    chmod 644 /etc/nix/nix.conf
   SHELL
 
   # User provisioning script
@@ -56,7 +60,15 @@ EOL
     # Install Nix
     echo "=== Installing Nix ==="
     sh <(curl -L https://nixos.org/nix/install) --daemon
-    . /etc/profile.d/nix.sh
+    
+    # Ensure Nix environment is loaded
+    if [ -e /etc/profile.d/nix.sh ]; then
+      . /etc/profile.d/nix.sh
+    fi
+    
+    # Verify Nix is working with experimental features
+    echo "Checking Nix version and features..."
+    nix --version
     
     # Basic Git configuration
     git config --global init.defaultBranch main
@@ -75,16 +87,21 @@ EOL
     
     # Restart the Nix daemon to apply settings
     sudo systemctl restart nix-daemon
-    . /etc/profile.d/nix.sh
+    
+    # Re-source Nix profile after daemon restart
+    if [ -e /etc/profile.d/nix.sh ]; then
+      . /etc/profile.d/nix.sh
+    fi
     
     # Setup home-manager
     echo "=== Setting up Home Manager ==="
     export NIXPKGS_ALLOW_UNFREE=1
     
-    # Apply the flake configuration
+    # Apply the flake configuration with explicit experimental features
     echo "=== Switching to Home Manager configuration ==="
-    nix run home-manager/master -- init --no-flake
-    LOCALE_ARCHIVE="" nix run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
+    nix --extra-experimental-features nix-command --extra-experimental-features flakes run home-manager/master -- init --no-flake
+    
+    LOCALE_ARCHIVE="" nix --extra-experimental-features nix-command --extra-experimental-features flakes run home-manager/master -- switch --flake $HOME/.config/nix#vagrant --impure
     
     # Create zshenv with proper permissions
     touch $HOME/.zshenv
