@@ -58,22 +58,8 @@ let
       };
     };
 
-    # Common aliases
-    aliases = {
-      st = "status -sb";
-      co = "checkout";
-      cb = "checkout -b";
-      ci = "commit";
-      cm = "commit -m";
-      ca = "commit --amend";
-      br = "branch";
-      df = "diff";
-      dfc = "diff --cached";
-      lol =
-        "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
-      lga =
-        "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all";
-    };
+    # No Git aliases here - using Oh My Zsh git plugin aliases instead
+    aliases = { };
 
     # Include local Git configuration file for private settings
     includes = [{ path = "~/.gitconfig.local"; }];

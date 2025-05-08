@@ -18,6 +18,12 @@ in {
     enableCompletion = true;
     autosuggestion.enable = true;
 
+    # Enable Oh My Zsh
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" ]; # Use the git plugin for standard git aliases
+    };
+
     shellAliases = sharedZsh.aliases // {
       # Vagrant-specific aliases
       ls = "ls --color=auto";

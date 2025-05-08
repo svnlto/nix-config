@@ -26,7 +26,64 @@
             ./common
             ./darwin
             # Pass hostname to configuration
-            { networking.hostName = hostname; }
+            {
+              networking.hostName = hostname;
+            }
+
+            # Add Home Manager to Darwin
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit username; };
+
+              # Inline Home Manager configuration
+              home-manager.users.${username} = { config, lib, pkgs, ... }:
+                let
+                  # Import shared ZSH configuration
+                  sharedZsh = import ./common/zsh/shared.nix;
+                in {
+                  # Home Manager configuration for macOS
+                  home.username = username;
+                  home.homeDirectory = "/Users/${username}";
+                  home.stateVersion = "23.11";
+
+                  # Enable Oh My Zsh with Git plugin
+                  programs.zsh = {
+                    enable = true;
+
+                    # Enable Oh My Zsh with Git plugin
+                    oh-my-zsh = {
+                      enable = true;
+                      plugins = [ "git" ];
+                      theme = ""; # Use empty theme since we're using Oh My Posh
+                    };
+
+                    # Common aliases from shared config plus macOS-specific ones
+                    shellAliases = sharedZsh.aliases // {
+                      nixswitch =
+                        "darwin-rebuild switch --flake ~/.config/nix#${hostname}";
+                    };
+
+                    # Additional ZSH initialization
+                    initExtra = ''
+                      # Source common settings
+                      ${sharedZsh.options}
+                      ${sharedZsh.keybindings}
+                      ${sharedZsh.tools}
+
+                      # Ensure Oh My Posh is properly initialized
+                      if command -v oh-my-posh &> /dev/null; then
+                        eval "$(oh-my-posh --init --shell zsh --config ~/.config/oh-my-posh/default.omp.json)"
+                      fi
+                    '';
+                  };
+
+                  # Install Oh My Posh theme
+                  home.file.".config/oh-my-posh/default.omp.json".source =
+                    ./common/zsh/default.omp.json;
+                };
+            }
           ] ++ extraModules;
           specialArgs = {
             inherit inputs self hostname;
