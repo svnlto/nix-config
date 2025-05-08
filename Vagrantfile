@@ -69,15 +69,8 @@ EOL'
     sudo chown root:root /etc/nix/nix.conf
     sudo chmod 644 /etc/nix/nix.conf
     
-    # Create user-specific Nix configuration as well
+    # Make sure ~/.config/nix directory exists
     mkdir -p $HOME/.config/nix
-    cat > $HOME/.config/nix-user.conf <<EOL
-experimental-features = nix-command flakes
-EOL
-    # Use sudo to avoid permission issues
-    sudo cp $HOME/.config/nix-user.conf $HOME/.config/nix/nix.conf
-    sudo chown vagrant:vagrant $HOME/.config/nix/nix.conf
-    sudo chmod 644 $HOME/.config/nix/nix.conf
     
     # Restart the Nix daemon to apply settings BEFORE sourcing Nix
     sudo systemctl restart nix-daemon
@@ -97,35 +90,9 @@ EOL
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
     
-    # Clean up potentially conflicting files with proper permissions
-    sudo rm -f $HOME/.zshrc* $HOME/.zprofile* $HOME/.zshenv*
-    
-    # Install basic tools directly (this skips home-manager for now)
-    echo "=== Installing basic tools ==="
-    # Skip installing zsh directly to avoid conflicts later
-    
-    # Clone configuration with clean setup
+    # Clone configuration directly 
     echo "=== Setting up configuration ==="
-    # Remove any existing config
-    if [ -d "$HOME/.config/nix" ]; then
-      echo "Existing Nix config directory found, preparing for update..."
-      
-      # Handle the nix.conf file specifically to prevent git conflicts
-      # This runs only on subsequent provisions
-      if [ -L "$HOME/.config/nix/nix.conf" ]; then
-        echo "Resetting nix.conf to avoid git conflicts..."
-        cd "$HOME/.config/nix"
-        git checkout -- nix.conf || true
-        # Keep a backup of our version before removing the symlink
-        cp -f nix.conf nix.conf.content
-        git reset -- nix.conf
-      fi
-      
-      # Move git repo instead of deleting to preserve changes
-      sudo mv $HOME/.config/nix $HOME/.config/nix.old
-    fi
-    
-    # Fresh clone of configuration
+    mkdir -p $HOME/.config
     git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
     
     # Verify flake.nix exists
@@ -136,13 +103,12 @@ EOL
     
     # Set proper permissions for the config directory
     sudo chown -R vagrant:vagrant $HOME/.config/nix
-    find $HOME/.config/nix -type d -exec chmod 755 {} \;
-    find $HOME/.config/nix -type f -exec chmod 644 {} \;
+    # Combined find command to set permissions in one pass
+    find $HOME/.config/nix -type d -exec chmod 755 {} \; -o -type f -exec chmod 644 {} \;
     
-    # Create zshenv with proper permissions
-    echo "Setting up ZSH environment..."
-    touch $HOME/.zshenv
-    chmod 644 $HOME/.zshenv
+    # Create minimal ZSH environment to ensure we can login 
+    # Home Manager will replace this later
+    echo "Setting up minimal ZSH environment..."
     cat > $HOME/.zshenv <<EOL
 # Source Nix environment
 if [ -e /etc/profile.d/nix.sh ]; then
@@ -170,9 +136,8 @@ EOL
     echo "Running home-manager switch command..."
     # Use a unique backup extension to avoid conflicts
     NIXPKGS_ALLOW_UNFREE=1 nix run home-manager/master -- switch -b backup.$RANDOM --flake ~/.config/nix#vagrant --impure || {
-      echo "Home Manager switch failed. Manual intervention may be needed."
-      echo "Try running the following command after logging in:"
-      echo "nix run home-manager/master -- switch -b backup.$(date +%s) --flake ~/.config/nix#vagrant --impure"
+      # Just mark failure - detailed instructions will appear in startup message
+      echo "Home Manager switch failed."
     }
   SHELL
 
@@ -184,10 +149,7 @@ EOL
       cd "$HOME/.config/nix"
       
       # Reset git repo state
-      git reset --head HEAD
-      
-      # Remove any backup files that might create conflicts
-      find "$HOME/.config/nix" -name "*.backup.*" -delete
+      git reset --hard HEAD
     fi
   SHELL
 
