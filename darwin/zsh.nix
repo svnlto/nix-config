@@ -21,31 +21,17 @@ in {
   # Enable ZSH
   programs.zsh.enable = true;
 
-  # Install required packages from shared config
-  environment.systemPackages = with pkgs;
-    map (name: builtins.getAttr name pkgs) sharedZsh.packages;
-
-  # Configure ZSH through environment.shellInit
-  environment.shellInit = ''
-    # This is loaded for all shells
-  '';
-
   # Configure ZSH specifically with shared settings
   programs.zsh.shellInit = ''
-    # Common history settings
-    ${sharedZsh.history}
-
     # Common locale settings
     ${sharedZsh.locale}
 
-    # default node.js environment
-    export NODE_ENV="dev"
+    # Set custom history file location
+    export HISTFILE=$HOME/.zsh_history
   '';
 
-  # ZSH interactive shell configuration with shared settings
+  # ZSH interactive shell initialization
   programs.zsh.interactiveShellInit = ''
-    # Common history options are in shellInit
-
     # Common ZSH options
     ${sharedZsh.options}
 
@@ -57,18 +43,10 @@ in {
 
     # Common tool initialization
     ${sharedZsh.tools}
-
-    # macOS-specific settings
-    if command -v pbcopy >/dev/null 2>&1; then
-      alias copy='pbcopy'
-      alias paste='pbpaste'
-    fi
   '';
 
   # Common aliases from shared config plus macOS-specific ones
   environment.shellAliases = sharedZsh.aliases // {
-    # macOS-specific aliases
-    brewup = "brew update && brew upgrade";
     nixswitch =
       "darwin-rebuild switch --flake ~/.config/nix#${config.networking.hostName}";
   };

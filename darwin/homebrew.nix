@@ -3,7 +3,10 @@
 {
   homebrew = {
     enable = true;
-    taps = [ "FelixKratz/formulae" ];
+    taps = [
+      "FelixKratz/formulae"
+      "hashicorp/tap" # For Hashicorp's Vagrant
+    ];
     brews = [ "mas" "dockutil" ];
     casks = [
       # customize this list to your needs
@@ -29,6 +32,12 @@
       "vcv-rack"
       "ableton-live-standard"
       "transmission"
+
+      # Virtualization tools
+      "virtualbox"
+      "utm" # Free and open-source virtualization
+      "hashicorp/tap/hashicorp-vagrant"
+      "vagrant"
     ];
     masApps = { };
     onActivation = {

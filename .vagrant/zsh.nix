@@ -18,14 +18,7 @@ in {
     enableCompletion = true;
     autosuggestion.enable = true;
 
-    # Shared aliases plus Ubuntu-specific ones
-    shellAliases = sharedZsh.aliases // {
-      # Ubuntu-specific aliases
-      ls = "ls --color=auto";
-      update = "sudo apt update && sudo apt upgrade";
-      nixswitch =
-        "nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu";
-    };
+    shellAliases = sharedZsh.aliases;
 
     # ZSH history configuration
     history = {
@@ -66,6 +59,19 @@ in {
 
       # Tool initializations
       ${sharedZsh.tools}
+
+      # NVM setup
+      export NVM_DIR="$HOME/.nvm"
+      if [ -d "$NVM_DIR" ]; then
+        # Create .nvm directory if it doesn't exist
+        mkdir -p "$NVM_DIR"
+      fi
+
+      # Initialize NVM from the Nix overlay location
+      if [ -e "${pkgs.nvm}/share/nvm/nvm.sh" ]; then
+        source "${pkgs.nvm}/share/nvm/nvm.sh"
+        source "${pkgs.nvm}/share/nvm/bash_completion"
+      fi
     '';
   };
 

@@ -5,12 +5,18 @@
 
   # Common packages for all platforms
   environment.systemPackages = with pkgs; [
+    # CLI utilities
+    oh-my-posh
+    hstr
+    eza
     ack
-    neovim
     zoxide
     bat
+
+    # Development tools
     gh
     nixfmt-classic
+    diff-so-fancy
   ];
 
   # Common settings

@@ -12,10 +12,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  # Installation notes for containerized Ubuntu environments (like OrbStack):
-  # Install Nix with:
-  # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --extra-conf "sandbox = false" --extra-conf='filter-syscalls = false' --init none --no-confirm
-
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager }:
     let
       # Default macOS configuration
@@ -37,66 +33,53 @@
             username = username;
           };
         };
+
+      # Overlays
+      overlays = [
+        (import ./overlays/tfenv.nix)
+        (import ./overlays/nvm.nix)
+        (import ./overlays/browser-forward.nix)
+      ];
+
+      # Create a version of nixpkgs with our overlays for Linux
+      nixpkgsWithOverlays = system:
+        import nixpkgs {
+          inherit system;
+          inherit overlays;
+        };
     in {
       # Generic macOS configuration - can be customized with hostname and user
       darwinConfigurations = {
-        # Default configuration
-        "macbook" = darwinSystem { };
+        "macbook" = darwinSystem {
+          hostname = "macbook";
+          username = "your_username"; # Replace with your macOS username
+        };
 
-        # Your current machine
         "Rick" = darwinSystem {
           hostname = "Rick";
           username = "svenlito";
         };
-
-        # Example for another Mac (commented out as reference)
-        # "work-mac" = darwinSystem {
-        #   hostname = "work-mac";
-        #   username = "workuser"; 
-        # };
       };
 
-      # Standalone home-manager configuration for Ubuntu OrbStack
+      # Standalone home-manager configuration for Vagrant VM
       # Install with:
-      # $ nix run home-manager/master -- switch --flake ~/.config/nix#ubuntu
+      # $ nix run home-manager/master -- switch --flake ~/.config/nix#vagrant
       homeConfigurations = {
-        # Main Ubuntu configuration that works for both regular Ubuntu and OrbStack
-        "ubuntu" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        "vagrant" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgsWithOverlays "aarch64-linux";
           modules = [
-            ./ubuntu-orbstack/home.nix
+            ./vagrant/home.nix
             {
               home = {
-                username = "sven";
-                homeDirectory = "/home/sven";
+                username = "vagrant";
+                homeDirectory = "/home/vagrant";
                 stateVersion = "23.11";
               };
+              nixpkgs.config.allowUnfree = true;
             }
           ];
-          extraSpecialArgs = { username = "sven"; };
+          extraSpecialArgs = { username = "vagrant"; };
         };
-
-        # Example for a work Ubuntu machine
-        # "work-ubuntu" = home-manager.lib.homeManagerConfiguration {
-        #   pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        #   modules = [
-        #     ./ubuntu-orbstack/home.nix
-        #     {
-        #       home = {
-        #         username = "workuser";
-        #         homeDirectory = "/home/workuser";
-        #         stateVersion = "23.11";
-        #       };
-        #       # Customize packages for work environment
-        #       home.packages = with pkgs; [
-        #         postgresql
-        #         redis
-        #         docker-compose
-        #       ];
-        #     }
-        #   ];
-        #   extraSpecialArgs = { username = "workuser"; };
-        # };
       };
     };
 }

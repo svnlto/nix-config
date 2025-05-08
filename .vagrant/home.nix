@@ -1,10 +1,16 @@
 { config, pkgs, username, ... }:
 
-{
-  imports = [ ./zsh.nix ./git.nix ];
+let commonPackages = import ../common/packages.nix { inherit pkgs; };
+in {
+  imports = [ ./zsh.nix ./git.nix ./devtools.nix ];
+
+  # Allow unfree packages (including Terraform with BSL license)
+  nixpkgs.config.allowUnfree = true;
 
   # Home Manager packages for server (CLI only)
-  home.packages = with pkgs; [
+  # Include both common packages and ubuntu-specific ones
+  home.packages = commonPackages ++ (with pkgs; [
+    # Ubuntu-specific packages 
     tmux
     htop
     ripgrep
@@ -19,7 +25,7 @@
     awscli2
     docker
     docker-compose
-  ];
+  ]);
 
   # Program configurations
   programs = {
@@ -52,15 +58,6 @@
       TCPKeepAlive yes
       IdentityAgent "~/.ssh/agent.sock"
   '';
-
-  # Add Linuxbrew setup as part of home-manager activation
-  home.activation.setupLinuxbrew =
-    let scriptPath = toString ./setup-linuxbrew.sh;
-    in config.lib.dag.entryAfter [ "writeBoundary" ] ''
-      echo "Running Linuxbrew setup script..."
-      chmod +x ${scriptPath}
-      ${scriptPath}
-    '';
 
   # Required for home-manager
   home.stateVersion = "23.11";

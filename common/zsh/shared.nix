@@ -15,16 +15,6 @@ rec {
     tree = "tree -C";
   };
 
-  # Common packages needed for ZSH setup on both platforms
-  packages = [
-    "zoxide" # Smart directory navigation
-    "hstr" # History search
-    "bat" # Better cat
-    "eza" # Modern ls replacement
-    "oh-my-posh" # Prompt theme engine
-    "tree" # Directory tree view
-  ];
-
   # Common ZSH history settings
   history = ''
     # History configuration
