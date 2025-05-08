@@ -130,6 +130,10 @@ export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
 
+    # Remove directly installed zsh to avoid conflicts with home-manager
+    echo "=== Removing directly installed zsh to avoid conflicts ==="
+    nix-env -e zsh || echo "zsh not installed directly, which is fine"
+
     # Run home-manager switch command with backup option
     echo "=== Setting up Home Manager ==="
     echo "Running home-manager switch command..."

@@ -18,6 +18,10 @@
 
   # Vagrant-specific packages (removed Rust-based tools)
   home.packages = with pkgs; [
+    # Tools needed by zsh configuration
+    zoxide
+    oh-my-posh
+
     # Vagrant-specific development tools
     git
     gnumake
