@@ -84,16 +84,23 @@ Vagrant.configure("2") do |config|
     echo "=== Setting up configuration ==="
     mkdir -p $HOME/.config
     
-    if [ ! -d "$HOME/.config/nix" ]; then
-      git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
-    fi
-    
     # Clean up potentially conflicting files with proper permissions
     rm -f $HOME/.zshrc $HOME/.zprofile $HOME/.zshenv
     
     # Install basic tools directly (this skips home-manager for now)
     echo "=== Installing basic tools ==="
     nix-env -iA nixpkgs.zsh nixpkgs.git
+    
+    if [ ! -d "$HOME/.config/nix" ]; then
+      git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
+      
+      # Verify flake.nix exists
+      if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
+        echo "Warning: flake.nix not found in repository, trying full clone..."
+        rm -rf $HOME/.config/nix
+        git clone https://github.com/svnlto/nix-config.git $HOME/.config/nix
+      fi
+    fi
     
     # Create zshenv with proper permissions
     echo "Setting up ZSH environment..."
@@ -119,19 +126,32 @@ EOL
 export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
+
+    # Run home-manager switch command AFTER creating the minimal .zshrc
+    # This way home-manager can safely replace it with its own configuration
+    echo "=== Setting up Home Manager ==="
+    echo "Running home-manager switch command..."
+    nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
   SHELL
 
   # Minimal startup message with instructions
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo ""
-    echo "=== Development environment partially ready ==="
-    echo "The VM has been set up with Nix and basic tools."
+    echo "=== Development environment ready ==="
+    echo "The VM has been set up with Nix and tools."
     echo ""
-    echo "To complete your home-manager setup, connect to the VM using:"
+    echo "Connect to the VM using:"
     echo "  vagrant ssh"
     echo ""
-    echo "Then run the following command:"
-    echo "  nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure"
-    echo ""
+    
+    # Check if home-manager appears to be configured
+    if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+      echo "Home Manager has been successfully configured!"
+    else
+      echo "NOTE: Home Manager setup didn't complete successfully."
+      echo "To manually run the home-manager setup:"
+      echo "  nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure"
+      echo ""
+    fi
   SHELL
 end
