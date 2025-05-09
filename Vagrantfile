@@ -18,11 +18,6 @@ Vagrant.configure("2") do |config|
     utm.memory = "8192"
     utm.cpus = 4
     utm.directory_share_mode = "virtFS"
-    utm.directory_share_additional_options = "cache=mmap" 
-    utm.graphics = "none" 
-    utm.driver = "hvf"   
-    utm.net_device = "virtio-net-pci"
-    utm.storage_device = "virtio-blk-pci"
   end
   
   # System provisioning script
@@ -166,6 +161,31 @@ EOL
       # Reset git repo state
       git reset --hard HEAD
     fi
+  SHELL
+  
+  # Ensure RAM disk is properly set up before home-manager runs
+  config.vm.provision "shell", run: "always", privileged: true, inline: <<-SHELL
+    echo "=== Setting up RAM disk ==="
+    
+    # Ensure RAM disk is mounted
+    if ! mount | grep -q "/ramdisk"; then
+      echo "Mounting RAM disk..."
+      mkdir -p /ramdisk
+      mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
+    else
+      echo "RAM disk is already mounted"
+    fi
+    
+    # Ensure RAM disk permissions service runs
+    if systemctl is-active --quiet ramdisk-permissions; then
+      echo "Restarting RAM disk permissions service..."
+      systemctl restart ramdisk-permissions
+    else
+      echo "Starting RAM disk permissions service..."
+      systemctl start ramdisk-permissions
+    fi
+    
+    echo "RAM disk setup complete"
   SHELL
 
   # Minimal startup message with instructions
