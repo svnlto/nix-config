@@ -70,6 +70,9 @@ in {
 
       # Alias for AWS commands
       alias awssso="aws sso login"
+
+      # Alias for Terraform commands
+      alias t="terraform"
     '';
   };
 }
