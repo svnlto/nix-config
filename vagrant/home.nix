@@ -1,7 +1,7 @@
 { config, pkgs, username, lib, ... }:
 
 {
-  imports = [ ./zsh.nix ./git.nix ./aws.nix ];
+  imports = [ ./zsh.nix ./git.nix ./aws.nix ./ramdisk.nix ];
 
   # Explicitly tell home-manager not to manage nix.conf
   xdg.configFile."nix/nix.conf".enable = false;
@@ -47,7 +47,10 @@
     # Terraform tools
     terraform-docs
     terraform-ls
-
+    
+    # Node.js tools
+    nodePackages.pnpm
+    
     tmux
     htop
     jq

@@ -14,10 +14,15 @@ Vagrant.configure("2") do |config|
   
   # UTM Provider Configuration
   config.vm.provider "utm" do |utm|
+    utm.name = "nix-dev-vm"
     utm.memory = "8192"
     utm.cpus = 4
-    utm.name = "nix-dev-vm"
     utm.directory_share_mode = "virtFS"
+    utm.directory_share_additional_options = "cache=mmap" 
+    utm.graphics = "none" 
+    utm.driver = "hvf"   
+    utm.net_device = "virtio-net-pci"
+    utm.storage_device = "virtio-blk-pci"
   end
   
   # System provisioning script
@@ -37,10 +42,6 @@ Vagrant.configure("2") do |config|
     echo "vagrant ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vagrant
     mkdir -p /home/vagrant/projects
     chown -R vagrant:vagrant /home/vagrant/projects
-    
-    # Optimize system
-    echo 'vm.swappiness=10' >> /etc/sysctl.conf
-    sysctl -p
     
     # Fix SSH permissions
     chmod 700 /home/vagrant/.ssh

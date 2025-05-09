@@ -82,6 +82,36 @@
     extraSpecialArgs = { inherit username; };
   };
 
+  # VM Performance Optimizations
+  # Set swappiness for better VM performance
+  boot.kernel.sysctl = { "vm.swappiness" = 10; };
+
+  # Optimize disk I/O scheduler using systemd service
+  systemd.services.optimize-io-scheduler = {
+    description = "Optimize disk I/O scheduler for virtual machines";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-udev-settle.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      #!/bin/bash
+      for DISK in vda sda; do
+        if [ -d "/sys/block/$DISK" ]; then
+          echo "none" > /sys/block/$DISK/queue/scheduler
+        fi
+      done
+    '';
+  };
+
+  # RAM Disk for temp files and build artifacts
+  fileSystems."/ramdisk" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "size=2G" "mode=1777" ];
+  };
+
   # System configuration
   system.stateVersion = "23.11";
 
