@@ -36,7 +36,7 @@ jobs:
         run: vagrant validate
 
   # Only run the more expensive macOS test if explicitly requested via workflow_dispatch
-  # example: gh repo run workflow vagrant-test --ref main
+  # example: gh workflow run vagrant-test.yml --ref main
   vagrant-test:
     needs: validate
     if: github.event_name == 'workflow_dispatch'
@@ -50,7 +50,7 @@ jobs:
           brew install --cask utm
 
       - name: Install vagrant-utm plugin
-        run: vagrant plugin install vagrant-utm
+        run: vagrant plugin install vagrant_utm
 
       - name: Run VM and test provisioning
         run: |
