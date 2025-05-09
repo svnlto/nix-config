@@ -7,8 +7,8 @@ set -e
 # Your private Gist ID - Replace this with your actual Gist ID
 GIST_ID="1bf9c10f2f60a2d83505dd5280f1be0d"
 
-# Use custom location to avoid conflicts with home-manager symlinks
-AWS_CONFIG_DIR="$HOME/.aws-custom"
+# Standard AWS location
+AWS_CONFIG_DIR="$HOME/.aws"
 AWS_CONFIG_FILE="$AWS_CONFIG_DIR/config"
 
 echo "Fetching AWS config from GitHub Gist..."
@@ -20,12 +20,11 @@ if ! gh auth status &>/dev/null; then
   echo "GitHub CLI not authenticated. Running 'gh auth login' first..."
   gh auth login
 fi
-# Fetch the gist content directly to our custom location
+# Fetch the gist content directly to our config file
 gh gist view $GIST_ID --raw --filename aws-config >"$AWS_CONFIG_FILE"
 chmod 600 "$AWS_CONFIG_FILE"
 
 echo "✅ AWS config successfully updated from Gist!"
-echo "To use this config, run AWS commands through aws-wrapper or set AWS_CONFIG_FILE=$AWS_CONFIG_FILE"
 
 # Print available profiles
 echo "Available AWS profiles:"
