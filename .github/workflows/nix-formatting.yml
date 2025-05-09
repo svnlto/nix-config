@@ -25,4 +25,4 @@ jobs:
         run: nix shell nixpkgs#nixpkgs-fmt -c nixpkgs-fmt --version
 
       - name: Check formatting
-        run: find . -name "*.nix" -type f | xargs nixpkgs-fmt --check
+        run: find . -name "*.nix" -type f | xargs nix shell nixpkgs#nixpkgs-fmt -c nixpkgs-fmt --check
