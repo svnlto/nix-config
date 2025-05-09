@@ -24,8 +24,29 @@ jobs:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Install pre-commit
-        run: pip install pre-commit
+      - name: Install Vagrant
+        run: |
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update
+          sudo apt install vagrant
+
+      - name: Install Dependencies for Pre-commit Hooks
+        run: |
+          # Install Nix tools
+          curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
+          . /etc/profile.d/nix.sh
+          nix-env -iA nixpkgs.nixpkgs-fmt nixpkgs.shellcheck
+          
+          # Install pre-commit
+          pip install pre-commit
 
       - name: Run pre-commit hooks
-        run: pre-commit run --all-files
+        run: |
+          # Source Nix if it's installed
+          if [ -e /etc/profile.d/nix.sh ]; then
+            . /etc/profile.d/nix.sh
+          fi
+          
+          # Run pre-commit
+          pre-commit run --all-files

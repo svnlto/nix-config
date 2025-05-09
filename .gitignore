@@ -19,4 +19,8 @@ result-*
 *.tmp
 *.temp
 *.log
+
+# Node.js (for semantic-release)
+node_modules/
+package-lock.json
 .vagrant

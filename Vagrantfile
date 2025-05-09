@@ -131,15 +131,9 @@ export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
     chmod 644 $HOME/.zshrc
 
-    # Run home-manager switch command AFTER creating the minimal .zshrc
-    # This way home-manager can safely replace it with its own configuration
-    echo "=== Setting up Home Manager ==="
-    echo "Running home-manager switch command..."
-    # Use a unique backup extension to avoid conflicts
-    NIXPKGS_ALLOW_UNFREE=1 nix run home-manager/master -- switch -b backup.$RANDOM --flake ~/.config/nix#vagrant --impure || {
-      # Just mark failure - detailed instructions will appear in startup message
-      echo "Home Manager switch failed."
-    }
+    # Home Manager will be run AFTER the RAM disk setup in a separate provision step
+    echo "=== Initial setup completed ==="
+    echo "RAM disk and configuration will be set up next"
   SHELL
 
   # Add a special provision step just for git cleanup
@@ -158,27 +152,63 @@ EOL
   config.vm.provision "shell", run: "always", privileged: true, inline: <<-SHELL
     echo "=== Setting up RAM disk ==="
     
-    # Ensure RAM disk is mounted
-    if ! mount | grep -q "/ramdisk"; then
-      echo "Mounting RAM disk..."
-      mkdir -p /ramdisk
-      mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
-    else
-      echo "RAM disk is already mounted"
+    # Unmount if already mounted but with issues
+    if mount | grep -q "/ramdisk"; then
+      echo "Unmounting existing RAM disk to ensure clean setup..."
+      umount /ramdisk 2>/dev/null || true
     fi
     
-    # Create the necessary directories and set permissions manually
-    echo "Setting up RAM disk directories and permissions manually..."
+    # Ensure base directory exists with correct permissions
+    echo "Creating RAM disk mount point..."
+    rm -rf /ramdisk 2>/dev/null || true
+    mkdir -p /ramdisk
+    chmod 1777 /ramdisk
+    
+    # Mount fresh RAM disk
+    echo "Mounting RAM disk..."
+    mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
+    if mount | grep -q "/ramdisk"; then
+      echo "RAM disk successfully mounted"
+    else
+      echo "ERROR: Failed to mount RAM disk"
+      exit 1
+    fi
+    
+    # Create the necessary directories and set permissions
+    echo "Setting up RAM disk directories and permissions..."
     mkdir -p /ramdisk/.npm /ramdisk/tmp /ramdisk/.terraform.d/plugin-cache /ramdisk/.pnpm/store
     chmod 1777 /ramdisk/tmp
     chmod 1777 /ramdisk  # Ensure the base directory is writable by all
-    chmod -R 755 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
+    chmod 777 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
+    
+    # Make sure everything is owned by the vagrant user
     chown -R vagrant:vagrant /ramdisk
+    
+    # Verify permissions
+    echo "Verifying permissions..."
+    ls -la /ramdisk
     
     echo "RAM disk setup complete"
   SHELL
 
-  # Minimal startup message with instructions
+  config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
+    echo "=== Running home-manager setup ==="
+    
+    # Source Nix environment
+    if [ -e /etc/profile.d/nix.sh ]; then
+      . /etc/profile.d/nix.sh
+    fi
+    
+    echo "Checking RAM disk status..."
+    ls -la /ramdisk
+    
+    # Now run home-manager with RAM disk available
+    echo "Running home-manager switch command..."
+    NIXPKGS_ALLOW_UNFREE=1 nix run home-manager/master -- switch -b backup.$RANDOM --flake ~/.config/nix#vagrant --impure || {
+      echo "Home Manager switch failed. See above for errors."
+    }
+  SHELL
+
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo ""
     echo "=== Development environment ready ==="
@@ -188,7 +218,6 @@ EOL
     echo "  vagrant ssh"
     echo ""
     
-    # Check if home-manager appears to be configured
     if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
       echo "Home Manager has been successfully configured!"
     else
