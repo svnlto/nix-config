@@ -22,7 +22,7 @@ jobs:
             experimental-features = nix-command flakes
 
       - name: Install nixpkgs-fmt
-        run: nix shell nixpkgs#nixpkgs-fmt -c true
+        run: nix shell nixpkgs#nixpkgs-fmt -c nixpkgs-fmt --version
 
       - name: Check formatting
         run: find . -name "*.nix" -type f | xargs nixpkgs-fmt --check

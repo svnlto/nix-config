@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm install --no-package-lock --no-save @semantic-release/changelog @semantic-release/git semantic-release
