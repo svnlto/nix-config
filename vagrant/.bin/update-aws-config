@@ -25,7 +25,3 @@ gh gist view $GIST_ID --raw --filename aws-config >"$AWS_CONFIG_FILE"
 chmod 600 "$AWS_CONFIG_FILE"
 
 echo "✅ AWS config successfully updated from Gist!"
-
-# Print available profiles
-echo "Available AWS profiles:"
-grep -E '^\[profile' "$AWS_CONFIG_FILE" | sed 's/\[profile \(.*\)\]/- \1/'
