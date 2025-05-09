@@ -8,8 +8,14 @@
 
   # Create and set up the .bin directory for custom scripts
   home.activation.setupBinDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p $HOME/.bin
-    chmod 755 $HOME/.bin
+
+    # Copy scripts from the repository .bin directory
+    CONFIG_BIN_DIR="$HOME/.config/nix/vagrant/.bin"
+    if [ -d "$CONFIG_BIN_DIR" ] && [ "$(ls -A $CONFIG_BIN_DIR 2>/dev/null)" ]; then
+      echo "Copying scripts from $CONFIG_BIN_DIR to $HOME/.bin"
+      cp -f "$CONFIG_BIN_DIR"/* "$HOME/.bin/" 2>/dev/null || true
+      chmod +x "$HOME/.bin"/* 2>/dev/null || true
+    fi
 
     # Generate aliases file for all executable scripts in .bin
     if [ -d "$HOME/.bin" ]; then

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Script to fetch AWS config from a private GitHub Gist
+# This allows storing sensitive AWS configuration separately from the code repo
+
+set -e
+
+# Your private Gist ID - Replace this with your actual Gist ID
+GIST_ID="1bf9c10f2f60a2d83505dd5280f1be0d"
+
+echo "Fetching AWS config from GitHub Gist..."
+mkdir -p ~/.aws
+chmod 700 ~/.aws
+
+# Check if gh is authenticated
+if ! gh auth status &>/dev/null; then
+  echo "GitHub CLI not authenticated. Running 'gh auth login' first..."
+  gh auth login
+fi
+
+# Fetch the gist content using gh cli
+gh gist view $GIST_ID --raw --filename aws-config >~/.aws/config
+
+# Set proper permissions
+chmod 600 ~/.aws/config
+
+echo "✅ AWS config successfully updated from Gist!"
+
+# Print available profiles
+echo "Available AWS profiles:"
+grep -E '^\[profile' ~/.aws/config | sed 's/\[profile \(.*\)\]/- \1/'

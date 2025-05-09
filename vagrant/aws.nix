@@ -4,44 +4,30 @@
   # Install AWS CLI and related tools
   home.packages = with pkgs; [ awscli2 aws-sso-cli ssm-session-manager-plugin ];
 
-  # AWS configuration
+  # Ensure .aws directory exists with proper permissions
+  home.activation.setupAwsDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p $HOME/.aws
+    chmod 700 $HOME/.aws
+  '';
+
+  # Add placeholder AWS config file
   home.file.".aws/config".text = ''
-    # Default SSO configuration
+    # This is a placeholder AWS config file.
+    # To load your actual configuration from your private GitHub Gist, run:
+    # $ update-aws-config  (or simply use the alias: uaws)
+    #
+    # This will fetch your AWS configuration securely using your authenticated GitHub CLI.
+
+    # Default fallback configuration
     [default]
-    sso_session = default-sso
-    sso_account_id = 123456789012  # Replace with your primary AWS account ID
-    sso_role_name = ReadOnly       # Default role to assume
-    region = us-east-1
-    output = json
-
-    # SSO session configuration
-    [sso-session default-sso]
-    sso_start_url = https://your-sso-portal.awsapps.com/start   # Replace with your SSO portal URL
-    sso_region = us-east-1
-    sso_registration_scopes = sso:account:access
-
-    # Development account profile 
-    [profile dev]
-    sso_session = default-sso
-    sso_account_id = 123456789012  # Replace with your dev account ID
-    sso_role_name = Developer
-    region = us-east-1
-    output = json
-
-    # Production account profile
-    [profile prod]
-    sso_session = default-sso
-    sso_account_id = 987654321098  # Replace with your prod account ID
-    sso_role_name = ReadOnly
-    region = us-east-1
-    output = json
-
-    # Staging account profile
-    [profile staging]
-    sso_session = default-sso
-    sso_account_id = 456789012345  # Replace with your staging account ID
-    sso_role_name = Developer
-    region = us-east-1
+    region = eu-west-2
     output = json
   '';
+
+  # Configure ZSH aliases for AWS-related scripts
+  programs.zsh.shellAliases = {
+    "uaws" = "update-aws-config"; # Short alias for update-aws-config
+    "awssso" = "aws sso login"; # Quick login to AWS SSO
+    "awswho" = "aws sts get-caller-identity"; # Check current AWS identity
+  };
 }
