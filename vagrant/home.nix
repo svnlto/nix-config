@@ -1,47 +1,35 @@
 { config, pkgs, username, lib, ... }:
 
 {
-  imports = [ ./zsh.nix ./git.nix ./aws.nix ./ramdisk.nix ./github.nix ];
+  imports = [ 
+    ../common/home-packages.nix
+    ./zsh.nix 
+    ./git.nix 
+    ./aws.nix 
+    ./ramdisk.nix 
+    ./github.nix 
+  ];
 
   # Explicitly tell home-manager not to manage nix.conf
   xdg.configFile."nix/nix.conf".enable = false;
 
   # Create and set up the .bin directory for custom scripts
   home.activation.setupBinDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-
-    # Copy scripts from the repository .bin directory
     CONFIG_BIN_DIR="$HOME/.config/nix/vagrant/.bin"
-    if [ -d "$CONFIG_BIN_DIR" ] && [ "$(ls -A $CONFIG_BIN_DIR 2>/dev/null)" ]; then
-      echo "Copying scripts from $CONFIG_BIN_DIR to $HOME/.bin"
-      cp -f "$CONFIG_BIN_DIR"/* "$HOME/.bin/" 2>/dev/null || true
-      chmod +x "$HOME/.bin"/* 2>/dev/null || true
+    TARGET_BIN_DIR="$HOME/.bin"
+    ALIAS_FILE="$HOME/.bin_aliases"
+
+    mkdir -p "$TARGET_BIN_DIR"
+
+    if [ -d "$CONFIG_BIN_DIR" ]; then
+      cp -f "$CONFIG_BIN_DIR"/* "$TARGET_BIN_DIR/" 2>/dev/null || true
+      chmod +x "$TARGET_BIN_DIR"/* 2>/dev/null || true
     fi
 
-    # Generate aliases file for all executable scripts in .bin
-    if [ -d "$HOME/.bin" ]; then
-      # Create a file that will be sourced by zsh
-      ALIAS_FILE="$HOME/.bin_aliases"
-      echo "# Auto-generated aliases for scripts in ~/.bin" > "$ALIAS_FILE"
-      
-      if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
-        echo "# Generated on $(date)" >> "$ALIAS_FILE"
-        # Make all scripts executable
-        chmod +x "$HOME/.bin"/* 2>/dev/null || true
-        
-        for script in "$HOME/.bin"/*; do
-          if [ -f "$script" ] && [ -x "$script" ]; then
-            script_name=$(basename "$script" .sh)
-            echo "alias $script_name=\"$script\"" >> "$ALIAS_FILE"
-          fi
-        done
-        echo "Auto-generated $(grep -c "^alias" "$ALIAS_FILE") aliases for ~/.bin scripts"
-      else
-        echo "# No scripts found in ~/.bin" >> "$ALIAS_FILE"
-        echo "No scripts found in ~/.bin directory to create aliases for"
-      fi
-      
-      chmod 644 "$ALIAS_FILE"
-    fi
+    echo "# Auto-generated aliases for scripts in ~/.bin" > "$ALIAS_FILE"
+    for script in "$TARGET_BIN_DIR"/*; do
+      [ -x "$script" ] && echo "alias $(basename "$script" .sh)=\"$script\"" >> "$ALIAS_FILE"
+    done
   '';
 
   nixpkgs.config.allowUnfree = true;
@@ -57,14 +45,8 @@
     trusted-substituters = true;
   };
 
-  # Vagrant-specific packages (removed Rust-based tools)
+  # Vagrant-specific packages (in addition to common packages)
   home.packages = with pkgs; [
-    # Tools needed by zsh configuration
-    zoxide
-    oh-my-posh
-    eza
-    gh
-
     # Vagrant-specific development tools
     git
     gnumake
@@ -105,24 +87,6 @@
       enable = true;
       defaultEditor = true;
       viAlias = true;
-      vimAlias = true;
-    };
-
-    tmux = {
-      enable = true;
-      shortcut = "a";
-      terminal = "screen-256color";
-      escapeTime = 0;
-      historyLimit = 50000;
-    };
-
-    # Explicitly disable fish using mkForce to override any imported configs
-    fish.enable = lib.mkForce false;
-
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      enableFishIntegration = lib.mkForce false;
     };
   };
 

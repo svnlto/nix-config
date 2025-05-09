@@ -1,9 +1,11 @@
-{ config, lib, pkgs, username, ... }:
+{ config, pkgs, username, lib, ... }:
 
-let
-  # Import shared ZSH configuration
-  sharedZsh = import ../common/zsh/shared.nix;
-in {
+{
+  imports = [
+    ../common/home-packages.nix
+    # Other darwin-specific imports...
+  ];
+
   # Home Manager configuration for macOS
 
   # Ensure home-manager uses the correct home directory
