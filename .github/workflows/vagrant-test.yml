@@ -1,0 +1,67 @@
+---
+name: Vagrant VM Test
+
+on:
+  # Run only manually or on major changes to minimize macOS runner usage
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'vagrant/**'
+      - 'Vagrantfile'
+      - 'flake.nix'
+      - 'flake.lock'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'vagrant/**'
+      - 'Vagrantfile'
+      - 'flake.nix'
+      - 'flake.lock'
+
+jobs:
+  # First job: Just validate the Vagrantfile syntax on Linux (cheaper)
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vagrant
+        run: |
+          wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt update && sudo apt install vagrant
+
+      - name: Validate Vagrantfile
+        run: vagrant validate
+
+  # Only run the more expensive macOS test if explicitly requested via workflow_dispatch
+  # example: gh repo run workflow vagrant-test --ref main
+  vagrant-test:
+    needs: validate
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vagrant and UTM
+        run: |
+          brew install hashicorp/tap/hashicorp-vagrant
+          brew install --cask utm
+
+      - name: Install vagrant-utm plugin
+        run: vagrant plugin install vagrant-utm
+
+      - name: Run VM and test provisioning
+        run: |
+          # Start VM with minimal resources for CI
+          UTM_MEMORY=4096 UTM_CPUS=2 vagrant up --no-provision
+
+          # Run only the RAM disk provisioner to test it specifically
+          vagrant provision --provision-with "shell"
+
+          # Test RAM disk setup
+          vagrant ssh -c "ls -la /ramdisk"
+
+          # Clean up
+          vagrant destroy -f

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":enableVulnerabilityAlerts"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "nix"
+      ],
+      "addLabels": [
+        "nix"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchDepTypes": [
+        "github-actions"
+      ],
+      "addLabels": [
+        "github-actions"
+      ],
+      "groupName": "github-actions",
+      "pinDigests": true
+    },
+    {
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "addLabels": [
+        "pre-commit"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "matchDepPatterns": [
+        "^nixpkgs"
+      ],
+      "schedule": [
+        "every 2 weeks"
+      ],
+      "pinDigests": true
+    },
+    {
+      "matchPackagePatterns": [
+        ".*"
+      ],
+      "pinDigests": true
+    }
+  ],
+  "nix": {
+    "enabled": true,
+    "fileMatch": [
+      "^flake\\.nix$",
+      "^overlays\\/.*\\.nix$",
+      "^common\\/.*\\.nix$",
+      "^darwin\\/.*\\.nix$",
+      "^vagrant\\/.*\\.nix$"
+    ]
+  },
+  "pre-commit": {
+    "enabled": true,
+    "fileMatch": [
+      "^\\.pre-commit-config\\.ya?ml$"
+    ]
+  },
+  "github-actions": {
+    "fileMatch": [
+      "^\\.github/workflows/[^/]+\\.ya?ml$"
+    ],
+    "enabled": true
+  },
+  "separateMajorMinor": true,
+  "dependencyDashboard": false,
+  "schedule": [
+    "every weekend"
+  ],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "auto",
+  "ignorePaths": [
+    "**/node_modules/**"
+  ],
+  "pinDigests": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 5am on Monday"
+    ]
+  }
+}

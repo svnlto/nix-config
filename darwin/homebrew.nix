@@ -4,7 +4,7 @@
   homebrew = {
     enable = true;
     taps = [ "FelixKratz/formulae" "hashicorp/tap" ];
-    brews = [ "mas" "dockutil" ];
+    brews = [ "mas" "dockutil" "pre-commit" ];
     casks = [
       # Security & Password Management
       "1password"

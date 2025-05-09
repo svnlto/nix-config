@@ -1,0 +1,51 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  - repo: https://github.com/nix-community/nixpkgs-fmt
+    rev: v1.3.0
+    hooks:
+      - id: nixpkgs-fmt
+        name: nixpkgs-fmt
+        description: Format nix code with nixpkgs-fmt
+        entry: nixpkgs-fmt
+        language: system
+        files: \.nix$
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.25.1
+    hooks:
+      - id: gitleaks
+        name: gitleaks
+        description: Detect secrets in your files
+        entry: gitleaks protect --verbose --redact --staged
+        language: golang
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        description: Lint shell scripts with shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+        exclude_types: [zsh]
+
+      - id: vagrant-validate
+        name: Vagrant Validate
+        description: Validate Vagrantfile syntax
+        entry: vagrant validate
+        language: system
+        files: ^Vagrantfile$
+        pass_filenames: false
