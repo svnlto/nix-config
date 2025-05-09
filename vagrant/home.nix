@@ -1,7 +1,7 @@
 { config, pkgs, username, lib, ... }:
 
 {
-  imports = [ ./zsh.nix ./git.nix ];
+  imports = [ ./zsh.nix ./git.nix ./aws.nix ];
 
   # Explicitly tell home-manager not to manage nix.conf
   xdg.configFile."nix/nix.conf".enable = false;
@@ -55,7 +55,6 @@
     kubernetes-helm
     wget
     pre-commit
-    awscli2
   ];
 
   # Program configurations

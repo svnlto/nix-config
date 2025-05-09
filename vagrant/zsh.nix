@@ -44,9 +44,6 @@ in {
       # Shared locale settings
       ${sharedZsh.locale}
 
-      # Default node.js environment
-      export NODE_ENV="dev"
-
       # Set browser variables for VSCode SSH sessions
       export BROWSER="browser-forward"
       export GH_BROWSER="browser-forward"
@@ -70,6 +67,9 @@ in {
       # Initialize NVM from the Nix overlay location
       source "${pkgs.nvm}/share/nvm/nvm.sh"
       source "${pkgs.nvm}/share/nvm/bash_completion"
+
+      # Alias for AWS commands
+      alias awssso="aws sso login"
     '';
   };
 }
