@@ -41,33 +41,26 @@
 
               # Inline Home Manager configuration
               home-manager.users.${username} = { config, lib, pkgs, ... }:
-                let
-                  # Import shared ZSH configuration
-                  sharedZsh = import ./common/zsh/shared.nix;
+                let sharedZsh = import ./common/zsh/shared.nix;
                 in {
-                  # Home Manager configuration for macOS
                   home.username = username;
                   home.homeDirectory = "/Users/${username}";
                   home.stateVersion = "23.11";
 
-                  # Enable Oh My Zsh with Git plugin
                   programs.zsh = {
                     enable = true;
 
-                    # Enable Oh My Zsh with Git plugin
                     oh-my-zsh = {
                       enable = true;
                       plugins = [ "git" ];
-                      theme = ""; # Use empty theme since we're using Oh My Posh
+                      theme = "";
                     };
 
-                    # Common aliases from shared config plus macOS-specific ones
                     shellAliases = sharedZsh.aliases // {
                       nixswitch =
                         "darwin-rebuild switch --flake ~/.config/nix#${hostname}";
                     };
 
-                    # Additional ZSH initialization
                     initContent = ''
                       # Source common settings
                       ${sharedZsh.options}
@@ -81,7 +74,6 @@
                     '';
                   };
 
-                  # Install Oh My Posh theme
                   home.file.".config/oh-my-posh/default.omp.json".source =
                     ./common/zsh/default.omp.json;
                 };
