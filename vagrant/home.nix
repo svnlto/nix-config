@@ -1,7 +1,7 @@
 { config, pkgs, username, lib, ... }:
 
 {
-  imports = [ ./zsh.nix ./git.nix ./aws.nix ./ramdisk.nix ];
+  imports = [ ./zsh.nix ./git.nix ./aws.nix ./ramdisk.nix ./github.nix ];
 
   # Explicitly tell home-manager not to manage nix.conf
   xdg.configFile."nix/nix.conf".enable = false;
@@ -10,6 +10,32 @@
   home.activation.setupBinDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p $HOME/.bin
     chmod 755 $HOME/.bin
+
+    # Generate aliases file for all executable scripts in .bin
+    if [ -d "$HOME/.bin" ]; then
+      # Create a file that will be sourced by zsh
+      ALIAS_FILE="$HOME/.bin_aliases"
+      echo "# Auto-generated aliases for scripts in ~/.bin" > "$ALIAS_FILE"
+      
+      if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
+        echo "# Generated on $(date)" >> "$ALIAS_FILE"
+        # Make all scripts executable
+        chmod +x "$HOME/.bin"/* 2>/dev/null || true
+        
+        for script in "$HOME/.bin"/*; do
+          if [ -f "$script" ] && [ -x "$script" ]; then
+            script_name=$(basename "$script" .sh)
+            echo "alias $script_name=\"$script\"" >> "$ALIAS_FILE"
+          fi
+        done
+        echo "Auto-generated $(grep -c "^alias" "$ALIAS_FILE") aliases for ~/.bin scripts"
+      else
+        echo "# No scripts found in ~/.bin" >> "$ALIAS_FILE"
+        echo "No scripts found in ~/.bin directory to create aliases for"
+      fi
+      
+      chmod 644 "$ALIAS_FILE"
+    fi
   '';
 
   nixpkgs.config.allowUnfree = true;
@@ -30,7 +56,8 @@
     # Tools needed by zsh configuration
     zoxide
     oh-my-posh
-    eza # Modern ls replacement
+    eza
+    gh
 
     # Vagrant-specific development tools
     git
@@ -47,10 +74,10 @@
     # Terraform tools
     terraform-docs
     terraform-ls
-    
+
     # Node.js tools
     nodePackages.pnpm
-    
+
     tmux
     htop
     jq

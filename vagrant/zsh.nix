@@ -15,6 +15,9 @@ in {
     enableCompletion = true;
     autosuggestion.enable = true;
 
+    # Apply shared aliases explicitly
+    shellAliases = sharedZsh.aliases;
+
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
@@ -69,27 +72,9 @@ in {
       # Custom user binaries directory
       export PATH="$HOME/.bin:$PATH"
 
-      # Create .bin directory if it doesn't exist
-      mkdir -p "$HOME/.bin"
-
-      # Set execute permissions for all scripts in .bin (only if files exist)
-      if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
-        chmod +x "$HOME/.bin"/* 2>/dev/null || true
-      fi
-
-      # Auto-generate aliases for all scripts in .bin
-      if [ -d "$HOME/.bin" ]; then
-        # First check if there are any files
-        if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
-          for script in "$HOME/.bin"/*; do
-            if [ -f "$script" ] && [ -x "$script" ]; then
-              script_name=$(basename "$script" .sh)
-              alias "$script_name"="$script"
-            fi
-          done
-        else
-          echo "No files found in ~/.bin directory"
-        fi
+      # Source auto-generated aliases if the file exists
+      if [ -f "$HOME/.bin_aliases" ]; then
+        source "$HOME/.bin_aliases"
       fi
     '';
   };
