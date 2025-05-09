@@ -98,19 +98,12 @@ EOL'
     
     git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
     
-    # Verify flake.nix exists
-    if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
-      echo "WARNING: flake.nix not found in repository!"
-      exit 1
-    fi
-    
     # Set proper permissions for the config directory
     sudo chown -R vagrant:vagrant $HOME/.config/nix
-    # Fix the find command with proper syntax
+
     find $HOME/.config/nix -type d -exec chmod 755 {} \\;
     find $HOME/.config/nix -type f -exec chmod 644 {} \\;
     
-    # Create minimal ZSH environment to ensure we can login 
     # Home Manager will replace this later
     echo "Setting up minimal ZSH environment..."
     # Ensure we can write to .zshenv
@@ -123,12 +116,10 @@ fi
 EOL
     chmod 644 $HOME/.zshenv
     
-    # Set ZSH as default shell
     echo "Setting ZSH as default shell..."
     sudo chsh -s $(which zsh) vagrant
     
     # Create a minimal .zshrc to ensure the shell works
-    # This will be overwritten by home-manager once it's properly set up
     echo "Creating temporary .zshrc..."
     # Ensure we can write to .zshrc
     rm -f $HOME/.zshrc
@@ -163,7 +154,7 @@ EOL
     fi
   SHELL
   
-  # Ensure RAM disk is properly set up before home-manager runs
+  # Initial RAM disk setup - handle everything here
   config.vm.provision "shell", run: "always", privileged: true, inline: <<-SHELL
     echo "=== Setting up RAM disk ==="
     
@@ -176,14 +167,13 @@ EOL
       echo "RAM disk is already mounted"
     fi
     
-    # Ensure RAM disk permissions service runs
-    if systemctl is-active --quiet ramdisk-permissions; then
-      echo "Restarting RAM disk permissions service..."
-      systemctl restart ramdisk-permissions
-    else
-      echo "Starting RAM disk permissions service..."
-      systemctl start ramdisk-permissions
-    fi
+    # Create the necessary directories and set permissions manually
+    echo "Setting up RAM disk directories and permissions manually..."
+    mkdir -p /ramdisk/.npm /ramdisk/tmp /ramdisk/.terraform.d/plugin-cache /ramdisk/.pnpm/store
+    chmod 1777 /ramdisk/tmp
+    chmod 1777 /ramdisk  # Ensure the base directory is writable by all
+    chmod -R 755 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
+    chown -R vagrant:vagrant /ramdisk
     
     echo "RAM disk setup complete"
   SHELL

@@ -17,32 +17,47 @@
   };
 
   # Create directories for npm, pnpm and Terraform caches on the RAM disk
+  # Use a more aggressive approach with sudo to ensure permission issues don't block us
   home.activation.setupRamdiskDirs =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Check if ramdisk is mounted and accessible
-      if [ -d "/ramdisk" ]; then
-        echo "RAM disk is available at /ramdisk"
-        
-        # Verify we can write to it - first try without sudo
-        if touch /ramdisk/.test-write-access 2>/dev/null; then
-          echo "RAM disk is writable"
-          rm -f /ramdisk/.test-write-access
-          
-          # Ensure subdirectories exist and have correct permissions
-          # but don't fail if they already exist with correct permissions
-          for dir in "/ramdisk/tmp" "/ramdisk/.npm" "/ramdisk/.pnpm/store" "/ramdisk/.terraform.d/plugin-cache"; do
-            if [ ! -d "$dir" ]; then
-              echo "Creating directory: $dir"
-              mkdir -p "$dir" || echo "Warning: Could not create $dir"
-            fi
-          done
-        else
-          echo "WARNING: Cannot write to /ramdisk - RAM disk features may not work correctly"
-          echo "System service may not have run yet or permissions are incorrect"
+      # Function to run commands with sudo if normal command fails
+      run_with_fallback() {
+        if ! $@; then
+          echo "Command failed, retrying with sudo: $@"
+          sudo $@
         fi
-      else
-        echo "WARNING: /ramdisk directory does not exist. RAM disk features will not work."
+      }
+
+      # Check if ramdisk exists, and if not try to create it
+      if [ ! -d "/ramdisk" ]; then
+        echo "Creating /ramdisk directory..."
+        run_with_fallback mkdir -p /ramdisk
       fi
+
+      # Check if ramdisk is mounted, if not try to mount it
+      if ! mount | grep -q "/ramdisk"; then
+        echo "Mounting RAM disk..."
+        run_with_fallback sudo mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
+      fi
+
+      echo "Setting up RAM disk directories and permissions..."
+
+      # Create all required directories
+      for dir in "/ramdisk/tmp" "/ramdisk/.npm" "/ramdisk/.pnpm" "/ramdisk/.pnpm/store" "/ramdisk/.terraform.d" "/ramdisk/.terraform.d/plugin-cache"; do
+        if [ ! -d "$dir" ]; then
+          echo "Creating directory: $dir"
+          run_with_fallback mkdir -p "$dir"
+        fi
+      done
+
+      # Set permissions
+      run_with_fallback chmod 1777 /ramdisk/tmp
+      run_with_fallback chmod -R 755 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
+
+      # Ensure current user owns the directories
+      run_with_fallback sudo chown -R $USER:$USER /ramdisk
+
+      echo "RAM disk setup complete"
     '';
 
   # NPM specific configuration

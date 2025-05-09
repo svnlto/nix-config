@@ -112,23 +112,8 @@
     options = [ "size=2G" "mode=1777" ];
   };
 
-  # Service to ensure RAM disk permissions are set correctly
-  systemd.services.ramdisk-permissions = {
-    description = "Set permissions for RAM disk directories";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "local-fs.target" ];
-    before = [ "home-manager-${username}.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      mkdir -p /ramdisk/.npm /ramdisk/tmp /ramdisk/.terraform.d /ramdisk/.pnpm
-      chmod 1777 /ramdisk/tmp
-      chown -R ${username}:${username} /ramdisk
-      chmod -R 755 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
-    '';
-  };
+  # We handle RAM disk setup in the home-manager activation script now
+  # No separate systemd service needed
 
   # System configuration
   system.stateVersion = "23.11";

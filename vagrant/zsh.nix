@@ -56,41 +56,40 @@ in {
       # Initialize NVM from the Nix overlay location
       source "${pkgs.nvm}/share/nvm/nvm.sh"
       source "${pkgs.nvm}/share/nvm/bash_completion"
-      
-      # Add PNPM to path
-      export PATH="/ramdisk/.pnpm:$PATH"
 
       # Alias for AWS commands
       alias awssso="aws sso login"
 
       # Alias for Terraform commands
       alias t="terraform"
+
+      # Alias for Nix commands
       alias nixswitch="nix run home-manager/master -- switch --flake ~/.config/nix#vagrant"
-      
-      # RAM disk aliases
-      alias rcd="cd /ramdisk"
-      alias npm-clear="rm -rf /ramdisk/.npm/* && echo 'NPM cache cleared'"
-      alias pnpm-clear="rm -rf /ramdisk/.pnpm/* && echo 'PNPM cache cleared'"
-      alias tf-clear="rm -rf /ramdisk/.terraform.d/* && echo 'Terraform cache cleared'"
-      alias ramdisk-status="df -h /ramdisk"
-      
+
       # Custom user binaries directory
       export PATH="$HOME/.bin:$PATH"
 
       # Create .bin directory if it doesn't exist
       mkdir -p "$HOME/.bin"
 
-      # Set execute permissions for all scripts in .bin
-      chmod +x "$HOME/.bin"/* 2>/dev/null || true
+      # Set execute permissions for all scripts in .bin (only if files exist)
+      if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
+        chmod +x "$HOME/.bin"/* 2>/dev/null || true
+      fi
 
       # Auto-generate aliases for all scripts in .bin
       if [ -d "$HOME/.bin" ]; then
-        for script in "$HOME/.bin"/*; do
-          if [ -x "$script" ]; then
-            script_name=$(basename "$script")
-            alias "$script_name"="$script"
-          fi
-        done
+        # First check if there are any files
+        if [ "$(ls -A $HOME/.bin 2>/dev/null)" ]; then
+          for script in "$HOME/.bin"/*; do
+            if [ -f "$script" ] && [ -x "$script" ]; then
+              script_name=$(basename "$script" .sh)
+              alias "$script_name"="$script"
+            fi
+          done
+        else
+          echo "No files found in ~/.bin directory"
+        fi
       fi
     '';
   };
