@@ -1,12 +1,9 @@
 { config, pkgs, lib, username, ... }:
 
 {
-  # This function will be used in our session variables to determine RAM disk paths
-  home.sessionVariables = let 
-    # Helper function to check if a path is available and choose an alternative if not
-    checkPath = path: fallback: "''${${path}:-${fallback}}";
-  in {
-    # NPM configuration - use RAM disk if available, otherwise fallback to home directory
+  # Configure development tools to use RAM disk for temporary files
+  home.sessionVariables = {
+    # NPM configuration
     npm_config_cache = "/ramdisk/.npm";
 
     # PNPM configuration
