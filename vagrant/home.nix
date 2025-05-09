@@ -6,6 +6,12 @@
   # Explicitly tell home-manager not to manage nix.conf
   xdg.configFile."nix/nix.conf".enable = false;
 
+  # Create and set up the .bin directory for custom scripts
+  home.activation.setupBinDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p $HOME/.bin
+    chmod 755 $HOME/.bin
+  '';
+
   nixpkgs.config.allowUnfree = true;
 
   # Add to your nix.conf or as nix.settings in configuration

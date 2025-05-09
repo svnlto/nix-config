@@ -64,7 +64,26 @@ in {
       alias t="terraform"
 
       # Alias for Nix commands
-      alias nixswitch = "nix run home-manager/master -- switch --flake ~/.config/nix#vagrant"
+      alias nixswitch="nix run home-manager/master -- switch --flake ~/.config/nix#vagrant"
+
+      # Custom user binaries directory
+      export PATH="$HOME/.bin:$PATH"
+
+      # Create .bin directory if it doesn't exist
+      mkdir -p "$HOME/.bin"
+
+      # Set execute permissions for all scripts in .bin
+      chmod +x "$HOME/.bin"/* 2>/dev/null || true
+
+      # Auto-generate aliases for all scripts in .bin
+      if [ -d "$HOME/.bin" ]; then
+        for script in "$HOME/.bin"/*; do
+          if [ -x "$script" ]; then
+            script_name=$(basename "$script")
+            alias "$script_name"="$script"
+          fi
+        done
+      fi
     '';
   };
 }

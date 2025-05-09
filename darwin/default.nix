@@ -10,6 +10,7 @@
     hstr
     git
     diff-so-fancy
+    tree
   ];
 
   programs.zsh.enable = true;
