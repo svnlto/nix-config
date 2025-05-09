@@ -1,8 +1,6 @@
 { config, lib, pkgs, username, ... }:
 
-let
-  # Import shared ZSH configuration
-  sharedZsh = import ../common/zsh/shared.nix;
+let sharedZsh = import ../common/zsh/shared.nix;
 in {
   # Vagrant-specific ZSH configuration for home-manager
 
@@ -14,22 +12,14 @@ in {
   programs.zsh = {
     enable = true;
 
-    # Basic zsh options
     enableCompletion = true;
     autosuggestion.enable = true;
 
-    # Enable Oh My Zsh
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
     };
 
-    shellAliases = sharedZsh.aliases // {
-      nixswitch =
-        "nix run home-manager/master -- switch --flake ~/.config/nix#vagrant";
-    };
-
-    # ZSH history configuration - aligned with the shared settings
     history = {
       size = 100000;
       save = 100000;
@@ -39,7 +29,6 @@ in {
       extended = true;
     };
 
-    # ZSH initialization script (shared + Vagrant-specific)
     initContent = ''
       # Shared locale settings
       ${sharedZsh.locale}
@@ -73,6 +62,9 @@ in {
 
       # Alias for Terraform commands
       alias t="terraform"
+
+      # Alias for Nix commands
+      alias nixswitch = "nix run home-manager/master -- switch --flake ~/.config/nix#vagrant"
     '';
   };
 }
