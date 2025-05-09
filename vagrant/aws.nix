@@ -2,7 +2,7 @@
 
 {
   # Install AWS CLI and related tools
-  home.packages = with pkgs; [ awscli2 aws-sso-cli sessionmanager-plugin ];
+  home.packages = with pkgs; [ awscli2 aws-sso-cli ];
 
   # AWS configuration
   home.file.".aws/config".text = ''
