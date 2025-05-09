@@ -3,22 +3,6 @@
 {
   imports = [ ./zsh ];
 
-  # Common packages for all platforms
-  environment.systemPackages = with pkgs; [
-    # CLI utilities
-    oh-my-posh
-    hstr
-    eza
-    ack
-    zoxide
-    bat
-
-    # Development tools
-    gh
-    nixfmt-classic
-    diff-so-fancy
-  ];
-
   # Common Nix settings - platform-specific settings should be in respective files
   nix = {
     settings = {
