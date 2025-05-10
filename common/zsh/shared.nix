@@ -35,9 +35,6 @@ rec {
     setopt share_history
     setopt HIST_EXPIRE_DUPS_FIRST
     setopt APPEND_HISTORY
-    
-    # Remove EXTENDED_HISTORY if you don't need timestamps
-    # Removed duplicate SHARE_HISTORY
   '';
 
   # Common locale settings
@@ -66,13 +63,10 @@ rec {
     zstyle ":completion:*" menu select
     zstyle ":completion:*" group-name ""
     zstyle ":completion:*:default" list-colors "''${(s.:.)LS_COLORS}"
-    
+
     # More efficient cache settings
     zstyle ":completion:*" use-cache on
     zstyle ":completion:*" cache-path ~/.cache/zsh
-    
-    # Speed up by avoiding approximate matches
-    # Removed: zstyle ":completion:::::" completer _expand _complete _ignored _approximate
   '';
 
   # Common key bindings
@@ -99,7 +93,7 @@ rec {
       unfunction omp_init
     }
     precmd_functions+=(omp_init)
-    
+
     # HSTR colors - only needed when hstr is actually used
     hstr() {
       export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
