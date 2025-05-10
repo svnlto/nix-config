@@ -3,6 +3,12 @@
 
 # Return a simple attribute set for direct import by other modules
 rec {
+  # Add a profiling block at the top of your configuration
+  profiling = ''
+    # Uncomment to enable profiling
+    # zmodload zsh/zprof
+  '';
+
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     reloadcli = "source $HOME/.zshrc";
@@ -19,18 +25,19 @@ rec {
   history = ''
     # History configuration
     export HISTFILE=$HOME/.zsh_history
-    export HIST_SIZE=100000
+    export HIST_SIZE=10000       # Reduced from 100000
     export HIST_STAMPS="dd/mm/yyyy"
-    export SAVEHIST=100000
+    export SAVEHIST=10000        # Reduced from 100000
     export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-    # History options
-    setopt hist_reduce_blanks  # remove superfluous blanks from history items
-    setopt share_history       # share history between different instances of the shell
+    # History options - keep only what you need
+    setopt hist_reduce_blanks
+    setopt share_history
     setopt HIST_EXPIRE_DUPS_FIRST
-    setopt EXTENDED_HISTORY
     setopt APPEND_HISTORY
-    setopt SHARE_HISTORY
+    
+    # Remove EXTENDED_HISTORY if you don't need timestamps
+    # Removed duplicate SHARE_HISTORY
   '';
 
   # Common locale settings
@@ -55,16 +62,17 @@ rec {
 
   # Common ZSH completion styling
   completion = ''
-    # Completion styling - using double quotes for nix string compatibility
-    zstyle ":completion:*" menu select # select completions with arrow keys
-    zstyle ":completion:*" group-name "" # group results by category
-    zstyle ":completion:::::" completer _expand _complete _ignored _approximate # enable approximate matches
+    # Simplified completion styling
+    zstyle ":completion:*" menu select
+    zstyle ":completion:*" group-name ""
     zstyle ":completion:*:default" list-colors "''${(s.:.)LS_COLORS}"
-    zstyle ":completion:*" accept-exact "*"
-
-    # Cache expensive completions
+    
+    # More efficient cache settings
     zstyle ":completion:*" use-cache on
     zstyle ":completion:*" cache-path ~/.cache/zsh
+    
+    # Speed up by avoiding approximate matches
+    # Removed: zstyle ":completion:::::" completer _expand _complete _ignored _approximate
   '';
 
   # Common key bindings
@@ -77,14 +85,34 @@ rec {
 
   # Tool initialization commands
   tools = ''
-    # Initialize zoxide
-    eval "$(zoxide init --cmd cd zsh)"
+    # Lazy-load zoxide
+    zoxide_init() {
+      eval "$(zoxide init --cmd cd zsh)"
+      unfunction zoxide_init
+    }
+    zoxide() { zoxide_init; zoxide "$@" }
+    cd() { zoxide_init; cd "$@" }
 
-    # Initialize oh-my-posh (removed terminal condition to ensure theme always loads)
-    eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
+    # Lazy-load oh-my-posh
+    omp_init() {
+      eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
+      unfunction omp_init
+    }
+    precmd_functions+=(omp_init)
+    
+    # HSTR colors - only needed when hstr is actually used
+    hstr() {
+      export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
+      command hstr "$@"
+    }
+  '';
 
-    # HSTR colors
-    export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
+  # Add another block at the end
+  profilingEnd = ''
+    # Uncomment to display profiling results
+    # if [[ "$PROFILE_STARTUP" == true ]]; then
+    #   zprof
+    # fi
   '';
 
   # Module metadata

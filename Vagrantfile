@@ -17,7 +17,6 @@ Vagrant.configure("2") do |config|
     utm.name = "nix-dev-vm"
     utm.memory = "8192"
     utm.cpus = 4
-    utm.directory_share_mode = "virtFS"
   end
   
   # System provisioning script

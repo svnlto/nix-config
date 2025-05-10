@@ -4,7 +4,7 @@
   imports = [ ./home.nix ];
 
   # VM-specific packages
-  environment.systemPackages = with pkgs; [ docker curl wget htop ];
+  environment.systemPackages = with pkgs; [ curl wget ];
 
   # Environment variables
   environment.variables = {
@@ -24,7 +24,7 @@
     package = pkgs.nix;
     settings = {
       trusted-users = [ "root" username ];
-      download-buffer-size = 65536; # 64MB buffer
+      download-buffer-size = 65536;
       max-jobs = 3;
       cores = 1;
       trusted-substituters = true;
@@ -34,8 +34,6 @@
 
       # Binary caches
       substituters =
-        [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
-      substituters-priority =
         [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     };
     extraOptions = ''
@@ -112,16 +110,6 @@
     options = [ "size=2G" "mode=1777" ];
   };
 
-  # We handle RAM disk setup in the home-manager activation script now
-  # No separate systemd service needed
-
   # System configuration
   system.stateVersion = "23.11";
-
-  # Package overrides
-  packageOverrides = pkgs: {
-    rustc = pkgs.rustc.override {
-      version = "1.73.0";
-    }; # Use a version with good binary cache coverage
-  };
 }

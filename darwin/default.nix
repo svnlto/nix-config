@@ -7,9 +7,11 @@
   environment.systemPackages = with pkgs; [
     oh-my-posh
     eza
+    zoxide
     hstr
     git
     diff-so-fancy
+    nixfmt-classic
     tree
   ];
 
