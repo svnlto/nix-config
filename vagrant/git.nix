@@ -36,6 +36,12 @@ let
       commit = {
         gpgsign = false; # Set to true if you use GPG signing
       };
+      credential."https://github.com" = {
+        helper = "!/home/${username}/.nix-profile/bin/gh auth git-credential";
+      };
+      credential."https://gist.github.com" = {
+        helper = "!/home/${username}/.nix-profile/bin/gh auth git-credential";
+      };
       rerere = { enabled = true; };
       help = { autocorrect = 10; };
       color = {
@@ -108,4 +114,8 @@ in {
 
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
+
+  home.activation.linkGitConfig = config.lib.dag.entryAfter ["writeBoundary"] ''
+  ln -sf ${config.home.homeDirectory}/.config/git/config /home/${username}/.gitconfig
+  ''
 }
