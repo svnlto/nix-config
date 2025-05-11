@@ -1,12 +1,12 @@
 { config, lib, pkgs, username, ... }:
 
-let sharedZsh = import ../common/zsh/shared.nix;
+let sharedZsh = import ../../common/zsh/shared.nix;
 in {
   # Vagrant-specific ZSH configuration for home-manager
 
   # Install Oh My Posh theme
   home.file.".config/oh-my-posh/default.omp.json".source =
-    ../common/zsh/default.omp.json;
+    ../../common/zsh/default.omp.json;
 
   # Home Manager ZSH configuration
   programs.zsh = {
