@@ -4,7 +4,12 @@
   imports = [ ./home.nix ];
 
   # VM-specific packages
-  environment.systemPackages = with pkgs; [ curl wget ];
+  environment.systemPackages = with pkgs; [ 
+    curl 
+    wget
+    fuse
+    fuse3
+  ];
 
   # Environment variables
   environment.variables = {
@@ -52,7 +57,7 @@
   # User configuration
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [ "docker" ];
+    extraGroups = [ "docker" "fuse" ];
     shell = pkgs.zsh;
   };
 

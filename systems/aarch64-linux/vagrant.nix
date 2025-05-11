@@ -9,6 +9,7 @@
     ./user-scripts.nix
     ./ramdisk.nix
     ./github.nix
+    ./rclone.nix
   ];
 
   # Explicitly tell home-manager not to manage nix.conf
@@ -59,6 +60,7 @@
     wget
     pre-commit
     rclone
+    trivy
   ];
 
   # Program configurations
