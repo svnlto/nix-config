@@ -16,7 +16,7 @@
       # Stop any existing rclone processes
       pkill -f "rclone mount gdrive:" 2>/dev/null || true
       
-      # Create mount directory in home directory
+      # Create mount directory in /vagrant
       mkdir -p $HOME/google-drive
       
       # Create a local cache directory for better performance
@@ -25,6 +25,7 @@
       # Mount with highly optimized settings for better performance
       rclone mount gdrive: $HOME/google-drive \
         --daemon \
+        --allow-non-empty \
         --vfs-cache-mode full \
         --vfs-cache-max-size 10G \
         --vfs-cache-max-age 72h \
