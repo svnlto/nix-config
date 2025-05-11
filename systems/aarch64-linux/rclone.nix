@@ -50,11 +50,6 @@
         --log-file=$HOME/rclone-gdrive.log
       
       echo "Google Drive mounted at $HOME/google-drive with optimized settings"
-      
-      # Create a symbolic link from /vagrant/google-drive to the home directory mount
-      if [ ! -L "/vagrant/google-drive" ]; then
-        ln -sf $HOME/google-drive /vagrant/google-drive
-      fi
     '';
   };
 
@@ -91,11 +86,6 @@
       # Unmount Google Drive (from home directory)
       fusermount -u $HOME/google-drive
       
-      # Remove symlink if it exists
-      if [ -L "/vagrant/google-drive" ]; then
-        rm -f /vagrant/google-drive
-      fi
-      
       echo "Google Drive unmounted"
     '';
   };
@@ -108,7 +98,6 @@
       
       if pgrep -f "rclone mount gdrive:" > /dev/null; then
         echo "✅ Google Drive is mounted at $HOME/google-drive"
-        echo "✅ Symlinked to /vagrant/google-drive"
         echo "Cache directory: $HOME/.cache/rclone"
         echo "Log file: $HOME/rclone-gdrive.log"
         
