@@ -33,6 +33,7 @@
         mkdir -p "/ramdisk/tmp" 2>/dev/null || echo "Could not create tmp dir"
         mkdir -p "/ramdisk/.pnpm/store" 2>/dev/null || echo "Could not create pnpm dirs"
         mkdir -p "/ramdisk/.terraform.d/plugin-cache" 2>/dev/null || echo "Could not create terraform dirs"
+        mkdir -p "/ramdisk/.terraform.d/plugins" 2>/dev/null || echo "Could not create terraform dirs"
         
         # Try to set permissions but don't fail if we can't
         chmod 777 "/ramdisk/tmp" 2>/dev/null || true

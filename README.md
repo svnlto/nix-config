@@ -1,5 +1,14 @@
 # 🚀 My Cross-Platform Nix Setup
 
+## 🔄 Recent Improvements
+
+I've recently restructured this configuration to better follow Nix best practices:
+
+- Organized configurations by system architecture in the `systems/` directory
+- Added Packer support for deploying to AWS EC2 instances
+- Improved overall organization for better maintainability and scalability
+- Followed Nix conventions for architecture-specific configurations
+
 ## 🏗️ Why I Built This
 
 Hey! This is just my Nix setup that I've put together over time to make coding easier. I got some ideas from Mitchell Hashimoto's approach to dev environments and tweaked things to work for me.
@@ -35,23 +44,26 @@ Here's how I've organized everything:
 │       ├── default.nix   # ZSH module definition
 │       ├── default.omp.json # Oh-My-Posh theme
 │       └── shared.nix    # Shared ZSH settings
-├── darwin/               # macOS specific configuration
-│   ├── default.nix       # Main configuration for macOS
-│   ├── homebrew.nix      # Homebrew packages and settings
-│   ├── defaults.nix      # macOS system preferences
-│   ├── dock.nix          # Dock configuration
-│   └── zsh.nix           # macOS-specific ZSH setup
+├── systems/              # Architecture-specific configurations
+│   ├── aarch64-darwin/   # Apple Silicon macOS configurations
+│   │   ├── default.nix   # Main configuration for macOS
+│   │   ├── homebrew.nix  # Homebrew packages and settings
+│   │   ├── defaults.nix  # macOS system preferences
+│   │   ├── dock.nix      # Dock configuration
+│   │   └── git.nix       # macOS-specific Git setup
+│   ├── aarch64-linux/    # ARM Linux configurations (AWS Graviton, etc.)
+│   │   └── ec2.nix       # EC2-specific Home Manager configuration
+│   └── x86_64-linux/     # x86_64 Linux configurations
+│       ├── default.nix   # System configuration
+│       ├── vagrant.nix   # Vagrant VM configuration
+│       ├── git.nix       # VM-specific Git configuration
+│       └── zsh.nix       # VM-specific ZSH setup
 ├── overlays/             # Custom Nix overlays
 │   ├── browser-forward.nix  # Browser forwarding for SSH sessions
 │   ├── nvm.nix           # Node Version Manager overlay
 │   └── tfenv.nix         # Terraform Version Manager overlay
-├── scripts/              # Utility scripts
-│   └── setup-local-config.sh # Script to set up Git local configuration
-└── vagrant/              # Vagrant VM configuration
-    ├── default.nix       # System configuration
-    ├── home.nix          # User environment via Home Manager
-    ├── git.nix           # VM-specific Git configuration
-    └── zsh.nix           # VM-specific ZSH setup
+├── packer/               # Packer templates
+│   └── aws-ec2.pkr.hcl   # AWS EC2 instance configuration
 ```
 
 ## 🛠️ Installation
@@ -93,6 +105,26 @@ Setting up on macOS is pretty straightforward:
    # For the default configuration (hostname: macbook)
    darwin-rebuild switch --flake ~/.config/nix#macbook
    ```
+
+### 🌩️ Cloud Deployment with Packer {#-cloud-deployment-with-packer}
+
+I've added Packer configuration to build an AWS EC2 instance with my Nix setup:
+
+```bash
+# Initialize Packer plugins
+cd ~/.config/nix/packer
+packer init aws-ec2.pkr.hcl
+
+# Make sure you have AWS credentials configured
+# Best practice: Use AWS profiles in ~/.aws/credentials
+# See https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
+
+# Build the AMI with your AWS profile
+packer build -var "aws_profile=your-profile" aws-ec2.pkr.hcl
+
+# Or use the default profile
+packer build aws-ec2.pkr.hcl
+```
 
 ### ✨ Creating a New macOS Host Configuration
 
@@ -152,7 +184,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
 
 4. Connect with VS Code Remote-SSH:
    - Install the "Remote - SSH" extension in VS Code
-   - Your SSH configuration is automatically maintained by the Nix configuration in `darwin/default.nix`
+   - Your SSH configuration is automatically maintained by the Nix configuration in `systems/aarch64-darwin/default.nix`
    - The SSH config includes all the settings needed to connect to your Vagrant VM:
      ```
      Host nix-dev
@@ -175,7 +207,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    - Open the `/vagrant` folder - it's synced with your host's nix config
    - Or open `~/.config/nix` to work directly with your configuration
 
-   **Note**: The SSH configuration is automatically applied during system activation, so any changes made to the configuration in `darwin/default.nix` will be applied when you run `darwin-rebuild switch`.
+   **Note**: The SSH configuration is automatically applied during system activation, so any changes made to the configuration in `systems/aarch64-darwin/default.nix` will be applied when you run `darwin-rebuild switch`.
 
 5. Some handy VM commands:
    ```bash
@@ -199,6 +231,8 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
 ### ☁️ AWS EC2 + Ubuntu Setup
 
 Want to take your development environment to the cloud? Here's how to set up your Nix configuration on an EC2 instance:
+
+> **Note**: As an alternative to manual setup, consider using the Packer template in `packer/aws-ec2.pkr.hcl` to automatically build an AMI with Nix pre-configured. See the [Cloud Deployment with Packer](#-cloud-deployment-with-packer) section.
 
 1. Launch an Ubuntu EC2 instance:
    - Use Ubuntu Server 22.04 LTS or newer (ARM64 for Graviton instances)
@@ -263,8 +297,8 @@ Want to take your development environment to the cloud? Here's how to set up you
        "ec2" = home-manager.lib.homeManagerConfiguration {
          pkgs = nixpkgsWithOverlays "aarch64-linux";
          modules = [
-           ./vagrant/home.nix  # Reuse Vagrant config as base
-           ./ec2/home.nix      # EC2-specific overrides
+           ./systems/x86_64-linux/vagrant.nix  # Reuse Vagrant config as base
+           ./systems/aarch64-linux/ec2.nix      # EC2-specific overrides
            {
              home = {
                username = "ubuntu";
@@ -281,10 +315,10 @@ Want to take your development environment to the cloud? Here's how to set up you
 
    - Create a directory for EC2-specific configuration:
      ```bash
-     mkdir -p ~/.config/nix/ec2
+     mkdir -p ~/.config/nix/systems/aarch64-linux
      ```
 
-   - Create a basic `ec2/home.nix` file:
+   - Create a basic `systems/aarch64-linux/ec2.nix` file:
      ```nix
      { config, pkgs, username, ... }:
 
@@ -416,12 +450,14 @@ Tweaking things is easy:
 Here's how to do all the usual stuff:
 
 - 📦 Adding packages everywhere: Just edit `common/default.nix`
-- 🍎 Adding Mac-only packages: Edit `darwin/default.nix`
-- 🍺 Need a GUI app via Homebrew? Edit `darwin/homebrew.nix`
-- ⚙️ Tweaking macOS settings: Look in `darwin/defaults.nix`
+- 🍎 Adding Mac-only packages: Edit `systems/aarch64-darwin/default.nix`
+- 🍺 Need a GUI app via Homebrew? Edit `systems/aarch64-darwin/homebrew.nix`
+- ⚙️ Tweaking macOS settings: Look in `systems/aarch64-darwin/defaults.nix`
 - 📱 Changing dock icons: Find your host in `flake.nix`
-- 🐧 Adding stuff to your VM: Edit `vagrant/home.nix`
+- 🐧 Adding stuff to your VM: Edit `systems/x86_64-linux/vagrant.nix`
+- ☁️ Adding stuff to your EC2 instance: Edit `systems/aarch64-linux/ec2.nix`
 - 🖥️ Changing VM settings: It's all in `Vagrantfile`
+- ⚡ Modifying AWS EC2 image: Edit `packer/aws-ec2.pkr.hcl`
 - 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
 
 ## ✨ Features
@@ -457,7 +493,7 @@ I love being able to have different dock setups for different Macs:
 
 I've set things up so I can easily manage:
 - 🌐 Tools I want everywhere (in `common/`)
-- 💻 Stuff specific to each platform (in `darwin/` and `vagrant/`)
+- 💻 Stuff specific to each architecture (in `systems/aarch64-darwin/` and `systems/x86_64-linux/`)
 - 👤 My personal preferences and settings
 
 ### 📦 Custom Nix Overlays

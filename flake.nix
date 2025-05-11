@@ -38,7 +38,7 @@
           inherit system;
           modules = [
             ./common
-            ./darwin
+            ./systems/${system}
             # Pass hostname to configuration
             {
               networking.hostName = hostname;
@@ -117,7 +117,7 @@
       homeConfigurations.vagrant = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgsWithOverlays "aarch64-linux";
         modules = [
-          ./vagrant/home.nix
+          ./systems/x86_64-linux/vagrant.nix
           {
             home = {
               username = "vagrant";
@@ -147,6 +147,30 @@
           }
         ];
         extraSpecialArgs = { username = "vagrant"; };
+      };
+      
+      # Standalone home-manager configuration for EC2
+      homeConfigurations.ec2 = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgsWithOverlays "aarch64-linux";
+        modules = [
+          ./systems/aarch64-linux/ec2.nix
+          {
+            home = {
+              username = "ubuntu";
+              homeDirectory = "/home/ubuntu";
+              stateVersion = "23.11";
+            };
+            
+            nixpkgs.config.allowUnfree = true;
+            
+            # Explicitly specify nix.package for home-manager
+            nix = {
+              package = nixpkgs.legacyPackages.aarch64-linux.nix;
+              settings.experimental-features = [ "nix-command" "flakes" ];
+            };
+          }
+        ];
+        extraSpecialArgs = { username = "ubuntu"; };
       };
     };
 }
