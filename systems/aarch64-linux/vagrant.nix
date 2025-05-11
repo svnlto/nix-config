@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../common/home-packages.nix
+    ../../common/home-packages.nix
     ./zsh.nix
     ./git.nix
     ./aws.nix

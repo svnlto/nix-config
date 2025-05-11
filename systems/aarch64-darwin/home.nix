@@ -45,5 +45,5 @@
 
   # Install Oh My Posh theme
   home.file.".config/oh-my-posh/default.omp.json".source =
-    ../common/zsh/default.omp.json;
+    ../../common/zsh/default.omp.json;
 }

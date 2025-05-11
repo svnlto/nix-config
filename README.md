@@ -1,16 +1,5 @@
 # 🚀 My Cross-Platform Nix Setup
 
-## 🔄 Recent Improvements
-
-I've recently restructured this configuration to better follow Nix best practices:
-
-- Organized configurations by system architecture in the `systems/` directory
-- Focus on aarch64 architecture only (Apple Silicon and ARM Linux)
-- Added Packer support for deploying to AWS EC2 instances
-- Improved overall organization for better maintainability and scalability
-- Followed Nix conventions for architecture-specific configurations
-- Implemented AWS profile support for better AWS resource management
-
 ## 🏗️ Why I Built This
 
 Hey! This is just my Nix setup that I've put together over time to make coding easier. I got some ideas from Mitchell Hashimoto's approach to dev environments and tweaked things to work for me.

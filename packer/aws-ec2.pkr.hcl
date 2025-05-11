@@ -98,7 +98,7 @@ build {
 
   # Install any additional packages or configurations
   provisioner "file" {
-    source      = "./common/zsh/default.omp.json"
+    source      = "../common/zsh/default.omp.json"
     destination = "/home/${var.ssh_username}/.config/oh-my-posh/default.omp.json"
   }
 
