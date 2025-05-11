@@ -16,14 +16,14 @@
       # Stop any existing rclone processes
       pkill -f "rclone mount gdrive:" 2>/dev/null || true
       
-      # Create mount directory if it doesn't exist
-      mkdir -p /vagrant/google-drive
+      # Create mount directory in home directory
+      mkdir -p $HOME/google-drive
       
       # Create a local cache directory for better performance
       mkdir -p $HOME/.cache/rclone
       
       # Mount with highly optimized settings for better performance
-      rclone mount gdrive: /vagrant/google-drive \
+      rclone mount gdrive: $HOME/google-drive \
         --daemon \
         --vfs-cache-mode full \
         --vfs-cache-max-size 10G \
@@ -47,9 +47,14 @@
         --no-modtime \
         --stats 0 \
         --log-level INFO \
-        --log-file /tmp/rclone-gdrive.log
+        --log-file=$HOME/rclone-gdrive.log
       
-      echo "Google Drive mounted at /vagrant/google-drive with optimized settings"
+      echo "Google Drive mounted at $HOME/google-drive with optimized settings"
+      
+      # Create a symbolic link from /vagrant/google-drive to the home directory mount
+      if [ ! -L "/vagrant/google-drive" ]; then
+        ln -sf $HOME/google-drive /vagrant/google-drive
+      fi
     '';
   };
 
@@ -83,8 +88,13 @@
     text = ''
       #!/bin/bash
       
-      # Unmount Google Drive
-      fusermount -u /vagrant/google-drive
+      # Unmount Google Drive (from home directory)
+      fusermount -u $HOME/google-drive
+      
+      # Remove symlink if it exists
+      if [ -L "/vagrant/google-drive" ]; then
+        rm -f /vagrant/google-drive
+      fi
       
       echo "Google Drive unmounted"
     '';
@@ -97,9 +107,13 @@
       #!/bin/bash
       
       if pgrep -f "rclone mount gdrive:" > /dev/null; then
-        echo "✅ Google Drive is mounted at /vagrant/google-drive"
+        echo "✅ Google Drive is mounted at $HOME/google-drive"
+        echo "✅ Symlinked to /vagrant/google-drive"
         echo "Cache directory: $HOME/.cache/rclone"
-        echo "Log file: /tmp/rclone-gdrive.log"
+        echo "Log file: $HOME/rclone-gdrive.log"
+        
+        # Mount status
+        mountpoint -q $HOME/google-drive && echo "✅ Mount point verified" || echo "❌ Mount point not active"
         
         # Check disk usage of cache
         echo -e "\nCache usage:"
@@ -107,7 +121,7 @@
         
         # Show recent log entries
         echo -e "\nRecent log entries:"
-        tail -n 5 /tmp/rclone-gdrive.log 2>/dev/null || echo "No log entries yet"
+        tail -n 5 $HOME/rclone-gdrive.log 2>/dev/null || echo "No log entries yet"
       else
         echo "❌ Google Drive is not mounted"
       fi
