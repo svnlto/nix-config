@@ -60,6 +60,10 @@
     extraGroups = [ "docker" "fuse" ];
     shell = pkgs.zsh;
   };
+  
+  # Add fuse modules explicitly to ensure they're available
+  boot.supportedFilesystems = [ "fuse" ];
+  boot.kernelModules = [ "fuse" ];
 
   # Configure passwordless sudo access
   security.sudo = { enable = true; };
