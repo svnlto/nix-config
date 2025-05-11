@@ -64,7 +64,25 @@
 
   # Terraform CLI configuration
   home.file.".terraformrc".text = ''
+    # Plugin cache on RAM disk for faster operations
     plugin_cache_dir = "/ramdisk/.terraform.d/plugin-cache"
+    
+    # Disable version checking to reduce network calls
     disable_checkpoint = true
+    disable_checkpoint_signature = true
+    
+    # HashiCorp Cloud Platform (HCP) Terraform credentials
+    # Replace with your actual token or use environment variables
+    credentials "app.terraform.io" {
+      token = "TERRAFORM_TOKEN_PLACEHOLDER"
+    }
+    
+    # Optional: Provider installation optimization
+    provider_installation {
+      filesystem_mirror {
+        path = "/ramdisk/.terraform.d/plugins"
+      }
+      direct {}
+    }
   '';
 }
