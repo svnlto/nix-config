@@ -24,17 +24,17 @@
       # The main /ramdisk mount is handled by the Vagrantfile provisioner
       if [ -d "/ramdisk" ] && [ -w "/ramdisk" ]; then
         echo "RAM disk is mounted and writable"
-        
+
         # Try creating user-specific directories that we should have permission for
         echo "Setting up user cache directories in RAM disk..."
-        
+
         # Create user directories in ramdisk - focus on directories we'll use
         mkdir -p "/ramdisk/.npm" 2>/dev/null || echo "Could not create npm cache dir"
         mkdir -p "/ramdisk/tmp" 2>/dev/null || echo "Could not create tmp dir"
         mkdir -p "/ramdisk/.pnpm/store" 2>/dev/null || echo "Could not create pnpm dirs"
         mkdir -p "/ramdisk/.terraform.d/plugin-cache" 2>/dev/null || echo "Could not create terraform dirs"
         mkdir -p "/ramdisk/.terraform.d/plugins" 2>/dev/null || echo "Could not create terraform dirs"
-        
+
         # Try to set permissions but don't fail if we can't
         chmod 777 "/ramdisk/tmp" 2>/dev/null || true
       else

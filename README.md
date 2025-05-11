@@ -42,7 +42,7 @@ Here's how I've organized everything:
 │   │   ├── defaults.nix  # macOS system preferences
 │   │   ├── dock.nix      # Dock configuration
 │   │   └── git.nix       # macOS-specific Git setup
-│   └── aarch64-linux/    # ARM Linux configurations 
+│   └── aarch64-linux/    # ARM Linux configurations
 │       ├── ec2.nix       # EC2-specific Home Manager configuration
 │       ├── vagrant.nix   # Vagrant VM configuration
 │       ├── default.nix   # System configuration
@@ -74,11 +74,11 @@ Setting up on macOS with Apple Silicon is pretty straightforward:
    ```bash
    # Install Nix
    sh <(curl -L https://nixos.org/nix/install)
-   
+
    # Enable flakes (minimal bootstrap configuration)
    mkdir -p ~/.config/nix
    echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-   
+
    # Install nix-darwin
    nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
    ./result/bin/darwin-installer
@@ -127,7 +127,7 @@ Want to use this on multiple Macs? No problem! You can have different settings f
      username = "your-username";
      dockApps = [
        "/Applications/Safari.app"
-       "/Applications/Mail.app" 
+       "/Applications/Mail.app"
        "/Applications/Visual Studio Code.app"
      ];
    };
@@ -146,7 +146,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```bash
    # Apply your nix-darwin config to install UTM and Vagrant
    darwin-rebuild switch --flake ~/.config/nix#macbook
-   
+
    # Install the Vagrant UTM plugin
    vagrant plugin install vagrant-utm
    ```
@@ -156,7 +156,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    cd ~/.config/nix
    vagrant up
    ```
-   
+
    **Heads up**: The first time you do this:
    - UTM will ask for permission (just say yes)
    - Your terminal will ask if you want to download the VM image (say yes to that too)
@@ -167,7 +167,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```bash
    # Quick way - SSH from your terminal
    vagrant ssh
-   
+
    # Or get the VM's IP for connecting with VS Code
    ip addr show | grep "inet " | grep -v 127.0.0.1
    ```
@@ -191,7 +191,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
        PubkeyAcceptedKeyTypes +ssh-rsa
        HostKeyAlgorithms +ssh-rsa
      ```
-   
+
    - In VS Code, open the Command Palette (⇧⌘P) and run "Remote-SSH: Connect to Host..."
    - Select "nix-dev" from the list
    - Open the `/vagrant` folder - it's synced with your host's nix config
@@ -212,7 +212,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```bash
    # From your Mac
    vagrant provision
-   
+
    # Or from inside the VM
    cd ~/.config/nix
    nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
@@ -235,15 +235,15 @@ Want to take your development environment to the cloud? Here's how to set up you
    # Add Tailscale's package repository
    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-   
+
    # Install Tailscale
    sudo apt-get update
    sudo apt-get install -y tailscale
-   
+
    # Start and authenticate Tailscale
    # This will output a URL to authenticate your instance
    sudo tailscale up
-   
+
    # Open the URL in your browser and authenticate the machine
    # Once authenticated, note the tailscale hostname (e.g., "ec2-dev.example.tailnet.ts.net")
    tailscale status
@@ -259,13 +259,13 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```bash
    # Update system packages first
    sudo apt update && sudo apt upgrade -y
-   
+
    # Install required dependencies
    sudo apt install -y curl git xz-utils
-   
+
    # Install Nix with daemon (multi-user install)
    sh <(curl -L https://nixos.org/nix/install) --daemon
-   
+
    # Reload shell to get Nix in PATH
    . /etc/profile.d/nix.sh
    ```
@@ -282,7 +282,7 @@ Want to take your development environment to the cloud? Here's how to set up you
      ```nix
      homeConfigurations = {
        # ...existing vagrant configuration...
-       
+
        # EC2 instance configuration
        "ec2" = home-manager.lib.homeManagerConfiguration {
          pkgs = nixpkgsWithOverlays "aarch64-linux";
@@ -315,13 +315,13 @@ Want to take your development environment to the cloud? Here's how to set up you
      {
        # EC2-specific configuration
        # This will override or extend the base vagrant configuration
-       
+
        # Additional packages specific to EC2 environment
        home.packages = with pkgs; [
          awscli2
          amazon-ecr-credential-helper
        ];
-       
+
        # EC2-specific Git configuration
        programs.git.extraConfig = {
          credential.helper = "!aws codecommit credential-helper $@";
@@ -335,7 +335,7 @@ Want to take your development environment to the cloud? Here's how to set up you
    # Enable flakes
    mkdir -p ~/.config/nix
    echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-   
+
    # Apply the EC2-specific configuration
    export NIXPKGS_ALLOW_UNFREE=1
    nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
@@ -375,10 +375,10 @@ I've set up two super handy version managers in the VM that make switching betwe
    ```bash
    # Grab any Terraform version you want
    tfenv install 1.5.0
-   
+
    # Switch versions with a single command
    tfenv use 1.5.0
-   
+
    # See what you've got installed
    tfenv list
    ```
@@ -387,10 +387,10 @@ I've set up two super handy version managers in the VM that make switching betwe
    ```bash
    # Install Node versions like candy
    nvm install 18
-   
+
    # Hop between versions instantly
    nvm use 16
-   
+
    # Check what you've got
    nvm list
    ```
@@ -410,7 +410,7 @@ Keeping everything up to date is super simple:
 # Pull latest changes
 git pull
 
-# Apply configuration 
+# Apply configuration
 darwin-rebuild switch --flake ~/.config/nix#macbook
 ```
 

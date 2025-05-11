@@ -38,7 +38,7 @@ source "amazon-ebs" "nixos" {
   profile         = var.aws_profile
   instance_type   = var.instance_type
   region          = var.aws_region
-  
+
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/hvm-ssd/ubuntu-24.04-amd64-server-*"
@@ -48,9 +48,9 @@ source "amazon-ebs" "nixos" {
     most_recent = true
     owners      = ["099720109477"] # Canonical
   }
-  
+
   ssh_username = var.ssh_username
-  
+
   tags = {
     Name        = "NixOS Environment"
     Environment = "Development"
@@ -109,7 +109,7 @@ build {
       "chsh -s $(which zsh)",
       "curl -s https://ohmyposh.dev/install.sh | bash -s -- --shell zsh"
     ]
-  } 
+  }
 
   # Final cleanup
   provisioner "shell" {

@@ -37,7 +37,7 @@ jobs:
           curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
           . /etc/profile.d/nix.sh
           nix-env -iA nixpkgs.nixpkgs-fmt nixpkgs.shellcheck
-          
+
           # Install pre-commit
           pip install pre-commit
 
@@ -47,6 +47,6 @@ jobs:
           if [ -e /etc/profile.d/nix.sh ]; then
             . /etc/profile.d/nix.sh
           fi
-          
+
           # Run pre-commit
           pre-commit run --all-files

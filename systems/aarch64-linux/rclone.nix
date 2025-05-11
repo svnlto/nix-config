@@ -118,11 +118,11 @@
         echo "✅ Google Drive is mounted at $HOME/google-drive"
         echo "Cache directory: $HOME/.cache/rclone"
         echo "Log file: $HOME/rclone-gdrive.log"
-        
+
         # Check disk usage of cache
         echo -e "\nCache usage:"
         du -sh $HOME/.cache/rclone 2>/dev/null || echo "Cache not yet created"
-        
+
         # Show recent log entries
         echo -e "\nRecent log entries:"
         tail -n 5 $HOME/rclone-gdrive.log 2>/dev/null || echo "No log entries yet"
@@ -134,7 +134,7 @@
           echo "❌ Google Drive is not mounted"
           echo "No rclone process for gdrive found"
         fi
-        
+
         # Check if mount directory exists
         if [ ! -d "$HOME/google-drive" ]; then
           echo "Mount directory does not exist. Run mount-gdrive to create and mount it."
