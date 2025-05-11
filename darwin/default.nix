@@ -77,7 +77,7 @@
       UserKnownHostsFile /dev/null
       StrictHostKeyChecking no
       PasswordAuthentication no
-      IdentityFile /Users/svenlito/.config/nix/.vagrant/machines/default/utm/private_key
+      IdentityFile /Users/${username}/.config/nix/.vagrant/machines/default/utm/private_key
       IdentitiesOnly yes
       LogLevel FATAL
       ForwardAgent yes
