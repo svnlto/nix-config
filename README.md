@@ -51,13 +51,13 @@ Here's how I've organized everything:
 │   │   ├── defaults.nix  # macOS system preferences
 │   │   ├── dock.nix      # Dock configuration
 │   │   └── git.nix       # macOS-specific Git setup
-│   ├── aarch64-linux/    # ARM Linux configurations (AWS Graviton, etc.)
-│   │   └── ec2.nix       # EC2-specific Home Manager configuration
-│   └── x86_64-linux/     # x86_64 Linux configurations
-│       ├── default.nix   # System configuration
-│       ├── vagrant.nix   # Vagrant VM configuration
-│       ├── git.nix       # VM-specific Git configuration
-│       └── zsh.nix       # VM-specific ZSH setup
+│   ├── aarch64-linux/    # ARM Linux configurations 
+│   │   ├── ec2.nix       # EC2-specific Home Manager configuration
+│   │   ├── vagrant.nix   # Vagrant VM configuration
+│   │   ├── default.nix   # System configuration
+│   │   ├── git.nix       # VM-specific Git configuration
+│   │   └── zsh.nix       # VM-specific ZSH setup
+│   └── x86_64-linux/     # x86_64 Linux configurations (unused)
 ├── overlays/             # Custom Nix overlays
 │   ├── browser-forward.nix  # Browser forwarding for SSH sessions
 │   ├── nvm.nix           # Node Version Manager overlay
@@ -297,7 +297,7 @@ Want to take your development environment to the cloud? Here's how to set up you
        "ec2" = home-manager.lib.homeManagerConfiguration {
          pkgs = nixpkgsWithOverlays "aarch64-linux";
          modules = [
-           ./systems/x86_64-linux/vagrant.nix  # Reuse Vagrant config as base
+           ./systems/aarch64-linux/vagrant.nix  # Reuse Vagrant config as base
            ./systems/aarch64-linux/ec2.nix      # EC2-specific overrides
            {
              home = {
@@ -454,7 +454,7 @@ Here's how to do all the usual stuff:
 - 🍺 Need a GUI app via Homebrew? Edit `systems/aarch64-darwin/homebrew.nix`
 - ⚙️ Tweaking macOS settings: Look in `systems/aarch64-darwin/defaults.nix`
 - 📱 Changing dock icons: Find your host in `flake.nix`
-- 🐧 Adding stuff to your VM: Edit `systems/x86_64-linux/vagrant.nix`
+- 🐧 Adding stuff to your VM: Edit `systems/aarch64-linux/vagrant.nix`
 - ☁️ Adding stuff to your EC2 instance: Edit `systems/aarch64-linux/ec2.nix`
 - 🖥️ Changing VM settings: It's all in `Vagrantfile`
 - ⚡ Modifying AWS EC2 image: Edit `packer/aws-ec2.pkr.hcl`
@@ -493,7 +493,7 @@ I love being able to have different dock setups for different Macs:
 
 I've set things up so I can easily manage:
 - 🌐 Tools I want everywhere (in `common/`)
-- 💻 Stuff specific to each architecture (in `systems/aarch64-darwin/` and `systems/x86_64-linux/`)
+- 💻 Stuff specific to each architecture (in `systems/aarch64-darwin/` and `systems/aarch64-linux/`)
 - 👤 My personal preferences and settings
 
 ### 📦 Custom Nix Overlays

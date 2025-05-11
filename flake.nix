@@ -117,7 +117,7 @@
       homeConfigurations.vagrant = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgsWithOverlays "aarch64-linux";
         modules = [
-          ./systems/x86_64-linux/vagrant.nix
+          ./systems/aarch64-linux/vagrant.nix
           {
             home = {
               username = "vagrant";
