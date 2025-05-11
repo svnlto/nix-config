@@ -115,7 +115,8 @@ in {
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
 
-  home.activation.linkGitConfig = config.lib.dag.entryAfter ["writeBoundary"] ''
-  ln -sf ${config.home.homeDirectory}/.config/git/config /home/${username}/.gitconfig
-  ''
+  home.activation.linkGitConfig =
+    config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      ln -sf ${config.home.homeDirectory}/.config/git/config /home/${username}/.gitconfig
+    '';
 }
