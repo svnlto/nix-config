@@ -79,26 +79,21 @@ rec {
 
   # Tool initialization commands
   tools = ''
-    # Lazy-load zoxide
-    zoxide_init() {
-      eval "$(zoxide init --cmd cd zsh)"
-      unfunction zoxide_init
-    }
-    zoxide() { zoxide_init; zoxide "$@" }
-    cd() { zoxide_init; cd "$@" }
+    # Simple zoxide initialization
+    if command -v zoxide >/dev/null 2>&1; then
+      eval "$(zoxide init zsh)"
+    fi
 
-    # Lazy-load oh-my-posh
-    omp_init() {
+    # Simple oh-my-posh initialization
+    if command -v oh-my-posh >/dev/null 2>&1; then
       eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
-      unfunction omp_init
-    }
-    precmd_functions+=(omp_init)
+    fi
 
-    # HSTR colors - only needed when hstr is actually used
-    hstr() {
+    # HSTR configuration
+    if command -v hstr >/dev/null 2>&1; then
       export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
-      command hstr "$@"
-    }
+      alias hh="hstr"
+    fi
   '';
 
   # Add another block at the end
