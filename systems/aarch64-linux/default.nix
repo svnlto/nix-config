@@ -4,12 +4,7 @@
   imports = [ ./home.nix ];
 
   # VM-specific packages
-  environment.systemPackages = with pkgs; [ 
-    curl 
-    wget
-    fuse
-    fuse3
-  ];
+  environment.systemPackages = with pkgs; [ curl wget fuse fuse3 ];
 
   # Environment variables
   environment.variables = {
@@ -60,7 +55,7 @@
     extraGroups = [ "docker" "fuse" ];
     shell = pkgs.zsh;
   };
-  
+
   # Add fuse modules explicitly to ensure they're available
   boot.supportedFilesystems = [ "fuse" ];
   boot.kernelModules = [ "fuse" ];

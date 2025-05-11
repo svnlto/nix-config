@@ -12,16 +12,35 @@
     executable = true;
     text = ''
       #!/bin/bash
-      
+
+      # Backup existing config if present
+      if [ -f "$HOME/.config/rclone/rclone.conf" ]; then
+        cp "$HOME/.config/rclone/rclone.conf" "$HOME/.config/rclone/rclone.conf.backup-$(date +%Y%m%d%H%M%S)"
+      fi
+
+      # Check if rclone configuration exists
+      if [ ! -f "$HOME/.config/rclone/rclone.conf" ]; then
+        echo "Error: No rclone configuration found at $HOME/.config/rclone/rclone.conf"
+        echo "Please run 'rclone config' to set up your Google Drive remote before mounting."
+        exit 1
+      fi
+
+      # Check if gdrive remote exists
+      if ! rclone listremotes | grep -q "^gdrive:$"; then
+        echo "Error: No 'gdrive:' remote found in rclone configuration."
+        echo "Please run 'rclone config' to set up your Google Drive remote before mounting."
+        exit 1
+      fi
+
       # Stop any existing rclone processes
       pkill -f "rclone mount gdrive:" 2>/dev/null || true
-      
+
       # Create mount directory in /vagrant
       mkdir -p $HOME/google-drive
-      
+
       # Create a local cache directory for better performance
       mkdir -p $HOME/.cache/rclone
-      
+
       # Mount with highly optimized settings for better performance
       rclone mount gdrive: $HOME/google-drive \
         --daemon \
@@ -49,7 +68,7 @@
         --stats 0 \
         --log-level INFO \
         --log-file=$HOME/rclone-gdrive.log
-      
+
       echo "Google Drive mounted at $HOME/google-drive with optimized settings"
     '';
   };
@@ -68,14 +87,11 @@
       ExecStop = "${config.home.homeDirectory}/.bin/unmount-gdrive";
       Restart = "on-failure";
       RestartSec = "30s";
-      Environment = [
-        "PATH=${lib.makeBinPath [pkgs.rclone pkgs.fuse pkgs.coreutils]}"
-      ];
+      Environment =
+        [ "PATH=${lib.makeBinPath [ pkgs.rclone pkgs.fuse pkgs.coreutils ]}" ];
     };
 
-    Install = {
-      WantedBy = ["default.target"];
-    };
+    Install = { WantedBy = [ "default.target" ]; };
   };
 
   # Create unmount script
@@ -83,10 +99,10 @@
     executable = true;
     text = ''
       #!/bin/bash
-      
+
       # Unmount Google Drive (from home directory)
       fusermount -u $HOME/google-drive
-      
+
       echo "Google Drive unmounted"
     '';
   };
@@ -96,14 +112,12 @@
     executable = true;
     text = ''
       #!/bin/bash
-      
-      if pgrep -f "rclone mount gdrive:" > /dev/null; then
+
+      # First check the mount point directly - most reliable method
+      if mountpoint -q "$HOME/google-drive" 2>/dev/null; then
         echo "✅ Google Drive is mounted at $HOME/google-drive"
         echo "Cache directory: $HOME/.cache/rclone"
         echo "Log file: $HOME/rclone-gdrive.log"
-        
-        # Mount status
-        mountpoint -q $HOME/google-drive && echo "✅ Mount point verified" || echo "❌ Mount point not active"
         
         # Check disk usage of cache
         echo -e "\nCache usage:"
@@ -113,15 +127,26 @@
         echo -e "\nRecent log entries:"
         tail -n 5 $HOME/rclone-gdrive.log 2>/dev/null || echo "No log entries yet"
       else
-        echo "❌ Google Drive is not mounted"
+        # Try several methods to detect the rclone process
+        if ps aux | grep -v grep | grep -q "[r]clone.*gdrive:"; then
+          echo "⚠️ Rclone process found but mount point is not active"
+        else
+          echo "❌ Google Drive is not mounted"
+          echo "No rclone process for gdrive found"
+        fi
+        
+        # Check if mount directory exists
+        if [ ! -d "$HOME/google-drive" ]; then
+          echo "Mount directory does not exist. Run mount-gdrive to create and mount it."
+        fi
       fi
     '';
   };
 
   # Add zsh aliases for easy mounting/unmounting
   programs.zsh.shellAliases = {
-    "mount-gdrive" = "$HOME/.bin/mount-gdrive";
-    "unmount-gdrive" = "$HOME/.bin/unmount-gdrive";
+    "gdrive-mount" = "$HOME/.bin/mount-gdrive";
+    "gdrive-unmount" = "$HOME/.bin/unmount-gdrive";
     "gdrive-status" = "$HOME/.bin/gdrive-status";
   };
 }
