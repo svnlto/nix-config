@@ -5,9 +5,11 @@
 I've recently restructured this configuration to better follow Nix best practices:
 
 - Organized configurations by system architecture in the `systems/` directory
+- Focus on aarch64 architecture only (Apple Silicon and ARM Linux)
 - Added Packer support for deploying to AWS EC2 instances
 - Improved overall organization for better maintainability and scalability
 - Followed Nix conventions for architecture-specific configurations
+- Implemented AWS profile support for better AWS resource management
 
 ## 🏗️ Why I Built This
 
@@ -51,13 +53,12 @@ Here's how I've organized everything:
 │   │   ├── defaults.nix  # macOS system preferences
 │   │   ├── dock.nix      # Dock configuration
 │   │   └── git.nix       # macOS-specific Git setup
-│   ├── aarch64-linux/    # ARM Linux configurations 
-│   │   ├── ec2.nix       # EC2-specific Home Manager configuration
-│   │   ├── vagrant.nix   # Vagrant VM configuration
-│   │   ├── default.nix   # System configuration
-│   │   ├── git.nix       # VM-specific Git configuration
-│   │   └── zsh.nix       # VM-specific ZSH setup
-│   └── x86_64-linux/     # x86_64 Linux configurations (unused)
+│   └── aarch64-linux/    # ARM Linux configurations 
+│       ├── ec2.nix       # EC2-specific Home Manager configuration
+│       ├── vagrant.nix   # Vagrant VM configuration
+│       ├── default.nix   # System configuration
+│       ├── git.nix       # VM-specific Git configuration
+│       └── zsh.nix       # VM-specific ZSH setup
 ├── overlays/             # Custom Nix overlays
 │   ├── browser-forward.nix  # Browser forwarding for SSH sessions
 │   ├── nvm.nix           # Node Version Manager overlay
@@ -76,9 +77,9 @@ Before you dive in, you'll need:
   - 🍎 macOS: `sh <(curl -L https://nixos.org/nix/install)`
   - 🐧 Linux: `sh <(curl -L https://nixos.org/nix/install) --daemon`
 
-### 🍎 macOS Setup
+### 🍎 macOS Setup (Apple Silicon)
 
-Setting up on macOS is pretty straightforward:
+Setting up on macOS with Apple Silicon is pretty straightforward:
 
 1. First, let's get Nix and nix-darwin installed:
    ```bash
@@ -460,6 +461,48 @@ Here's how to do all the usual stuff:
 - ⚡ Modifying AWS EC2 image: Edit `packer/aws-ec2.pkr.hcl`
 - 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
 
+### ☁️ AWS Configuration
+
+This setup includes special support for working with AWS:
+
+#### AWS Profiles
+
+The EC2 configuration uses AWS profiles for better credential management:
+
+```nix
+# In systems/aarch64-linux/ec2.nix
+programs.git.extraConfig = {
+  credential.helper = "!aws --profile dev codecommit credential-helper $@";
+  credential.UseHttpPath = true;
+};
+```
+
+#### Packer AWS EC2 Images
+
+The Packer configuration also supports AWS profiles:
+
+```hcl
+# In packer/aws-ec2.pkr.hcl
+variable "aws_profile" {
+  type    = string
+  default = "default"
+  description = "AWS profile to use for authentication"
+}
+
+source "amazon-ebs" "nixos" {
+  ami_name        = var.ami_name
+  profile         = var.aws_profile
+  # ...
+}
+```
+
+To build an EC2 image with a specific profile:
+
+```bash
+cd ~/.config/nix/packer
+packer build -var "aws_profile=dev" aws-ec2.pkr.hcl
+```
+
 ## ✨ Features
 
 ### 📱 Customizable Dock Applications
@@ -493,8 +536,10 @@ I love being able to have different dock setups for different Macs:
 
 I've set things up so I can easily manage:
 - 🌐 Tools I want everywhere (in `common/`)
-- 💻 Stuff specific to each architecture (in `systems/aarch64-darwin/` and `systems/aarch64-linux/`)
+- 💻 Stuff specific to each ARM platform (in `systems/aarch64-darwin/` for macOS and `systems/aarch64-linux/` for Linux)
 - 👤 My personal preferences and settings
+
+This configuration focuses exclusively on ARM64 architecture (aarch64), optimized for Apple Silicon Macs and ARM-based Linux environments like ARM EC2 instances.
 
 ### 📦 Custom Nix Overlays
 
