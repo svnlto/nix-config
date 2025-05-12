@@ -53,7 +53,7 @@
     tree
     unzip
     nmap
-    docker
+    docker        
     docker-compose
     kubectl
     kubernetes-helm

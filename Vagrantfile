@@ -26,6 +26,13 @@ Vagrant.configure("2") do |config|
     apt-get update
     apt-get install -y locales sudo build-essential curl file git unzip zsh
 
+    # Install Docker
+    echo "=== Installing and configuring Docker ==="
+    apt-get install -y docker.io
+    systemctl enable docker
+    systemctl start docker
+    usermod -aG docker vagrant
+
     # Generate required locales
     localedef -i en_US -f UTF-8 en_US.UTF-8
     localedef -i en_GB -f UTF-8 en_GB.UTF-8
