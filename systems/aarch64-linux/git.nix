@@ -93,11 +93,6 @@ let
     *.log
     npm-debug.log*
 
-    # Dependency lock files
-    package-lock.json
-    yarn.lock
-    pnpm-lock.yaml
-
     # Nix
     result
     result-*
