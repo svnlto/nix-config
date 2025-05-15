@@ -48,7 +48,6 @@ rec {
   options = ''
     # Directory navigation
     setopt auto_cd             # cd by typing directory name if it's not a command
-    setopt correct_all         # autocorrect commands
 
     # Completion settings
     setopt auto_list           # automatically list choices on ambiguous completion
