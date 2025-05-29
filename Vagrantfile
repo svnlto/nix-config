@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "utm" do |utm|
     utm.name = "nix-dev-vm"
     utm.memory = "8192"
-    utm.cpus = 4
+    utm.cpus = 6
   end
 
   # System provisioning script

@@ -11,7 +11,7 @@ let
     "Rick" = [
       "/Applications/Arc.app"
       "/Applications/Spotify.app"
-      "/Applications/Visual Studio Code.app"
+      "/Applications/Zed.app"
     ];
 
     # Default configuration (used if no host-specific config exists)

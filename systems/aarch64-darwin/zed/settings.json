@@ -133,6 +133,12 @@
     "html": true,
     "dockerfile": true,
     "docker-compose": true,
-    "prisma": true
+    "prisma": true,
+    "catppuccin": true,
+    "catppuccin-icons": true,
+    "git-firefly": true,
+    "make": true,
+    "nix": true,
+    "sql": true
   }
 }
