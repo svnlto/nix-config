@@ -26,10 +26,12 @@
 
       # Development & Terminal
       "visual-studio-code"
+      "visual-studio-code@insiders"
       "iterm2"
       "utm"
       "hashicorp/tap/hashicorp-vagrant"
       "vagrant"
+      "zed"
 
       # Networking & Utilities
       "tailscale"
