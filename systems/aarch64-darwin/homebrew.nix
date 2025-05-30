@@ -14,7 +14,6 @@
       # Productivity Tools
       "raycast"
       "setapp"
-      "todoist"
       "notion-calendar"
       "notion-mail"
 

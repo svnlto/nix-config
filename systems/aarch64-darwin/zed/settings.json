@@ -13,6 +13,12 @@
           "border": "#5d5889"
         }
       }
+    },
+    "git": {
+      "added": "#a6e3a1",
+      "modified": "#f9e2af",
+      "deleted": "#f38ba8",
+      "renamed": "#89b4fa"
     }
   },
   "active_pane_modifiers": {
