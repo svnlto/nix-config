@@ -5,8 +5,11 @@ Vagrant.configure("2") do |config|
   # Basic VM Configuration
   config.vm.box = "utm/ubuntu-24.04"
   config.vm.hostname = "nix-dev"
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
+
+  # Forward a continuous port range
+  (3000..4000).each do |port|
+    config.vm.network "forwarded_port", guest: port, host: port
+  end
 
   # Fix SSH authentication issues
   config.ssh.insert_key = true
