@@ -12,6 +12,9 @@ let
       "/Applications/Arc.app"
       "/Applications/Spotify.app"
       "/Applications/Zed.app"
+      "/Applications/Linear.app"
+      "/applications/Slack.app"
+      "/applications/Claude.app"
     ];
 
     # Default configuration (used if no host-specific config exists)

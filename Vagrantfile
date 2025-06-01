@@ -2,24 +2,36 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # Basic VM Configuration
-  config.vm.box = "utm/ubuntu-24.04"
+  # Use minimal ARM64 Ubuntu 24.04 box
+  config.vm.box = "cloud-image/ubuntu-24.04"
+  
+  # Increase boot timeout for QEMU
+  config.vm.boot_timeout = 600
   config.vm.hostname = "nix-dev"
 
-  # Forward a continuous port range
-  (3000..4000).each do |port|
-    config.vm.network "forwarded_port", guest: port, host: port
-  end
+  # Port forwarding will be handled by QEMU provider settings
 
-  # Fix SSH authentication issues
+  # SSH configuration
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
+  
+  # Forward a reasonable port range for development (20 ports)
+   (3000..3019).each do |port|
+     config.vm.network "forwarded_port", guest: port, host: port
+   end
 
-  # UTM Provider Configuration
-  config.vm.provider "utm" do |utm|
-    utm.name = "nix-dev-vm"
-    utm.memory = "8192"
-    utm.cpus = 6
+  # QEMU Provider Configuration
+  config.vm.provider "qemu" do |qemu|
+    qemu.name = "nix-dev-vm"
+    qemu.memory = "8192"
+    qemu.cpus = 4
+    qemu.arch = "aarch64"
+    qemu.machine = "virt,accel=hvf"
+    qemu.cpu = "host"
+    qemu.net_device = "virtio-net-pci"
+    # Just basic networking - no crazy port forwarding
+    qemu.extra_qemu_args = %w(-display none)
+    qemu.disk_size = "50G"
   end
 
   # System provisioning script
@@ -65,7 +77,6 @@ Vagrant.configure("2") do |config|
     sh <(curl -L https://nixos.org/nix/install) --daemon
 
     # Create system Nix configuration with experimental features
-    # This needs to be done RIGHT AFTER Nix installation
     sudo mkdir -p /etc/nix
     sudo bash -c 'cat > /etc/nix/nix.conf << EOL
 experimental-features = nix-command flakes
@@ -77,29 +88,24 @@ EOL'
     # Make sure ~/.config/nix directory exists
     mkdir -p $HOME/.config/nix
 
-    # Restart the Nix daemon to apply settings BEFORE sourcing Nix
+    # Restart the Nix daemon to apply settings
     sudo systemctl restart nix-daemon
 
-    # NOW source Nix environment (after config has been created & daemon restarted)
+    # Source Nix environment
     if [ -e /etc/profile.d/nix.sh ]; then
       . /etc/profile.d/nix.sh
     fi
 
-    # Verify Nix is working with experimental features
+    # Verify Nix is working
     echo "Checking Nix version and features..."
     nix --version
-    echo "Testing experimental features directly..."
-    nix-env --version  # Should work without extra flags now
 
     # Basic Git configuration
     git config --global init.defaultBranch main
     git config --global core.editor "vim"
 
-    # Clone configuration with better handling for reprovisioning
-    echo "=== Setting up configuration ==="
-    mkdir -p $HOME/.config
-
-    # Handle existing directory on reprovisioning
+    # Clone your Nix configuration
+    echo "=== Setting up Nix configuration ==="
     if [ -d "$HOME/.config/nix" ]; then
       echo "Found existing nix config directory, backing it up..."
       mv $HOME/.config/nix $HOME/.config/nix.bak.$(date +%s)
@@ -107,15 +113,13 @@ EOL'
 
     git clone --depth=1 https://github.com/svnlto/nix-config.git $HOME/.config/nix
 
-    # Set proper permissions for the config directory
+    # Set proper permissions
     sudo chown -R vagrant:vagrant $HOME/.config/nix
-
     find $HOME/.config/nix -type d -exec chmod 755 {} \\;
     find $HOME/.config/nix -type f -exec chmod 644 {} \\;
 
-    # Home Manager will replace this later
+    # Setup minimal ZSH environment
     echo "Setting up minimal ZSH environment..."
-    # Ensure we can write to .zshenv
     rm -f $HOME/.zshenv
     cat > $HOME/.zshenv <<EOL
 # Source Nix environment
@@ -128,78 +132,58 @@ EOL
     echo "Setting ZSH as default shell..."
     sudo chsh -s $(which zsh) vagrant
 
-    # Create a minimal .zshrc to ensure the shell works
-    echo "Creating temporary .zshrc..."
-    # Ensure we can write to .zshrc
+    # Create minimal .zshrc
     rm -f $HOME/.zshrc
     cat > $HOME/.zshrc <<EOL
-# This is a temporary .zshrc that will be replaced by home-manager
-# when you manually run: home-manager switch --flake ~/.config/nix#vagrant
+# Temporary .zshrc - will be replaced by home-manager
 export PS1="%B%F{green}%n@%m%f:%F{blue}%~%f%(!.#.$)%b "
 export PATH=\$PATH:\$HOME/.nix-profile/bin
 EOL
     chmod 644 $HOME/.zshrc
 
-    # Home Manager will be run AFTER the RAM disk setup in a separate provision step
     echo "=== Initial setup completed ==="
-    echo "RAM disk and configuration will be set up next"
   SHELL
 
-  # Add a special provision step just for git cleanup
+  # Git cleanup provision
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
-    # Ensure git repo stays clean by dealing with problematic files after home-manager runs
     if [ -L "$HOME/.config/nix/nix.conf" ] && [ -d "$HOME/.config/nix/.git" ]; then
       echo "=== Cleaning up git conflicts ==="
       cd "$HOME/.config/nix"
-
-      # Reset git repo state
       git reset --hard HEAD
     fi
   SHELL
 
-  # Initial RAM disk setup - handle everything here
+  # RAM disk setup
   config.vm.provision "shell", run: "always", privileged: true, inline: <<-SHELL
     echo "=== Setting up RAM disk ==="
 
-    # Unmount if already mounted but with issues
+    # Unmount if already mounted
     if mount | grep -q "/ramdisk"; then
-      echo "Unmounting existing RAM disk to ensure clean setup..."
+      echo "Unmounting existing RAM disk..."
       umount /ramdisk 2>/dev/null || true
     fi
 
-    # Ensure base directory exists with correct permissions
-    echo "Creating RAM disk mount point..."
+    # Create mount point
     rm -rf /ramdisk 2>/dev/null || true
     mkdir -p /ramdisk
     chmod 1777 /ramdisk
 
-    # Mount fresh RAM disk
+    # Mount RAM disk
     echo "Mounting RAM disk..."
     mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
-    if mount | grep -q "/ramdisk"; then
-      echo "RAM disk successfully mounted"
-    else
-      echo "ERROR: Failed to mount RAM disk"
-      exit 1
-    fi
 
-    # Create the necessary directories and set permissions
-    echo "Setting up RAM disk directories and permissions..."
+    # Create directories
     mkdir -p /ramdisk/.npm /ramdisk/tmp /ramdisk/.terraform.d/plugin-cache /ramdisk/.pnpm/store
     chmod 1777 /ramdisk/tmp
-    chmod 1777 /ramdisk  # Ensure the base directory is writable by all
     chmod 777 /ramdisk/.npm /ramdisk/.terraform.d /ramdisk/.pnpm
 
-    # Make sure everything is owned by the vagrant user
+    # Set ownership
     chown -R vagrant:vagrant /ramdisk
-
-    # Verify permissions
-    echo "Verifying permissions..."
-    ls -la /ramdisk
 
     echo "RAM disk setup complete"
   SHELL
 
+  # Home Manager setup
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo "=== Running home-manager setup ==="
 
@@ -208,32 +192,25 @@ EOL
       . /etc/profile.d/nix.sh
     fi
 
-    echo "Checking RAM disk status..."
-    ls -la /ramdisk
-
-    # Now run home-manager with RAM disk available
+    # Run home-manager
     echo "Running home-manager switch command..."
     NIXPKGS_ALLOW_UNFREE=1 nix run home-manager/master -- switch -b backup.$RANDOM --flake ~/.config/nix#vagrant --impure || {
       echo "Home Manager switch failed. See above for errors."
     }
   SHELL
 
+  # Final status
   config.vm.provision "shell", run: "always", privileged: false, inline: <<-SHELL
     echo ""
     echo "=== Development environment ready ==="
-    echo "The VM has been set up with Nix and tools."
-    echo ""
-    echo "Connect to the VM using:"
-    echo "  vagrant ssh"
+    echo "Connect to the VM using: vagrant ssh"
     echo ""
 
     if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-      echo "Home Manager has been successfully configured!"
+      echo "✅ Home Manager configured successfully!"
     else
-      echo "NOTE: Home Manager setup didn't complete successfully."
-      echo "To manually run the home-manager setup:"
-      echo "  nix run home-manager/master -- switch -b backup.$(date +%s) --flake ~/.config/nix#vagrant --impure"
-      echo ""
+      echo "⚠️  Home Manager setup incomplete. To retry manually:"
+      echo "  nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure"
     fi
   SHELL
 end

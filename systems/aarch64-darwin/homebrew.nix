@@ -4,7 +4,7 @@
   homebrew = {
     enable = true;
     taps = [ "FelixKratz/formulae" "hashicorp/tap" ];
-    brews = [ "mas" "dockutil" "pre-commit" "rclone" ];
+    brews = [ "mas" "dockutil" "pre-commit" "rclone" "qemu"];
     casks = [
       # Security & Password Management
       "1password"
@@ -25,11 +25,10 @@
 
       # Development & Terminal
       "visual-studio-code"
-      "iterm2"
-      "utm"
       "hashicorp/tap/hashicorp-vagrant"
       "vagrant"
       "zed"
+      "linear-linear"
 
       # Networking & Utilities
       "tailscale"
