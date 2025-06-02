@@ -35,7 +35,6 @@
     gawk
 
     # Overlays
-    nvm
     tfenv
     browser-forward
 
