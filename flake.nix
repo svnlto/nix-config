@@ -21,7 +21,6 @@
       # Overlays
       overlays = [
         (import ./overlays/tfenv.nix)
-        (import ./overlays/nvm.nix)
         (import ./overlays/browser-forward.nix)
       ];
 

@@ -10,6 +10,7 @@
     ack
     zoxide
     bat
+    direnv
 
     # Development tools
     gh
