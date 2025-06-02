@@ -72,12 +72,6 @@
     disable_checkpoint = true
     disable_checkpoint_signature = true
 
-    # HashiCorp Cloud Platform (HCP) Terraform credentials
-    # Replace with your actual token or use environment variables
-    credentials "app.terraform.io" {
-      token = "TERRAFORM_TOKEN_PLACEHOLDER"
-    }
-
     # Optional: Provider installation optimization
     provider_installation {
       filesystem_mirror {

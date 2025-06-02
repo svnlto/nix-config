@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
     qemu.cpu = "host"
     qemu.net_device = "virtio-net-pci"
     # Just basic networking - no crazy port forwarding
-    qemu.extra_qemu_args = %w(-display none)
+    qemu.extra_qemu_args = %w(-display none -smp 4,cores=4,threads=1,sockets=1)
     qemu.disk_size = "50G"
   end
 
