@@ -52,14 +52,6 @@ in {
       # Tool initializations
       ${sharedZsh.tools}
 
-      # NVM setup - simplified to avoid redundancy
-      export NVM_DIR="$HOME/.nvm"
-      mkdir -p "$NVM_DIR"
-
-      # Initialize NVM from the Nix overlay location
-      source "${pkgs.nvm}/share/nvm/nvm.sh"
-      source "${pkgs.nvm}/share/nvm/bash_completion"
-
       # Alias for AWS commands
       alias awssso="aws sso login"
 
