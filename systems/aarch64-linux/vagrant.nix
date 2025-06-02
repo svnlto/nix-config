@@ -36,7 +36,6 @@
 
     # Overlays
     tfenv
-    browser-forward
 
     # Terraform tools
     terraform-docs

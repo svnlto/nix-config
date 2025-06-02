@@ -21,7 +21,6 @@
       # Overlays
       overlays = [
         (import ./overlays/tfenv.nix)
-        (import ./overlays/browser-forward.nix)
       ];
 
       # Create a version of nixpkgs with our overlays for Linux

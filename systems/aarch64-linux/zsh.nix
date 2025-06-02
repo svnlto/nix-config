@@ -36,10 +36,6 @@ in {
       # Shared locale settings
       ${sharedZsh.locale}
 
-      # Set browser variables for VSCode SSH sessions
-      export BROWSER="browser-forward"
-      export GH_BROWSER="browser-forward"
-
       # Shared ZSH options
       ${sharedZsh.options}
 

@@ -49,8 +49,6 @@ Here's how I've organized everything:
 │       ├── git.nix       # VM-specific Git configuration
 │       └── zsh.nix       # VM-specific ZSH setup
 ├── overlays/             # Custom Nix overlays
-│   ├── browser-forward.nix  # Browser forwarding for SSH sessions
-│   ├── nvm.nix           # Node Version Manager overlay
 │   └── tfenv.nix         # Terraform Version Manager overlay
 ├── packer/               # Packer templates
 │   └── aws-ec2.pkr.hcl   # AWS EC2 instance configuration
@@ -71,6 +69,7 @@ Before you dive in, you'll need:
 Setting up on macOS with Apple Silicon is pretty straightforward:
 
 1. First, let's get Nix and nix-darwin installed:
+
    ```bash
    # Install Nix
    sh <(curl -L https://nixos.org/nix/install)
@@ -85,6 +84,7 @@ Setting up on macOS with Apple Silicon is pretty straightforward:
    ```
 
 2. Grab my config:
+
    ```bash
    git clone https://github.com/svnlto/nix-config.git ~/.config/nix
    cd ~/.config/nix
@@ -121,6 +121,7 @@ packer build aws-ec2.pkr.hcl
 Want to use this on multiple Macs? No problem! You can have different settings for each:
 
 1. Add your Mac to flake.nix under darwinConfigurations:
+
    ```nix
    "your-hostname" = darwinSystem {
      hostname = "your-hostname";
@@ -143,6 +144,7 @@ Want to use this on multiple Macs? No problem! You can have different settings f
 Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM + Vagrant is a match made in heaven. You get the speed of native ARM virtualization with the convenience of Vagrant's declarative VM management:
 
 1. First, grab the basics:
+
    ```bash
    # Apply your nix-darwin config to install UTM and Vagrant
    darwin-rebuild switch --flake ~/.config/nix#macbook
@@ -152,18 +154,21 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```
 
 2. Fire up the VM:
+
    ```bash
    cd ~/.config/nix
    vagrant up
    ```
 
    **Heads up**: The first time you do this:
+
    - UTM will ask for permission (just say yes)
    - Your terminal will ask if you want to download the VM image (say yes to that too)
    - It'll download the Ubuntu ARM64 VM image (~600MB)
    - Then it'll set up Nix and all your dev tools automatically
 
 3. Jump into the VM:
+
    ```bash
    # Quick way - SSH from your terminal
    vagrant ssh
@@ -173,9 +178,11 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```
 
 4. Connect with VS Code Remote-SSH:
+
    - Install the "Remote - SSH" extension in VS Code
    - Your SSH configuration is automatically maintained by the Nix configuration in `systems/aarch64-darwin/default.nix`
    - The SSH config includes all the settings needed to connect to your Vagrant VM:
+
      ```
      Host nix-dev
        HostName 127.0.0.1
@@ -200,6 +207,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    **Note**: The SSH configuration is automatically applied during system activation, so any changes made to the configuration in `systems/aarch64-darwin/default.nix` will be applied when you run `darwin-rebuild switch`.
 
 5. Some handy VM commands:
+
    ```bash
    vagrant suspend  # Take a coffee break (pauses the VM)
    vagrant resume   # Back to work! (resumes the VM)
@@ -209,6 +217,7 @@ Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM 
    ```
 
 6. Made some config tweaks? Apply them like this:
+
    ```bash
    # From your Mac
    vagrant provision
@@ -225,12 +234,14 @@ Want to take your development environment to the cloud? Here's how to set up you
 > **Note**: As an alternative to manual setup, consider using the Packer template in `packer/aws-ec2.pkr.hcl` to automatically build an AMI with Nix pre-configured. See the [Cloud Deployment with Packer](#-cloud-deployment-with-packer) section.
 
 1. Launch an Ubuntu EC2 instance:
+
    - Use Ubuntu Server 22.04 LTS or newer (ARM64 for Graviton instances)
    - Recommended: t4g.medium or better for decent performance
    - You can keep the instance completely private in a private subnet
    - Make sure the instance has internet access through a NAT gateway
 
 2. Install Tailscale on your EC2 instance:
+
    ```bash
    # Add Tailscale's package repository
    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
@@ -250,12 +261,14 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 3. Install Tailscale on your local machine:
+
    - macOS: `brew install tailscale`
    - Visit https://tailscale.com/download for other platforms
    - Run `tailscale up` and authenticate
    - Verify connectivity with `tailscale ping ec2-hostname`
 
 4. Install Nix with multi-user support:
+
    ```bash
    # Update system packages first
    sudo apt update && sudo apt upgrade -y
@@ -271,6 +284,7 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 5. Clone your configuration:
+
    ```bash
    mkdir -p ~/.config
    git clone https://github.com/svnlto/nix-config.git ~/.config/nix
@@ -278,7 +292,9 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 6. Create EC2-specific configuration:
+
    - Modify your `flake.nix` to add an EC2 configuration:
+
      ```nix
      homeConfigurations = {
        # ...existing vagrant configuration...
@@ -304,11 +320,13 @@ Want to take your development environment to the cloud? Here's how to set up you
      ```
 
    - Create a directory for EC2-specific configuration:
+
      ```bash
      mkdir -p ~/.config/nix/systems/aarch64-linux
      ```
 
    - Create a basic `systems/aarch64-linux/ec2.nix` file:
+
      ```nix
      { config, pkgs, username, ... }:
 
@@ -331,6 +349,7 @@ Want to take your development environment to the cloud? Here's how to set up you
      ```
 
 7. Enable Nix flakes and apply the configuration:
+
    ```bash
    # Enable flakes
    mkdir -p ~/.config/nix
@@ -342,6 +361,7 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 8. Connect with VS Code:
+
    - Install the "Remote - SSH" extension in VS Code
    - Add a new SSH configuration by editing your SSH config file:
      ```
@@ -361,6 +381,7 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 With this Tailscale-powered setup, you get all the benefits of a cloud development environment with none of the security headaches:
+
 - Keep your EC2 instance completely private (no public IP needed)
 - Secure, encrypted connections between all your devices
 - Connection works even if the instance's IP changes
@@ -372,6 +393,7 @@ With this Tailscale-powered setup, you get all the benefits of a cloud developme
 I've set up two super handy version managers in the VM that make switching between different versions of tools a breeze:
 
 1. **tfenv** - For all your Terraform needs:
+
    ```bash
    # Grab any Terraform version you want
    tfenv install 1.5.0
@@ -383,22 +405,6 @@ I've set up two super handy version managers in the VM that make switching betwe
    tfenv list
    ```
 
-2. **nvm** - For juggling Node.js versions:
-   ```bash
-   # Install Node versions like candy
-   nvm install 18
-
-   # Hop between versions instantly
-   nvm use 16
-
-   # Check what you've got
-   nvm list
-   ```
-
-### 🔗 Browser Forwarding
-
-When working in your VM and using tools like GitHub CLI that need to open a browser for authentication, you don't want to be stuck copying and pasting URLs. This setup automatically forwards browser requests to your host machine, making the experience seamless. The `browser-forward` overlay handles this transparently.
-
 ## 🔄 Usage
 
 ### 🔁 Updating the System
@@ -406,6 +412,7 @@ When working in your VM and using tools like GitHub CLI that need to open a brow
 Keeping everything up to date is super simple:
 
 #### 🍎 macOS:
+
 ```bash
 # Pull latest changes
 git pull
@@ -415,6 +422,7 @@ darwin-rebuild switch --flake ~/.config/nix#macbook
 ```
 
 #### 🐧 Vagrant VM:
+
 ```bash
 # Pull latest changes
 git pull
@@ -524,6 +532,7 @@ I love being able to have different dock setups for different Macs:
 ### 🔄 Cross-Platform Package Management
 
 I've set things up so I can easily manage:
+
 - 🌐 Tools I want everywhere (in `common/`)
 - 💻 Stuff specific to each ARM platform (in `systems/aarch64-darwin/` for macOS and `systems/aarch64-linux/` for Linux)
 - 👤 My personal preferences and settings
@@ -535,8 +544,6 @@ This configuration focuses exclusively on ARM64 architecture (aarch64), optimize
 Sometimes the standard Nix packages don't have exactly what you need, or they're not up to date. That's where my custom overlays come in:
 
 - **tfenv**: My go-to for managing multiple Terraform versions
-- **nvm**: Keeps Node.js versions under control
-- **browser-forward**: My little trick for forwarding browser requests from SSH sessions to your Mac
 
 These make life so much easier when you're working across multiple projects with different requirements.
 
