@@ -40,7 +40,8 @@
     # Terraform tools
     terraform-docs
     terraform-ls
-
+    tflint
+    
     # Node.js tools
     nodePackages.pnpm
 
