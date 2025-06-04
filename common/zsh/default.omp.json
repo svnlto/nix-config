@@ -9,7 +9,9 @@
     "pink": "#F5BDE6",
     "purple": "#C6A0F6",
     "text": "#494D64",
-    "wight": "#FFFFFF"
+    "wight": "#FFFFFF",
+    "nix": "#7EBAE4",
+    "direnv": "#FFA500"
   },
   "transient_prompt": {
     "template": "{{ .UserName }}@{{ .HostName }} > ",
@@ -77,6 +79,18 @@
             "{{ if gt .Ahead 0 }}#B388FF{{ end }}",
             "{{ if gt .Behind 0 }}#B388FB{{ end }}"
           ]
+        },
+        {
+          "type": "nix-shell",
+          "style": "plain",
+          "foreground": "p:nix",
+          "template": " \uf313 {{ .Type }}"
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:direnv",
+          "template": "{{ if .Env.DIRENV_DIR }} \uf07c direnv{{ end }}"
         },
         {
           "properties": {

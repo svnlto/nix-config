@@ -18,17 +18,18 @@
       "notion-mail"
 
       # Communication & Collaboration
-      "zoom"
+      "linear-linear"
       "slack"
+      "zoom"
       "whatsapp"
       "telegram"
 
       # Development & Terminal
-      "visual-studio-code"
       "hashicorp/tap/hashicorp-vagrant"
       "vagrant"
       "zed"
-      "linear-linear"
+      "pieces"
+      "claude"
 
       # Networking & Utilities
       "tailscale"

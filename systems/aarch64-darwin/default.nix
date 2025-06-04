@@ -7,6 +7,7 @@
   environment.systemPackages = with pkgs; [
     oh-my-posh
     eza
+    bat
     zoxide
     hstr
     git
@@ -73,11 +74,11 @@
     Host nix-dev
       HostName 127.0.0.1
       User vagrant
-      Port 2222
+      Port 50022
       UserKnownHostsFile /dev/null
       StrictHostKeyChecking no
       PasswordAuthentication no
-      IdentityFile /Users/${username}/.config/nix/.vagrant/machines/default/utm/private_key
+      IdentityFile /Users/${username}/.config/nix/.vagrant/machines/default/qemu/private_key
       IdentitiesOnly yes
       LogLevel FATAL
       ForwardAgent yes
