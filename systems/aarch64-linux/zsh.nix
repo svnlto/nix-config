@@ -64,6 +64,11 @@ in {
       if [ -f "$HOME/.bin_aliases" ]; then
         source "$HOME/.bin_aliases"
       fi
+      
+      # Ensure direnv is properly initialized
+      if command -v direnv &> /dev/null; then
+        eval "$(direnv hook zsh)"
+      fi
     '';
   };
 }
