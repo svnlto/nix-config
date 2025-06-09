@@ -40,6 +40,7 @@
       "zwift"
       "vcv-rack"
       "ableton-live-standard"
+      "figma"
     ];
     masApps = { };
     onActivation = {

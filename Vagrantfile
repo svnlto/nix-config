@@ -170,7 +170,7 @@ EOL
 
     # Mount RAM disk
     echo "Mounting RAM disk..."
-    mount -t tmpfs -o size=2G,mode=1777 none /ramdisk
+    mount -t tmpfs -o size=4G,mode=1777 none /ramdisk
 
     # Create directories
     mkdir -p /ramdisk/.npm /ramdisk/tmp /ramdisk/.terraform.d/plugin-cache /ramdisk/.pnpm/store
