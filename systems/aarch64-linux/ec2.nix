@@ -1,6 +1,15 @@
 { config, pkgs, username, ... }:
 
 {
+  imports = [
+    ../../common/home-packages.nix
+    ../../common/claude-code
+    ./zsh.nix
+    ./git.nix
+    ./aws.nix
+    ./user-scripts.nix
+    ./github.nix
+  ];
   # EC2-specific configuration
   # This will override or extend the base vagrant configuration
 

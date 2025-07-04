@@ -3,6 +3,7 @@
 {
   imports = [
     ../../common/home-packages.nix
+    ../../common/claude-code
     ./zsh.nix
     ./git.nix
     ./aws.nix
