@@ -60,6 +60,10 @@ in {
       # Custom user binaries directory
       export PATH="$HOME/.bin:$PATH"
 
+      # Add npm global bin to PATH for Claude Code
+      export PATH="$HOME/.npm-global/bin:$PATH"
+      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+
       # Source auto-generated aliases if the file exists
       if [ -f "$HOME/.bin_aliases" ]; then
         source "$HOME/.bin_aliases"
