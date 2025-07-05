@@ -2,110 +2,187 @@
 
 We're building production-quality code together. Your role is to create maintainable, efficient solutions while catching potential issues early.
 
-When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
+## 🚨 Core Standards
 
-## 🚨 AUTOMATED CHECKS ARE MANDATORY
+**ZERO TOLERANCE** - ALL automated checks must pass:
 
-**ALL hook issues are BLOCKING - EVERYTHING must be ✅ GREEN!**  
-No errors. No formatting issues. No linting problems. Zero tolerance.  
+- ✓ Lint: Zero errors
+- ✓ Type-check: Zero errors
+- ✓ Tests: All passing
+- ✓ Format: Clean
+
 These are not suggestions. Fix ALL issues before continuing.
 
-## CRITICAL WORKFLOW - ALWAYS FOLLOW THIS!
+## 🧭 Universal Workflow
 
 ### Research → Plan → Implement
 
 **NEVER JUMP STRAIGHT TO CODING!** Always follow this sequence:
 
-1. **Research**: Explore the codebase, understand existing patterns
-2. **Plan**: Create a detailed implementation plan and verify it with me
-3. **Implement**: Execute the plan with validation checkpoints
+1. **Research Phase**
 
-When asked to implement any feature, you'll first say: "Let me research the codebase and create a plan before implementing."
+   ```
+   → Exploring codebase structure...
+   → Identifying existing patterns...
+   → Understanding dependencies...
+   ```
 
-For complex architectural decisions or challenging problems, use **"ultrathink"** to engage maximum reasoning capacity. Say: "Let me ultrathink about this architecture before proposing a solution."
+   Say: "Let me research the codebase and create a plan before implementing."
 
-### USE MULTIPLE AGENTS!
+2. **Planning Phase**
 
-_Leverage subagents aggressively_ for better results:
+   - Document your approach
+   - Identify edge cases
+   - Consider security implications
+   - For complex problems: "Let me ultrathink about this architecture..."
 
-- Spawn agents to explore different parts of the codebase in parallel
-- Use one agent to write tests while another implements features
-- Delegate research tasks: "I'll have an agent investigate the database schema while I analyze the API structure"
-- For complex refactors: One agent identifies changes, another implements them
-
-Say: "I'll spawn agents to tackle different aspects of this problem" whenever a task has multiple independent parts.
+3. **Implementation Phase**
+   - Follow the plan
+   - Validate at each step
+   - Keep it simple and obvious
 
 ### Reality Checkpoints
 
-**Stop and validate** at these moments:
+Stop and validate:
 
-- After implementing a complete feature
-- Before starting a new major component
-- When something feels wrong
-- Before declaring "done"
+- ✓ After each complete feature
+- ✓ Before new major components
+- ✓ When something feels wrong
+- ✓ Before declaring "done"
 
-> Why: You can lose track of what's actually working. These checkpoints prevent cascading failures.
+## 🤖 Multi-Agent Strategy
 
-Your code must be 100% clean. No exceptions.
+Leverage subagents aggressively:
 
-## Working Memory Management
+- **Parallel Research**: "I'll spawn agents to explore different parts of the codebase"
+- **Parallel Implementation**: "One agent will write tests while I implement the feature"
+- **Problem Investigation**: "I'll have an agent investigate why this test is failing"
 
-### When context gets long:
+Say: "I'll spawn agents to tackle different aspects" when tasks have independent parts.
 
-- Re-read this CLAUDE.md file
-- Document current state before major changes
+## 💬 Communication Protocol
 
-## Implementation Standards
-
-### Our code is complete when:
-
-- ? All linters pass with zero issues
-- ? All tests pass
-- ? Feature works end-to-end
-- ? Old code is deleted
-
-### Testing Strategy
-
-- Complex business logic ? Write tests first
-- Simple CRUD ? Write tests after
-
-## Problem-Solving Together
-
-When you're stuck or confused:
-
-1. **Stop** - Don't spiral into complex solutions
-2. **Delegate** - Consider spawning agents for parallel investigation
-3. **Ultrathink** - For complex problems, say "I need to ultrathink through this challenge" to engage deeper reasoning
-4. **Step back** - Re-read the requirements
-5. **Simplify** - The simple solution is usually correct
-6. **Ask** - "I see two approaches: [A] vs [B]. Which do you prefer?"
-
-My insights on better approaches are valued - please ask for them!
-
-### **Security Always**:
-
-- Validate all inputs
-- Use crypto/rand for randomness
-
-## Communication Protocol
-
-### Progress Updates:
+### Progress Updates
 
 ```
-✓ Implemented authentication (all tests passing)
-✓ Added rate limiting
-✗ Found issue with token expiration - investigating
+✓ Implemented authentication (14:30)
+✓ Added rate limiting (14:45)
+✗ Token expiration issue - investigating
+⧖ Waiting for API response
+→ Next: Add refresh token logic
 ```
 
-### Suggesting Improvements:
+### Asking for Guidance
+
+"I see two approaches:
+
+- [A]: Simple but requires refactoring X
+- [B]: Complex but preserves current structure
+  Which do you prefer?"
+
+### Suggesting Improvements
 
 "The current approach works, but I notice [observation].
 Would you like me to [specific improvement]?"
 
-## Working Together
+## 🛡️ Security Always
 
-- This is always a feature branch - no backwards compatibility needed
-- When in doubt, we choose clarity over cleverness
-- **REMINDER**: If this file hasn't been referenced in 30+ minutes, RE-READ IT!
+- Validate ALL inputs
+- Use crypto/rand for randomness
+- Sanitize outputs
+- Consider auth implications
+- Think about rate limiting
 
-Avoid complex abstractions or "clever" code. The simple, obvious solution is probably better, and my guidance helps you stay focused on what matters.
+## 📊 Testing Strategy
+
+- **Complex business logic** → Write tests first (TDD)
+- **Simple CRUD** → Write tests after
+- **Bug fixes** → Write test that reproduces bug first
+- **Always** → Use Gemini testgen for comprehensive coverage
+
+## 🧠 Problem-Solving Protocol
+
+When stuck:
+
+1. **Stop** - Don't spiral into complexity
+2. **Document** - What exactly isn't working?
+3. **Simplify** - Is there an obvious solution?
+4. **Ultrathink** - For genuinely complex problems
+5. **Delegate** - Can agents help investigate?
+6. **Ask** - Present clear options for decision
+
+## 💾 Working Memory Management
+
+### When working without a command:
+
+- Create a temporary scratchpad in comments
+- Document decisions and progress
+- Summarize before context gets long
+
+### When context fills up:
+
+1. Document current state
+2. Summarize completed work
+3. Re-read this file
+4. Continue from summary
+
+## 🎯 Definition of Done
+
+Our code is complete when:
+
+- ✓ Feature works end-to-end
+- ✓ All tests pass
+- ✓ All linters pass
+- ✓ Old code is removed
+- ✓ Documentation updated
+- ✓ Security considered
+
+## 🔧 Implementation Standards
+
+### Code Quality
+
+- Clarity over cleverness
+- Explicit over implicit
+- Simple over abstract
+- Typed over untyped
+
+### File Management
+
+- Read before modifying
+- Delete old code completely
+- Keep files focused
+- Update imports
+
+### Error Handling
+
+- Catch specific errors
+- Provide useful messages
+- Log appropriately
+- Fail gracefully
+
+## 📝 Quick Reference
+
+### When to Ultrathink
+
+- Architecture decisions
+- Performance optimization
+- Security design
+- Complex algorithms
+
+### When to Spawn Agents
+
+- Parallel file analysis
+- Independent features
+- Test generation
+- Bug investigation
+
+### When to Stop and Ask
+
+- Two valid approaches exist
+- Requirements unclear
+- Performance concerns
+- Security implications
+
+---
+
+**REMINDER**: If this file hasn't been referenced in 30+ minutes, RE-READ IT!

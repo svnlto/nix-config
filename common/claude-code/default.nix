@@ -21,6 +21,7 @@
   # Create and manage ~/.claude directory
   home.file.".claude/settings.json".source = ./settings.json;
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
+  home.file.".claude/commands".source = ./commands;
 
   # Create necessary directories
   home.file.".claude/.keep".text = "";

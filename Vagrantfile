@@ -19,19 +19,21 @@ Vagrant.configure("2") do |config|
    (3000..3019).each do |port|
      config.vm.network "forwarded_port", guest: port, host: port
    end
+   
+   # Forward Playwright port
+   config.vm.network "forwarded_port", guest: 9222, host: 9222
 
-  # QEMU Provider Configuration
+   # QEMU Provider Configuration
   config.vm.provider "qemu" do |qemu|
     qemu.name = "nix-dev-vm"
     qemu.memory = "8192"
-    qemu.cpus = 4
     qemu.arch = "aarch64"
     qemu.machine = "virt,accel=hvf"
     qemu.cpu = "host"
     qemu.net_device = "virtio-net-pci"
-    # Just basic networking - no crazy port forwarding
-    qemu.extra_qemu_args = %w(-display none -smp 4,cores=4,threads=1,sockets=1)
-    qemu.disk_size = "50G"
+    qemu.cpus = 6
+    qemu.extra_qemu_args = %w(-display none -smp 6,cores=6,threads=1,sockets=1)
+    qemu.disk_size = "80G"
   end
 
   # System provisioning script
