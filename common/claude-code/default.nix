@@ -26,7 +26,7 @@
   # Create necessary directories
   home.file.".claude/.keep".text = "";
 
-  # Install Claude Code on activation
+  # Install Claude Code and sync linear commands on activation
   home.activation.installClaudeCode = lib.hm.dag.entryAfter ["writeBoundary"] ''
     PATH="${pkgs.nodejs_22}/bin:$PATH"
     export NPM_CONFIG_PREFIX="$HOME/.npm-global"
@@ -36,6 +36,19 @@
       npm install -g @anthropic-ai/claude-code
     else
       echo "Claude Code is already installed at $(which claude)"
+    fi
+    
+    # Clone and sync linear commands
+    echo "Syncing Claude Code Linear commands..."
+    TEMP_DIR=$(mktemp -d)
+    if ${pkgs.git}/bin/git clone https://github.com/svnlto/claude-code-linear-commands.git "$TEMP_DIR" >/dev/null 2>&1; then
+      mkdir -p "$HOME/.claude/commands"
+      cp "$TEMP_DIR/commands/"* "$HOME/.claude/commands/" 2>/dev/null || true
+      rm -rf "$TEMP_DIR"
+      echo "Linear commands synced to ~/.claude/commands/"
+    else
+      echo "Warning: Failed to sync linear commands"
+      rm -rf "$TEMP_DIR"
     fi
   '';
 
