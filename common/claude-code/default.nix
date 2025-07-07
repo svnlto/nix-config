@@ -42,10 +42,10 @@
     echo "Syncing Claude Code Linear commands..."
     TEMP_DIR=$(mktemp -d)
     if ${pkgs.git}/bin/git clone https://github.com/svnlto/claude-code-linear-commands.git "$TEMP_DIR" >/dev/null 2>&1; then
-      mkdir -p "$HOME/.claude/commands"
-      cp "$TEMP_DIR/commands/"* "$HOME/.claude/commands/" 2>/dev/null || true
+      mkdir -p "$HOME/.claude/commands/linear"
+      cp "$TEMP_DIR/commands/"* "$HOME/.claude/commands/linear/" 2>/dev/null || true
       rm -rf "$TEMP_DIR"
-      echo "Linear commands synced to ~/.claude/commands/"
+      echo "Linear commands synced to ~/.claude/commands/linear/"
     else
       echo "Warning: Failed to sync linear commands"
       rm -rf "$TEMP_DIR"
