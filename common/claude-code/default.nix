@@ -21,15 +21,23 @@
   # Create and manage ~/.claude directory
   home.file.".claude/settings.json".source = ./settings.json;
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
-  home.file.".claude/commands".source = ./commands;
   
-  # Fetch and sync linear commands to separate directory
-  home.file.".claude/commands-linear".source = pkgs.fetchFromGitHub {
-    owner = "svnlto";
-    repo = "claude-code-linear-commands";
-    rev = "main";
-    sha256 = "07zl1yfb1pvkyk0kqhdw7z5dpi8078jdybnm0gzwjb13hxk17s21";
-  } + "/commands";
+  # Combine local commands with linear commands
+  home.file.".claude/commands".source = pkgs.symlinkJoin {
+    name = "claude-commands";
+    paths = [
+      ./commands
+      (pkgs.runCommand "linear-commands" {} ''
+        mkdir -p $out/linear
+        cp -r ${pkgs.fetchFromGitHub {
+          owner = "svnlto";
+          repo = "claude-code-linear-commands";
+          rev = "main";
+          sha256 = "07zl1yfb1pvkyk0kqhdw7z5dpi8078jdybnm0gzwjb13hxk17s21";
+        }}/commands/* $out/linear/
+      '')
+    ];
+  };
 
   # Create necessary directories
   home.file.".claude/.keep".text = "";
