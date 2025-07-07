@@ -40,22 +40,56 @@ if [[ ! -f "$FILES" ]]; then
     exit 0
 fi
 
+# Create MegaLinter configuration
+MEGALINTER_CONFIG=$(cat <<'EOF'
+APPLY_FIXES: none
+LOG_LEVEL: WARNING
+SHOW_ELAPSED_TIME: true
+FILEIO_REPORTER: false
+SARIF_REPORTER: false
+TEXT_REPORTER: false
+UPDATED_SOURCES_REPORTER: false
+ENABLE:
+  - BASH
+  - JSON
+  - MARKDOWN
+  - YAML
+  - TYPESCRIPT
+  - TERRAFORM
+  - DOCKERFILE
+DISABLE:
+  - COPYPASTE
+  - REPOSITORY
+  - ARM
+  - PYTHON
+  - RUST
+FILTER_REGEX_EXCLUDE: "(\.git/|\.nix-store/|result/|\.direnv/)"
+EOF
+)
+
+# Write config to temporary file
+CONFIG_FILE="/tmp/megalinter-$$.yml"
+echo "$MEGALINTER_CONFIG" > "$CONFIG_FILE"
+
 # Run MegaLinter on modified files
 echo "Running MegaLinter on: $FILES"
-docker run --rm \
-    -e APPLY_FIXES=none \
-    -e LOG_LEVEL=WARNING \
-    -e SHOW_ELAPSED_TIME=true \
-    -e FILEIO_REPORTER=false \
-    -e SARIF_REPORTER=false \
-    -e TEXT_REPORTER=false \
-    -e UPDATED_SOURCES_REPORTER=false \
-    -e ENABLE="BASH,JSON,MARKDOWN,YAML,TYPESCRIPT,TERRAFORM,DOCKERFILE" \
-    -e DISABLE="COPYPASTE,REPOSITORY,ARM,PYTHON,RUST" \
+if docker run --rm \
+    -e MEGALINTER_CONFIG_FILE="/tmp/lint/.megalinter.yml" \
     -e FILTER_REGEX_INCLUDE="$(basename "$FILES")" \
-    -e FILTER_REGEX_EXCLUDE="(\.git/|\.nix-store/|result/|\.direnv/)" \
     -v "$PWD:/tmp/lint" \
-    oxsecurity/megalinter:latest 2>&1 || echo "MegaLinter failed" >&2
+    -v "$CONFIG_FILE:/tmp/lint/.megalinter.yml" \
+    --platform linux/arm64 \
+    oxsecurity/megalinter:latest 2>&1; then
+    echo "MegaLinter completed successfully" >&2
+else
+    exit_code=$?
+    echo "MegaLinter failed with exit code: $exit_code" >&2
+    # Don't fail the hook for linting issues, just warn
+    echo "Note: Linting issues found, but continuing..." >&2
+fi
+
+# Cleanup
+rm -f "$CONFIG_FILE"
 
 echo "Hook completed: $(date)" >&2
 exit 0
