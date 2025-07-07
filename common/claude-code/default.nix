@@ -22,6 +22,12 @@
   home.file.".claude/settings.json".source = ./settings.json;
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
   
+  # Copy hook scripts with executable permissions
+  home.file.".claude/hooks/superlinter.sh" = {
+    source = ./hooks/superlinter.sh;
+    executable = true;
+  };
+  
   # Combine local commands with linear commands
   home.file.".claude/commands".source = pkgs.symlinkJoin {
     name = "claude-commands";

@@ -1,4 +1,17 @@
 {
-  "model": "sonnet",
-  "includeCoAuthoredBy": false
+  "model": "claude-sonnet-4-20250514",
+  "includeCoAuthoredBy": false,
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "script",
+            "script": "~/.claude/hooks/superlinter.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
