@@ -22,12 +22,20 @@ These are not suggestions. Fix ALL issues before continuing.
 1. **Research Phase**
 
    ```
+   → Checking latest documentation via context7...
    → Exploring codebase structure...
    → Identifying existing patterns...
    → Understanding dependencies...
    ```
 
-   Say: "Let me research the codebase and create a plan before implementing."
+   **ALWAYS use context7 MCP** to read current documentation for:
+
+   - Framework/library versions and APIs
+   - Best practices and patterns
+   - Breaking changes or deprecations
+   - Security advisories
+
+   Say: "Let me check the latest docs and research the codebase before implementing."
 
 2. **Planning Phase**
 
