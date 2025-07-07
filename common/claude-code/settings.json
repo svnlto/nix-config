@@ -7,8 +7,8 @@
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "type": "script",
-            "script": "~/.claude/hooks/superlinter.sh"
+            "type": "command",
+            "command": "~/.claude/hooks/superlinter.sh"
           }
         ]
       }
