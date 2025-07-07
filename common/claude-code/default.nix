@@ -22,11 +22,19 @@
   home.file.".claude/settings.json".source = ./settings.json;
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
   home.file.".claude/commands".source = ./commands;
+  
+  # Fetch and sync linear commands
+  home.file.".claude/commands/linear".source = pkgs.fetchFromGitHub {
+    owner = "svnlto";
+    repo = "claude-code-linear-commands";
+    rev = "main";
+    sha256 = "sha256-07zl1yfb1pvkyk0kqhdw7z5dpi8078jdybnm0gzwjb13hxk17s21";
+  } + "/commands";
 
   # Create necessary directories
   home.file.".claude/.keep".text = "";
 
-  # Install Claude Code and sync linear commands on activation
+  # Install Claude Code on activation
   home.activation.installClaudeCode = lib.hm.dag.entryAfter ["writeBoundary"] ''
     PATH="${pkgs.nodejs_22}/bin:$PATH"
     export NPM_CONFIG_PREFIX="$HOME/.npm-global"
@@ -36,19 +44,6 @@
       npm install -g @anthropic-ai/claude-code
     else
       echo "Claude Code is already installed at $(which claude)"
-    fi
-    
-    # Clone and sync linear commands
-    echo "Syncing Claude Code Linear commands..."
-    TEMP_DIR=$(mktemp -d)
-    if ${pkgs.git}/bin/git clone https://github.com/svnlto/claude-code-linear-commands.git "$TEMP_DIR" >/dev/null 2>&1; then
-      mkdir -p "$HOME/.claude/commands/linear"
-      cp "$TEMP_DIR/commands/"* "$HOME/.claude/commands/linear/" 2>/dev/null || true
-      rm -rf "$TEMP_DIR"
-      echo "Linear commands synced to ~/.claude/commands/linear/"
-    else
-      echo "Warning: Failed to sync linear commands"
-      rm -rf "$TEMP_DIR"
     fi
   '';
 
