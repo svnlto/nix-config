@@ -8,7 +8,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/superlinter.sh"
+            "command": "~/.claude/hooks/megalinter.sh"
           }
         ]
       }

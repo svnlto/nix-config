@@ -23,8 +23,8 @@
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
   
   # Copy hook scripts with executable permissions
-  home.file.".claude/hooks/superlinter.sh" = {
-    source = ./hooks/superlinter.sh;
+  home.file.".claude/hooks/megalinter.sh" = {
+    source = ./hooks/megalinter.sh;
     executable = true;
   };
   
