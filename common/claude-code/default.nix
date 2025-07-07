@@ -28,7 +28,7 @@
     owner = "svnlto";
     repo = "claude-code-linear-commands";
     rev = "main";
-    sha256 = "sha256-07zl1yfb1pvkyk0kqhdw7z5dpi8078jdybnm0gzwjb13hxk17s21";
+    sha256 = "07zl1yfb1pvkyk0kqhdw7z5dpi8078jdybnm0gzwjb13hxk17s21";
   } + "/commands";
 
   # Create necessary directories
