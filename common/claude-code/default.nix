@@ -23,8 +23,8 @@
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
   home.file.".claude/commands".source = ./commands;
   
-  # Fetch and sync linear commands
-  home.file.".claude/commands/linear".source = pkgs.fetchFromGitHub {
+  # Fetch and sync linear commands to separate directory
+  home.file.".claude/commands-linear".source = pkgs.fetchFromGitHub {
     owner = "svnlto";
     repo = "claude-code-linear-commands";
     rev = "main";
