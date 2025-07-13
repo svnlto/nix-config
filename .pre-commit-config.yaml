@@ -18,7 +18,7 @@ repos:
       - id: nixpkgs-fmt
         name: nixpkgs-fmt
         description: Format nix code with nixpkgs-fmt
-        entry: nixfmt
+        entry: nixpkgs-fmt
         language: system
         files: \.nix$
 
