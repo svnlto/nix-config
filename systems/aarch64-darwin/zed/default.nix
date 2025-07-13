@@ -1,17 +1,29 @@
-{ config, lib, pkgs, username, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
 {
   # Make Zed settings available to home-manager
-  home-manager.users.${username} = { config, lib, pkgs, ... }: {
-    # Set the path where Zed stores its configuration
-    home.file.".config/zed/settings.json".source = ./settings.json;
+  home-manager.users.${username} =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      # Set the path where Zed stores its configuration
+      home.file.".config/zed/settings.json".source = ./settings.json;
 
-    # Ensure Zed configuration directory exists
-    home.activation.createZedConfigDir =
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # Ensure Zed configuration directory exists
+      home.activation.createZedConfigDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p "$HOME/.config/zed"
       '';
-  };
+    };
 
   # Add a separate system activation script to handle permissions
   system.activationScripts.zedConfig = lib.mkIf (username != null) ''

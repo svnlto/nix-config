@@ -1,5 +1,11 @@
 # GitHub CLI configuration
-{ config, lib, pkgs, username, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
 {
   # Enable GitHub CLI

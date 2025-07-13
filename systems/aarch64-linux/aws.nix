@@ -1,8 +1,18 @@
-{ config, pkgs, lib, username, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  ...
+}:
 
 {
   # Install AWS CLI and related tools
-  home.packages = with pkgs; [ awscli2 aws-sso-cli ssm-session-manager-plugin ];
+  home.packages = with pkgs; [
+    awscli2
+    aws-sso-cli
+    ssm-session-manager-plugin
+  ];
 
   # Explicitly tell home-manager not to manage the AWS config file
   xdg.configFile."aws/config".enable = false;

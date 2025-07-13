@@ -1,5 +1,12 @@
 # macOS Dock configuration
-{ config, lib, pkgs, username, hostname, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  hostname,
+  ...
+}:
 
 let
   # Use the actual path to dockutil instead of pkgs.homebrew
@@ -32,27 +39,33 @@ let
   };
 
   # Select the dock apps for the current hostname or fall back to default
-  selectedDockApps = if builtins.hasAttr hostname dockAppsByHost then
-    dockAppsByHost.${hostname}
-  else
-    dockAppsByHost.default;
-in {
+  selectedDockApps =
+    if builtins.hasAttr hostname dockAppsByHost then
+      dockAppsByHost.${hostname}
+    else
+      dockAppsByHost.default;
+in
+{
   # Export the configuration through options instead of _module.args
   options = { };
 
   # Create a proper module configuration
   config = {
     system.activationScripts = {
-      dock.text = let
-        # Build the dock configuration script
-        dockConfigScript = apps: ''
-          ${dockutil} --remove all --no-restart
-          ${lib.concatStringsSep "\n" (map (app: ''
-            ${dockutil} --add "${app}" --no-restart
-          '') apps)}
-          killall Dock
-        '';
-      in dockConfigScript selectedDockApps;
+      dock.text =
+        let
+          # Build the dock configuration script
+          dockConfigScript = apps: ''
+            ${dockutil} --remove all --no-restart
+            ${lib.concatStringsSep "\n" (
+              map (app: ''
+                ${dockutil} --add "${app}" --no-restart
+              '') apps
+            )}
+            killall Dock
+          '';
+        in
+        dockConfigScript selectedDockApps;
 
       # Update the postActivation script to use our dock config
       postActivation.text = lib.mkAfter ''
@@ -62,12 +75,15 @@ in {
           let
             dockConfigScript = apps: ''
               ${dockutil} --remove all --no-restart
-              ${lib.concatStringsSep "\n" (map (app: ''
-                ${dockutil} --add "${app}" --no-restart
-              '') apps)}
+              ${lib.concatStringsSep "\n" (
+                map (app: ''
+                  ${dockutil} --add "${app}" --no-restart
+                '') apps
+              )}
               killall Dock
             '';
-          in dockConfigScript selectedDockApps
+          in
+          dockConfigScript selectedDockApps
         }' >&2
       '';
     };

@@ -1,4 +1,9 @@
-{ config, pkgs, username, ... }:
+{
+  config,
+  pkgs,
+  username,
+  ...
+}:
 
 {
   imports = [ ./zsh ];
@@ -6,8 +11,14 @@
   # Common Nix settings - platform-specific settings should be in respective files
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" username ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        username
+      ];
 
       # Settings to improve lock handling
       use-case-hack = true;

@@ -28,7 +28,7 @@ jobs:
       - name: Install Dependencies with Nix
         run: |
           # Install all dependencies via Nix
-          nix profile install nixpkgs#pre-commit nixpkgs#nixpkgs-fmt nixpkgs#shellcheck
+          nix profile install nixpkgs#pre-commit nixpkgs#nixfmt-rfc-style nixpkgs#shellcheck
 
       - name: Run pre-commit hooks
         run: |

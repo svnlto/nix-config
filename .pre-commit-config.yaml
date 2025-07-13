@@ -12,13 +12,13 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-  - repo: https://github.com/nix-community/nixpkgs-fmt
-    rev: v1.3.0
+  - repo: local
     hooks:
-      - id: nixpkgs-fmt
-        name: nixpkgs-fmt
-        description: Format nix code with nixpkgs-fmt
-        entry: nixpkgs-fmt
+      - id: nixfmt
+        name: nixfmt
+        description: Format nix code with nixfmt
+        entry: nix
+        args: [shell, nixpkgs#nixfmt-rfc-style, -c, nixfmt]
         language: system
         files: \.nix$
 
