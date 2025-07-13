@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  ...
-}:
+{ config, pkgs, username, ... }:
 
 {
   imports = [
@@ -19,10 +14,7 @@
   # This will override or extend the base vagrant configuration
 
   # Additional packages specific to EC2 environment
-  home.packages = with pkgs; [
-    awscli2
-    amazon-ecr-credential-helper
-  ];
+  home.packages = with pkgs; [ awscli2 amazon-ecr-credential-helper ];
 
   # EC2-specific Git configuration
   programs.git.extraConfig = {

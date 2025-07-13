@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  username,
-  ...
-}:
+{ config, pkgs, lib, username, ... }:
 
 {
   home.activation.setupBinDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -24,6 +18,7 @@
 
   # Configure ZSH aliases for user scripts
   programs.zsh.shellAliases = {
-    "fusg" = "fetch-user-script-gists"; # Short alias for fetch-user-script-gists
+    "fusg" =
+      "fetch-user-script-gists"; # Short alias for fetch-user-script-gists
   };
 }

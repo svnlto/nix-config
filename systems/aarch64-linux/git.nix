@@ -1,11 +1,5 @@
 # Ubuntu-specific Git configuration
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}:
+{ config, lib, pkgs, username, ... }:
 
 let
   # Complete Git configuration for Ubuntu
@@ -33,25 +27,17 @@ let
         tool = "vscode";
         conflictstyle = "diff3";
       };
-      mergetool.vscode = {
-        cmd = "code --wait $MERGED";
-      };
+      mergetool.vscode = { cmd = "code --wait $MERGED"; };
       diff = {
         tool = "vscode";
         colorMoved = "default";
       };
-      difftool.vscode = {
-        cmd = "code --wait --diff $LOCAL $REMOTE";
-      };
+      difftool.vscode = { cmd = "code --wait --diff $LOCAL $REMOTE"; };
       commit = {
         gpgsign = false; # Set to true if you use GPG signing
       };
-      rerere = {
-        enabled = true;
-      };
-      help = {
-        autocorrect = 10;
-      };
+      rerere = { enabled = true; };
+      help = { autocorrect = 10; };
       color = {
         ui = "always";
         diff = {
@@ -111,15 +97,15 @@ let
     result
     result-*
   '';
-in
-{
+in {
   # Apply the git configuration for Ubuntu (home-manager)
   programs.git = gitConfig;
 
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
 
-  home.activation.linkGitConfig = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    ln -sf ${config.home.homeDirectory}/.config/git/config /home/${username}/.gitconfig
-  '';
+  home.activation.linkGitConfig =
+    config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      ln -sf ${config.home.homeDirectory}/.config/git/config /home/${username}/.gitconfig
+    '';
 }

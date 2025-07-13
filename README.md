@@ -16,7 +16,7 @@ Here's why I love this setup:
 
 This is my take on a flexible Nix configuration that manages macOS systems and can provision Linux development environments. It works for me, and maybe it'll give you some ideas for your own setup!
 
-- 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications  
+- 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications
 - 🐧 **Linux**: Using Home Manager for development environments (local or cloud)
 - 🤖 **Claude Code**: Automated MCP server configuration for AI-powered development
 
@@ -161,7 +161,7 @@ darwin-rebuild switch --flake ~/.config/nix#rick
 
 **Included MCP servers:**
 - **context7**: Documentation and context retrieval
-- **code-reasoning**: Code analysis and reasoning capabilities  
+- **code-reasoning**: Code analysis and reasoning capabilities
 - **sequential-thinking**: Step-by-step problem solving
 
 The configuration automatically:

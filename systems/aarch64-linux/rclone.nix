@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 
 {
   # Install rclone package
@@ -92,20 +87,11 @@
       ExecStop = "${config.home.homeDirectory}/.bin/unmount-gdrive";
       Restart = "on-failure";
       RestartSec = "30s";
-      Environment = [
-        "PATH=${
-          lib.makeBinPath [
-            pkgs.rclone
-            pkgs.fuse
-            pkgs.coreutils
-          ]
-        }"
-      ];
+      Environment =
+        [ "PATH=${lib.makeBinPath [ pkgs.rclone pkgs.fuse pkgs.coreutils ]}" ];
     };
 
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
+    Install = { WantedBy = [ "default.target" ]; };
   };
 
   # Create unmount script

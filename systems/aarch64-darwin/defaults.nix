@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  ...
-}:
+{ config, pkgs, username, ... }:
 
 {
   system.defaults = {
