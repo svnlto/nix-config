@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   # Use minimal ARM64 Ubuntu 24.04 box
   config.vm.box = "cloud-image/ubuntu-24.04"
-  
+
   # Increase boot timeout for QEMU
   config.vm.boot_timeout = 600
   config.vm.hostname = "nix-dev"
@@ -14,12 +14,12 @@ Vagrant.configure("2") do |config|
   # SSH configuration
   config.ssh.insert_key = true
   config.ssh.forward_agent = true
-  
+
   # Forward a reasonable port range for development (20 ports)
    (3000..3019).each do |port|
      config.vm.network "forwarded_port", guest: port, host: port
    end
-   
+
    # Forward Playwright port
    config.vm.network "forwarded_port", guest: 9222, host: 9222
 

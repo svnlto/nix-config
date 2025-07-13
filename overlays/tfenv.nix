@@ -25,7 +25,12 @@ final: prev: {
     # expanding $HOME fails with --set-default.
     fixupPhase = ''
       wrapProgram $out/bin/tfenv \
-      --prefix PATH : "${prev.lib.makeBinPath [ prev.unzip prev.curl ]}" \
+      --prefix PATH : "${
+        prev.lib.makeBinPath [
+          prev.unzip
+          prev.curl
+        ]
+      }" \
       --run 'export TFENV_CONFIG_DIR="''${TFENV_CONFIG_DIR:-$HOME/.tfenv}"' \
       --run 'mkdir -p $TFENV_CONFIG_DIR'
 

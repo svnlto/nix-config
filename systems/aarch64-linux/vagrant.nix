@@ -1,4 +1,10 @@
-{ config, pkgs, username, lib, ... }:
+{
+  config,
+  pkgs,
+  username,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -42,7 +48,7 @@
     terraform-docs
     terraform-ls
     tflint
-    
+
     # Node.js tools
     nodePackages.pnpm
 
@@ -53,7 +59,7 @@
     tree
     unzip
     nmap
-    docker        
+    docker
     docker-compose
     kubectl
     kubernetes-helm

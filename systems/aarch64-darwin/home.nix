@@ -1,8 +1,15 @@
-{ config, pkgs, username, lib, ... }:
+{
+  config,
+  pkgs,
+  username,
+  lib,
+  ...
+}:
 
-let 
+let
   sharedZsh = import ../../common/zsh/shared.nix;
-in {
+in
+{
   imports = [
     ../../common/home-packages.nix
     ../../common/claude-code/default.nix
@@ -20,7 +27,7 @@ in {
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
-    
+
     # Reduce verbosity
     config = {
       global = {
@@ -67,6 +74,5 @@ in {
   };
 
   # Install Oh My Posh theme
-  home.file.".config/oh-my-posh/default.omp.json".source =
-    ../../common/zsh/default.omp.json;
+  home.file.".config/oh-my-posh/default.omp.json".source = ../../common/zsh/default.omp.json;
 }

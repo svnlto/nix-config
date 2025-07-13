@@ -24,22 +24,21 @@ jobs:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
       - name: Install Dependencies for Pre-commit Hooks
         run: |
           # Install Nix tools
-          curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
-          . /etc/profile.d/nix.sh
-          nix-env -iA nixpkgs.nixpkgs-fmt nixpkgs.shellcheck
+          nix profile install nixpkgs#nixfmt-rfc-style nixpkgs#shellcheck
 
           # Install pre-commit
           pip install pre-commit
 
       - name: Run pre-commit hooks
         run: |
-          # Source Nix if it's installed
-          if [ -e /etc/profile.d/nix.sh ]; then
-            . /etc/profile.d/nix.sh
-          fi
-
-          # Run pre-commit
-          pre-commit run --all-files
+          # Run pre-commit (exclude vagrant-validate since we removed Vagrant)
+          pre-commit run --all-files --hook-stage commit

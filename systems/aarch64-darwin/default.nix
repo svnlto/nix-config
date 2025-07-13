@@ -1,7 +1,20 @@
-{ config, pkgs, lib, username, hostname, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  hostname,
+  ...
+}:
 
 {
-  imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ./git.nix ./zed/default.nix ];
+  imports = [
+    ./homebrew.nix
+    ./defaults.nix
+    ./dock.nix
+    ./git.nix
+    ./zed/default.nix
+  ];
 
   # macOS specific packages
   environment.systemPackages = with pkgs; [
@@ -26,24 +39,26 @@
 
   # System activation scripts
   system.activationScripts = {
-    applications.text = let
-      env = pkgs.buildEnv {
-        name = "system-applications";
-        paths = config.environment.systemPackages;
-        pathsToLink = "/Applications";
-      };
-    in lib.mkForce ''
-      # Set up applications.
-      echo "setting up /Applications..." >&2
-      rm -rf /Applications/Nix\ Apps
-      mkdir -p /Applications/Nix\ Apps
-      find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-      while read -r src; do
-        app_name=$(basename "$src")
-        echo "copying $src" >&2
-        ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
-      done
-    '';
+    applications.text =
+      let
+        env = pkgs.buildEnv {
+          name = "system-applications";
+          paths = config.environment.systemPackages;
+          pathsToLink = "/Applications";
+        };
+      in
+      lib.mkForce ''
+        # Set up applications.
+        echo "setting up /Applications..." >&2
+        rm -rf /Applications/Nix\ Apps
+        mkdir -p /Applications/Nix\ Apps
+        find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
+        while read -r src; do
+          app_name=$(basename "$src")
+          echo "copying $src" >&2
+          ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
+        done
+      '';
 
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
@@ -89,9 +104,7 @@
 
   system.activationScripts.userSshConfig.text = ''
     mkdir -p /Users/${username}/.ssh
-    cp ${
-      config.environment.etc."user-ssh-config".source
-    } /Users/${username}/.ssh/config
+    cp ${config.environment.etc."user-ssh-config".source} /Users/${username}/.ssh/config
     chown ${username}:staff /Users/${username}/.ssh/config
     chmod 600 /Users/${username}/.ssh/config
   '';

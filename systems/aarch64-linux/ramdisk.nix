@@ -1,4 +1,10 @@
-{ config, pkgs, lib, username, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  ...
+}:
 
 {
   # Configure development tools to use RAM disk for temporary files
@@ -18,36 +24,35 @@
 
   # Create directories for npm, pnpm and Terraform caches on the RAM disk
   # Use a simpler approach that doesn't depend on sudo
-  home.activation.setupRamdiskDirs =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Only try to create subdirectories if the ramdisk is already mounted
-      # The main /ramdisk mount is handled by the Vagrantfile provisioner
-      if [ -d "/ramdisk" ] && [ -w "/ramdisk" ]; then
-        echo "RAM disk is mounted and writable"
+  home.activation.setupRamdiskDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Only try to create subdirectories if the ramdisk is already mounted
+    # The main /ramdisk mount is handled by the Vagrantfile provisioner
+    if [ -d "/ramdisk" ] && [ -w "/ramdisk" ]; then
+      echo "RAM disk is mounted and writable"
 
-        # Try creating user-specific directories that we should have permission for
-        echo "Setting up user cache directories in RAM disk..."
+      # Try creating user-specific directories that we should have permission for
+      echo "Setting up user cache directories in RAM disk..."
 
-        # Create user directories in ramdisk - focus on directories we'll use
-        mkdir -p "/ramdisk/.npm" 2>/dev/null || echo "Could not create npm cache dir"
-        mkdir -p "/ramdisk/tmp" 2>/dev/null || echo "Could not create tmp dir"
-        mkdir -p "/ramdisk/.pnpm/store" 2>/dev/null || echo "Could not create pnpm dirs"
-        mkdir -p "/ramdisk/.terraform.d/plugin-cache" 2>/dev/null || echo "Could not create terraform dirs"
-        mkdir -p "/ramdisk/.terraform.d/plugins" 2>/dev/null || echo "Could not create terraform dirs"
+      # Create user directories in ramdisk - focus on directories we'll use
+      mkdir -p "/ramdisk/.npm" 2>/dev/null || echo "Could not create npm cache dir"
+      mkdir -p "/ramdisk/tmp" 2>/dev/null || echo "Could not create tmp dir"
+      mkdir -p "/ramdisk/.pnpm/store" 2>/dev/null || echo "Could not create pnpm dirs"
+      mkdir -p "/ramdisk/.terraform.d/plugin-cache" 2>/dev/null || echo "Could not create terraform dirs"
+      mkdir -p "/ramdisk/.terraform.d/plugins" 2>/dev/null || echo "Could not create terraform dirs"
 
-        # Try to set permissions but don't fail if we can't
-        chmod 777 "/ramdisk/tmp" 2>/dev/null || true
-      else
-        echo "WARNING: /ramdisk is not mounted or not writable"
-        echo "RAM disk features will fall back to regular disk"
-        # Create fallback directories in home directory
-        mkdir -p "$HOME/.cache/npm-ramdisk"
-        mkdir -p "$HOME/.cache/pnpm-ramdisk"
-        mkdir -p "$HOME/.cache/terraform-ramdisk"
-      fi
+      # Try to set permissions but don't fail if we can't
+      chmod 777 "/ramdisk/tmp" 2>/dev/null || true
+    else
+      echo "WARNING: /ramdisk is not mounted or not writable"
+      echo "RAM disk features will fall back to regular disk"
+      # Create fallback directories in home directory
+      mkdir -p "$HOME/.cache/npm-ramdisk"
+      mkdir -p "$HOME/.cache/pnpm-ramdisk"
+      mkdir -p "$HOME/.cache/terraform-ramdisk"
+    fi
 
-      echo "RAM disk setup complete"
-    '';
+    echo "RAM disk setup complete"
+  '';
 
   # NPM specific configuration
   home.file.".npmrc".text = ''

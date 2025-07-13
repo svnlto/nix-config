@@ -1,12 +1,19 @@
-{ config, lib, pkgs, username, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
-let sharedZsh = import ../../common/zsh/shared.nix;
-in {
+let
+  sharedZsh = import ../../common/zsh/shared.nix;
+in
+{
   # Vagrant-specific ZSH configuration for home-manager
 
   # Install Oh My Posh theme
-  home.file.".config/oh-my-posh/default.omp.json".source =
-    ../../common/zsh/default.omp.json;
+  home.file.".config/oh-my-posh/default.omp.json".source = ../../common/zsh/default.omp.json;
 
   # Home Manager ZSH configuration
   programs.zsh = {
@@ -68,7 +75,7 @@ in {
       if [ -f "$HOME/.bin_aliases" ]; then
         source "$HOME/.bin_aliases"
       fi
-      
+
       # Ensure direnv is properly initialized
       if command -v direnv &> /dev/null; then
         eval "$(direnv hook zsh)"

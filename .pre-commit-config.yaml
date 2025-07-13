@@ -41,11 +41,3 @@ repos:
         language: system
         types: [shell]
         exclude_types: [zsh]
-
-      - id: vagrant-validate
-        name: Vagrant Validate
-        description: Validate Vagrantfile syntax
-        entry: vagrant validate
-        language: system
-        files: ^Vagrantfile$
-        pass_filenames: false
