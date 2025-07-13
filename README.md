@@ -4,20 +4,21 @@
 
 Hey! This is just my Nix setup that I've put together over time to make coding easier. I got some ideas from Mitchell Hashimoto's approach to dev environments and tweaked things to work for me.
 
-I like to keep my Mac clean and organized while still having access to all the tools I need for development. That's why I set things up this way: I use my Mac for everyday tasks, but I do all my actual coding and development work in a Vagrant-managed UTM VM.
+I like to keep my Mac clean and organized while still having access to all the tools I need for development. This configuration manages my macOS system with nix-darwin and can also set up Linux development environments for cloud or local development.
 
 Here's why I love this setup:
 
-- **My host stays clean** - No more dependency issues
-- **I can experiment freely** - Breaking my dev environment doesn't affect my system
-- **It's consistent** - My dev environment feels the same on all my devices
-- **Best of both worlds** - macOS for daily tasks, Linux for development
-- **My settings follow me everywhere** - Shared ZSH configs keep my shell experience consistent
+- **My host stays clean** - Nix manages dependencies declaratively
+- **It's consistent** - My dev environment feels the same across devices
+- **Best of both worlds** - macOS for daily tasks, with Linux options for development
+- **My settings follow me everywhere** - Shared configurations keep everything consistent
+- **Claude Code integration** - Automated MCP server setup for enhanced AI coding assistance
 
-This is my take on a flexible Nix configuration that manages both my macOS system and my Linux development VM. It works for me, and maybe it'll give you some ideas for your own setup!
+This is my take on a flexible Nix configuration that manages macOS systems and can provision Linux development environments. It works for me, and maybe it'll give you some ideas for your own setup!
 
-- 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications
-- 🐧 **Linux/UTM VM**: Using Home Manager for user environment configuration
+- 🍎 **macOS**: Using nix-darwin for system configuration and Homebrew for applications  
+- 🐧 **Linux**: Using Home Manager for development environments (local or cloud)
+- 🤖 **Claude Code**: Automated MCP server configuration for AI-powered development
 
 ## 📁 Structure
 
@@ -28,9 +29,14 @@ Here's how I've organized everything:
 ├── flake.nix             # Main entry point for the Nix flake
 ├── flake.lock            # Lock file for flake dependencies
 ├── nix.conf              # Global Nix settings
-├── Vagrantfile           # Definition for Vagrant VM development environment
+├── Vagrantfile           # Legacy Vagrant configuration (kept for reference)
 ├── common/               # Shared configuration
 │   ├── default.nix       # Common packages and settings
+│   ├── claude-code/      # Claude Code integration
+│   │   ├── default.nix   # Claude Code and MCP server setup
+│   │   ├── settings.json # Claude Code settings
+│   │   ├── CLAUDE.md     # Claude Code instructions
+│   │   └── commands/     # Custom Claude Code commands
 │   └── zsh/              # Shared ZSH configuration
 │       ├── default.nix   # ZSH module definition
 │       ├── default.omp.json # Oh-My-Posh theme
@@ -41,17 +47,21 @@ Here's how I've organized everything:
 │   │   ├── homebrew.nix  # Homebrew packages and settings
 │   │   ├── defaults.nix  # macOS system preferences
 │   │   ├── dock.nix      # Dock configuration
-│   │   └── git.nix       # macOS-specific Git setup
+│   │   ├── git.nix       # macOS-specific Git setup
+│   │   └── zed/          # Zed editor configuration
 │   └── aarch64-linux/    # ARM Linux configurations
 │       ├── ec2.nix       # EC2-specific Home Manager configuration
-│       ├── vagrant.nix   # Vagrant VM configuration
+│       ├── vagrant.nix   # Legacy VM configuration
 │       ├── default.nix   # System configuration
-│       ├── git.nix       # VM-specific Git configuration
-│       └── zsh.nix       # VM-specific ZSH setup
+│       ├── git.nix       # Linux-specific Git configuration
+│       └── zsh.nix       # Linux-specific ZSH setup
 ├── overlays/             # Custom Nix overlays
 │   └── tfenv.nix         # Terraform Version Manager overlay
 ├── packer/               # Packer templates
 │   └── aws-ec2.pkr.hcl   # AWS EC2 instance configuration
+└── .github/              # GitHub Actions workflows
+    └── workflows/
+        └── pre-commit.yml # Code quality and formatting checks
 ```
 
 ## 🛠️ Installation
@@ -92,8 +102,8 @@ Setting up on macOS with Apple Silicon is pretty straightforward:
 
 3. Apply it to your Mac:
    ```bash
-   # For the default configuration (hostname: macbook)
-   darwin-rebuild switch --flake ~/.config/nix#macbook
+   # For the rick configuration (your actual hostname)
+   darwin-rebuild switch --flake ~/.config/nix#rick
    ```
 
 ### 🌩️ Cloud Deployment with Packer {#-cloud-deployment-with-packer}
@@ -139,93 +149,41 @@ Want to use this on multiple Macs? No problem! You can have different settings f
    darwin-rebuild switch --flake ~/.config/nix#your-hostname
    ```
 
-### 🖥️ UTM + Vagrant Setup (Apple Silicon)
+### 🤖 Claude Code Integration
 
-Here's my favorite part - the VM setup! If you've got an Apple Silicon Mac, UTM + Vagrant is a match made in heaven. You get the speed of native ARM virtualization with the convenience of Vagrant's declarative VM management:
+This configuration includes automated setup for Claude Code with MCP (Model Context Protocol) servers:
 
-1. First, grab the basics:
+```bash
+# Claude Code and MCP servers are automatically installed and configured
+# when you apply the nix-darwin configuration
+darwin-rebuild switch --flake ~/.config/nix#rick
+```
 
-   ```bash
-   # Apply your nix-darwin config to install UTM and Vagrant
-   darwin-rebuild switch --flake ~/.config/nix#macbook
+**Included MCP servers:**
+- **context7**: Documentation and context retrieval
+- **code-reasoning**: Code analysis and reasoning capabilities  
+- **sequential-thinking**: Step-by-step problem solving
 
-   # Install the Vagrant UTM plugin
-   vagrant plugin install vagrant-utm
-   ```
+The configuration automatically:
+- Installs Claude Code via npm
+- Configures MCP servers as user-scoped (available across all projects)
+- Sets up custom commands and workflows
+- Manages settings and documentation
 
-2. Fire up the VM:
+**Claude Code features:**
+- Custom commands for Linear integration
+- Sophisticated development workflows
+- Automated code quality checks
+- Context-aware AI assistance
 
-   ```bash
-   cd ~/.config/nix
-   vagrant up
-   ```
+### 🖥️ Local Development Options
 
-   **Heads up**: The first time you do this:
+While this configuration previously included Vagrant VM setup, the focus has shifted to:
+- **Direct macOS development** with Nix managing dependencies
+- **Cloud development** using EC2 instances with Tailscale
+- **Claude Code integration** for AI-enhanced development
 
-   - UTM will ask for permission (just say yes)
-   - Your terminal will ask if you want to download the VM image (say yes to that too)
-   - It'll download the Ubuntu ARM64 VM image (~600MB)
-   - Then it'll set up Nix and all your dev tools automatically
-
-3. Jump into the VM:
-
-   ```bash
-   # Quick way - SSH from your terminal
-   vagrant ssh
-
-   # Or get the VM's IP for connecting with VS Code
-   ip addr show | grep "inet " | grep -v 127.0.0.1
-   ```
-
-4. Connect with VS Code Remote-SSH:
-
-   - Install the "Remote - SSH" extension in VS Code
-   - Your SSH configuration is automatically maintained by the Nix configuration in `systems/aarch64-darwin/default.nix`
-   - The SSH config includes all the settings needed to connect to your Vagrant VM:
-
-     ```
-     Host nix-dev
-       HostName 127.0.0.1
-       User vagrant
-       Port 2222
-       UserKnownHostsFile /dev/null
-       StrictHostKeyChecking no
-       PasswordAuthentication no
-       IdentityFile /Users/svenlito/.config/nix/.vagrant/machines/default/utm/private_key
-       IdentitiesOnly yes
-       LogLevel FATAL
-       ForwardAgent yes
-       PubkeyAcceptedKeyTypes +ssh-rsa
-       HostKeyAlgorithms +ssh-rsa
-     ```
-
-   - In VS Code, open the Command Palette (⇧⌘P) and run "Remote-SSH: Connect to Host..."
-   - Select "nix-dev" from the list
-   - Open the `/vagrant` folder - it's synced with your host's nix config
-   - Or open `~/.config/nix` to work directly with your configuration
-
-   **Note**: The SSH configuration is automatically applied during system activation, so any changes made to the configuration in `systems/aarch64-darwin/default.nix` will be applied when you run `darwin-rebuild switch`.
-
-5. Some handy VM commands:
-
-   ```bash
-   vagrant suspend  # Take a coffee break (pauses the VM)
-   vagrant resume   # Back to work! (resumes the VM)
-   vagrant halt     # Calling it a day (stops the VM)
-   vagrant destroy  # Starting fresh (deletes the VM)
-   vagrant provision # Apply new config changes
-   ```
-
-6. Made some config tweaks? Apply them like this:
-
-   ```bash
-   # From your Mac
-   vagrant provision
-
-   # Or from inside the VM
-   cd ~/.config/nix
-   nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
-   ```
+The Vagrant configuration files are retained for reference but are no longer actively maintained.
 
 ### ☁️ AWS EC2 + Ubuntu Setup
 
@@ -418,20 +376,17 @@ Keeping everything up to date is super simple:
 git pull
 
 # Apply configuration
-darwin-rebuild switch --flake ~/.config/nix#macbook
+darwin-rebuild switch --flake ~/.config/nix#rick
 ```
 
-#### 🐧 Vagrant VM:
+#### ☁️ EC2 Instance:
 
 ```bash
 # Pull latest changes
 git pull
 
-# Rebuild VM with latest configuration
-vagrant provision
-
-# Or if you're already in the VM, you can run:
-nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
+# Apply updated configuration
+nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
 ```
 
 ### ✏️ Making Changes
@@ -452,11 +407,11 @@ Here's how to do all the usual stuff:
 - 🍺 Need a GUI app via Homebrew? Edit `systems/aarch64-darwin/homebrew.nix`
 - ⚙️ Tweaking macOS settings: Look in `systems/aarch64-darwin/defaults.nix`
 - 📱 Changing dock icons: Find your host in `flake.nix`
-- 🐧 Adding stuff to your VM: Edit `systems/aarch64-linux/vagrant.nix`
+- 🤖 Configuring Claude Code: Edit `common/claude-code/default.nix`
 - ☁️ Adding stuff to your EC2 instance: Edit `systems/aarch64-linux/ec2.nix`
-- 🖥️ Changing VM settings: It's all in `Vagrantfile`
 - ⚡ Modifying AWS EC2 image: Edit `packer/aws-ec2.pkr.hcl`
 - 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
+- 🔧 Pre-commit hooks: Edit `.pre-commit-config.yaml`
 
 ### ☁️ AWS Configuration
 
