@@ -39,7 +39,6 @@
       "orbstack"
       "zed"
       "pieces"
-      "claude"
 
       # Networking & Utilities
       "tailscale"
