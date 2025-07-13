@@ -1,17 +1,10 @@
 {
   "model": "claude-sonnet-4-20250514",
   "includeCoAuthoredBy": false,
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/megalinter.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "code-reasoning",
+    "sequential-thinking",
+    "context7"
+  ]
 }

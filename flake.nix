@@ -51,54 +51,8 @@
                 extraSpecialArgs = { inherit username; };
                 backupFileExtension = "backup";
 
-                # Inline Home Manager configuration
-                users.${username} = { config, lib, pkgs, ... }:
-                  let 
-                    sharedZsh = import ./common/zsh/shared.nix;
-                  in {
-                    # Import Claude Code configuration from module
-                    imports = [ ./common/claude-code/default.nix ];
-
-                    home = {
-                      username = username;
-                      homeDirectory = "/Users/${username}";
-                      stateVersion = "23.11";
-                    };
-
-                    programs.zsh = {
-                      enable = true;
-
-                      oh-my-zsh = {
-                        enable = true;
-                        plugins = [ "git" ];
-                        theme = "";
-                      };
-
-                      shellAliases = sharedZsh.aliases // {
-                        nixswitch =
-                          "darwin-rebuild switch --flake ~/.config/nix#${hostname}";
-                      };
-
-                      initContent = ''
-                        # Source common settings
-                        ${sharedZsh.options}
-                        ${sharedZsh.keybindings}
-                        ${sharedZsh.tools}
-
-                        # Add npm global bin to PATH
-                        export PATH="$HOME/.npm-global/bin:$PATH"
-                        export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-
-                        # Ensure Oh My Posh is properly initialized
-                        if command -v oh-my-posh &> /dev/null; then
-                          eval "$(oh-my-posh --init --shell zsh --config ~/.config/oh-my-posh/default.omp.json)"
-                        fi
-                      '';
-                    };
-
-                    home.file.".config/oh-my-posh/default.omp.json".source =
-                      ./common/zsh/default.omp.json;
-                  };
+                # Import Home Manager configuration from separate file
+                users.${username} = import ./systems/${system}/home.nix;
               };
             }
           ] ++ extraModules;
@@ -113,8 +67,8 @@
           username = "your_username"; # Replace with your macOS username
         };
 
-        "Rick" = darwinSystem {
-          hostname = "Rick";
+        "rick" = darwinSystem {
+          hostname = "rick";
           username = "svenlito";
         };
       };

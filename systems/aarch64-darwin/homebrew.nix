@@ -27,6 +27,7 @@
       # Development & Terminal
       "hashicorp/tap/hashicorp-vagrant"
       "vagrant"
+      "orbstack"
       "zed"
       "pieces"
       "claude"

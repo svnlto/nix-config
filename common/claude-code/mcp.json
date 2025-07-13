@@ -1,0 +1,18 @@
+{
+  "user": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context-labs/context7-server"]
+    },
+    "code-reasoning": {
+      "command": "npx",
+      "args": ["-y", "@mettamatt/code-reasoning"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "env": {}
+    }
+  }
+}

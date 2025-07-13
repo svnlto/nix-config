@@ -3,9 +3,6 @@
   # Install Node.js to enable npm
   home.packages = with pkgs; [
     nodejs_22
-    # Dependencies for hooks
-    yq
-    ripgrep
   ];
 
   # Add npm global bin to PATH for user-installed packages
@@ -21,12 +18,8 @@
   # Create and manage ~/.claude directory
   home.file.".claude/settings.json".source = ./settings.json;
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
+  home.file.".claude/.mcp.json".source = ./mcp.json;
   
-  # Copy hook scripts with executable permissions
-  home.file.".claude/hooks/megalinter.sh" = {
-    source = ./hooks/megalinter.sh;
-    executable = true;
-  };
   
   # Combine local commands with linear commands
   home.file.".claude/commands".source = pkgs.symlinkJoin {
