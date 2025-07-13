@@ -40,5 +40,5 @@ jobs:
 
       - name: Run pre-commit hooks
         run: |
-          # Run pre-commit (exclude vagrant-validate since we removed Vagrant)
+          # Run pre-commit 
           pre-commit run --all-files --hook-stage commit
