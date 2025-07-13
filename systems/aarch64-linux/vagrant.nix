@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  lib,
-  ...
-}:
+{ config, pkgs, username, lib, ... }:
 
 {
   imports = [
@@ -40,9 +34,6 @@
     gcc
     gnused
     gawk
-
-    # Overlays
-    tfenv
 
     # Terraform tools
     terraform-docs

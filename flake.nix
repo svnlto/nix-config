@@ -16,30 +16,19 @@
     };
   };
 
-  outputs =
-    inputs@{
-      self,
-      nix-darwin,
-      nixpkgs,
-      nix-homebrew,
-      home-manager,
-    }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, }:
     let
-      # Overlays
-      overlays = [
-        (import ./overlays/tfenv.nix)
-      ];
+      # Overlays (removed - use flakes for project-specific tools)
+      overlays = [ ];
 
       # Create a version of nixpkgs with our overlays for Linux
       nixpkgsWithOverlays = system: import nixpkgs { inherit system overlays; };
 
       # Default macOS configuration
-      darwinSystem =
-        {
-          hostname ? "macbook", # Generic default hostname
-          username ? "user", # Generic default username
-          system ? "aarch64-darwin", # Default to Apple Silicon
-          extraModules ? [ ], # Allow additional modules
+      darwinSystem = { hostname ? "macbook", # Generic default hostname
+        username ? "user", # Generic default username
+        system ? "aarch64-darwin", # Default to Apple Silicon
+        extraModules ? [ ], # Allow additional modules
         }:
         nix-darwin.lib.darwinSystem {
           inherit system;
@@ -66,17 +55,9 @@
             }
           ] ++ extraModules;
 
-          specialArgs = {
-            inherit
-              inputs
-              self
-              hostname
-              username
-              ;
-          };
+          specialArgs = { inherit inputs self hostname username; };
         };
-    in
-    {
+    in {
       # macOS configurations
       darwinConfigurations = {
         "macbook" = darwinSystem {
@@ -107,10 +88,7 @@
             # Explicitly specify nix.package for home-manager
             nix = {
               package = nixpkgs.legacyPackages.aarch64-linux.nix;
-              settings.experimental-features = [
-                "nix-command"
-                "flakes"
-              ];
+              settings.experimental-features = [ "nix-command" "flakes" ];
             };
 
             programs.fish.enable = false;
@@ -126,9 +104,7 @@
             ];
           }
         ];
-        extraSpecialArgs = {
-          username = "vagrant";
-        };
+        extraSpecialArgs = { username = "vagrant"; };
       };
 
       # Standalone home-manager configuration for EC2
@@ -148,16 +124,11 @@
             # Explicitly specify nix.package for home-manager
             nix = {
               package = nixpkgs.legacyPackages.aarch64-linux.nix;
-              settings.experimental-features = [
-                "nix-command"
-                "flakes"
-              ];
+              settings.experimental-features = [ "nix-command" "flakes" ];
             };
           }
         ];
-        extraSpecialArgs = {
-          username = "ubuntu";
-        };
+        extraSpecialArgs = { username = "ubuntu"; };
       };
     };
 }
