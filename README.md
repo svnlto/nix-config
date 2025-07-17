@@ -30,13 +30,23 @@ Here's how I've organized everything:
 ├── flake.lock            # Lock file for flake dependencies
 ├── nix.conf              # Global Nix settings
 ├── Vagrantfile           # Legacy Vagrant configuration (kept for reference)
+├── CLAUDE.md             # Claude Code project instructions
+├── COMMIT_CONVENTION.md  # Git commit message conventions
+├── LICENSE               # MIT license
+├── renovate.json         # Renovate dependency updates
 ├── common/               # Shared configuration
 │   ├── default.nix       # Common packages and settings
+│   ├── home-packages.nix # Shared packages for all systems
 │   ├── claude-code/      # Claude Code integration
-│   │   ├── default.nix   # Claude Code and MCP server setup
+│   │   ├── default.nix   # Claude Code setup
 │   │   ├── settings.json # Claude Code settings
 │   │   ├── CLAUDE.md     # Claude Code instructions
 │   │   └── commands/     # Custom Claude Code commands
+│   │       ├── breakdown-linear-issue.md
+│   │       ├── bugfix.md
+│   │       ├── process-task.md
+│   │       ├── refactor.md
+│   │       └── linear/   # Linear integration commands
 │   └── zsh/              # Shared ZSH configuration
 │       ├── default.nix   # ZSH module definition
 │       ├── default.omp.json # Oh-My-Posh theme
@@ -44,16 +54,24 @@ Here's how I've organized everything:
 ├── systems/              # Architecture-specific configurations
 │   ├── aarch64-darwin/   # Apple Silicon macOS configurations
 │   │   ├── default.nix   # Main configuration for macOS
+│   │   ├── home.nix      # Home Manager configuration
 │   │   ├── homebrew.nix  # Homebrew packages and settings
 │   │   ├── defaults.nix  # macOS system preferences
 │   │   ├── dock.nix      # Dock configuration
 │   │   ├── git.nix       # macOS-specific Git setup
 │   │   └── zed/          # Zed editor configuration
+│   │       ├── default.nix
+│   │       └── settings.json
 │   └── aarch64-linux/    # ARM Linux configurations
-│       ├── ec2.nix       # EC2-specific Home Manager configuration
+│       ├── default.nix   # Common Linux system configuration
 │       ├── vagrant.nix   # Legacy VM configuration
-│       ├── default.nix   # System configuration
+│       ├── ec2.nix       # EC2-specific Home Manager configuration
+│       ├── aws.nix       # AWS-specific configurations
 │       ├── git.nix       # Linux-specific Git configuration
+│       ├── github.nix    # GitHub CLI and integrations
+│       ├── ramdisk.nix   # RAM disk configurations
+│       ├── rclone.nix    # Cloud storage sync configurations
+│       ├── user-scripts.nix # Custom user scripts
 │       └── zsh.nix       # Linux-specific ZSH setup
 ├── overlays/             # Custom Nix overlays
 │   └── tfenv.nix         # Terraform Version Manager overlay
@@ -102,8 +120,11 @@ Setting up on macOS with Apple Silicon is pretty straightforward:
 
 3. Apply it to your Mac:
    ```bash
-   # For the rick configuration (your actual hostname)
+   # For the rick configuration (replace with your hostname)
    darwin-rebuild switch --flake ~/.config/nix#rick
+
+   # Or use the generic macbook configuration
+   darwin-rebuild switch --flake ~/.config/nix#macbook
    ```
 
 ### 🌩️ Cloud Deployment with Packer {#-cloud-deployment-with-packer}
@@ -139,7 +160,7 @@ Want to use this on multiple Macs? No problem! You can have different settings f
      dockApps = [
        "/Applications/Safari.app"
        "/Applications/Mail.app"
-       "/Applications/Visual Studio Code.app"
+       "/Applications/Zed.app"
      ];
    };
    ```
@@ -160,17 +181,20 @@ darwin-rebuild switch --flake ~/.config/nix#rick
 ```
 
 **Included MCP servers:**
+
 - **context7**: Documentation and context retrieval
 - **code-reasoning**: Code analysis and reasoning capabilities
 - **sequential-thinking**: Step-by-step problem solving
 
 The configuration automatically:
+
 - Installs Claude Code via npm
 - Configures MCP servers as user-scoped (available across all projects)
 - Sets up custom commands and workflows
 - Manages settings and documentation
 
 **Claude Code features:**
+
 - Custom commands for Linear integration
 - Sophisticated development workflows
 - Automated code quality checks
@@ -179,6 +203,7 @@ The configuration automatically:
 ### 🖥️ Local Development Options
 
 While this configuration previously included Vagrant VM setup, the focus has shifted to:
+
 - **Direct macOS development** with Nix managing dependencies
 - **Cloud development** using EC2 instances with Tailscale
 - **Claude Code integration** for AI-enhanced development
@@ -192,7 +217,6 @@ Want to take your development environment to the cloud? Here's how to set up you
 > **Note**: As an alternative to manual setup, consider using the Packer template in `packer/aws-ec2.pkr.hcl` to automatically build an AMI with Nix pre-configured. See the [Cloud Deployment with Packer](#-cloud-deployment-with-packer) section.
 
 1. Launch an Ubuntu EC2 instance:
-
    - Use Ubuntu Server 22.04 LTS or newer (ARM64 for Graviton instances)
    - Recommended: t4g.medium or better for decent performance
    - You can keep the instance completely private in a private subnet
@@ -219,7 +243,6 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 3. Install Tailscale on your local machine:
-
    - macOS: `brew install tailscale`
    - Visit https://tailscale.com/download for other platforms
    - Run `tailscale up` and authenticate
@@ -250,7 +273,6 @@ Want to take your development environment to the cloud? Here's how to set up you
    ```
 
 6. Create EC2-specific configuration:
-
    - Modify your `flake.nix` to add an EC2 configuration:
 
      ```nix
@@ -318,17 +340,12 @@ Want to take your development environment to the cloud? Here's how to set up you
    nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
    ```
 
-8. Connect with VS Code:
-
-   - Install the "Remote - SSH" extension in VS Code
-   - Add a new SSH configuration by editing your SSH config file:
+8. Connect with your editor:
+   - Use SSH to connect to your development environment:
+     ```bash
+     ssh ubuntu@ec2-hostname.tailnet.ts.net
      ```
-     Host ec2-dev
-       HostName ec2-hostname.tailnet.ts.net
-       User ubuntu
-       ForwardAgent yes
-     ```
-   - Connect to "ec2-dev" from the Remote SSH extension
+   - Or configure your editor's remote development features
    - Open your projects folder and enjoy your cloud development environment!
 
 9. To update your configuration:
@@ -346,22 +363,22 @@ With this Tailscale-powered setup, you get all the benefits of a cloud developme
 - Get consistent development environments across your entire team
 - Access your environment securely from anywhere
 
-### 🔧 Version Manager Setup
+### 🔧 Additional Features
 
-I've set up two super handy version managers in the VM that make switching between different versions of tools a breeze:
+This configuration includes several advanced features:
 
-1. **tfenv** - For all your Terraform needs:
+#### 🌟 Enhanced Linux Development
+- **AWS Integration**: Pre-configured AWS CLI with profile support
+- **GitHub CLI**: Seamless GitHub integration with authentication
+- **RAM Disk Support**: High-performance temporary storage configurations
+- **Cloud Storage**: Rclone integration for syncing with cloud providers
+- **Custom Scripts**: User-defined scripts for workflow automation
 
-   ```bash
-   # Grab any Terraform version you want
-   tfenv install 1.5.0
-
-   # Switch versions with a single command
-   tfenv use 1.5.0
-
-   # See what you've got installed
-   tfenv list
-   ```
+#### 🛠️ Specialized Configurations
+- **Renovate**: Automated dependency updates via `renovate.json`
+- **Commit Conventions**: Standardized commit message format via `COMMIT_CONVENTION.md`
+- **Zed Editor**: Modern editor configuration with settings
+- **Linear Integration**: Custom Claude Code commands for Linear workflow
 
 ## 🔄 Usage
 
@@ -375,8 +392,11 @@ Keeping everything up to date is super simple:
 # Pull latest changes
 git pull
 
-# Apply configuration
+# Apply configuration (replace with your hostname)
 darwin-rebuild switch --flake ~/.config/nix#rick
+
+# Or use the generic configuration
+darwin-rebuild switch --flake ~/.config/nix#macbook
 ```
 
 #### ☁️ EC2 Instance:
@@ -402,15 +422,19 @@ Tweaking things is easy:
 
 Here's how to do all the usual stuff:
 
-- 📦 Adding packages everywhere: Just edit `common/default.nix`
+- 📦 Adding packages everywhere: Edit `common/home-packages.nix`
 - 🍎 Adding Mac-only packages: Edit `systems/aarch64-darwin/default.nix`
 - 🍺 Need a GUI app via Homebrew? Edit `systems/aarch64-darwin/homebrew.nix`
 - ⚙️ Tweaking macOS settings: Look in `systems/aarch64-darwin/defaults.nix`
-- 📱 Changing dock icons: Find your host in `flake.nix`
+- 📱 Changing dock icons: Edit `systems/aarch64-darwin/dock.nix`
 - 🤖 Configuring Claude Code: Edit `common/claude-code/default.nix`
 - ☁️ Adding stuff to your EC2 instance: Edit `systems/aarch64-linux/ec2.nix`
+- 🔧 AWS-specific configurations: Edit `systems/aarch64-linux/aws.nix`
+- 🐙 GitHub CLI setup: Edit `systems/aarch64-linux/github.nix`
+- 💾 RAM disk configurations: Edit `systems/aarch64-linux/ramdisk.nix`
+- ☁️ Cloud storage sync: Edit `systems/aarch64-linux/rclone.nix`
+- 📜 Custom user scripts: Edit `systems/aarch64-linux/user-scripts.nix`
 - ⚡ Modifying AWS EC2 image: Edit `packer/aws-ec2.pkr.hcl`
-- 🔄 Adding a custom tool: Create a new file in `overlays/` and add it to `flake.nix`
 - 🔧 Pre-commit hooks: Edit `.pre-commit-config.yaml`
 
 ### ☁️ AWS Configuration
@@ -494,13 +518,15 @@ I've set things up so I can easily manage:
 
 This configuration focuses exclusively on ARM64 architecture (aarch64), optimized for Apple Silicon Macs and ARM-based Linux environments like ARM EC2 instances.
 
-### 📦 Custom Nix Overlays
+### 📦 Modern Development Workflow
 
-Sometimes the standard Nix packages don't have exactly what you need, or they're not up to date. That's where my custom overlays come in:
+This configuration emphasizes a streamlined development approach:
 
-- **tfenv**: My go-to for managing multiple Terraform versions
-
-These make life so much easier when you're working across multiple projects with different requirements.
+- **Declarative Configuration**: All system and development tools managed through Nix
+- **Cross-Platform Consistency**: Shared configuration between macOS and Linux environments
+- **AI-Enhanced Development**: Deep Claude Code integration with custom commands
+- **Cloud-Native Ready**: Built-in support for AWS, GitHub, and cloud storage
+- **Automated Maintenance**: Renovate for dependency updates, pre-commit hooks for quality
 
 ## 💡 Tips and Tricks
 
@@ -508,11 +534,15 @@ Here are a few things I've learned along the way:
 
 - 🔄 **Nix + Homebrew Harmony**: Keep an eye on your PATH - I've set Homebrew to take precedence, but you might want to adjust this
 
-- 🖥️ **VS Code Remote SSH**: The Remote SSH extension makes working in the VM feel just like working locally
+- 🖥️ **Remote Development**: SSH-based remote development works seamlessly with modern editors
 
-- 🌐 **Browser Integration**: When you're in VS Code and run something like `gh auth login`, browser links will open automatically on your host machine
+- 🌐 **Browser Integration**: When you run commands like `gh auth login`, browser links will open automatically on your host machine
 
-- 🔧 **Multiple Terraform Versions**: Use tfenv to easily switch between different versions of Terraform for various projects
+- 🤖 **Claude Code Commands**: Use the custom commands in `common/claude-code/commands/` for Linear integration and development workflows
+
+- 🔧 **Tailscale Networking**: Secure networking between your devices without exposing services to the internet
+
+- 📦 **Shared vs Specific**: Use `common/home-packages.nix` for tools you want everywhere, platform-specific configs for specialized tools
 
 ## 📄 License
 

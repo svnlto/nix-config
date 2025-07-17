@@ -29,7 +29,6 @@ These are not suggestions. Fix ALL issues before continuing.
    ```
 
    **ALWAYS use context7 MCP** to read current documentation for:
-
    - Framework/library versions and APIs
    - Best practices and patterns
    - Breaking changes or deprecations
@@ -38,7 +37,6 @@ These are not suggestions. Fix ALL issues before continuing.
    Say: "Let me check the latest docs and research the codebase before implementing."
 
 2. **Planning Phase**
-
    - Document your approach
    - Identify edge cases
    - Consider security implications
@@ -125,7 +123,7 @@ When stuck:
 
 - Create a temporary scratchpad in comments
 - Document decisions and progress
-- Summarize before context gets long
+- Summarize before compaction occurs
 
 ### When context fills up:
 
