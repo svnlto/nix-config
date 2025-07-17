@@ -55,22 +55,4 @@
       echo "Claude Code is already installed at $(which claude)"
     fi
   '';
-
-  # Setup MCP servers after Claude Code is installed
-  home.activation.setupMcpServers = lib.hm.dag.entryAfter [ "installClaudeCode" ] ''
-    PATH="${pkgs.nodejs_22}/bin:$PATH"
-    export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-
-    # Only add if not already configured
-    if ! claude mcp list | grep -q "context7"; then
-      echo "Configuring MCP servers..."
-      claude mcp add --scope user context7 npx -y @context-labs/context7-server
-      claude mcp add --scope user code-reasoning npx -y @mettamatt/code-reasoning
-      claude mcp add --scope user sequential-thinking npx -y @modelcontextprotocol/server-sequential-thinking
-      echo "MCP servers configured successfully"
-    else
-      echo "MCP servers already configured"
-    fi
-  '';
-
 }

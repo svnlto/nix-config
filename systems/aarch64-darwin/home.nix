@@ -41,6 +41,21 @@ in
     DIRENV_LOG_FORMAT = "";
   };
 
+  # GitHub CLI configuration
+  programs.gh = {
+    enable = true;
+    settings = {
+      # Default protocol when cloning repositories
+      git_protocol = "ssh";
+
+      # Default editor
+      editor = "zed";
+
+      # Prompt for every command
+      prompt = "enabled";
+    };
+  };
+
   programs.zsh = {
     enable = true;
 

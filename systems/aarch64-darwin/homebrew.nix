@@ -32,6 +32,7 @@
       "zoom"
       "whatsapp"
       "telegram"
+      "claude" # desktop
 
       # Development & Terminal
       "hashicorp/tap/hashicorp-vagrant"

@@ -1,28 +1,14 @@
 {
   "icon_theme": "Catppuccin Mocha",
-  "theme": "Catppuccin Macchiato",
+  "theme": "Catppuccin Mocha",
   "experimental.theme_overrides": {
     "players": [
       {
         "cursor": "#ff00f7b0"
       }
-    ],
-    "project_panel": {
-      "item": {
-        "selected": {
-          "border": "#5d5889"
-        }
-      }
-    },
-    "git": {
-      "added": "#a6e3a1",
-      "modified": "#f9e2af",
-      "deleted": "#f38ba8",
-      "renamed": "#89b4fa"
-    }
+    ]
   },
   "active_pane_modifiers": {
-    "magnification": 1.0,
     "inactive_opacity": 0.8
   },
   "scrollbar": {
@@ -66,7 +52,6 @@
   },
   "agent": {
     "always_allow_tool_actions": true,
-    "version": "2",
     "enabled": true,
     "button": true,
     "dock": "right",
@@ -89,22 +74,13 @@
   "cursor_blink": true,
   "vim_mode": true,
   "show_whitespaces": "all",
-  "show_indent_guide": true,
   "preferred_line_length": 80,
   "show_wrap_guides": true,
   "wrap_guides": [80],
   "gutter": {
-    "line_numbers": true,
-    "code_actions": false,
-    "diagnostics": false,
-    "annotations": false
+    "line_numbers": true
   },
   "format_on_save": "prettier",
-  "format_on_paste": true,
-  "terminal_font_size": 12,
-  "terminal_line_height": 1.1,
-  "terminal_option_as_meta": true,
-  "terminal_copy_on_select": true,
   "terminal": {
     "font_family": "Hack Nerd Font Mono",
     "dock": "right",
@@ -119,7 +95,6 @@
     "**/.cache",
     "**/logs"
   ],
-  "search_exclude_patterns": ["**/.git", "**/.cache", "**/.terraform"],
   "languages": {
     "JSON": {
       "format_on_save": "prettier"
@@ -141,8 +116,7 @@
     "*.jinja": ["Python"]
   },
   "telemetry": {
-    "metrics": false,
-    "crashes": false
+    "metrics": false
   },
   "confirm_quit": false,
   "git": {
