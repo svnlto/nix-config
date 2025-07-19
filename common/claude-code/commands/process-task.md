@@ -27,9 +27,9 @@ cat >> .claude/tasks/$ARGUMENTS.md << 'EOF'
 - ⧖ Parse requirements and identify files to modify
 - ⧖ Create feature branch
 - ⧖ Create design document
-- ⧖ Get design approval from Gemini
+- ⧖ Get design validation from Gemini
 - ⧖ Implement each requirement
-- ⧖ Generate tests using Gemini testgen
+- ⧖ Generate tests using Ultrathink
 - ⧖ Run all quality checks
 - ⧖ Get code review from Gemini
 - ⧖ Create completion summary

@@ -28,7 +28,7 @@ These are not suggestions. Fix ALL issues before continuing.
    → Understanding dependencies...
    ```
 
-   **ALWAYS use context7 MCP** to read current documentation for:
+   **ALWAYS use the `mcp__context7__get-library-docs` tool** to read current documentation for:
    - Framework/library versions and APIs
    - Best practices and patterns
    - Breaking changes or deprecations
@@ -104,7 +104,7 @@ Would you like me to [specific improvement]?"
 - **Complex business logic** → Write tests first (TDD)
 - **Simple CRUD** → Write tests after
 - **Bug fixes** → Write test that reproduces bug first
-- **Always** → Use Gemini testgen for comprehensive coverage
+- **Always** → Use Ultrathink for comprehensive coverage
 
 ## 🧠 Problem-Solving Protocol
 
