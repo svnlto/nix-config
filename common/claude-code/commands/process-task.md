@@ -104,7 +104,7 @@ Design document template with global sections:
 ```
 
 - **UPDATE**: ✓ Create design document (HH:MM)
-- Submit to Gemini using `planner` mode for validation
+- Submit to Gemini for validation
 - Revise based on feedback
 - **UPDATE**: Document Gemini feedback in Notes section
 - **DO NOT proceed without approval**
@@ -127,9 +127,9 @@ echo "✓ Checkpoint: Am I keeping it simple?"
 - Apply framework-specific patterns from loaded context
 - Maintain TypeScript strict typing
 - Add proper error handling
-- Use Gemini `testgen` to generate tests
+- Use Ultrathink to generate tests
 - **UPDATE**: ✓ Implement requirement [X] (HH:MM)
-- **UPDATE**: ✓ Generate tests using Gemini testgen (HH:MM)
+- **UPDATE**: ✓ Generate tests Ultrathink (HH:MM)
 
 Apply these global principles:
 
@@ -162,7 +162,7 @@ echo "✓ Security considered?"
 
 **Using: Global Standards § "Communication Protocol"**
 
-- Submit to Gemini using `codereview` mode
+- Submit to Gemini
 - **UPDATE**: Document review feedback in Notes
 - Address critical feedback
 - **UPDATE**: ✓ Get code review from Gemini (HH:MM)
