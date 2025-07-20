@@ -1,75 +1,182 @@
-# Linear Issue Breakdown Command
+## Linear Issue Breakdown Command
 
 **Arguments:** `$ARGUMENTS` (Linear issue ID, e.g., DEV-35)
 
-Break down Linear issue into executable tasks based on project type.
+<command_purpose>
+Break down Linear issue into executable tasks based on project type, following the enhanced global workflow patterns.
+</command_purpose>
 
-## Process:
+<execution_workflow>
 
 ### 1. Fetch & Analyze
 
-**Following**: Global § "Universal Workflow - Research Phase" + "Working Memory" + "Quick Reference"
+**Following**: Global `<universal_workflow>` → Research Phase + `<memory_management>` + `<reasoning_tool_guide>`
 
-- Fetch issue details using Linear tools
-- Detect project type (labels, file refs, team context)
-- Load context from `.claude/prompts/[type]-dev.md`
-- Apply memory tools, LSP tools, Sequential-thinking/Code-reasoning/Ultrathink per global standards
+<research_steps>
+
+1. Fetch issue details using Linear tools
+2. <thinking>
+   Analyze issue context:
+   - Detect project type (labels, file refs, team context)
+   - Identify complexity level and security implications
+   - Determine required reasoning tools
+   </thinking>
+3. Load context from `.claude/prompts/[type]-dev.md`
+4. Apply memory tools and reasoning tools per global standards:
+   - **Sequential-thinking**: For multi-step breakdown planning
+   - **Code-reasoning**: For technical analysis and dependencies
+   - **Ultrathink**: For complex architecture decisions
+     </research_steps>
 
 ### 2. Task Generation
 
-**Following: Global § "Implementation Standards - Code Quality"**
+**Following**: Global `<implementation_standards>` → `<code_quality>`
 
-Generate 3-8 discrete tasks using project-specific patterns:
+<task_generation>
+Generate 3-8 discrete tasks using enhanced project-specific patterns:
 
-#### Base Template:
+**Base Template with XML Structure**:
 
 ```markdown
+<task_header>
+
 # Task N - [Name]
-[Description]
 
-Files: [list with purposes]
-[Context about current state]
+**Type**: [Frontend/Backend/Infrastructure/Fullstack]
+**Complexity**: [Simple/Medium/Complex]
+**Estimated**: [Time estimate]
+</task_header>
 
-Requirements:
-- Technical requirements
-- Security (per global § "Security Always")
-- Testing (per global § "Testing Strategy")
+<task_description>
+[Clear description with context]
+</task_description>
 
-[Implementation guidance + examples]
+<task_context>
+**Current State**: [Analysis of existing implementation]
+**Dependencies**: [Other tasks, external services, etc.]
+**Files to Modify**:
 
-Acceptance:
-- ✓ Global "Definition of Done"
-- ✓ [Project-specific criteria]
+- `path/to/file.ext` - [Purpose and changes needed]
+- `path/to/test.spec.ext` - [Test coverage required]
+  </task_context>
+
+<requirements>
+**Functional**:
+- [Core functionality requirements]
+
+**Technical** (per global `<implementation_standards>`):
+
+- Clarity over cleverness
+- Explicit over implicit
+- Simple over abstract
+- Strong typing required
+
+**Security** (per global `<security_requirements>`):
+
+- Input validation at boundaries
+- Crypto/rand for random generation
+- Output sanitization
+- Authentication/rate limiting considerations
+
+**Testing** (per global `<testing_strategy>`):
+
+- [TDD for complex logic / Tests after for simple CRUD]
+- Edge case coverage
+- Integration test requirements
+  </requirements>
+
+<implementation_guidance>
+<thinking>
+Approach this by:
+
+1. [Step-by-step implementation strategy]
+2. [Key technical decisions needed]
+3. [Potential pitfalls to avoid]
+   </thinking>
+
+**Examples**: [Concrete code examples where helpful]
+**Patterns**: [Reference existing codebase patterns]
+</implementation_guidance>
+
+<acceptance_criteria>
+**Global Standards** (per `<core_standards>`):
+
+- ✓ Works end-to-end
+- ✓ All tests pass
+- ✓ Linters pass
+- ✓ Old code removed
+- ✓ Documentation updated
+- ✓ Security considered
+
+**Task-Specific**:
+
+- ✓ [Specific measurable criteria]
+- ✓ [Performance requirements if applicable]
+- ✓ [Integration requirements]
+  </acceptance_criteria>
 ```
 
-#### Project-Specific Patterns:
+**Project-Specific Enhancements**:
 
-**All Projects**: Examples, tests, acceptance criteria per global standards
-**Terraform**: +provider configs, +terraform validate/test
-**React**: +TypeScript interfaces, +Storybook, +pnpm test
-**Fastify**: +schema validation, +OpenAPI spec
-**Backend**: +migrations, +E2E tests
+- **Terraform**: +provider configs, +terraform validate/test, +state management
+- **React**: +TypeScript interfaces, +Storybook stories, +pnpm test, +accessibility
+- **Fastify**: +schema validation, +OpenAPI spec, +rate limiting
+- **Backend**: +migrations, +E2E tests, +monitoring/logging
+  </task_generation>
 
-### 3. Output
+### 3. Output Generation
 
-**Following**: Global § "Communication Protocol" + "Working Memory"
+**Following**: Global `<communication_patterns>` + `<output_formatting>` + `<memory_management>`
 
-Create task files: `/tasks/[issue]-task-[n]-[description].md`
-Use global progress format, store breakdown patterns in memory
+<output_process>
 
-**Multi-Agent Strategy**: Spawn agents for codebase analysis, dependencies, test coverage
+1. Create task files: `/tasks/[issue]-task-[n]-[description].md`
+2. Use enhanced progress format:
 
-## Auto-Detection Logic
+   ```
+   <analysis>
+   Broke down issue DEV-35 into 5 discrete tasks covering authentication refactor
+   </analysis>
+
+   ✓ Completed: Issue analysis and task breakdown (14:30)
+   → Next: Creating task files with enhanced templates
+   ```
+
+3. Store breakdown patterns in memory for future sessions
+4. **Multi-Agent Strategy**:
+   - Spawn agent for codebase analysis
+   - Spawn agent for dependency mapping
+   - Spawn agent for test coverage assessment
+     </output_process>
+     </execution_workflow>
+
+<auto_detection>
+**Enhanced Project Detection**:
 
 ```javascript
 function detectProjectType(issue) {
-  // Labels: terraform, frontend → terraform, react
-  // Files: .tf, .tsx, routes/ → terraform, react, fastify
-  // Team: Infrastructure, Frontend → terraform, react
-  // Default: promptForType()
+  const detectionRules = {
+    labels: {
+      terraform: ["infrastructure", "terraform", "aws", "gcp"],
+      react: ["frontend", "ui", "react", "nextjs"],
+      fastify: ["api", "backend", "fastify"],
+      fullstack: ["fullstack", "end-to-end"],
+    },
+    files: {
+      terraform: [".tf", ".tfvars", "terraform/"],
+      react: [".tsx", ".jsx", "components/", "pages/"],
+      fastify: ["routes/", "plugins/", "schemas/"],
+    },
+    teams: {
+      terraform: ["Infrastructure", "DevOps", "Platform"],
+      react: ["Frontend", "UI/UX"],
+      fastify: ["Backend", "API"],
+    },
+  };
+
+  // Enhanced detection with fallback to prompt
+  return analyzeContext(issue, detectionRules) || promptForType();
 }
 ```
 
-## Quality Validation
-
-Each task must meet global § "Definition of Done": clear path, security, tests, measurable acceptance, project standards.
+</auto_detection>
