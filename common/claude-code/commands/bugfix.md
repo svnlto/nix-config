@@ -24,6 +24,20 @@ test("should reproduce issue #123", () => {
 
 If complex: "I'll have an agent investigate why this test is failing" (global phrase)
 
+**Memory Integration** (from global § "Working Memory"):
+- Load relevant memory about similar bugs and solutions
+- Use LSP tools if available for navigation and code understanding
+
+**Problem-Solving** (from updated global § "Problem-Solving Protocol"):
+
+When debugging: Stop→Document→Simplify→Code-reasoning/Sequential-thinking→Delegate→Ask
+
+**Tool Selection** (from global § "Quick Reference"):
+- LSP tools: For navigating to definitions, finding references, code exploration
+- Code-reasoning: For analyzing bugs, debugging logic, understanding existing implementations
+- Sequential-thinking: For multi-step debugging, systematic investigation
+- Memory tools: Load previous bug patterns, store solutions
+
 ### 3. Fix Implementation
 
 **Reality Checkpoint** (from global):
@@ -31,6 +45,10 @@ If complex: "I'll have an agent investigate why this test is failing" (global ph
 - ✓ Does fix resolve the issue?
 - ✓ No new bugs introduced?
 - ✓ Is this the simplest solution?
+
+**Memory Integration** (from global § "Working Memory"):
+- Load relevant memory about similar bugs
+- Store root cause analysis for future reference
 
 ### 4. Communication
 
@@ -49,3 +67,4 @@ Notice: We don't repeat what's in global, we just reference it:
 - "Follow § Problem-Solving Protocol"
 - "Apply § Security Always principles"
 - "Use § Communication Protocol format"
+- "Apply § Working Memory for bug patterns"

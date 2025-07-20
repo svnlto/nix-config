@@ -8,15 +8,12 @@ Break down Linear issue into executable tasks based on project type.
 
 ### 1. Fetch & Analyze
 
-**Following: Global § "Universal Workflow - Research Phase"**
+**Following**: Global § "Universal Workflow - Research Phase" + "Working Memory" + "Quick Reference"
 
 - Fetch issue details using Linear tools
-- Detect project type from:
-  - Issue labels (terraform, react, fastify, etc.)
-  - File references in description
-  - Project/team context
-- Load appropriate context from `.claude/prompts/[type]-dev.md`
-- **If complex**: "Let me ultrathink about this breakdown..."
+- Detect project type (labels, file refs, team context)
+- Load context from `.claude/prompts/[type]-dev.md`
+- Apply memory tools, LSP tools, Sequential-thinking/Code-reasoning/Ultrathink per global standards
 
 ### 2. Task Generation
 
@@ -24,123 +21,55 @@ Break down Linear issue into executable tasks based on project type.
 
 Generate 3-8 discrete tasks using project-specific patterns:
 
-#### Base Template (all projects):
+#### Base Template:
 
 ```markdown
-# Task N - [Descriptive Name]
+# Task N - [Name]
+[Description]
 
-[1-2 sentence description]
-
-Files to Create/Modify:
-
-1. [path/file.ext] - Purpose
-2. [path/file.ext] - Purpose
-   [etc...]
-
-[Context paragraph about current state]
+Files: [list with purposes]
+[Context about current state]
 
 Requirements:
+- Technical requirements
+- Security (per global § "Security Always")
+- Testing (per global § "Testing Strategy")
 
-- Specific technical requirement
-- Security/compliance requirement (per global § "Security Always")
-- Testing requirement (per global § "Testing Strategy")
+[Implementation guidance + examples]
 
-[Implementation guidance with patterns]
-
-// Example configuration/code
-[Project-specific example based on detected type]
-
-Acceptance Criteria:
-
-- ✓ All automated checks pass (lint, test, type-check)
-- ✓ Feature works end-to-end
-- ✓ Security validations in place
+Acceptance:
+- ✓ Global "Definition of Done"
 - ✓ [Project-specific criteria]
 ```
 
 #### Project-Specific Patterns:
 
-**Terraform Projects:**
-
-- Include provider configurations
-- Resource examples with tags
-- Variable definitions with types
-- Acceptance: `terraform plan/validate/test`
-
-**React Projects:**
-
-- Component structure examples
-- TypeScript interfaces
-- Test file patterns
-- Acceptance: `pnpm test`, Storybook stories
-
-**Fastify Projects:**
-
-- Route definitions
-- Schema validation examples
-- Plugin patterns
-- Acceptance: Integration tests, OpenAPI spec
-
-**Backend Services:**
-
-- API endpoint examples
-- Database migrations
-- Service layer patterns
-- Acceptance: E2E tests, API docs
+**All Projects**: Examples, tests, acceptance criteria per global standards
+**Terraform**: +provider configs, +terraform validate/test
+**React**: +TypeScript interfaces, +Storybook, +pnpm test
+**Fastify**: +schema validation, +OpenAPI spec
+**Backend**: +migrations, +E2E tests
 
 ### 3. Output
 
-**Following: Global § "Communication Protocol"**
+**Following**: Global § "Communication Protocol" + "Working Memory"
 
 Create task files: `/tasks/[issue]-task-[n]-[description].md`
+Use global progress format, store breakdown patterns in memory
 
-Progress tracking:
-
-```
-✓ Fetched issue DEV-35 (10:30)
-✓ Detected project type: terraform (10:31)
-✓ Loaded terraform-dev.md context (10:32)
-✓ Identified 5 tasks (10:45)
-→ Creating task files...
-```
-
-## Multi-Agent Strategy
-
-When breaking down complex features:
-
-- Spawn agent to analyze existing codebase
-- Spawn agent to identify dependencies
-- Spawn agent to plan test coverage
+**Multi-Agent Strategy**: Spawn agents for codebase analysis, dependencies, test coverage
 
 ## Auto-Detection Logic
 
 ```javascript
-// Pseudo-code for project type detection
 function detectProjectType(issue) {
-  // Check labels
-  if (issue.labels.includes("terraform")) return "terraform";
-  if (issue.labels.includes("frontend")) return "react";
-
-  // Check file references
-  if (issue.description.match(/\.tf|terraform\//)) return "terraform";
-  if (issue.description.match(/\.tsx?|components\//)) return "react";
-  if (issue.description.match(/routes\/|fastify/)) return "fastify";
-
-  // Check team/project context
-  if (issue.team.name.includes("Infrastructure")) return "terraform";
-  if (issue.team.name.includes("Frontend")) return "react";
-
-  // Default or ask
-  return promptForType();
+  // Labels: terraform, frontend → terraform, react
+  // Files: .tf, .tsx, routes/ → terraform, react, fastify
+  // Team: Infrastructure, Frontend → terraform, react
+  // Default: promptForType()
 }
 ```
 
 ## Quality Validation
 
-Each generated task must meet global § "Definition of Done":
-
-- Clear implementation path
-- Security considerations included
-- Test requirements defined
-- Acceptance criteria measurable
-- Project-specific standards applied
+Each task must meet global § "Definition of Done": clear path, security, tests, measurable acceptance, project standards.

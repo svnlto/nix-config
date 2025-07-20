@@ -13,232 +13,79 @@ Global standards from `~/.claude/CLAUDE.md` are already loaded. This command ext
 ### 0. Initialize Progress Tracking
 
 ```bash
+# Create progress scratchpad using global Communication Protocol format
 cat >> .claude/tasks/$ARGUMENTS.md << 'EOF'
-
----
 ## 📝 PROGRESS SCRATCHPAD
-**Started:**
-**Current Phase:** Research & Analysis
-
-### Working Items:
-<!-- Using global Communication Protocol format -->
-- ⧖ Read and analyze task requirements
-- ⧖ Determine task type and load appropriate context
-- ⧖ Parse requirements and identify files to modify
-- ⧖ Create feature branch
-- ⧖ Create design document
-- ⧖ Get design validation from Gemini
-- ⧖ Implement each requirement
-- ⧖ Generate tests using Ultrathink
-- ⧖ Run all quality checks
-- ⧖ Get code review from Gemini
-- ⧖ Create completion summary
-
-### Completed:
-<!-- ✓ Item (HH:MM) format from global standards -->
-
-### Notes:
-<!-- Key findings, following global documentation style -->
-
+**Started:** **Phase:** Research & Analysis
+### Working Items: [12 standard workflow items per global standards]
+### Completed: [Global ✓ (HH:MM) format]
+### Notes: [Global documentation style]
 EOF
 ```
 
 ### 1. Research & Analysis Phase
 
-**Following: Global Standards § "Universal Workflow - Research Phase"**
+**Following**: Global § "Universal Workflow - Research Phase" + "Working Memory" + "Multi-Agent Strategy"
 
-```bash
-# Direct reference to global workflow
-echo "→ Applying 'Research → Plan → Implement' workflow from global standards"
-echo "→ As per global: 'Let me research the codebase and create a plan before implementing.'"
-```
-
-- Read complete task file: `.claude/tasks/$ARGUMENTS.md`
-- **UPDATE**: ✓ Read and analyze task requirements (HH:MM)
-- Determine task type and load appropriate context from `.claude/prompts/` (e.g., terraform-dev.md, react-dev.md, fastify-dev.md)
-- **UPDATE**: ✓ Determine task type and load appropriate context (HH:MM)
-- Parse requirements, acceptance criteria, and files to modify
-- **UPDATE**: ✓ Parse requirements and identify files to modify (HH:MM)
+- Load memory, use LSP tools, read task file, determine type, parse requirements
 - Create branch: `git checkout -b ${taskFileName}`
-- **UPDATE**: ✓ Create feature branch (HH:MM)
-
-**Multi-Agent Strategy** (from global § "Multi-Agent Strategy"):
-
-- Spawn agent for codebase exploration: "I'll spawn agents to explore different parts of the codebase"
-- Spawn agent for pattern analysis: "Having an agent investigate existing patterns"
+- Apply multi-agent strategy for codebase exploration and pattern analysis
+- Update scratchpad with global ✓ (HH:MM) format for each completed item
 
 ### 2. Planning & Design
 
-**Following: Global Standards § "Universal Workflow - Planning Phase"**
+**Following**: Global § "Universal Workflow - Planning Phase" + "Security Always" + "Testing Strategy"
 
-When creating design document:
-
-- ✓ Document approach (global standard)
-- ✓ Identify edge cases (global standard)
-- ✓ Consider security implications (global § "Security Always")
-
-**For complex architecture** (from global § "When to Ultrathink"):
-"Let me ultrathink about this architecture..."
-
-Design document template with global sections:
-
+Create design document covering:
 ```markdown
-### Approach
-
-[Following global "Code Quality" principles]
-
-### Security Considerations
-
-[Applying global § "Security Always":]
-
-- Input validation strategy
-- Randomness approach (crypto/rand)
-- Auth implications
-
-### Testing Strategy
-
-[From global § "Testing Strategy":]
-
-- Complex logic: TDD approach
-- Simple CRUD: Test after
+### Approach: [Global "Code Quality" principles]
+### Security: [Input validation, crypto/rand, auth implications]
+### Testing: [TDD for complex logic, test after for simple CRUD]
 ```
 
-- **UPDATE**: ✓ Create design document (HH:MM)
-- Submit to Gemini for validation
-- Revise based on feedback
-- **UPDATE**: Document Gemini feedback in Notes section
-- **DO NOT proceed without approval**
-- **UPDATE**: ✓ Get design approval from Gemini (HH:MM)
+Apply tool selection per global § "Quick Reference": Sequential-thinking/Code-reasoning/Ultrathink
+Submit to Gemini for validation - **DO NOT proceed without approval**
 
 ### 3. Implementation
 
-**Following: Global Standards § "Implementation Standards"**
+**Following**: Global § "Implementation Standards" + "Problem-Solving Protocol"
 
 For each requirement:
-
-```bash
-# Reality checkpoint (from global standards)
-echo "✓ Checkpoint: Is feature working end-to-end?"
-echo "✓ Checkpoint: Am I keeping it simple?"
-```
-
-- Read existing files before modifying
-- Follow exact file paths from task
-- Apply framework-specific patterns from loaded context
-- Maintain TypeScript strict typing
-- Add proper error handling
-- Use Ultrathink to generate tests
-- **UPDATE**: ✓ Implement requirement [X] (HH:MM)
-- **UPDATE**: ✓ Generate tests Ultrathink (HH:MM)
-
-Apply these global principles:
-
-- **Code Quality**: "Clarity over cleverness"
-- **File Management**: "Read before modifying"
-- **Error Handling**: "Catch specific errors"
-
-**When stuck** (from global § "Problem-Solving Protocol"):
-
-1. Stop - Document what isn't working
-2. Check if we need to ultrathink
-3. Consider spawning helper agents
-4. Present options: "I see two approaches..."
+- Read files before modifying, follow exact paths, apply framework patterns
+- Use reasoning tools for tests, maintain TypeScript typing, add error handling
+- Apply reality checkpoints: end-to-end functionality, simplicity
+- When stuck: Stop→Document→Simplify→Sequential-thinking/Code-reasoning/Ultrathink→Delegate→Ask
 
 ### 4. Quality Checks
 
-**Following: Global Standards § "Core Standards - ZERO TOLERANCE"**
+**Following**: Global § "Core Standards & Definition of Done"
 
-```bash
-# Must match global definition of done
-echo "Checking against global 'Definition of Done':"
-echo "✓ Feature works end-to-end?"
-echo "✓ All tests pass?"
-echo "✓ All linters pass?"
-echo "✓ Old code removed?"
-echo "✓ Security considered?"
-```
+Verify: end-to-end functionality, tests pass, linters pass, old code removed, security considered
 
 ### 5. Code Review
 
-**Using: Global Standards § "Communication Protocol"**
+**Following**: Global § "Communication Protocol"
 
-- Submit to Gemini
-- **UPDATE**: Document review feedback in Notes
-- Address critical feedback
-- **UPDATE**: ✓ Get code review from Gemini (HH:MM)
+Submit to Gemini, document feedback, address critical issues
+Use global progress format: ✓/✗/→ with timestamps
 
-All updates follow global format:
+### 6. Memory Update
 
-```
-✓ Implemented auth module (14:30)
-✗ Rate limiting failing - investigating
-→ Next: Debug rate limit logic
-```
+**Following**: Global § "Working Memory"
 
-When asking for help (from global):
-"I see two approaches:
+Store architectural decisions, patterns, and context for future sessions
 
-- [A]: [Description with tradeoffs]
-- [B]: [Description with tradeoffs]
-  Which do you prefer?"
+## Integration Examples
 
-## Integration Examples:
-
-### Referencing Specific Sections:
-
-```bash
-# When implementing security features
-echo "Applying global § 'Security Always' principles..."
-
-# When writing tests
-echo "Following global § 'Testing Strategy' - using TDD for complex logic"
-
-# When stuck
-echo "Using global § 'Problem-Solving Protocol' step 4: ultrathink"
-```
-
-### Delegating to Global Workflow:
-
-```bash
-# Instead of duplicating instructions
-echo "→ Executing standard 'Research → Plan → Implement' workflow"
-# The global file has the complete details
-```
-
-### Using Global Quick Reference:
-
-```bash
-# Check triggers
-echo "Checking global § 'Quick Reference - When to Spawn Agents'"
-echo "✓ Parallel file analysis needed - spawning agent"
-```
+**Global Standard References**: Use § notation for Security Always, Testing Strategy, Problem-Solving Protocol
+**Tool Selection**: Sequential-thinking (planning), Code-reasoning (analysis), Ultrathink (architecture)
+**Memory Integration**: Load previous context, store patterns for future reference
 
 ## Completion Summary
 
-Template incorporates global standards:
-
 ```markdown
 ## ✅ TASK COMPLETION SUMMARY
-
-### Global Standards Checklist:
-
-[From § "Definition of Done"]
-
-- ✓ Feature works end-to-end
-- ✓ All tests pass
-- ✓ All linters pass
-- ✓ Old code removed
-- ✓ Documentation updated
-- ✓ Security considered
-
-### Process Validation:
-
-- ✓ Followed Research → Plan → Implement
-- ✓ Used multi-agent strategy for: [tasks]
-- ✓ Applied ultrathink for: [complex problems]
-- ✓ Security validations: [list]
-
-### Communication Log:
-
-[Progress updates in global format]
+### Global Standards: [Reference § "Definition of Done" checklist]
+### Process: Research→Plan→Implement, multi-agent strategy, reasoning tools applied
+### Communication: [Progress updates in global ✓/✗/→ format]
 ```
