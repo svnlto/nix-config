@@ -33,11 +33,11 @@
     background-opacity = 0.95
     unfocused-split-opacity = 0.7
 
-    # Key bindings (similar to other terminals)
+    # Key bindings (corrected for Ghostty)
     keybind = cmd+t=new_tab
     keybind = cmd+w=close_surface
     keybind = cmd+n=new_window
-    keybind = cmd+plus=increase_font_size:1
+    keybind = cmd+equal=increase_font_size:1
     keybind = cmd+minus=decrease_font_size:1
     keybind = cmd+zero=reset_font_size
     keybind = cmd+c=copy_to_clipboard
@@ -46,7 +46,6 @@
     # Split panes
     keybind = cmd+d=new_split:right
     keybind = cmd+shift+d=new_split:down
-    keybind = cmd+shift+w=close_split
 
     # Tab navigation
     keybind = cmd+1=goto_tab:1
