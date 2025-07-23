@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./neovim
+    ./ghostty
   ];
 
   # Common packages for all platforms (user-level)

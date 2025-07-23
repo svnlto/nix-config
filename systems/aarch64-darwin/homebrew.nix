@@ -40,6 +40,7 @@
       "orbstack"
       "zed"
       "pieces"
+      "ghostty"
 
       # Networking & Utilities
       "tailscale"
