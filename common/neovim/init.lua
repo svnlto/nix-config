@@ -111,21 +111,43 @@ local plugins = {
       "ryanoasis/vim-devicons",
     },
     config = function()
-      -- NERDTree settings
-      vim.g.NERDTreeWinSize = 35
-      vim.g.NERDTreeShowHidden = 1
+      -- NERDTree settings - clean and minimal
+      vim.g.NERDTreeWinSize = 30
+      vim.g.NERDTreeShowHidden = 0
       vim.g.NERDTreeMinimalUI = 1
       vim.g.NERDTreeDirArrows = 1
       vim.g.NERDTreeShowLineNumbers = 0
       vim.g.NERDTreeWinPos = "left"
-      vim.g.NERDTreeIgnore = {'\\.git$', '\\.DS_Store$', 'node_modules', '__pycache__', '\\.turbo$'}
+      vim.g.NERDTreeIgnore = {'\\.git$', '\\.DS_Store$', 'node_modules', '__pycache__', '\\.turbo$', '\\.env$', '\\.env\\..*$'}
       vim.g.NERDTreeAutoDeleteBuffer = 1
       vim.g.NERDTreeQuitOnOpen = 0
       vim.g.NERDTreeShowBookmarks = 0
       vim.g.NERDTreeMinimalMenu = 1
+      vim.g.NERDTreeCascadeSingleChildDir = 1
+      vim.g.NERDTreeCascadeOpenSingleChildDir = 1
 
-      -- Disable git plugin to avoid display issues
+      -- Clean visual styling
+      vim.g.NERDTreeMarkBookmarks = 0
+      vim.g.NERDTreeHijackNetrw = 1
+      vim.g.NERDTreeChDirMode = 2
+
+      -- Disable git plugin and other decorators to avoid clutter
       vim.g.NERDTreeGitStatusEnable = 0
+      vim.g.loaded_nerd_tree_git_status = 1
+
+      -- Custom NERDTree highlights for cleaner look with Catppuccin Mocha colors
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.cmd([[
+            highlight NERDTreeDir ctermfg=blue guifg=#89b4fa
+            highlight NERDTreeDirSlash ctermfg=blue guifg=#89b4fa
+            highlight NERDTreeFile ctermfg=white guifg=#cdd6f4
+            highlight NERDTreeExecFile ctermfg=green guifg=#a6e3a1
+            highlight NERDTreeOpenable ctermfg=blue guifg=#89b4fa
+            highlight NERDTreeClosable ctermfg=blue guifg=#89b4fa
+          ]])
+        end,
+      })
 
       -- Start NERDTree when Vim is started without file arguments
       vim.api.nvim_create_autocmd("StdinReadPre", {
