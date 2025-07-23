@@ -243,12 +243,37 @@ require("lazy").setup({
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
-        javascript = { "biome" },
-        typescript = { "biome" },
-        javascriptreact = { "biome" },
-        typescriptreact = { "biome" },
-        json = { "biome" },
-        jsonc = { "biome" },
+        javascript = { "biome-check" },
+        typescript = { "biome-check" },
+        javascriptreact = { "biome-check" },
+        typescriptreact = { "biome-check" },
+        json = { "biome-check" },
+        jsonc = { "biome-check" },
+      },
+      formatters = {
+        ["biome-check"] = {
+          command = function(self, ctx)
+            -- Look for local biome installation first
+            local local_biome = vim.fn.fnamemodify(ctx.filename, ":p:h") .. "/node_modules/.bin/biome"
+            if vim.fn.executable(local_biome) == 1 then
+              return local_biome
+            end
+            -- Fall back to global biome or npx
+            if vim.fn.executable("biome") == 1 then
+              return "biome"
+            end
+            return "npx"
+          end,
+          args = function(self, ctx)
+            local local_biome = vim.fn.fnamemodify(ctx.filename, ":p:h") .. "/node_modules/.bin/biome"
+            if vim.fn.executable(local_biome) == 1 or vim.fn.executable("biome") == 1 then
+              return { "check", "--apply", "--stdin-file-path", "$FILENAME" }
+            else
+              return { "biome", "check", "--apply", "--stdin-file-path", "$FILENAME" }
+            end
+          end,
+          stdin = true,
+        },
       },
       format_on_save = {
         timeout_ms = 500,
@@ -261,18 +286,48 @@ require("lazy").setup({
   {
     'mfussenegger/nvim-lint',
     config = function()
-      require('lint').linters_by_ft = {
-        javascript = { 'biome' },
-        typescript = { 'biome' },
-        javascriptreact = { 'biome' },
-        typescriptreact = { 'biome' },
-        json = { 'biome' },
-        jsonc = { 'biome' },
+      local lint = require('lint')
+
+      -- Custom biome linter that looks for local installation
+      lint.linters.biome_local = {
+        cmd = function()
+          local local_biome = vim.fn.getcwd() .. "/node_modules/.bin/biome"
+          if vim.fn.executable(local_biome) == 1 then
+            return local_biome
+          elseif vim.fn.executable("biome") == 1 then
+            return "biome"
+          else
+            return "npx"
+          end
+        end,
+        stdin = true,
+        args = function()
+          local local_biome = vim.fn.getcwd() .. "/node_modules/.bin/biome"
+          if vim.fn.executable(local_biome) == 1 or vim.fn.executable("biome") == 1 then
+            return { 'lint', '--stdin-file-path', vim.api.nvim_buf_get_name(0) }
+          else
+            return { 'biome', 'lint', '--stdin-file-path', vim.api.nvim_buf_get_name(0) }
+          end
+        end,
+        stream = 'stderr',
+        ignore_exitcode = true,
+        parser = require('lint.parsers').from_errorformat('%f:%l:%c %m', {
+          source = 'biome',
+        }),
+      }
+
+      lint.linters_by_ft = {
+        javascript = { 'biome_local' },
+        typescript = { 'biome_local' },
+        javascriptreact = { 'biome_local' },
+        typescriptreact = { 'biome_local' },
+        json = { 'biome_local' },
+        jsonc = { 'biome_local' },
       }
 
       vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         callback = function()
-          require("lint").try_lint()
+          lint.try_lint()
         end,
       })
     end,
