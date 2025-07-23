@@ -7,7 +7,7 @@
     theme = catppuccin-mocha
 
     # Font configuration (matching Zed config)
-    font-family = "Hack Nerd Font Mono"
+    font-family = "Hack Nerd Font"
     font-size = 12
     font-thicken = true
 

@@ -34,9 +34,6 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 
--- Font configuration (matching Zed config)
-vim.opt.guifont = "Hack Nerd Font Mono:h12"
-
 -- Remove intro message
 vim.opt.shortmess:append("I")
 
