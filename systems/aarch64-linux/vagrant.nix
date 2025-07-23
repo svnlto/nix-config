@@ -66,15 +66,6 @@
     trivy
   ];
 
-  # Program configurations
-  programs = {
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-    };
-  };
-
   home.file.".ssh/config".text = ''
     Host *
       AddKeysToAgent yes
