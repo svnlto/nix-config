@@ -10,7 +10,9 @@
     font-family = "Hack Nerd Font"
     font-size = 12
     font-thicken = true
-    adjust-cell-height = 4
+    # Zed uses 1.618 line height (golden ratio) - adjust cell to match
+    # Font size 12 * 1.618 = ~19.4, so we need about 7-8 extra pixels
+    adjust-cell-height = 7
     adjust-cell-width = -1
 
     # Window configuration
