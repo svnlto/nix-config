@@ -3,12 +3,12 @@
 {
   # Ghostty terminal configuration
   home.file.".config/ghostty/config".text = ''
-    # Theme
-    theme = catppuccin-macchiato
+    # Theme (matching Zed config)
+    theme = catppuccin-mocha
 
-    # Font configuration
-    font-family = "JetBrains Mono"
-    font-size = 14
+    # Font configuration (matching Zed config)
+    font-family = "Hack Nerd Font Mono"
+    font-size = 12
     font-thicken = true
 
     # Window configuration

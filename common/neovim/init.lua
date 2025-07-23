@@ -34,6 +34,9 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 
+-- Font configuration (matching Zed config)
+vim.opt.guifont = "Hack Nerd Font Mono:h12"
+
 -- Remove intro message
 vim.opt.shortmess:append("I")
 
@@ -60,7 +63,7 @@ local plugins = {
     priority = 1000,
     config = function()
       require("catppuccin").setup({
-        flavour = "macchiato", -- or "mocha" for darker
+        flavour = "mocha", -- matching Zed config
         transparent_background = false,
         integrations = {
           cmp = true,

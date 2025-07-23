@@ -9,6 +9,8 @@ rec {
     bat
     nixfmt-classic
     diff-so-fancy
+    # Fonts to match Zed config
+    (nerdfonts.override { fonts = [ "Hack" ]; })
   ];
 
   # Development tools for user environments
