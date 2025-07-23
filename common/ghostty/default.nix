@@ -10,6 +10,8 @@
     font-family = "Hack Nerd Font"
     font-size = 12
     font-thicken = true
+    adjust-cell-height = -2
+    adjust-cell-width = -1
 
     # Window configuration
     window-padding-x = 10
