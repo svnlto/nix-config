@@ -170,21 +170,26 @@ local plugins = {
       vim.api.nvim_create_autocmd("BufEnter", {
         pattern = "*",
         callback = function()
-          if vim.fn.winnr("$") == 1 and vim.fn.exists("b:NERDTree") == 1 and vim.b.NERDTree.isTabTree() then
+          if vim.fn.winnr("$") == 1 and vim.bo.filetype == "nerdtree" then
             vim.cmd("q")
           end
         end,
       })
 
-      -- If more than one window and previous buffer was nerdtree, go back to it
+      -- Better window focus management for NERDTree
       vim.api.nvim_create_autocmd("BufEnter", {
         pattern = "*",
         callback = function()
+          -- If we're in a normal buffer and there are multiple windows
           if vim.bo.buftype == "" and vim.fn.winnr("$") > 1 then
-            -- Focus the previous window if we opened a file from NERDTree
+            -- Check if the previous window was NERDTree
             local prev_winnr = vim.fn.winnr("#")
-            if prev_winnr ~= 0 and vim.fn.getbufvar(vim.fn.winbufnr(prev_winnr), "&filetype") == "nerdtree" then
-              return
+            if prev_winnr ~= 0 then
+              local prev_bufnr = vim.fn.winbufnr(prev_winnr)
+              local prev_filetype = vim.fn.getbufvar(prev_bufnr, "&filetype")
+              if prev_filetype == "nerdtree" then
+                return
+              end
             end
           end
         end,
