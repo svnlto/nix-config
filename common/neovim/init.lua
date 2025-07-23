@@ -34,6 +34,9 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 
+-- Print margin indicator at 80 characters (matching Zed config)
+vim.opt.colorcolumn = "80"
+
 -- Remove intro message
 vim.opt.shortmess:append("I")
 
