@@ -77,7 +77,7 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "vim", "vimdoc", "javascript", "typescript", "python", "rust" },
+        ensure_installed = { "lua", "vim", "vimdoc", "javascript", "typescript", "python", "terraform", "hcl", "json", "yaml", "markdown" },
         auto_install = true,
         highlight = {
           enable = true,
@@ -114,7 +114,7 @@ require("lazy").setup({
 
       -- Setup Mason-LSPConfig with proper handlers
       require('mason-lspconfig').setup({
-        ensure_installed = {'lua_ls', 'rust_analyzer', 'pyright'},
+        ensure_installed = {'lua_ls', 'tsserver', 'terraformls', 'pyright'},
         handlers = {
           -- Default handler for all servers
           function(server_name)
@@ -134,6 +134,44 @@ require("lazy").setup({
                   }
                 }
               }
+            })
+          end,
+
+          -- Custom handler for TypeScript
+          tsserver = function()
+            require('lspconfig').tsserver.setup({
+              capabilities = lsp_zero.get_capabilities(),
+              settings = {
+                typescript = {
+                  inlayHints = {
+                    includeInlayParameterNameHints = 'all',
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  }
+                },
+                javascript = {
+                  inlayHints = {
+                    includeInlayParameterNameHints = 'all',
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  }
+                }
+              }
+            })
+          end,
+
+          -- Custom handler for Terraform
+          terraformls = function()
+            require('lspconfig').terraformls.setup({
+              capabilities = lsp_zero.get_capabilities(),
             })
           end,
         },
@@ -190,6 +228,23 @@ require("lazy").setup({
     'numToStr/Comment.nvim',
     config = function()
       require('Comment').setup()
+    end,
+  },
+
+  -- Better TypeScript experience
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+  },
+
+  -- Terraform syntax and tools
+  {
+    'hashivim/vim-terraform',
+    config = function()
+      vim.g.terraform_align = 1
+      vim.g.terraform_fold_sections = 1
+      vim.g.terraform_fmt_on_save = 1
     end,
   },
 })
