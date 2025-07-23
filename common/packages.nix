@@ -10,7 +10,7 @@ rec {
     nixfmt-classic
     diff-so-fancy
     # Fonts to match Zed config
-    (nerdfonts.override { fonts = [ "Hack" ]; })
+    nerd-fonts.hack
   ];
 
   # Development tools for user environments
