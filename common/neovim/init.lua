@@ -170,8 +170,11 @@ local plugins = {
       vim.api.nvim_create_autocmd("VimEnter", {
         pattern = "*",
         callback = function()
+          -- Only open NERDTree if no arguments or if opening a directory
           if vim.fn.argc() == 0 and not vim.g.std_in then
             vim.cmd("NERDTree")
+          elseif vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
+            vim.cmd("NERDTree " .. vim.fn.argv(0))
           end
         end,
       })
