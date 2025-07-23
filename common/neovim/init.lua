@@ -107,15 +107,12 @@ local plugins = {
   -- File explorer (NERDTree)
   {
     "preservim/nerdtree",
-    dependencies = {
-      "ryanoasis/vim-devicons",
-    },
     config = function()
-      -- NERDTree settings - clean and minimal
-      vim.g.NERDTreeWinSize = 30
+      -- NERDTree settings - extremely minimal like Zed
+      vim.g.NERDTreeWinSize = 25
       vim.g.NERDTreeShowHidden = 0
       vim.g.NERDTreeMinimalUI = 1
-      vim.g.NERDTreeDirArrows = 1
+      vim.g.NERDTreeDirArrows = 0  -- Remove arrows completely
       vim.g.NERDTreeShowLineNumbers = 0
       vim.g.NERDTreeWinPos = "left"
       vim.g.NERDTreeIgnore = {'\\.git$', '\\.DS_Store$', 'node_modules', '__pycache__', '\\.turbo$', '\\.env$', '\\.env\\..*$'}
@@ -126,25 +123,38 @@ local plugins = {
       vim.g.NERDTreeCascadeSingleChildDir = 1
       vim.g.NERDTreeCascadeOpenSingleChildDir = 1
 
-      -- Clean visual styling
+      -- Disable all decorations and icons
       vim.g.NERDTreeMarkBookmarks = 0
       vim.g.NERDTreeHijackNetrw = 1
       vim.g.NERDTreeChDirMode = 2
+      vim.g.DevIconsEnable = 0  -- Disable file icons
+      vim.g.webdevicons_enable = 0
+      vim.g.webdevicons_enable_nerdtree = 0
 
       -- Disable git plugin and other decorators to avoid clutter
       vim.g.NERDTreeGitStatusEnable = 0
       vim.g.loaded_nerd_tree_git_status = 1
 
-      -- Custom NERDTree highlights for cleaner look with Catppuccin Mocha colors
+      -- Ultra-minimal styling to match Zed
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
           vim.cmd([[
-            highlight NERDTreeDir ctermfg=blue guifg=#89b4fa
-            highlight NERDTreeDirSlash ctermfg=blue guifg=#89b4fa
-            highlight NERDTreeFile ctermfg=white guifg=#cdd6f4
-            highlight NERDTreeExecFile ctermfg=green guifg=#a6e3a1
-            highlight NERDTreeOpenable ctermfg=blue guifg=#89b4fa
-            highlight NERDTreeClosable ctermfg=blue guifg=#89b4fa
+            " Hide the help text at the top
+            let g:NERDTreeMinimalMenu = 1
+
+            " Custom minimal highlights
+            highlight NERDTreeDir ctermfg=blue guifg=#89b4fa gui=NONE
+            highlight NERDTreeDirSlash ctermfg=blue guifg=#89b4fa gui=NONE
+            highlight NERDTreeFile ctermfg=white guifg=#cdd6f4 gui=NONE
+            highlight NERDTreeExecFile ctermfg=white guifg=#cdd6f4 gui=NONE
+            highlight NERDTreeOpenable ctermfg=gray guifg=#6c7086 gui=NONE
+            highlight NERDTreeClosable ctermfg=gray guifg=#6c7086 gui=NONE
+            highlight NERDTreeUp ctermfg=gray guifg=#6c7086 gui=NONE
+
+            " Hide the help message and make it super clean
+            autocmd FileType nerdtree setlocal conceallevel=3
+            autocmd FileType nerdtree syntax match NERDTreeHideCWD #^[</].*$# conceal
+            autocmd FileType nerdtree syntax match NERDTreeHideHelp #^".*# conceal
           ]])
         end,
       })
