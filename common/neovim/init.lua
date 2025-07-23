@@ -88,111 +88,93 @@ require("lazy").setup({
 
   -- LSP Configuration
   {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
-    dependencies = {
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'neovim/nvim-lspconfig',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/nvim-cmp',
-      'L3MON4D3/LuaSnip',
-    },
+    'williamboman/mason.nvim',
     config = function()
-      local lsp_zero = require('lsp-zero')
+      require('mason').setup()
+    end,
+  },
 
-      -- Setup keymaps when LSP attaches
-      lsp_zero.on_attach(function(client, bufnr)
-        local opts = {buffer = bufnr, remap = false}
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-      end)
-
-      -- Setup Mason
-      require('mason').setup({})
-
-      -- Setup Mason-LSPConfig with proper handlers
+  {
+    'williamboman/mason-lspconfig.nvim',
+    dependencies = { 'mason.nvim' },
+    config = function()
       require('mason-lspconfig').setup({
-        ensure_installed = {'lua_ls', 'typescript-language-server', 'terraformls', 'pyright'},
-        handlers = {
-          -- Default handler for all servers
-          function(server_name)
-            require('lspconfig')[server_name].setup({
-              capabilities = lsp_zero.get_capabilities()
-            })
-          end,
+        ensure_installed = { 'lua_ls', 'tsserver', 'terraformls', 'pyright' },
+      })
+    end,
+  },
 
-          -- Custom handler for lua_ls
-          lua_ls = function()
-            require('lspconfig').lua_ls.setup({
-              capabilities = lsp_zero.get_capabilities(),
-              settings = {
-                Lua = {
-                  diagnostics = {
-                    globals = {'vim'}
-                  }
-                }
-              }
-            })
-          end,
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = { 'mason-lspconfig.nvim', 'cmp-nvim-lsp' },
+    config = function()
+      local lspconfig = require('lspconfig')
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-          -- Custom handler for TypeScript
-          ['typescript-language-server'] = function()
-            require('lspconfig').tsserver.setup({
-              capabilities = lsp_zero.get_capabilities(),
-              settings = {
-                typescript = {
-                  inlayHints = {
-                    includeInlayParameterNameHints = 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                  }
-                },
-                javascript = {
-                  inlayHints = {
-                    includeInlayParameterNameHints = 'all',
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = true,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                  }
-                }
-              }
-            })
-          end,
-
-          -- Custom handler for Terraform
-          terraformls = function()
-            require('lspconfig').terraformls.setup({
-              capabilities = lsp_zero.get_capabilities(),
-            })
-          end,
-        },
+      -- Setup LSP attach keymaps
+      vim.api.nvim_create_autocmd('LspAttach', {
+        desc = 'LSP actions',
+        callback = function(event)
+          local opts = {buffer = event.buf}
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
+        end
       })
 
-      -- Setup completion
+      -- Configure language servers
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = {'vim'}
+            }
+          }
+        }
+      })
+
+      lspconfig.tsserver.setup({
+        capabilities = capabilities,
+      })
+
+      lspconfig.terraformls.setup({
+        capabilities = capabilities,
+      })
+
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
+    end,
+  },
+
+  -- Completion
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+    },
+    config = function()
       local cmp = require('cmp')
-      local cmp_select = {behavior = cmp.SelectBehavior.Select}
 
       cmp.setup({
         sources = {
           {name = 'nvim_lsp'},
           {name = 'luasnip'},
         },
-        formatting = lsp_zero.cmp_format(),
         mapping = cmp.mapping.preset.insert({
-          ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-          ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-y>'] = cmp.mapping.confirm({ select = true }),
           ['<C-Space>'] = cmp.mapping.complete(),
         }),
+        snippet = {
+          expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+          end,
+        },
       })
     end,
   },
@@ -230,8 +212,6 @@ require("lazy").setup({
       require('Comment').setup()
     end,
   },
-
-  -- TypeScript support is handled by tsserver LSP above
 
   -- Formatting and linting
   {
@@ -275,70 +255,6 @@ require("lazy").setup({
         lsp_fallback = true,
       },
     },
-  },
-
-  -- Linting
-  {
-    'mfussenegger/nvim-lint',
-    config = function()
-      local lint = require('lint')
-
-      -- Custom biome linter that looks for local installation
-      lint.linters.biome_local = {
-        cmd = function()
-          local local_biome = vim.fn.getcwd() .. "/node_modules/.bin/biome"
-          if vim.fn.executable(local_biome) == 1 then
-            return local_biome
-          elseif vim.fn.executable("biome") == 1 then
-            return "biome"
-          else
-            return "npx"
-          end
-        end,
-        stdin = true,
-        args = function()
-          local local_biome = vim.fn.getcwd() .. "/node_modules/.bin/biome"
-          if vim.fn.executable(local_biome) == 1 or vim.fn.executable("biome") == 1 then
-            return { 'lint', '--stdin-file-path', vim.api.nvim_buf_get_name(0) }
-          else
-            return { 'biome', 'lint', '--stdin-file-path', vim.api.nvim_buf_get_name(0) }
-          end
-        end,
-        stream = 'stderr',
-        ignore_exitcode = true,
-        parser = function(output)
-          local diagnostics = {}
-          for line in output:gmatch('[^\r\n]+') do
-            local file, lnum, col, message = line:match('([^:]+):(%d+):(%d+)%s+(.*)')
-            if file and lnum and col and message then
-              table.insert(diagnostics, {
-                lnum = tonumber(lnum) - 1,
-                col = tonumber(col) - 1,
-                message = message,
-                source = 'biome',
-                severity = vim.diagnostic.severity.WARN,
-              })
-            end
-          end
-          return diagnostics
-        end,
-      }
-
-      lint.linters_by_ft = {
-        javascript = { 'biome_local' },
-        typescript = { 'biome_local' },
-        javascriptreact = { 'biome_local' },
-        typescriptreact = { 'biome_local' },
-        json = { 'biome_local' },
-        jsonc = { 'biome_local' },
-      }
-
-      vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-        callback = function()
-          lint.try_lint()
-        end,
-      })
-    end,
   },
 
   -- Terraform syntax and tools
