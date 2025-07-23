@@ -238,6 +238,46 @@ require("lazy").setup({
     opts = {},
   },
 
+  -- Formatting and linting
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        javascript = { "biome" },
+        typescript = { "biome" },
+        javascriptreact = { "biome" },
+        typescriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+    },
+  },
+
+  -- Linting
+  {
+    'mfussenegger/nvim-lint',
+    config = function()
+      require('lint').linters_by_ft = {
+        javascript = { 'biome' },
+        typescript = { 'biome' },
+        javascriptreact = { 'biome' },
+        typescriptreact = { 'biome' },
+        json = { 'biome' },
+        jsonc = { 'biome' },
+      }
+
+      vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        callback = function()
+          require("lint").try_lint()
+        end,
+      })
+    end,
+  },
+
   -- Terraform syntax and tools
   {
     'hashivim/vim-terraform',
@@ -254,6 +294,15 @@ vim.keymap.set("n", "<leader>pv", ":NvimTreeToggle<CR>")
 vim.keymap.set("n", "<leader>pf", require('telescope.builtin').find_files, {})
 vim.keymap.set("n", "<leader>ps", require('telescope.builtin').live_grep, {})
 vim.keymap.set("n", "<leader>vh", require('telescope.builtin').help_tags, {})
+
+-- Formatting keymaps
+vim.keymap.set({ "n", "v" }, "<leader>mp", function()
+  require("conform").format({
+    lsp_fallback = true,
+    async = false,
+    timeout_ms = 1000,
+  })
+end, { desc = "Format file or range (in visual mode)" })
 
 -- Move lines up/down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
