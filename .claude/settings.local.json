@@ -2,8 +2,26 @@
   "permissions": {
     "allow": [
       "Bash(git*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "mcp__code-reasoning__code-reasoning",
+      "mcp__filesystem__read_multiple_files",
+      "mcp__filesystem__search_files",
+      "mcp__filesystem__list_directory"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "code-reasoning",
+    "sequential-thinking",
+    "linear",
+    "notion",
+    "context7",
+    "sentry",
+    "playwright",
+    "filesystem",
+    "gemini",
+    "memory",
+    "cclsp"
+  ]
 }

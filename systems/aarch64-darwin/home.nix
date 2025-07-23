@@ -59,6 +59,10 @@ in
   programs.zsh = {
     enable = true;
 
+    enableCompletion = true;
+    autosuggestion = sharedZsh.autosuggestionConfig;
+    history = sharedZsh.historyConfig;
+
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
@@ -72,14 +76,20 @@ in
 
     # Additional ZSH initialization
     initContent = ''
-      # Source common settings
+      # Shared ZSH options
       ${sharedZsh.options}
-      ${sharedZsh.keybindings}
-      ${sharedZsh.tools}
 
-      # Add npm global bin to PATH
-      export PATH="$HOME/.npm-global/bin:$PATH"
-      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+      # Shared completion settings
+      ${sharedZsh.completion}
+
+      # Shared key bindings
+      ${sharedZsh.keybindings}
+
+      # Shared history options
+      ${sharedZsh.historyOptions}
+
+      # Tool initializations (includes environment setup)
+      ${sharedZsh.tools}
 
       # Ensure Oh My Posh is properly initialized
       if command -v oh-my-posh &> /dev/null; then

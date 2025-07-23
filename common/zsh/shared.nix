@@ -20,27 +20,34 @@ rec {
     tree = "tree -C";
   };
 
-  # Common ZSH history settings
-  history = ''
-    # History configuration
-    export HISTFILE=$HOME/.zsh_history
-    export HIST_SIZE=10000       # Reduced from 100000
-    export HIST_STAMPS="dd/mm/yyyy"
-    export SAVEHIST=10000        # Reduced from 100000
-    export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+  # Declarative history configuration for home-manager
+  historyConfig = {
+    size = 10000;
+    save = 10000;
+    path = "$HOME/.zsh_history";
+    ignoreAllDups = true;
+    ignoreDups = true;
+    share = true;
+    extended = true;
+    expireDuplicatesFirst = true;
+  };
 
+  # ZSH autosuggestion configuration
+  autosuggestionConfig = {
+    enable = true;
+    strategy = [
+      "history"
+      "completion"
+    ];
+  };
+
+  # History options for shell initialization (setopt commands)
+  historyOptions = ''
     # History options - keep only what you need
     setopt hist_reduce_blanks
     setopt share_history
     setopt HIST_EXPIRE_DUPS_FIRST
     setopt APPEND_HISTORY
-  '';
-
-  # Common locale settings
-  locale = ''
-    # Locales
-    export LANG=en_GB.UTF-8
-    export LC_ALL=en_GB.UTF-8
   '';
 
   # Common ZSH option settings
@@ -75,8 +82,11 @@ rec {
     bindkey '\e[B' history-search-forward
   '';
 
-  # Tool initialization commands
+  # Tool initialization commands (now uses shared environment)
   tools = ''
+    # Import shared environment setup
+    ${(import ../environment.nix).shellEnvironment}
+
     # Simple zoxide initialization
     if command -v zoxide >/dev/null 2>&1; then
       eval "$(zoxide init zsh)"

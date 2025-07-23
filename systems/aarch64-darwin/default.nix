@@ -17,17 +17,11 @@
   ];
 
   # macOS specific packages
-  environment.systemPackages = with pkgs; [
-    oh-my-posh
-    eza
-    bat
-    zoxide
-    hstr
-    git
-    diff-so-fancy
-    nixfmt-classic
-    tree
-  ];
+  environment.systemPackages =
+    let
+      packages = import ../../common/packages.nix { inherit pkgs; };
+    in
+    packages.allSystemPackages;
 
   programs.zsh.enable = true;
 
