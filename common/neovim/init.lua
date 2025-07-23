@@ -114,7 +114,7 @@ require("lazy").setup({
 
       -- Setup Mason-LSPConfig with proper handlers
       require('mason-lspconfig').setup({
-        ensure_installed = {'lua_ls', 'tsserver', 'terraformls', 'pyright'},
+        ensure_installed = {'lua_ls', 'typescript-language-server', 'terraformls', 'pyright'},
         handlers = {
           -- Default handler for all servers
           function(server_name)
@@ -138,7 +138,7 @@ require("lazy").setup({
           end,
 
           -- Custom handler for TypeScript
-          tsserver = function()
+          ['typescript-language-server'] = function()
             require('lspconfig').tsserver.setup({
               capabilities = lsp_zero.get_capabilities(),
               settings = {
@@ -231,12 +231,7 @@ require("lazy").setup({
     end,
   },
 
-  -- Better TypeScript experience
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
-  },
+  -- TypeScript support is handled by tsserver LSP above
 
   -- Formatting and linting
   {
@@ -311,9 +306,22 @@ require("lazy").setup({
         end,
         stream = 'stderr',
         ignore_exitcode = true,
-        parser = require('lint.parsers').from_errorformat('%f:%l:%c %m', {
-          source = 'biome',
-        }),
+        parser = function(output)
+          local diagnostics = {}
+          for line in output:gmatch('[^\r\n]+') do
+            local file, lnum, col, message = line:match('([^:]+):(%d+):(%d+)%s+(.*)')
+            if file and lnum and col and message then
+              table.insert(diagnostics, {
+                lnum = tonumber(lnum) - 1,
+                col = tonumber(col) - 1,
+                message = message,
+                source = 'biome',
+                severity = vim.diagnostic.severity.WARN,
+              })
+            end
+          end
+          return diagnostics
+        end,
       }
 
       lint.linters_by_ft = {
