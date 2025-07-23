@@ -16,6 +16,7 @@ rec {
     gh
     direnv
     ack
+    neovim
   ];
 
   # macOS system-level packages (things that need to be at system level)
