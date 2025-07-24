@@ -37,6 +37,10 @@ vim.opt.swapfile = false
 -- Print margin indicator at 80 characters (matching Zed config)
 vim.opt.colorcolumn = "80"
 
+-- Terminal integration and sizing
+vim.opt.ttyfast = true
+vim.opt.lazyredraw = false
+
 -- Remove intro message
 vim.opt.shortmess:append("I")
 
@@ -548,5 +552,13 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     end
     local file = vim.loop.fs_realpath(event.match) or event.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end,
+})
+
+-- Fix terminal size detection
+vim.api.nvim_create_autocmd({ "VimEnter", "VimResized" }, {
+  group = augroup("terminal_resize"),
+  callback = function()
+    vim.cmd("redraw!")
   end,
 })
