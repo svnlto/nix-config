@@ -34,8 +34,8 @@
     scrollback-limit = 10000
 
     # Colors and transparency
-    background-opacity = 0.95
-    unfocused-split-opacity = 0.7
+    background-opacity = 0.99
+    unfocused-split-opacity = 0.9
 
     # Key bindings (corrected for Ghostty)
     keybind = cmd+t=new_tab
@@ -50,6 +50,12 @@
     # Split panes
     keybind = cmd+d=new_split:right
     keybind = cmd+shift+d=new_split:down
+
+    # Navigate between splits
+    keybind = cmd+h=goto_split:left
+    keybind = cmd+j=goto_split:down
+    keybind = cmd+k=goto_split:up
+    keybind = cmd+l=goto_split:right
 
     # Tab navigation
     keybind = cmd+1=goto_tab:1
