@@ -16,8 +16,8 @@
     adjust-cell-width = -1
 
     # Window configuration
-    window-padding-x = 10
-    window-padding-y = 10
+    window-padding-x = 4
+    window-padding-y = 2
     window-decoration = true
     window-theme = dark
     macos-titlebar-style = tabs
