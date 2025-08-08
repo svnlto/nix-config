@@ -8,7 +8,6 @@ vim.g.maplocalleader = " "
 -- Basic settings that match Zed's feel
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
 vim.opt.mouse = "a"
@@ -36,6 +35,10 @@ vim.opt.swapfile = false
 
 -- Print margin indicator at 80 characters (matching Zed config)
 vim.opt.colorcolumn = "80"
+
+-- Add gap to the right of line numbers using modern statuscolumn
+vim.opt.signcolumn = "yes"
+vim.opt.statuscolumn = "%s%=%{v:relnum?v:relnum:v:lnum}   "  -- Three spaces after numbers
 
 -- Terminal integration and sizing
 vim.opt.ttyfast = true
@@ -111,107 +114,206 @@ local plugins = {
     end,
   },
 
-  -- File explorer (NERDTree)
+  -- File explorer (nvim-tree)
   {
-    "preservim/nerdtree",
+    "nvim-tree/nvim-tree.lua",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons", -- File icons
+    },
     config = function()
-      -- NERDTree settings - extremely minimal like Zed
-      vim.g.NERDTreeWinSize = 25
-      vim.g.NERDTreeShowHidden = 0
-      vim.g.NERDTreeMinimalUI = 1
-      vim.g.NERDTreeDirArrows = 0  -- Remove arrows completely
-      vim.g.NERDTreeShowLineNumbers = 0
-      vim.g.NERDTreeWinPos = "left"
-      vim.g.NERDTreeIgnore = {'\\.git$', '\\.DS_Store$', 'node_modules', '__pycache__', '\\.turbo$', '\\.env$', '\\.env\\..*$'}
-      vim.g.NERDTreeAutoDeleteBuffer = 1
-      vim.g.NERDTreeQuitOnOpen = 0
-      vim.g.NERDTreeShowBookmarks = 0
-      vim.g.NERDTreeMinimalMenu = 1
-      vim.g.NERDTreeCascadeSingleChildDir = 1
-      vim.g.NERDTreeCascadeOpenSingleChildDir = 1
+      -- nvim-tree setup - minimal like Zed
+      require("nvim-tree").setup({
+        -- Disable netrw completely
+        disable_netrw = true,
+        hijack_netrw = true,
 
-      -- Disable all decorations and icons
-      vim.g.NERDTreeMarkBookmarks = 0
-      vim.g.NERDTreeHijackNetrw = 1
-      vim.g.NERDTreeChDirMode = 2
-      vim.g.DevIconsEnable = 0  -- Disable file icons
-      vim.g.webdevicons_enable = 0
-      vim.g.webdevicons_enable_nerdtree = 0
+        -- Window/UI settings
+        view = {
+          width = 40,
+          side = "left",
+          number = false,
+          relativenumber = false,
+          signcolumn = "no",
+        },
 
-      -- Disable git plugin and other decorators to avoid clutter
-      vim.g.NERDTreeGitStatusEnable = 0
-      vim.g.loaded_nerd_tree_git_status = 1
+        -- Renderer settings for minimal UI
+        renderer = {
+          add_trailing = false,
+          group_empty = true,
+          highlight_git = true,
+          full_name = false,
+          highlight_opened_files = "none",
+          root_folder_label = ":~:s?$?/..",
+          indent_width = 2,
+          indent_markers = {
+            enable = false,
+          },
+          icons = {
+            webdev_colors = false,
+            git_placement = "after",
+            modified_placement = "after",
+            padding = " ",
+            symlink_arrow = " → ",
+            show = {
+              file = false,  -- No file icons for minimal look
+              folder = false, -- No folder icons
+              folder_arrow = false, -- No arrows
+              git = true,    -- Show git status
+              modified = true,
+            },
+            glyphs = {
+              default = "",
+              symlink = "",
+              bookmark = "",
+              modified = "●",
+              folder = {
+                arrow_closed = "",
+                arrow_open = "",
+                default = "",
+                open = "",
+                empty = "",
+                empty_open = "",
+                symlink = "",
+                symlink_open = "",
+              },
+              git = {
+                unstaged = "!",
+                staged = "+",
+                unmerged = "",
+                renamed = "»",
+                untracked = "?",
+                deleted = "✗",
+                ignored = "◌",
+              },
+            },
+          },
+        },
 
-      -- Ultra-minimal styling to match Zed
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          vim.cmd([[
-            " Hide the help text at the top
-            let g:NERDTreeMinimalMenu = 1
+        -- Hide dotfiles but show git files
+        filters = {
+          dotfiles = false,
+          git_clean = false,
+          no_buffer = false,
+          custom = { ".git", ".DS_Store", "node_modules", "__pycache__", ".turbo", ".env" },
+          exclude = {},
+        },
 
-            " Custom minimal highlights
-            highlight NERDTreeDir ctermfg=blue guifg=#89b4fa gui=NONE
-            highlight NERDTreeDirSlash ctermfg=blue guifg=#89b4fa gui=NONE
-            highlight NERDTreeFile ctermfg=white guifg=#cdd6f4 gui=NONE
-            highlight NERDTreeExecFile ctermfg=white guifg=#cdd6f4 gui=NONE
-            highlight NERDTreeOpenable ctermfg=gray guifg=#6c7086 gui=NONE
-            highlight NERDTreeClosable ctermfg=gray guifg=#6c7086 gui=NONE
-            highlight NERDTreeUp ctermfg=gray guifg=#6c7086 gui=NONE
+        -- Git integration
+        git = {
+          enable = true,
+          ignore = true,
+          show_on_dirs = true,
+          show_on_open_dirs = true,
+          timeout = 400,
+        },
 
-            " Hide the help message and make it super clean
-            autocmd FileType nerdtree setlocal conceallevel=3
-            autocmd FileType nerdtree syntax match NERDTreeHideCWD #^[</].*$# conceal
-            autocmd FileType nerdtree syntax match NERDTreeHideHelp #^".*# conceal
-          ]])
+        -- Actions
+        actions = {
+          use_system_clipboard = true,
+          change_dir = {
+            enable = true,
+            global = false,
+            restrict_above_cwd = false,
+          },
+          open_file = {
+            quit_on_open = false,
+            resize_window = true,
+            window_picker = {
+              enable = true,
+              picker = "default",
+              chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+              exclude = {
+                filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame" },
+                buftype = { "nofile", "terminal", "help" },
+              },
+            },
+          },
+          remove_file = {
+            close_window = true,
+          },
+        },
+
+        -- Log settings (disable for performance)
+        log = {
+          enable = false,
+        },
+
+        -- Key mappings for nvim-tree
+        on_attach = function(bufnr)
+          local api = require("nvim-tree.api")
+
+          local function opts(desc)
+            return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+          end
+
+          -- Default mappings
+          api.config.mappings.default_on_attach(bufnr)
+
+          -- Custom mappings for splits
+          vim.keymap.set("n", "s", api.node.open.vertical, opts("Open: Vertical Split"))
+          vim.keymap.set("n", "v", api.node.open.horizontal, opts("Open: Horizontal Split"))
         end,
       })
 
-      -- Start NERDTree when Vim is started without file arguments
-      vim.api.nvim_create_autocmd("StdinReadPre", {
-        pattern = "*",
-        callback = function()
-          vim.g.std_in = 1
-        end,
-      })
 
+      -- Auto-open nvim-tree on startup if no file specified
       vim.api.nvim_create_autocmd("VimEnter", {
-        pattern = "*",
         callback = function()
-          -- Only open NERDTree if no arguments or if opening a directory
-          if vim.fn.argc() == 0 and not vim.g.std_in then
-            vim.cmd("NERDTree")
+          if vim.fn.argc() == 0 then
+            require("nvim-tree.api").tree.open()
           elseif vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
-            vim.cmd("NERDTree " .. vim.fn.argv(0))
+            require("nvim-tree.api").tree.open({ path = vim.fn.argv(0) })
           end
         end,
       })
 
-      -- Auto-close NERDTree if it's the only window left
+      -- Prevent nvim-tree from being the last window
       vim.api.nvim_create_autocmd("BufEnter", {
-        pattern = "*",
+        nested = true,
         callback = function()
-          if vim.fn.winnr("$") == 1 and vim.bo.filetype == "nerdtree" then
-            vim.cmd("q")
+          if #vim.api.nvim_list_wins() == 1 and require("nvim-tree.utils").is_nvim_tree_buf() then
+            vim.cmd("quit")
           end
         end,
       })
 
-      -- Better window focus management for NERDTree
+      -- Sync nvim-tree when opening files via telescope
       vim.api.nvim_create_autocmd("BufEnter", {
-        pattern = "*",
         callback = function()
-          -- If we're in a normal buffer and there are multiple windows
-          if vim.bo.buftype == "" and vim.fn.winnr("$") > 1 then
-            -- Check if the previous window was NERDTree
-            local prev_winnr = vim.fn.winnr("#")
-            if prev_winnr ~= 0 then
-              local prev_bufnr = vim.fn.winbufnr(prev_winnr)
-              local prev_filetype = vim.fn.getbufvar(prev_bufnr, "&filetype")
-              if prev_filetype == "nerdtree" then
-                return
-              end
+          if vim.bo.buftype == "" and vim.bo.filetype ~= "NvimTree" then
+            local api = require("nvim-tree.api")
+            if api.tree.is_visible() then
+              api.tree.find_file({ buf = vim.api.nvim_get_current_buf() })
             end
           end
+        end,
+      })
+
+      -- Custom highlights for minimal Catppuccin Mocha theme
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          vim.cmd([[
+            highlight NvimTreeNormal guifg=#7f849c guibg=NONE
+            highlight NvimTreeFolderName guifg=#6c7086 gui=NONE
+            highlight NvimTreeFolderIcon guifg=#6c7086 gui=NONE
+            highlight NvimTreeOpenedFolderName guifg=#6c7086 gui=NONE
+            highlight NvimTreeEmptyFolderName guifg=#585b70 gui=NONE
+            highlight NvimTreeIndentMarker guifg=#585b70 gui=NONE
+            highlight NvimTreeWinSeparator guifg=#313244 guibg=NONE
+            highlight NvimTreeRootFolder guifg=#6c7086 gui=NONE
+            highlight NvimTreeSymlink guifg=#89dceb gui=NONE
+            highlight NvimTreeFolderArrowClosed guifg=#585b70 gui=NONE
+            highlight NvimTreeFolderArrowOpen guifg=#585b70 gui=NONE
+
+            " Git status colors
+            highlight NvimTreeGitDirty guifg=#a6adc8 gui=NONE
+            highlight NvimTreeGitStaged guifg=#94e2d5 gui=NONE
+            highlight NvimTreeGitMerge guifg=#f9e2af gui=NONE
+            highlight NvimTreeGitRenamed guifg=#89dceb gui=NONE
+            highlight NvimTreeGitNew guifg=#fab387 gui=NONE
+            highlight NvimTreeGitDeleted guifg=#f5c2e7 gui=NONE
+            highlight NvimTreeGitIgnored guifg=#585b70 gui=NONE
+          ]])
         end,
       })
     end,
@@ -232,6 +334,7 @@ local plugins = {
           "ts_ls", -- TypeScript/JavaScript (updated name)
           "terraformls", -- Terraform
           "lua_ls", -- Keep Lua for Neovim config editing
+          "biome", -- Biome LSP for linting and formatting
         },
         automatic_enable = false, -- Disable automatic enabling to prevent errors
       })
@@ -290,6 +393,13 @@ local plugins = {
             telemetry = { enable = false },
           },
         },
+      })
+
+      -- Biome LSP (official integration)
+      lspconfig.biome.setup({
+        capabilities = capabilities,
+        filetypes = { "javascript", "javascriptreact", "json", "jsonc", "typescript", "typescriptreact" },
+        root_dir = lspconfig.util.root_pattern("biome.json", ".git"),
       })
 
       -- LSP keymaps
@@ -452,9 +562,51 @@ local plugins = {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     config = function()
-      require("ibl").setup()
+      require("ibl").setup({
+        indent = {
+          char = "│",
+          highlight = "IblIndent",
+        },
+        scope = {
+          enabled = false, -- Disable scope highlighting to reduce visual noise
+        },
+      })
+
+      -- Set subtle colors for indent guides (matching Catppuccin Mocha theme)
+      vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244" }) -- Very subtle gray
     end,
   },
+
+  -- Markdown preview with Mermaid support
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && npm install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+    config = function()
+      vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown Preview Toggle" })
+
+      -- Mermaid and diagram support
+      vim.g.mkdp_preview_options = {
+        mkit = {},
+        katex = {},
+        uml = {},
+        maid = {},
+        disable_sync_scroll = 0,
+        sync_scroll_type = 'middle',
+        hide_yaml_meta = 1,
+        sequence_diagrams = {},
+        flowchart_diagrams = {},
+        content_editable = false,
+        disable_filename = 0,
+        toc = {}
+      }
+    end,
+  },
+
 }
 
 -- Setup lazy.nvim
@@ -474,7 +626,7 @@ keymap("n", "<leader>b", "<cmd>Telescope buffers<cr>", { desc = "Switch buffer" 
 keymap("n", "<leader>:", "<cmd>Telescope commands<cr>", { desc = "Commands" })
 
 -- File explorer
-keymap("n", "<leader>e", "<cmd>NERDTreeToggle<cr>", { desc = "Toggle file explorer" })
+keymap("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" })
 
 -- Buffer management
 keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })

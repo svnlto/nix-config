@@ -129,3 +129,13 @@ Located in `common/claude-code/`, this provides:
 - Tailscale for secure cloud connectivity
 - Proper credential management for AWS profiles
 - Isolated development environments prevent host contamination
+
+## Code Quality Standards
+
+**6 Golden Rules for Clean Code** (Neo Kim):
+1. **SOC** - Separation of concerns
+2. **DYC** - Document your code
+3. **DRY** - Don't repeat yourself
+4. **KISS** - Keep it simple stupid
+5. **TDD** - Test driven development
+6. **YAGNI** - You ain't gonna need it

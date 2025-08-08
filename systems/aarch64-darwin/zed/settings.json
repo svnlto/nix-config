@@ -47,27 +47,14 @@
     },
     "show_diagnostics": "all",
     "indent_guides": {
-      "show": "always"
+      "show": "never"
     }
-  },
-  "agent": {
-    "always_allow_tool_actions": true,
-    "enabled": true,
-    "button": true,
-    "dock": "right",
-    "default_width": 640,
-    "default_height": 320,
-    "default_model": {
-      "provider": "copilot_chat",
-      "model": "claude-3.7-sonnet"
-    },
-    "single_file_review": true
   },
   "cursor_shape": "block",
   "ui_font_size": 12,
   "ui_font_family": "Menlo",
   "buffer_font_size": 12,
-  "buffer_font_family": "Hack Nerd Font Mono",
+  "buffer_font_family": "Hack Nerd Font",
   "tab_size": 2,
   "relative_line_numbers": false,
   "auto_update": false,
@@ -80,9 +67,9 @@
   "gutter": {
     "line_numbers": true
   },
-  "format_on_save": "prettier",
+  "format_on_save": "language_server",
   "terminal": {
-    "font_family": "Hack Nerd Font Mono",
+    "font_family": "Hack Nerd Font",
     "dock": "right",
     "default_width": 640,
     "default_height": 320,
@@ -97,7 +84,7 @@
   ],
   "languages": {
     "JSON": {
-      "format_on_save": "prettier"
+      "format_on_save": "language_server"
     },
     "Terraform": {
       "format_on_save": "language_server"
@@ -130,7 +117,6 @@
     "catppuccin": true,
     "catppuccin-icons": true,
     "git-firefly": true,
-    "make": true,
     "nix": true,
     "sql": true,
     "markdown-oxide": true,

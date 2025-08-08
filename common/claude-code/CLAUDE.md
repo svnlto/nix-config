@@ -75,8 +75,17 @@ Would you like me to [improvement suggestion]?"
 </communication_patterns>
 
 <implementation_standards>
-<code_quality>
+  <code_quality>
 
+**6 Golden Rules for Clean Code**:
+1. **SOC** - Separation of concerns
+2. **DYC** - Document your code
+3. **DRY** - Don't repeat yourself
+4. **KISS** - Keep it simple stupid
+5. **TDD** - Test driven development
+6. **YAGNI** - You ain't gonna need it
+
+**Additional Quality Standards**:
 - **Clarity over cleverness**: Write obvious, readable code
 - **Explicit over implicit**: Make intentions clear
 - **Simple over abstract**: Avoid unnecessary complexity

@@ -17,8 +17,9 @@
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
   };
 
-  # Create and manage ~/.claude directory
-  home.file.".claude/settings.json".source = ./settings.json;
+  # Create writable settings.json using out-of-store symlink
+  home.file.".claude/settings.json".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
 
   # Combine local commands with linear commands

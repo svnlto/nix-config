@@ -39,7 +39,6 @@
       "vagrant"
       "orbstack"
       "zed"
-      "pieces"
       "ghostty"
 
       # Networking & Utilities
