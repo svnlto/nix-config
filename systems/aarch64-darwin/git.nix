@@ -1,18 +1,9 @@
 # macOS-specific Git configuration
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}:
+{ config, lib, pkgs, username, ... }:
 
 {
   # Add Git to system packages
-  environment.systemPackages = with pkgs; [
-    git
-    diff-so-fancy
-  ];
+  environment.systemPackages = with pkgs; [ git diff-so-fancy ];
 
   # This creates a global Git configuration
   environment.etc."gitconfig".text = ''
@@ -105,10 +96,14 @@
   # System activation script to copy gitconfig and gitignore to user's home directory
   system.activationScripts.gitConfig = ''
     echo "Setting up Git configuration..." >&2
-    cp ${config.environment.etc."gitconfig".source} /Users/${username}/.gitconfig
+    cp ${
+      config.environment.etc."gitconfig".source
+    } /Users/${username}/.gitconfig
     chown ${username}:staff /Users/${username}/.gitconfig
 
-    cp ${config.environment.etc."gitignore".source} /Users/${username}/.gitignore
+    cp ${
+      config.environment.etc."gitignore".source
+    } /Users/${username}/.gitignore
     chown ${username}:staff /Users/${username}/.gitignore
   '';
 }

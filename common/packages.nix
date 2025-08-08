@@ -1,5 +1,4 @@
-{ pkgs }:
-rec {
+{ pkgs }: rec {
   # Core CLI utilities shared across all platforms
   corePackages = with pkgs; [
     oh-my-posh
@@ -14,11 +13,7 @@ rec {
   ];
 
   # Development tools for user environments
-  devPackages = with pkgs; [
-    gh
-    direnv
-    ack
-  ];
+  devPackages = with pkgs; [ gh direnv ack ];
 
   # macOS system-level packages (things that need to be at system level)
   darwinSystemPackages = with pkgs; [

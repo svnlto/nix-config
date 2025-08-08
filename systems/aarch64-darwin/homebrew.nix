@@ -3,17 +3,8 @@
 {
   homebrew = {
     enable = true;
-    taps = [
-      "FelixKratz/formulae"
-      "hashicorp/tap"
-    ];
-    brews = [
-      "mas"
-      "dockutil"
-      "pre-commit"
-      "rclone"
-      "qemu"
-    ];
+    taps = [ "FelixKratz/formulae" "hashicorp/tap" ];
+    brews = [ "mas" "dockutil" "pre-commit" "rclone" "qemu" ];
     casks = [
       # Security & Password Management
       "1password"

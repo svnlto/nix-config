@@ -12,7 +12,8 @@ rec {
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     reloadcli = "source $HOME/.zshrc";
-    ll = "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
+    ll =
+      "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
     vim = "nvim";
     c = "clear";
     cat = "bat";
@@ -35,10 +36,7 @@ rec {
   # ZSH autosuggestion configuration
   autosuggestionConfig = {
     enable = true;
-    strategy = [
-      "history"
-      "completion"
-    ];
+    strategy = [ "history" "completion" ];
   };
 
   # History options for shell initialization (setopt commands)
@@ -114,6 +112,7 @@ rec {
 
   # Module metadata
   meta = {
-    description = "Shared ZSH configuration for both nix-darwin and home-manager";
+    description =
+      "Shared ZSH configuration for both nix-darwin and home-manager";
   };
 }

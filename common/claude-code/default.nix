@@ -1,11 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-{
+{ inputs, lib, config, pkgs, ... }: {
   # Install Node.js to enable npm
   home.packages = with pkgs; [ nodejs_22 ];
 
@@ -13,13 +6,11 @@
   home.sessionPath = [ "$HOME/.npm-global/bin" ];
 
   # Set npm prefix to user directory
-  home.sessionVariables = {
-    NPM_CONFIG_PREFIX = "$HOME/.npm-global";
-  };
+  home.sessionVariables = { NPM_CONFIG_PREFIX = "$HOME/.npm-global"; };
 
   # Create writable settings.json using out-of-store symlink
-  home.file.".claude/settings.json".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
+  home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
 
   # Combine local commands with linear commands
@@ -45,15 +36,16 @@
   home.file.".claude/.keep".text = "";
 
   # Install Claude Code on activation
-  home.activation.installClaudeCode = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    PATH="${pkgs.nodejs_22}/bin:$PATH"
-    export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+  home.activation.installClaudeCode =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      PATH="${pkgs.nodejs_22}/bin:$PATH"
+      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 
-    if ! command -v claude >/dev/null 2>&1; then
-      echo "Installing Claude Code..."
-      npm install -g @anthropic-ai/claude-code
-    else
-      echo "Claude Code is already installed at $(which claude)"
-    fi
-  '';
+      if ! command -v claude >/dev/null 2>&1; then
+        echo "Installing Claude Code..."
+        npm install -g @anthropic-ai/claude-code
+      else
+        echo "Claude Code is already installed at $(which claude)"
+      fi
+    '';
 }

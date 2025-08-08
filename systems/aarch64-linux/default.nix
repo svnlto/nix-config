@@ -1,21 +1,10 @@
-{
-  config,
-  pkgs,
-  lib,
-  username,
-  ...
-}:
+{ config, pkgs, lib, username, ... }:
 
 {
   imports = [ ./home.nix ];
 
   # VM-specific packages
-  environment.systemPackages = with pkgs; [
-    curl
-    wget
-    fuse
-    fuse3
-  ];
+  environment.systemPackages = with pkgs; [ curl wget fuse fuse3 ];
 
   # Environment variables
   environment.variables = {
@@ -34,10 +23,7 @@
   nix = {
     package = pkgs.nix;
     settings = {
-      trusted-users = [
-        "root"
-        username
-      ];
+      trusted-users = [ "root" username ];
       download-buffer-size = 65536;
       max-jobs = 3;
       cores = 1;
@@ -47,10 +33,8 @@
       http-connections = 25;
 
       # Binary caches
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-      ];
+      substituters =
+        [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     };
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -68,10 +52,7 @@
   # User configuration
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups = [
-      "docker"
-      "fuse"
-    ];
+    extraGroups = [ "docker" "fuse" ];
     shell = pkgs.zsh;
   };
 
@@ -80,9 +61,7 @@
   boot.kernelModules = [ "fuse" ];
 
   # Configure passwordless sudo access
-  security.sudo = {
-    enable = true;
-  };
+  security.sudo = { enable = true; };
 
   # Enable SSH for remote access
   services.openssh = {
@@ -107,9 +86,7 @@
 
   # VM Performance Optimizations
   # Set swappiness for better VM performance
-  boot.kernel.sysctl = {
-    "vm.swappiness" = 10;
-  };
+  boot.kernel.sysctl = { "vm.swappiness" = 10; };
 
   # Optimize disk I/O scheduler using systemd service
   systemd.services.optimize-io-scheduler = {
@@ -134,10 +111,7 @@
   fileSystems."/ramdisk" = {
     device = "none";
     fsType = "tmpfs";
-    options = [
-      "size=2G"
-      "mode=1777"
-    ];
+    options = [ "size=2G" "mode=1777" ];
   };
 
   # System configuration

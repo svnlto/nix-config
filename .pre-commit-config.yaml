@@ -18,7 +18,7 @@ repos:
         name: nixfmt
         description: Format nix code with nixfmt
         entry: nix
-        args: [shell, nixpkgs#nixfmt-rfc-style, -c, nixfmt]
+        args: [shell, nixpkgs#nixfmt-classic, -c, nixfmt]
         language: system
         files: \.nix$
 

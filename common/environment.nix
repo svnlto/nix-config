@@ -31,9 +31,9 @@ rec {
   # Environment variable exports for shell init
   envExports = ''
     # Common environment variables
-    ${builtins.concatStringsSep "\n" (
-      builtins.attrValues (builtins.mapAttrs (name: value: "export ${name}=${value}") commonEnvVars)
-    )}
+    ${builtins.concatStringsSep "\n" (builtins.attrValues
+      (builtins.mapAttrs (name: value: "export ${name}=${value}")
+        commonEnvVars))}
   '';
 
   # Combined environment setup for shell initialization

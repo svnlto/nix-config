@@ -1,19 +1,9 @@
-{
-  config,
-  pkgs,
-  username,
-  lib,
-  ...
-}:
+{ config, pkgs, username, lib, ... }:
 
-let
-  sharedZsh = import ../../common/zsh/shared.nix;
-in
-{
-  imports = [
-    ../../common/home-packages.nix
-    ../../common/claude-code/default.nix
-  ];
+let sharedZsh = import ../../common/zsh/shared.nix;
+in {
+  imports =
+    [ ../../common/home-packages.nix ../../common/claude-code/default.nix ];
 
   # Home Manager configuration for macOS
   home = {
@@ -29,17 +19,11 @@ in
     nix-direnv.enable = true;
 
     # Reduce verbosity
-    config = {
-      global = {
-        hide_env_diff = true;
-      };
-    };
+    config = { global = { hide_env_diff = true; }; };
   };
 
   # Set direnv log format to be less verbose
-  home.sessionVariables = {
-    DIRENV_LOG_FORMAT = "";
-  };
+  home.sessionVariables = { DIRENV_LOG_FORMAT = ""; };
 
   # GitHub CLI configuration
   programs.gh = {
@@ -99,5 +83,6 @@ in
   };
 
   # Install Oh My Posh theme
-  home.file.".config/oh-my-posh/default.omp.json".source = ../../common/zsh/default.omp.json;
+  home.file.".config/oh-my-posh/default.omp.json".source =
+    ../../common/zsh/default.omp.json;
 }
