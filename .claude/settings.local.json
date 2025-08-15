@@ -26,5 +26,6 @@
     "gemini",
     "memory",
     "cclsp"
-  ]
+  ],
+  "outputStyle": "Architect"
 }

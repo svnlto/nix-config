@@ -12,6 +12,7 @@
   home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
   home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
+  home.file.".claude/output-styles".source = ./output-styles;
 
   # Combine local commands with linear commands
   home.file.".claude/commands".source = pkgs.symlinkJoin {
