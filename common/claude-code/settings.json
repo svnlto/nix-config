@@ -10,6 +10,10 @@
     "filesystem",
     "memory"
   ],
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccusage@latest statusline"
+  },
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   }
