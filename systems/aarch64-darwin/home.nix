@@ -55,7 +55,7 @@ in {
 
     # Common aliases from shared config plus macOS-specific ones
     shellAliases = sharedZsh.aliases // {
-      nixswitch = "darwin-rebuild switch --flake ~/.config/nix#rick";
+      nixswitch = "sudo darwin-rebuild switch --flake ~/.config/nix#rick";
     };
 
     # Additional ZSH initialization
