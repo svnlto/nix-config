@@ -15,6 +15,9 @@
 
   system.stateVersion = 5;
 
+  # Set primary user for nix-darwin user-specific options
+  system.primaryUser = username;
+
   ids.gids.nixbld = 30000;
 
   # System activation scripts
