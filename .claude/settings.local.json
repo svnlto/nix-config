@@ -9,7 +9,8 @@
       "mcp__filesystem__list_directory",
       "mcp__sequential-thinking__sequentialthinking",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "WebFetch(domain:docs.anthropic.com)"
     ],
     "deny": []
   },
@@ -23,9 +24,7 @@
     "sentry",
     "playwright",
     "filesystem",
-    "gemini",
-    "memory",
-    "cclsp"
+    "gemini"
   ],
   "outputStyle": "Architect"
 }
