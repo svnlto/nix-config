@@ -13,7 +13,7 @@
   ];
 
   # Development tools for user environments
-  devPackages = with pkgs; [ gh direnv ack pipx ];
+  devPackages = with pkgs; [ gh direnv ack pipx tmux ];
 
   # macOS system-level packages (things that need to be at system level)
   darwinSystemPackages = with pkgs; [

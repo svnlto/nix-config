@@ -47,15 +47,16 @@
     keybind = cmd+c=copy_to_clipboard
     keybind = cmd+v=paste_from_clipboard
 
-    # Split panes
-    keybind = cmd+d=new_split:right
-    keybind = cmd+shift+d=new_split:down
+    # Split panes - Disabled in favor of tmux
+    # keybind = cmd+d=new_split:right
+    # keybind = cmd+shift+d=new_split:down
+    # keybind = cmd+shift+a=new_split:left
 
-    # Navigate between splits
-    keybind = cmd+h=goto_split:left
-    keybind = cmd+j=goto_split:down
-    keybind = cmd+k=goto_split:up
-    keybind = cmd+l=goto_split:right
+    # Navigate between splits - Disabled in favor of tmux (use Ctrl+hjkl)
+    # keybind = cmd+h=goto_split:left
+    # keybind = cmd+j=goto_split:down
+    # keybind = cmd+k=goto_split:up
+    # keybind = cmd+l=goto_split:right
 
     # Tab navigation
     keybind = cmd+1=goto_tab:1
