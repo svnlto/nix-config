@@ -6,9 +6,10 @@
     # macOS clipboard integration
     set-option -g default-command "reattach-to-user-namespace -l $SHELL"
 
-    # Terminal settings
-    set-option -g default-terminal "screen-256color"
-    set-option -ga terminal-overrides ",xterm-256color:Tc"
+    # Terminal settings - optimized for Ghostty
+    set-option -g default-terminal "tmux-256color"
+    set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"
+    set-option -ga terminal-overrides ",xterm-ghostty:RGB,tmux-256color:RGB"
 
     # Essential vim integration - zero escape delay
     set -sg escape-time 0
@@ -123,11 +124,12 @@
     set -g status-bg "#1e1e2e"
     set -g status-fg "#cdd6f4"
 
-    # Window status (modern syntax)
+    # Window status (modern syntax) - ensure proper background
     setw -g window-status-current-style "fg=#1e1e2e,bg=#89b4fa,bold"
-    setw -g window-status-style "fg=#7f849c,bg=#313244"
-    set -g window-status-format "#I #W"
-    setw -g window-status-current-format "#[bold]#I #W"
+    setw -g window-status-style "fg=#7f849c,bg=#1e1e2e"
+    set -g window-status-format " #I #W "
+    setw -g window-status-current-format " #I #W "
+    set -g window-status-separator ""
 
     # Pane borders
     set -g pane-border-style "fg=#313244"
@@ -137,11 +139,14 @@
     set -g message-style "bg=#f38ba8,fg=#1e1e2e"
     set -g message-command-style "bg=#f38ba8,fg=#1e1e2e"
 
-    # Status bar format
-    set -g status-left-length 100
-    set -g status-right-length 100
-    set -g status-left "#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#313244]"
-    set -g status-right "#[fg=#7f849c,bg=#313244] %Y-%m-%d #[fg=#cdd6f4]| %H:%M #[fg=#89b4fa,bg=#313244]#[fg=#1e1e2e,bg=#89b4fa,bold] #h "
+    # Status bar - clean and full width
+    set -g status-left-length 30
+    set -g status-right-length 50
+    set -g status-justify left
+
+    # Simple status format that fills properly
+    set -g status-left "#[fg=#89b4fa,bold] #S #[default]"
+    set -g status-right "#[fg=#7f849c]%Y-%m-%d %H:%M #[fg=#89b4fa,bold]#h#[default]"
 
     # Clock mode
     setw -g clock-mode-colour "#89b4fa"

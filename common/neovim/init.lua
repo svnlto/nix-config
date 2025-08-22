@@ -194,7 +194,7 @@ local plugins = {
           dotfiles = false,
           git_clean = false,
           no_buffer = false,
-          custom = { ".git", ".DS_Store", "node_modules", "__pycache__", ".turbo", ".env" },
+          custom = { ".DS_Store", "node_modules", "__pycache__", ".turbo", },
           exclude = {},
         },
 
@@ -205,6 +205,16 @@ local plugins = {
           show_on_dirs = true,
           show_on_open_dirs = true,
           timeout = 400,
+        },
+
+        -- Disable features that can cause sign conflicts
+        diagnostics = {
+          enable = false, -- Disable to prevent sign conflicts
+        },
+
+        -- Disable update_focused_file to reduce autocmd overhead
+        update_focused_file = {
+          enable = false,
         },
 
         -- Actions
@@ -314,6 +324,21 @@ local plugins = {
             highlight NvimTreeGitDeleted guifg=#f5c2e7 gui=NONE
             highlight NvimTreeGitIgnored guifg=#585b70 gui=NONE
           ]])
+        end,
+      })
+
+      -- Fix nvim-tree sign issues by ensuring all signs are properly defined
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          -- Clear any problematic signs that might cause errors
+          pcall(vim.fn.sign_undefine, "NvimTreeBookmarkIcon")
+          -- Ensure the git runner doesn't interfere with sign placement
+          vim.schedule(function()
+            if vim.fn.exists("*nvim_tree#git#runner#new") == 1 then
+              -- Restart git runner with better error handling
+              pcall(vim.cmd, "NvimTreeRefresh")
+            end
+          end)
         end,
       })
     end,
