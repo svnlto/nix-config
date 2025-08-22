@@ -1,28 +1,56 @@
 { config, pkgs, ... }:
 
 {
-  # tmux configuration with Neovim-compatible navigation
+  # Merged tmux configuration combining productivity features with Neovim-compatible navigation
   home.file.".tmux.conf".text = ''
+    # macOS clipboard integration
+    set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+
     # Terminal settings
     set-option -g default-terminal "screen-256color"
     set-option -ga terminal-overrides ",xterm-256color:Tc"
 
+    # Essential vim integration - zero escape delay
+    set -sg escape-time 0
+
+    # Focus events for vim/neovim
+    set -g focus-events on
+
+    # Start windows and panes at 1, not 0
+    set -g base-index 1
+    set -g pane-base-index 1
+
+    # Renumber windows when one is closed
+    set -g renumber-windows on
+
+    # Increase scrollback buffer size (from your existing config)
+    set -g history-limit 50000
+
     # Enable mouse support
     set -g mouse on
 
-    # Remap prefix to Ctrl-a (optional - you can keep default Ctrl-b)
-    # set -g prefix C-a
-    # unbind C-b
-    # bind-key C-a send-prefix
+    # Don't exit tmux when closing a session
+    set -g detach-on-destroy off
 
-    # Use vim keybindings for pane navigation (matching Neovim exactly)
+    # Status bar refresh rate
+    set -g status-interval 60
+
+    # Enable activity alerts
+    setw -g monitor-activity on
+    set -g visual-activity on
+
+    # Remap prefix to Ctrl-a (from your existing config)
+    set -g prefix C-a
+    unbind C-b
+    bind C-a send-prefix
+
+    # Traditional prefix-based navigation (keeping your existing workflow)
     bind h select-pane -L
     bind j select-pane -D
     bind k select-pane -U
     bind l select-pane -R
 
-    # Smart pane switching with awareness of Vim splits (vim-tmux-navigator style)
-    # Using Ctrl+hjkl to match your Neovim config exactly
+    # Direct Ctrl+hjkl navigation (your main request!) with vim-tmux-navigator
     is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
         | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
     bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
@@ -42,13 +70,26 @@
     bind-key -T copy-mode-vi 'C-l' select-pane -R
     bind-key -T copy-mode-vi 'C-\' select-pane -l
 
-    # Split panes more intuitively (matching common expectations)
+    # Quick pane cycling with Ctrl-a (from your existing config)
+    unbind ^A
+    bind ^A select-pane -t :.+
+
+    # Smart splits that inherit current directory (from your existing config)
+    bind '"' split-window -c "#{pane_current_path}"
+    bind % split-window -h -c "#{pane_current_path}"
+    bind c new-window -c "#{pane_current_path}"
+
+    # Additional intuitive split bindings
     bind | split-window -h -c "#{pane_current_path}"
     bind - split-window -v -c "#{pane_current_path}"
-    unbind '"'
-    unbind %
 
-    # Pane resizing with vim-style keys
+    # Pane resizing with arrow keys (from your existing config)
+    bind Right resize-pane -R 8
+    bind Left resize-pane -L 8
+    bind Up resize-pane -U 4
+    bind Down resize-pane -D 4
+
+    # Vim-style pane resizing (alternative)
     bind -r H resize-pane -L 5
     bind -r J resize-pane -D 5
     bind -r K resize-pane -U 5
@@ -57,44 +98,36 @@
     # Copy mode with vim keybindings
     setw -g mode-keys vi
     bind-key -T copy-mode-vi 'v' send -X begin-selection
-    bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+    bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+
+    # Mouse wheel scrolling in copy mode
+    bind-key -T copy-mode-vi WheelUpPane send -X scroll-up
+    bind-key -T copy-mode-vi WheelDownPane send -X scroll-down
+    bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+
+    # Config reload (from your existing config)
+    unbind r
+    bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+    # Clear screen with prefix C-l (from your existing config)
+    bind C-l send-keys 'C-l'
+
+    # Clear history with Ctrl-k (from your existing config)
+    bind-key -n C-k clear-history
 
     # Window navigation
     bind -n S-Left previous-window
     bind -n S-Right next-window
 
-    # Quick pane cycling
-    bind -n M-Left select-pane -L
-    bind -n M-Right select-pane -R
-    bind -n M-Up select-pane -U
-    bind -n M-Down select-pane -D
-
-    # Start windows and panes at 1, not 0
-    set -g base-index 1
-    setw -g pane-base-index 1
-
-    # Renumber windows when one is closed
-    set -g renumber-windows on
-
-    # Increase scrollback buffer size
-    set -g history-limit 10000
-
-    # Enable activity alerts
-    setw -g monitor-activity on
-    set -g visual-activity on
-
-    # Don't exit tmux when closing a session
-    set -g detach-on-destroy off
-
-    # Theme configuration (matching Catppuccin Mocha from your Neovim config)
-    # Status bar
+    # Theme configuration (Catppuccin Mocha matching your other tools)
     set -g status-bg "#1e1e2e"
     set -g status-fg "#cdd6f4"
-    set -g status-interval 1
 
-    # Window status
+    # Window status (modern syntax)
     setw -g window-status-current-style "fg=#1e1e2e,bg=#89b4fa,bold"
     setw -g window-status-style "fg=#7f849c,bg=#313244"
+    set -g window-status-format "#I #W"
+    setw -g window-status-current-format "#[bold]#I #W"
 
     # Pane borders
     set -g pane-border-style "fg=#313244"
@@ -109,10 +142,6 @@
     set -g status-right-length 100
     set -g status-left "#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#313244]"
     set -g status-right "#[fg=#7f849c,bg=#313244] %Y-%m-%d #[fg=#cdd6f4]| %H:%M #[fg=#89b4fa,bg=#313244]#[fg=#1e1e2e,bg=#89b4fa,bold] #h "
-
-    # Window status format
-    setw -g window-status-format "#[fg=#7f849c,bg=#313244] #I #W "
-    setw -g window-status-current-format "#[fg=#313244,bg=#89b4fa]#[fg=#1e1e2e,bg=#89b4fa,bold] #I #W #[fg=#89b4fa,bg=#313244]"
 
     # Clock mode
     setw -g clock-mode-colour "#89b4fa"
