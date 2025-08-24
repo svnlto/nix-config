@@ -139,7 +139,7 @@ local plugins = {
         -- Renderer settings for minimal UI
         renderer = {
           add_trailing = false,
-          group_empty = true,
+          group_empty = false,  -- Show all directories, don't group empty ones
           highlight_git = true,
           full_name = false,
           highlight_opened_files = "none",
@@ -189,19 +189,19 @@ local plugins = {
           },
         },
 
-        -- Hide dotfiles but show git files
+        -- Show all files including dotfiles
         filters = {
-          dotfiles = false,
-          git_clean = false,
-          no_buffer = false,
-          custom = { ".DS_Store", "node_modules", "__pycache__", ".turbo", },
-          exclude = {},
+          dotfiles = false,    -- Show dotfiles (.env, .gitignore, etc.)
+          git_clean = false,   -- Show git-ignored files
+          no_buffer = false,   -- Show all files regardless of buffer status
+          custom = { ".DS_Store" },  -- Only hide system files
+          exclude = {},        -- Don't exclude any patterns
         },
 
         -- Git integration
         git = {
           enable = true,
-          ignore = true,
+          ignore = false,  -- Show git-ignored files (like .env, build files, etc.)
           show_on_dirs = true,
           show_on_open_dirs = true,
           timeout = 400,
@@ -212,9 +212,10 @@ local plugins = {
           enable = false, -- Disable to prevent sign conflicts
         },
 
-        -- Disable update_focused_file to reduce autocmd overhead
+        -- Enable file sync to keep tree updated with current buffer
         update_focused_file = {
-          enable = false,
+          enable = true,
+          update_root = false,  -- Don't change root when following files
         },
 
         -- Actions
@@ -324,6 +325,16 @@ local plugins = {
             highlight NvimTreeGitDeleted guifg=#f5c2e7 gui=NONE
             highlight NvimTreeGitIgnored guifg=#585b70 gui=NONE
           ]])
+        end,
+      })
+
+      -- Auto-refresh nvim-tree when files change
+      vim.api.nvim_create_autocmd({ "BufWritePost", "FileChangedShellPost" }, {
+        callback = function()
+          local api = require("nvim-tree.api")
+          if api.tree.is_visible() then
+            api.tree.reload()
+          end
         end,
       })
 
@@ -652,6 +663,8 @@ keymap("n", "<leader>:", "<cmd>Telescope commands<cr>", { desc = "Commands" })
 
 -- File explorer
 keymap("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" })
+keymap("n", "<leader>E", "<cmd>NvimTreeFindFile<cr>", { desc = "Find current file in explorer" })
+keymap("n", "<leader>r", "<cmd>NvimTreeRefresh<cr>", { desc = "Refresh file explorer" })
 
 -- Buffer management
 keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })

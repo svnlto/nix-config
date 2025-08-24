@@ -12,7 +12,8 @@
   ],
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccusage@latest statusline"
+    "command": "npx -y ccusage@latest statusline  --visual-burn-rate emoji",
+    "padding": 0
   },
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075

@@ -17,6 +17,7 @@
     gh
     direnv
     ack
+    ripgrep # Required for Telescope live_grep
     pipx
     tmux
     reattach-to-user-namespace
