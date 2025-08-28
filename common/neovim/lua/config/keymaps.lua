@@ -10,7 +10,10 @@ keymap("n", "<leader>r", "<cmd>NvimTreeRefresh<cr>", { desc = "Refresh file expl
 
 keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
 keymap("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-keymap("n", "<leader>x", "<cmd>bd<cr>", { desc = "Close buffer" })
+-- Use LazyVim's Snacks.bufdelete() for proper buffer management
+keymap("n", "<leader>x", function()
+  require("snacks").bufdelete()
+end, { desc = "Close buffer" })
 
 keymap("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
 keymap("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
