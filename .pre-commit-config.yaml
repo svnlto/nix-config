@@ -41,3 +41,11 @@ repos:
         language: system
         types: [shell]
         exclude_types: [zsh]
+
+      - id: stylua
+        name: stylua
+        description: Format Lua code with StyLua
+        entry: nix
+        args: [shell, nixpkgs#stylua, -c, stylua, --check]
+        language: system
+        files: \.lua$

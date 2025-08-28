@@ -30,9 +30,6 @@
       "zed"
       "ghostty"
 
-      # Networking & Utilities
-      "tailscale"
-
       # Media & Entertainment
       "spotify"
       "vlc"
@@ -41,7 +38,7 @@
     ];
     masApps = { };
     onActivation = {
-      cleanup = "zap";
+      cleanup = "uninstall"; # Less aggressive than "zap"
       upgrade = true;
       autoUpdate = true;
     };

@@ -1,49 +1,33 @@
 {
-  "mcpServers": {
-    "code-reasoning": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@mettamatt/code-reasoning"
-      ],
-      "env": {}
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
-      "env": {}
-    },
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ],
-      "env": {
-        "DEFAULT_MINIMUM_TOKENS": "10000"
-      }
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/svenlito/.config"
-      ]
-    },
-    "memory": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
-      "env": {
-        "DEFAULT_MINIMUM_TOKENS": "10000",
-        "MEMORY_FILE_PATH": "/Users/svenlito/.config/agent-memory.jsonl"
-      }
-    }
-  }
+	"mcpServers": {
+		"code-reasoning": {
+			"command": "npx",
+			"args": ["-y", "@mettamatt/code-reasoning"],
+			"env": {}
+		},
+		"sequential-thinking": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+			"env": {}
+		},
+		"context7": {
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp@latest"],
+			"env": {
+				"DEFAULT_MINIMUM_TOKENS": "10000"
+			}
+		},
+		"memory": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-memory"],
+			"env": {
+				"DEFAULT_MINIMUM_TOKENS": "10000",
+				"MEMORY_FILE_PATH": "/Users/svenlito/.config/agent-memory.jsonl"
+			}
+		},
+		"gemini": {
+			"command": "/Users/svenlito/Projects/zen-mcp-server/.zen_venv/bin/python",
+			"args": ["/Users/svenlito/Projects/zen-mcp-server/server.py"]
+		}
+	}
 }

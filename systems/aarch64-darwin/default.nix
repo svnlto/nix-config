@@ -67,20 +67,6 @@
       ServerAliveInterval 20
       ServerAliveCountMax 10
       TCPKeepAlive yes
-    Host nix-dev
-      HostName 127.0.0.1
-      User vagrant
-      Port 50022
-      UserKnownHostsFile /dev/null
-      StrictHostKeyChecking no
-      PasswordAuthentication no
-      IdentityFile /Users/${username}/.config/nix/.vagrant/machines/default/qemu/private_key
-      IdentitiesOnly yes
-      LogLevel FATAL
-      ForwardAgent yes
-      PubkeyAcceptedKeyTypes +ssh-rsa
-      HostKeyAlgorithms +ssh-rsa
-
   '';
 
   system.activationScripts.userSshConfig.text = ''
@@ -92,7 +78,9 @@
     chmod 600 /Users/${username}/.ssh/config
   '';
 
+  # Enable Touch ID for sudo (including in tmux)
   security.pam.services.sudo_local.touchIdAuth = true;
+  security.pam.services.sudo_local.reattach = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 

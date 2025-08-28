@@ -6,6 +6,10 @@
     # macOS clipboard integration
     set-option -g default-command "reattach-to-user-namespace -l $SHELL"
 
+    # Fix Touch ID authentication in tmux
+    # Enable use of the macOS keychain for SSH keys
+    set -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
+
     # Terminal settings - optimized for Ghostty
     set-option -g default-terminal "tmux-256color"
     set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"

@@ -9,6 +9,9 @@
     vimAlias = true;
   };
 
-  # Neovim configuration files
-  home.file.".config/nvim/init.lua".source = ./init.lua;
+  # Neovim configuration files - copy entire directory structure
+  home.file.".config/nvim" = {
+    source = ./.;
+    recursive = true;
+  };
 }
