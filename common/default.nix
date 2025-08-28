@@ -9,13 +9,25 @@
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "root" username ];
 
-      # Settings to improve lock handling
+      # Performance optimizations
+      max-jobs = "auto";
+      cores = 0; # Use all available cores
+      build-cores = 0;
+
+      # Settings to improve lock handling and build performance
       use-case-hack = true;
       fallback = true;
       keep-going = true;
-      log-lines = 50;
-      connect-timeout = 10;
-      download-buffer-size = 65536; # 64MB download buffer
+      log-lines = 25;
+      download-buffer-size =
+        268435456; # 256MB download buffer (optimized for 16GB RAM)
+
+      # Substituter optimizations for 16GB RAM system
+      builders-use-substitutes = true;
+      http-connections = 50; # Increased for faster parallel downloads
+      max-substitution-jobs = 32; # Increased for better parallelization
+      stalled-download-timeout = 300; # 5 minutes timeout
+      connect-timeout = 30; # Optimized connection timeout
     };
 
     # Set up automatic store optimization

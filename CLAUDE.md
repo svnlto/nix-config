@@ -6,35 +6,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### macOS (nix-darwin)
 ```bash
-# Apply system configuration (replace 'rick' with your hostname)
-darwin-rebuild switch --flake ~/.config/nix#rick
+# Apply system configuration (auto-detects hostname)
+nixswitch
+
+# Or manually specify hostname
+sudo darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)
 
 # Update and apply configuration
-git pull && darwin-rebuild switch --flake ~/.config/nix#rick
+git pull && nixswitch
 ```
 
-### Development VM (Vagrant)
+### Linux (Home Manager)
 ```bash
-# Start VM
-vagrant up
+# Apply generic Linux configuration
+hmswitch
 
-# SSH into VM
-vagrant ssh
+# Apply user-specific configuration (if exists)
+hm-user
 
-# Apply configuration changes
-vagrant provision
+# Manual commands
+home-manager switch --flake ~/.config/nix#linux
+home-manager switch --flake ~/.config/nix#$(whoami)  # user-specific
 
-# Inside VM: Apply home-manager configuration
-nix run home-manager/master -- switch --flake ~/.config/nix#vagrant --impure
-```
-
-### Cloud (EC2)
-```bash
-# Build AMI with Packer
-cd packer && packer build -var "aws_profile=dev" aws-ec2.pkr.hcl
-
-# Apply EC2 home-manager configuration
-nix run home-manager/master -- switch --flake ~/.config/nix#ec2 --impure
+# Update and apply configuration
+git pull && hmswitch
 ```
 
 ## Architecture Overview
@@ -84,15 +79,20 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 - **Add everywhere**: Edit `common/packages.nix` (corePackages or devPackages lists)
 - **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
-- **Linux-specific packages**: Edit `systems/aarch64-linux/vagrant.nix` or `ec2.nix`
+- **Linux-specific packages**: Edit `systems/aarch64-linux/home-linux.nix`
 
 ### Adding New Hosts
 Create new configuration in `flake.nix`:
 ```nix
-"hostname" = darwinSystem {
+# For macOS
+"hostname" = mkDarwinSystem {
   hostname = "hostname";
   username = "username";
-  # Additional config...
+};
+
+# For Linux
+"username" = mkHomeManagerConfig {
+  username = "username";
 };
 ```
 
@@ -109,9 +109,9 @@ Located in `common/claude-code/`, this provides:
 - **Node.js**: Uses nodePackages.pnpm from nixpkgs
 
 ### Multi-Environment Support
-- **Vagrant**: Local development VM with UTM integration
-- **EC2**: Cloud development with Packer AMI building
-- **Tailscale**: Secure connectivity for cloud instances
+- **Generic Linux**: Flexible Home Manager configuration for any Linux environment
+- **Development Shell**: Available via `nix develop` for working on this configuration
+- **Auto-Detection**: Shell aliases automatically detect system type and hostname
 
 ## Platform-Specific Notes
 

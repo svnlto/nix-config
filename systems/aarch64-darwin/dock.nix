@@ -19,16 +19,6 @@ let
 
     # Default configuration (used if no host-specific config exists)
     "default" = [ ];
-
-    # Example for another Mac (uncomment and customize as needed)
-    # "work-mac" = [
-    #   "/Applications/Safari.app"
-    #   "/Applications/Mail.app"
-    #   "/Applications/Calendar.app"
-    #   "/Applications/Slack.app"
-    #   "/Applications/Visual Studio Code.app"
-    #   "/Applications/Terminal.app"
-    # ];
   };
 
   # Select the dock apps for the current hostname or fall back to default

@@ -53,7 +53,21 @@
 
       # Dock configuration is now handled in dock.nix
 
-      echo "==== Homebrew update completed ====" >&2
+      echo "==== Homebrew update completed ===="
+
+      # Optional cleanup - only run if CLEANUP_ON_REBUILD is set
+      if [[ "$CLEANUP_ON_REBUILD" == "true" ]]; then
+        echo "==== Starting system cleanup ===="
+        # Clean up old generations (keep last 30 days)
+        nix-collect-garbage --delete-older-than 30d || true
+
+        # Optimize nix store
+        nix store optimise || true
+
+        echo "==== System cleanup completed ===="
+      else
+        echo "ℹ️  Skipping automatic cleanup (set CLEANUP_ON_REBUILD=true to enable)"
+      fi >&2
     '';
   };
 

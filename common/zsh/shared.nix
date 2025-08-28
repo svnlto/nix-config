@@ -11,14 +11,61 @@ rec {
 
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
+    # Shell utilities
     reloadcli = "source $HOME/.zshrc";
+    c = "clear";
+
+    # Enhanced file operations
     ll =
       "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
+    la = "eza --all --group-directories-first";
+    ls = "eza --group-directories-first";
+    lt = "eza --tree --level=2 --group-directories-first";
+
+    # Better defaults
     vim = "nvim";
-    c = "clear";
     cat = "bat";
     hh = "hstr";
     tree = "tree -C";
+
+    # Git shortcuts
+    g = "git";
+    gs = "git status";
+    ga = "git add";
+    gc = "git commit";
+    gp = "git push";
+    gl = "git pull";
+    gd = "git diff";
+
+    # Nix utilities (platform-agnostic)
+    nix-shell-pure = "nix-shell --pure";
+    nix-gc = "nix-collect-garbage -d";
+    nix-search = "nix search nixpkgs";
+    nix-which = "nix-locate --top-level";
+
+    # System maintenance shortcuts
+    nix-health = "nix store verify --all";
+    nix-repair = "nix store repair --all";
+    nix-clean =
+      "echo '🧹 Starting cleanup...' && nix-collect-garbage --delete-older-than 7d && echo '✨ Quick cleanup complete'";
+    nix-clean-deep =
+      "echo '🧹 Starting deep cleanup...' && nix-collect-garbage -d && nix store optimise && echo '✨ Deep cleanup complete'";
+    system-info = "nix-info -m";
+
+    # Quick diagnostics
+    check-flake = "nix flake check";
+    show-config = "nix show-config";
+    list-gens =
+      "nix profile list --profile /nix/var/nix/profiles/system 2>/dev/null || echo 'No system profile found'";
+
+    # Update management
+    nix-update = "nix flake update";
+    nix-check-updates = "nix flake show --json | jq '.inputs'";
+
+    # Development shortcuts
+    serve = "python3 -m http.server";
+    ports = "netstat -tulpn";
+    myip = "curl -s http://whatismyip.akamai.com/";
   };
 
   # Declarative history configuration for home-manager

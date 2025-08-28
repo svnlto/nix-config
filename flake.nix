@@ -1,6 +1,22 @@
 {
   description = "Cross-platform Nix configuration";
 
+  # Build performance optimizations
+  nixConfig = {
+    extra-substituters =
+      [ "https://nix-community.cachix.org" "https://cache.nixos.org" ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+    max-jobs = "auto";
+    cores = 0; # Use all available cores
+    auto-optimise-store = true;
+    builders-use-substitutes = true;
+    fallback = true;
+    keep-going = true;
+    log-lines = 25;
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
@@ -8,8 +24,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-
-    # Linux-specific inputs
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,29 +32,45 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, }:
     let
-      # Overlays (removed - use flakes for project-specific tools)
-      overlays = [ ];
+      # Utility function to create nixpkgs for different systems
+      mkNixpkgs = system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
 
-      # Create a version of nixpkgs with our overlays for Linux
-      nixpkgsWithOverlays = system: import nixpkgs { inherit system overlays; };
+      # Enhanced validation helper with helpful error messages
+      validateUsername = name: config:
+        let
+          username = config.username;
+          isPlaceholder = username == "user" || username == "your_username";
+          errorMsg = ''
+            ❌ Configuration Error in ${name}:
+              • Invalid username: '${username}'
+              💡 Solution: Edit flake.nix and change username to your actual username
 
-      # Default macOS configuration
-      darwinSystem = { hostname ? "macbook", # Generic default hostname
-        username ? "user", # Generic default username
-        system ? "aarch64-darwin", # Default to Apple Silicon
-        extraModules ? [ ], # Allow additional modules
-        }:
-        nix-darwin.lib.darwinSystem {
+            Example:
+              "${name}" = mkDarwinSystem {
+                hostname = "${name}";
+                username = "your-actual-username";  # ← Change this
+              };
+          '';
+        in if isPlaceholder then throw errorMsg else config;
+
+      # Abstracted macOS configuration function
+      mkDarwinSystem =
+        { hostname, username, system ? "aarch64-darwin", extraModules ? [ ] }:
+        let config = { inherit hostname username system extraModules; };
+        in nix-darwin.lib.darwinSystem {
           inherit system;
           modules = [
             ./common
             ./systems/${system}
-            # Pass hostname to configuration
             {
               networking.hostName = hostname;
             }
 
-            # Add Home Manager to Darwin
+            # Home Manager integration
             home-manager.darwinModules.home-manager
             {
               home-manager = {
@@ -48,87 +78,89 @@
                 useUserPackages = true;
                 extraSpecialArgs = { inherit username; };
                 backupFileExtension = "backup";
-
-                # Import Home Manager configuration from separate file
                 users.${username} = import ./systems/${system}/home.nix;
               };
             }
           ] ++ extraModules;
-
           specialArgs = { inherit inputs self hostname username; };
+        };
+
+      # Abstracted Home Manager configuration function for Linux
+      mkHomeManagerConfig =
+        { username, homeDirectory ? "/home/${username}", extraModules ? [ ] }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = mkNixpkgs "aarch64-linux";
+          modules = [
+            ./systems/aarch64-linux/home-linux.nix
+            {
+              home = {
+                inherit username homeDirectory;
+                stateVersion = "24.05"; # Manage this manually for now
+              };
+            }
+          ] ++ extraModules;
+          extraSpecialArgs = { inherit username; };
         };
     in {
       # macOS configurations
       darwinConfigurations = {
-        "macbook" = darwinSystem {
-          hostname = "macbook";
-          username = "your_username"; # Replace with your macOS username
-        };
-
-        "rick" = darwinSystem {
+        "rick" = mkDarwinSystem (validateUsername "rick" {
           hostname = "rick";
           username = "svenlito";
+        });
+      };
+
+      # Linux Home Manager configurations
+      homeConfigurations = {
+        # Generic Linux configuration - can be used for VMs, containers, cloud instances
+        linux = mkHomeManagerConfig {
+          username =
+            "user"; # Override this when using: home-manager switch --flake .#linux --extra-experimental-features "nix-command flakes"
         };
+
+        # Specific user configurations (examples)
+        vagrant = mkHomeManagerConfig { username = "vagrant"; };
+
+        ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
       };
 
-      # Standalone home-manager configuration for Vagrant VM
-      homeConfigurations.vagrant = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgsWithOverlays "aarch64-linux";
-        modules = [
-          ./systems/aarch64-linux/vagrant.nix
-          {
-            home = {
-              username = "vagrant";
-              homeDirectory = "/home/vagrant";
-              stateVersion = "23.11";
-            };
-
-            nixpkgs.config.allowUnfree = true;
-
-            # Explicitly specify nix.package for home-manager
-            nix = {
-              package = nixpkgs.legacyPackages.aarch64-linux.nix;
-              settings.experimental-features = [ "nix-command" "flakes" ];
-            };
-
-            programs.fish.enable = false;
-
-            nixpkgs.overlays = [
-              (final: prev: {
-                # Override fish package properly inside the module
-                fish = prev.fish.overrideAttrs (oldAttrs: {
-                  doCheck = false;
-                  doInstallCheck = false;
-                });
-              })
-            ];
-          }
-        ];
-        extraSpecialArgs = { username = "vagrant"; };
+      # Development shell for working on this configuration
+      devShells.aarch64-darwin.default = let pkgs = mkNixpkgs "aarch64-darwin";
+      in pkgs.mkShell {
+        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh ];
+        shellHook = ''
+          echo "🛠️  Nix configuration development environment"
+          echo "Available tools: nixfmt-classic, statix, deadnix, nil, zsh"
+          echo ""
+          echo "Quick commands:"
+          echo "  nixswitch                              # Rebuild Darwin system"
+          echo "  home-manager switch --flake .#linux   # Rebuild Linux home"
+          echo ""
+          # Auto-start zsh if available
+          if command -v zsh >/dev/null 2>&1; then
+            echo "Starting ZSH shell..."
+            exec zsh
+          fi
+        '';
       };
 
-      # Standalone home-manager configuration for EC2
-      homeConfigurations.ec2 = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgsWithOverlays "aarch64-linux";
-        modules = [
-          ./systems/aarch64-linux/ec2.nix
-          {
-            home = {
-              username = "ubuntu";
-              homeDirectory = "/home/ubuntu";
-              stateVersion = "23.11";
-            };
-
-            nixpkgs.config.allowUnfree = true;
-
-            # Explicitly specify nix.package for home-manager
-            nix = {
-              package = nixpkgs.legacyPackages.aarch64-linux.nix;
-              settings.experimental-features = [ "nix-command" "flakes" ];
-            };
-          }
-        ];
-        extraSpecialArgs = { username = "ubuntu"; };
+      devShells.aarch64-linux.default = let pkgs = mkNixpkgs "aarch64-linux";
+      in pkgs.mkShell {
+        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh ];
+        shellHook = ''
+          echo "🛠️  Nix configuration development environment (Linux)"
+          echo "Available tools: nixfmt-classic, statix, deadnix, nil, zsh"
+          echo ""
+          echo "Quick commands:"
+          echo "  hmswitch                               # Rebuild Home Manager"
+          echo "  home-manager switch --flake .#linux   # Manual rebuild"
+          echo ""
+          # Auto-start zsh if available
+          if command -v zsh >/dev/null 2>&1; then
+            echo "Starting ZSH shell..."
+            exec zsh
+          fi
+        '';
       };
     };
 }
