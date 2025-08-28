@@ -22,9 +22,10 @@
     window-theme = dark
     macos-titlebar-style = tabs
 
-    # Cursor
+    # Cursor - pink and blinking
     cursor-style = block
-    cursor-style-blink = false
+    cursor-style-blink = true
+    cursor-color = FF24C0
 
     # Shell integration
     shell-integration = zsh

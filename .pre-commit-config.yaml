@@ -46,6 +46,6 @@ repos:
         name: stylua
         description: Format Lua code with StyLua
         entry: nix
-        args: [shell, nixpkgs#stylua, -c, stylua, --check]
+        args: [shell, nixpkgs#stylua, -c, stylua]
         language: system
         files: \.lua$

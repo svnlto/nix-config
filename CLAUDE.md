@@ -6,11 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### macOS (nix-darwin)
 ```bash
-# Apply system configuration
-darwin-rebuild switch --flake ~/.config/nix#macbook
+# Apply system configuration (replace 'rick' with your hostname)
+darwin-rebuild switch --flake ~/.config/nix#rick
 
 # Update and apply configuration
-git pull && darwin-rebuild switch --flake ~/.config/nix#macbook
+git pull && darwin-rebuild switch --flake ~/.config/nix#rick
 ```
 
 ### Development VM (Vagrant)
@@ -51,21 +51,24 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 ```
 ├── flake.nix              # Main orchestrator - defines all configurations
 ├── common/                # Shared configuration across platforms
-│   ├── default.nix        # Common Nix settings and packages
-│   ├── home-packages.nix  # Shared packages for all systems
+│   ├── default.nix        # Common Nix settings
+│   ├── packages.nix       # Package definitions for all systems
+│   ├── home-packages.nix  # Home Manager package imports
 │   ├── claude-code/       # Claude Code integration with custom commands
+│   ├── neovim/           # Neovim configuration
+│   ├── tmux/             # Tmux configuration
 │   └── zsh/              # Shared ZSH configuration
 ├── systems/
 │   ├── aarch64-darwin/    # macOS-specific (nix-darwin)
 │   └── aarch64-linux/     # Linux-specific (home-manager)
-└── overlays/              # Custom package overlays (tfenv, etc.)
+└── packer/               # Cloud image templates (Packer)
 ```
 
 ### Configuration Flow
 1. **flake.nix** - Entry point defining `darwinConfigurations` and `homeConfigurations`
 2. **common/** - Imported by all systems for shared settings
 3. **systems/{arch}/** - Platform-specific configurations that extend common base
-4. **overlays/** - Custom packages not in nixpkgs
+4. **packages.nix** - Centralized package definitions organized by category
 
 ## Development Workflow
 
@@ -78,10 +81,10 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 3. Commit changes: `git commit -am "description"`
 
 ### Package Management
-- **Add everywhere**: Edit `common/home-packages.nix`
-- **macOS system packages**: Edit `systems/aarch64-darwin/default.nix`
+- **Add everywhere**: Edit `common/packages.nix` (corePackages or devPackages lists)
+- **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
-- **Linux packages**: Edit `systems/aarch64-linux/vagrant.nix` or `ec2.nix`
+- **Linux-specific packages**: Edit `systems/aarch64-linux/vagrant.nix` or `ec2.nix`
 
 ### Adding New Hosts
 Create new configuration in `flake.nix`:
@@ -102,8 +105,8 @@ Located in `common/claude-code/`, this provides:
 - **Modular structure**: Combines local and remote commands via symlinkJoin
 
 ### Version Management
-- **tfenv**: Terraform version management via custom overlay
-- **Custom overlays**: Pattern for adding tools not in nixpkgs
+- **Terraform**: Managed as regular nixpkgs in Linux configurations
+- **Node.js**: Uses nodePackages.pnpm from nixpkgs
 
 ### Multi-Environment Support
 - **Vagrant**: Local development VM with UTM integration

@@ -15,6 +15,11 @@
     set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"
     set-option -ga terminal-overrides ",xterm-ghostty:RGB,tmux-256color:RGB"
 
+    # Cursor configuration - pink blinking cursor
+    set-option -ga terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
+    set-option -g cursor-style blinking-block
+    set-option -g cursor-colour "#FF24C0"
+
     # Essential vim integration - zero escape delay
     set -sg escape-time 0
 
@@ -135,9 +140,9 @@
     setw -g window-status-current-format " #I #W "
     set -g window-status-separator ""
 
-    # Pane borders
-    set -g pane-border-style "fg=#313244"
-    set -g pane-active-border-style "fg=#89b4fa"
+    # Pane borders - dark grey dividers
+    set -g pane-border-style "fg=#45475a"
+    set -g pane-active-border-style "fg=#45475a"
 
     # Message text
     set -g message-style "bg=#f38ba8,fg=#1e1e2e"

@@ -35,3 +35,14 @@ opt.lazyredraw = false
 
 opt.shortmess:append("I")
 opt.spell = false
+
+-- Cursor configuration - pink blinking cursor
+opt.guicursor = {
+  "n-v-c:block-Cursor/lCursor-blinkwait1000-blinkon500-blinkoff500",
+  "i-ci:ver25-Cursor/lCursor-blinkwait1000-blinkon500-blinkoff500",
+  "r-cr:hor20-Cursor/lCursor-blinkwait1000-blinkon500-blinkoff500",
+}
+
+-- Set cursor color via highlight
+vim.api.nvim_set_hl(0, "Cursor", { bg = "#FF24C0", fg = "#1e1e2e" })
+vim.api.nvim_set_hl(0, "lCursor", { bg = "#FF24C0", fg = "#1e1e2e" })

@@ -48,3 +48,12 @@ vim.api.nvim_create_autocmd({ "VimEnter", "VimResized" }, {
     vim.cmd("redraw!")
   end,
 })
+
+-- Disable spell checking for all file types (overrides LazyVim defaults)
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("disable_spell"),
+  pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
