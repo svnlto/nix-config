@@ -16,6 +16,7 @@
   # These tools support software development and system administration
   devPackages = with pkgs; [
     gh # GitHub CLI for repository management
+    lazygit # Terminal UI for git commands (LazyVim dependency)
     direnv # Environment variable manager per directory
     ack # Text search tool optimized for source code
     ripgrep # Fast text search (required for Neovim Telescope)

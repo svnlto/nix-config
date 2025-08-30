@@ -14,6 +14,23 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
+      -- Define all nvim-tree signs BEFORE setup to prevent sign_place errors
+      local signs = {
+        NvimTreeBookmarkIcon = { text = "", texthl = "NvimTreeSymlink" },
+        NvimTreeGitDirty = { text = "!", texthl = "NvimTreeGitDirty" },
+        NvimTreeGitStaged = { text = "+", texthl = "NvimTreeGitStaged" },
+        NvimTreeGitMerge = { text = "", texthl = "NvimTreeGitMerge" },
+        NvimTreeGitRenamed = { text = "»", texthl = "NvimTreeGitRenamed" },
+        NvimTreeGitNew = { text = "?", texthl = "NvimTreeGitNew" },
+        NvimTreeGitDeleted = { text = "✗", texthl = "NvimTreeGitDeleted" },
+        NvimTreeGitIgnored = { text = "◌", texthl = "NvimTreeGitIgnored" },
+      }
+
+      -- Define signs immediately, before nvim-tree setup
+      for name, opts in pairs(signs) do
+        pcall(vim.fn.sign_define, name, opts)
+      end
+
       require("nvim-tree").setup({
         -- Disable netrw completely
         disable_netrw = true,
@@ -149,8 +166,13 @@ return {
             return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
           end
 
-          -- Default mappings
+          -- Default mappings (but filter out bookmark mappings that cause sign errors)
           api.config.mappings.default_on_attach(bufnr)
+
+          -- Remove any bookmark-related mappings that might trigger sign errors
+          pcall(vim.keymap.del, "n", "m", { buffer = bufnr })
+          pcall(vim.keymap.del, "n", "bd", { buffer = bufnr })
+          pcall(vim.keymap.del, "n", "bt", { buffer = bufnr })
 
           -- Custom mappings for splits
           vim.keymap.set("n", "s", api.node.open.vertical, opts("Open: Vertical Split"))
@@ -226,21 +248,6 @@ return {
           if api.tree.is_visible() then
             api.tree.reload()
           end
-        end,
-      })
-
-      -- Fix nvim-tree sign issues by ensuring all signs are properly defined
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          -- Clear any problematic signs that might cause errors
-          pcall(vim.fn.sign_undefine, "NvimTreeBookmarkIcon")
-          -- Ensure the git runner doesn't interfere with sign placement
-          vim.schedule(function()
-            if vim.fn.exists("*nvim_tree#git#runner#new") == 1 then
-              -- Restart git runner with better error handling
-              pcall(vim.cmd, "NvimTreeRefresh")
-            end
-          end)
         end,
       })
     end,

@@ -2,8 +2,11 @@
 
 let sharedZsh = import ../../common/zsh/shared.nix;
 in {
-  imports =
-    [ ../../common/home-packages.nix ../../common/claude-code/default.nix ];
+  imports = [
+    ../../common/home-packages.nix
+    ../../common/claude-code/default.nix
+    ../../common/lazygit/default.nix
+  ];
 
   # Home Manager configuration for macOS
   home = {

@@ -122,8 +122,11 @@
     # Clear screen with prefix C-l (from your existing config)
     bind C-l send-keys 'C-l'
 
-    # Clear history with Ctrl-k (from your existing config)
-    bind-key -n C-k clear-history
+    # Clear history with prefix + K (capital K to avoid conflict with pane navigation)
+    bind-key K clear-history
+
+    # Restore pane navigation that was accidentally removed
+    # This maintains your existing Ctrl+A+hjkl navigation pattern
 
     # Window navigation
     bind -n S-Left previous-window
@@ -140,9 +143,13 @@
     setw -g window-status-current-format " #I #W "
     set -g window-status-separator ""
 
-    # Pane borders - dark grey dividers
+    # Pane borders - colored active border with dimmed inactive panes
     set -g pane-border-style "fg=#45475a"
-    set -g pane-active-border-style "fg=#45475a"
+    set -g pane-active-border-style "fg=#89b4fa,bold"
+
+    # Dim inactive panes, brighten active pane
+    set -g window-style "fg=#6c7086,bg=#1e1e2e"
+    set -g window-active-style "fg=#cdd6f4,bg=#1e1e2e"
 
     # Message text
     set -g message-style "bg=#f38ba8,fg=#1e1e2e"
