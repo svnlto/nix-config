@@ -13,7 +13,7 @@ sh <(curl -L https://nixos.org/nix/install)
 # Clone and apply
 git clone https://github.com/svnlto/nix-config.git ~/.config/nix
 cd ~/.config/nix
-darwin-rebuild switch --flake .#rick  # Replace 'rick' with your hostname
+nixswitch  # Auto-detects hostname
 ```
 
 ### Cloud (AWS EC2)

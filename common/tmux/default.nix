@@ -1,6 +1,17 @@
 { config, pkgs, ... }:
 
 {
+  # Install TPM (Tmux Plugin Manager)
+  home.file.".tmux/plugins/tpm" = {
+    source = pkgs.fetchFromGitHub {
+      owner = "tmux-plugins";
+      repo = "tpm";
+      rev = "v3.1.0";
+      sha256 = "sha256-CeI9Wq6tHqV68woE11lIY4cLoNY8XWyXyMHTDmFKJKI=";
+    };
+    recursive = true;
+  };
+
   # Merged tmux configuration combining productivity features with Neovim-compatible navigation
   home.file.".tmux.conf".text = ''
     # macOS clipboard integration
@@ -167,5 +178,23 @@
     # Clock mode
     setw -g clock-mode-colour "#89b4fa"
     setw -g clock-mode-style 24
+
+    # TPM (Tmux Plugin Manager) configuration
+    # Plugins will be installed to ~/.tmux/plugins/
+    set -g @plugin 'tmux-plugins/tpm'
+    set -g @plugin 'tmux-plugins/tmux-resurrect'
+    set -g @plugin 'tmux-plugins/tmux-continuum'
+
+    # tmux-resurrect settings
+    set -g @resurrect-strategy-vim 'session'
+    set -g @resurrect-strategy-nvim 'session'
+    set -g @resurrect-capture-pane-contents 'on'
+
+    # tmux-continuum settings
+    set -g @continuum-restore 'on'
+    set -g @continuum-save-interval '15'
+
+    # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+    run '~/.tmux/plugins/tpm/tpm'
   '';
 }

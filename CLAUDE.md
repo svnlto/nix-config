@@ -133,6 +133,111 @@ Located in `common/claude-code/`, this provides:
 - Proper credential management for AWS profiles
 - Isolated development environments prevent host contamination
 
+## Configuration Development Commands
+
+### Nix Development Tools (via `nix develop`)
+```bash
+# Enter development shell with Nix tools
+nix develop
+
+# Available tools in development shell:
+nixfmt-classic     # Format Nix code
+statix            # Lint Nix code for common issues
+deadnix           # Find dead/unused Nix code
+nil               # Nix LSP for editor integration
+```
+
+### Configuration Validation
+```bash
+# Check flake syntax and evaluation
+nix flake check
+
+# Validate specific configuration
+nix eval .#darwinConfigurations.rick.system
+nix eval .#homeConfigurations.linux.activationPackage
+```
+
+### Troubleshooting Commands
+```bash
+# Debug build issues
+nixswitch --show-trace
+hmswitch --show-trace
+
+# Check system status
+nix-status                    # Detailed status (alias)
+darwin-rebuild --list-generations    # Show previous builds
+
+# Emergency rollback
+sudo darwin-rebuild rollback        # macOS
+home-manager generations            # Linux - shows available generations
+```
+
+## Advanced Architecture Details
+
+### Module Resolution System
+The configuration uses a sophisticated import system:
+
+1. **flake.nix**: Orchestrates everything using `mkDarwinSystem` and `mkHomeManagerConfig` functions
+2. **common/default.nix**: Base Nix settings imported by all systems
+3. **common/home-manager-base.nix**: Home Manager defaults for Linux systems
+4. **common/versions.nix**: Centralized state version management to prevent conflicts
+
+### Cross-Platform Module Strategy
+- **Shared modules** in `common/` use conditional logic for platform differences
+- **Platform modules** in `systems/{arch}/` extend shared configuration
+- **Import chains**: flake.nix → systems/{arch} → common → specialized modules
+
+### Performance Optimizations
+Built-in performance tuning throughout:
+- **Build parallelization**: `max-jobs = "auto"`, `cores = 0`
+- **Download optimization**: 256MB buffer, 50 HTTP connections
+- **Store optimization**: Automatic optimization, substituter caching
+- **RAM disk** (Linux): `/ramdisk` for temporary build artifacts
+
+### State Management Architecture
+- **Version pinning**: `common/versions.nix` prevents Home Manager version conflicts
+- **Hostname detection**: Auto-detects via `scutil --get LocalHostName` (macOS)
+- **Username validation**: Runtime validation with helpful error messages
+- **Backup management**: `.backup` extension for replaced configs
+
+## Critical Implementation Patterns
+
+### Module Import Best Practices
+```nix
+# ✅ Correct: Import with proper parameter passing
+./common/module.nix
+
+# ✅ Correct: Platform-specific imports
+./systems/${system}/specific.nix
+
+# ❌ Avoid: Direct path strings without validation
+"/some/hardcoded/path"
+```
+
+### Configuration Override Hierarchy
+1. **flake.nix**: System-level overrides
+2. **systems/{arch}/default.nix**: Platform-specific overrides
+3. **common/**: Shared defaults
+4. **Individual modules**: Specific functionality
+
+### Error Handling Patterns
+The codebase implements defensive configuration:
+- **Validation functions**: `validateUsername` with helpful error messages
+- **Fallback options**: `fallback = true` in Nix settings
+- **Graceful degradation**: Optional features with null checks
+
+## Security Architecture
+
+### SSH Key Management
+- **1Password integration**: SSH agent socket configuration for seamless key access
+- **Per-platform paths**: macOS uses Library/Group Containers path
+- **Automatic setup**: System activation scripts configure SSH properly
+
+### Credential Isolation
+- **Home Manager**: User-level secrets and configurations
+- **System-level**: Only essential system packages and settings
+- **Cloud integration**: AWS profiles, Tailscale for secure connectivity
+
 ## Code Quality Standards
 
 **6 Golden Rules for Clean Code** (Neo Kim):
@@ -142,3 +247,9 @@ Located in `common/claude-code/`, this provides:
 4. **KISS** - Keep it simple stupid
 5. **TDD** - Test driven development
 6. **YAGNI** - You ain't gonna need it
+
+### Nix-Specific Quality Guidelines
+- **Pure functions**: All configuration functions should be deterministic
+- **Explicit dependencies**: Always declare inputs explicitly
+- **Modular design**: Each .nix file should have single responsibility
+- **Documentation**: Comment complex expressions and business logic
