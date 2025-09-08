@@ -4,7 +4,7 @@
   homebrew = {
     enable = true;
     taps = [ "FelixKratz/formulae" ];
-    brews = [ "mas" "dockutil" "pre-commit" "rclone" ];
+    brews = [ "mas" "dockutil" "pre-commit" ];
     casks = [
       # Security & Password Management
       "1password"
@@ -27,14 +27,12 @@
 
       # Development & Terminal
       "orbstack"
-      "zed"
       "ghostty"
 
       # Media & Entertainment
       "spotify"
       "vlc"
       "zwift"
-      "figma"
     ];
     masApps = { };
     onActivation = {

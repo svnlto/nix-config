@@ -9,7 +9,7 @@
     bat # Cat clone with syntax highlighting and git integration
     nixfmt-classic # Nix code formatter for consistent code style
     diff-so-fancy # Enhanced diff visualization with better formatting
-    nerd-fonts.hack # Programming font with icons (matches Zed editor config)
+    nerd-fonts.hack # Programming font with icons
   ];
 
   # Development tools - programming and productivity utilities

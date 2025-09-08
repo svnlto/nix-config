@@ -1,8 +1,7 @@
 { config, pkgs, lib, username, hostname, ... }:
 
 {
-  imports =
-    [ ./homebrew.nix ./defaults.nix ./dock.nix ./git.nix ./zed/default.nix ];
+  imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ./git.nix ];
 
   # macOS specific packages
   environment.systemPackages =

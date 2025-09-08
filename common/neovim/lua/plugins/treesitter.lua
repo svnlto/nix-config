@@ -16,6 +16,7 @@ return {
         "terraform",
         "yaml",
         "markdown",
+        "dockerfile",
       },
     },
   },

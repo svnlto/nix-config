@@ -29,7 +29,7 @@ opt.swapfile = false
 opt.colorcolumn = "80"
 
 opt.signcolumn = "yes"
-opt.statuscolumn = "%s%=%{v:relnum?v:relnum:v:lnum}   "
+opt.statuscolumn = "%s%=%{&ft=='NvimTree'?'':v:relnum?v:relnum:v:lnum}   "
 opt.ttyfast = true
 opt.lazyredraw = false
 

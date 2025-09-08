@@ -70,6 +70,13 @@
     keybind = cmd+8=goto_tab:8
     keybind = cmd+9=goto_tab:9
 
+    # Mouse and link handling
+    mouse-hide-while-typing = true
+    click-repeat-interval = 300
+
+    # Link detection and opening - enables Cmd+click on URLs
+    link-url = true
+
     # Performance
     macos-option-as-alt = true
     confirm-close-surface = false

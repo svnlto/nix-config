@@ -11,8 +11,7 @@
 			"WebFetch(domain:docs.anthropic.com)",
 			"WebFetch(domain:www.lazyvim.org)",
 			"WebFetch(domain:github.com)",
-			"WebFetch(domain:raw.githubusercontent.com)",
-			"WebFetch(domain:docs.astronvim.com)"
+			"WebFetch(domain:raw.githubusercontent.com)"
 		],
 		"deny": []
 	},
@@ -20,11 +19,8 @@
 	"enabledMcpjsonServers": [
 		"code-reasoning",
 		"sequential-thinking",
-		"linear",
-		"notion",
 		"context7",
-		"sentry",
-		"playwright",
+		"memory",
 		"gemini"
 	],
 	"outputStyle": "Architect"

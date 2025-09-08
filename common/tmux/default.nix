@@ -147,12 +147,15 @@
     set -g status-bg "#1e1e2e"
     set -g status-fg "#cdd6f4"
 
-    # Window status (modern syntax) - ensure proper background
+    # Clean window list with only active window colored
+    # Current window - bright blue and bold with padding
     setw -g window-status-current-style "fg=#1e1e2e,bg=#89b4fa,bold"
+    setw -g window-status-current-format "  #I #W  "
+
+    # Inactive windows - clean dark background with subtle text
     setw -g window-status-style "fg=#7f849c,bg=#1e1e2e"
-    set -g window-status-format " #I #W "
-    setw -g window-status-current-format " #I #W "
-    set -g window-status-separator ""
+    set -g window-status-format "  #I #W  "
+    set -g window-status-separator " "
 
     # Pane borders - colored active border with dimmed inactive panes
     set -g pane-border-style "fg=#45475a"
