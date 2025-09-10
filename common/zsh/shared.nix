@@ -3,12 +3,6 @@
 
 # Return a simple attribute set for direct import by other modules
 rec {
-  # Add a profiling block at the top of your configuration
-  profiling = ''
-    # Uncomment to enable profiling
-    # zmodload zsh/zprof
-  '';
-
   # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     # Shell utilities
@@ -150,14 +144,6 @@ rec {
       export HSTR_CONFIG=case-sensitive,keywords-matching,hicolor,debug,prompt-bottom,help-on-opposite-side
       alias hh="hstr"
     fi
-  '';
-
-  # Add another block at the end
-  profilingEnd = ''
-    # Uncomment to display profiling results
-    # if [[ "$PROFILE_STARTUP" == true ]]; then
-    #   zprof
-    # fi
   '';
 
   # Module metadata

@@ -8,13 +8,11 @@ let
   # Define host-specific dock apps
   dockAppsByHost = {
     # Configuration for Rick (your current Mac)
-    "Rick" = [
+    "rick" = [
+      "/Applications/Ghostty.app"
       "/Applications/Arc.app"
-      "/Applications/Zed.app"
       "/Applications/Linear.app"
-      "/applications/Slack.app"
       "/applications/Claude.app"
-      "/applications/Pieces.app"
     ];
 
     # Default configuration (used if no host-specific config exists)
