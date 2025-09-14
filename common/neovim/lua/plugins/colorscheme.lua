@@ -6,6 +6,7 @@ return {
     lazy = false,
     opts = {
       flavour = "mocha",
+      term_colors = false, -- Disable terminal color overrides to preserve terminal cursor color
       integrations = {
         bufferline = false,
         cmp = true,
@@ -22,6 +23,10 @@ return {
     config = function(_, opts)
       require("catppuccin").setup(opts)
       vim.cmd.colorscheme("catppuccin")
+
+      -- Set pink cursor color after colorscheme loads
+      vim.api.nvim_set_hl(0, "Cursor", { bg = "#FF24C0", fg = "#1e1e2e" })
+      vim.api.nvim_set_hl(0, "lCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
 
       vim.schedule(function()
         if pcall(require, "nvim-tree") then
