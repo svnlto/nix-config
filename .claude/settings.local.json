@@ -2,7 +2,7 @@
 	"BASH_DEFAULT_TIMEOUT_MS": "300000",
 	"permissions": {
 		"allow": [
-			"Bash(git*)",
+			"Bash(git:*)",
 			"Bash(ls:*)",
 			"mcp__code-reasoning__code-reasoning",
 			"mcp__sequential-thinking__sequentialthinking",
