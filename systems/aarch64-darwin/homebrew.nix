@@ -29,7 +29,6 @@
       # Development & Terminal
       "orbstack"
       "ghostty"
-      "ollama"
 
       # Media & Entertainment
       "spotify"

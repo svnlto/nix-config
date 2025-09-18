@@ -57,9 +57,7 @@ rec {
     nix-check-updates = "nix flake show --json | jq '.inputs'";
 
     # Development shortcuts
-    serve = "python3 -m http.server";
-    ports = "netstat -tulpn";
-    myip = "curl -s http://whatismyip.akamai.com/";
+    ports = "netstat -tulp";
   };
 
   # Declarative history configuration for home-manager
