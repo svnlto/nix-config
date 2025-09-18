@@ -16,6 +16,7 @@
       "setapp"
       "notion-calendar"
       "notion-mail"
+      "superwhisper"
 
       # Communication & Collaboration
       "linear-linear"
