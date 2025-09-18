@@ -126,8 +126,6 @@ EOF
     # Normal usage: w <project> <worktree> [command...]
     local project="$1"
     local worktree="$2"
-    shift 2
-    local command=("$@")
 
     if [[ -z "$project" || -z "$worktree" ]]; then
         echo "Usage: w <project> <worktree> [command...]"
@@ -136,6 +134,9 @@ EOF
         echo "       w --help"
         return 1
     fi
+
+    shift 2
+    local command=("$@")
 
     # Check if project exists
     if [[ ! -d "$projects_dir/$project" ]]; then
