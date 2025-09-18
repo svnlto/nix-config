@@ -55,7 +55,33 @@ w() {
     local worktrees_dir="$HOME/Projects/worktrees"
 
     # Handle special flags
-    if [[ "$1" == "--list" ]]; then
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        cat << 'EOF'
+Multi-project worktree manager with Claude support
+
+USAGE:
+  w <project> <worktree>              # cd to worktree (creates if needed)
+  w <project> <worktree> <command>    # run command in worktree
+  w --list                            # list all worktrees
+  w --rm <project> <worktree>         # remove worktree
+  w --help, -h                        # show this help
+
+EXAMPLES:
+  w myapp feature-x                   # cd to feature-x worktree
+  w myapp feature-x claude            # run claude in worktree
+  w myapp feature-x gst               # git status in worktree
+  w myapp feature-x gcmsg "fix: bug"  # git commit in worktree
+
+DIRECTORY STRUCTURE:
+  ~/Projects/                         # Your git projects
+  ~/Projects/worktrees/<project>/     # Worktrees for each project
+
+NEW BRANCHES:
+  Created as: <username>/<worktree-name>
+  Example: svenlito/feature-x
+EOF
+        return 0
+    elif [[ "$1" == "--list" ]]; then
         echo "=== All Worktrees ==="
         # Check new location
         if [[ -d "$worktrees_dir" ]]; then
@@ -107,6 +133,7 @@ w() {
         echo "Usage: w <project> <worktree> [command...]"
         echo "       w --list"
         echo "       w --rm <project> <worktree>"
+        echo "       w --help"
         return 1
     fi
 
