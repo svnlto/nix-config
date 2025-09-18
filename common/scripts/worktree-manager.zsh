@@ -2,12 +2,12 @@
 # Multi-project worktree manager with Claude support
 #
 # ASSUMPTIONS & SETUP:
-# - Your git projects live in: ~/projects/
-# - Worktrees will be created in: ~/projects/worktrees/<project>/<branch>
+# - Your git projects live in: ~/Projects/
+# - Worktrees will be created in: ~/Projects/worktrees/<project>/<branch>
 # - New branches will be named: <your-username>/<feature-name>
 #
 # DIRECTORY STRUCTURE EXAMPLE:
-# ~/projects/
+# ~/Projects/
 # ├── my-app/              (main git repo)
 # ├── another-project/     (main git repo)
 # └── worktrees/
@@ -19,8 +19,8 @@
 #
 # CUSTOMIZATION:
 # To use different directories, modify these lines in the w() function:
-#   local projects_dir="$HOME/projects"
-#   local worktrees_dir="$HOME/projects/worktrees"
+#   local projects_dir="$HOME/Projects"
+#   local worktrees_dir="$HOME/Projects/worktrees"
 #
 # INSTALLATION:
 # 1. Add to your .zshrc (in this order):
@@ -51,8 +51,8 @@
 
 # Multi-project worktree manager
 w() {
-    local projects_dir="$HOME/projects"
-    local worktrees_dir="$HOME/projects/worktrees"
+    local projects_dir="$HOME/Projects"
+    local worktrees_dir="$HOME/Projects/worktrees"
 
     # Handle special flags
     if [[ "$1" == "--list" ]]; then
@@ -175,8 +175,8 @@ _w() {
     local curcontext="$curcontext" state line
     typeset -A opt_args
 
-    local projects_dir="$HOME/projects"
-    local worktrees_dir="$HOME/projects/worktrees"
+    local projects_dir="$HOME/Projects"
+    local worktrees_dir="$HOME/Projects/worktrees"
 
     # Define the main arguments
     _arguments -C \
