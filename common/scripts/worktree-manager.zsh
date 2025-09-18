@@ -93,13 +93,6 @@ EOF
                 done
             done
         fi
-        # Also check old core-wts location
-        if [[ -d "$projects_dir/core-wts" ]]; then
-            echo "\n[core] (legacy location)"
-            for wt in $projects_dir/core-wts/*(/N); do
-                echo "  • $(basename "$wt")"
-            done
-        fi
         return 0
     elif [[ "$1" == "--rm" ]]; then
         shift
@@ -109,17 +102,12 @@ EOF
             echo "Usage: w --rm <project> <worktree>"
             return 1
         fi
-        # Check both locations for core
-        if [[ "$project" == "core" && -d "$projects_dir/core-wts/$worktree" ]]; then
-            (cd "$projects_dir/$project" && git worktree remove "$projects_dir/core-wts/$worktree")
-        else
-            local wt_path="$worktrees_dir/$project/$worktree"
-            if [[ ! -d "$wt_path" ]]; then
-                echo "Worktree not found: $wt_path"
-                return 1
-            fi
-            (cd "$projects_dir/$project" && git worktree remove "$wt_path")
+        local wt_path="$worktrees_dir/$project/$worktree"
+        if [[ ! -d "$wt_path" ]]; then
+            echo "Worktree not found: $wt_path"
+            return 1
         fi
+        (cd "$projects_dir/$project" && git worktree remove "$wt_path")
         return $?
     fi
 
@@ -144,24 +132,11 @@ EOF
         return 1
     fi
 
-    # Determine worktree path - check multiple locations
-    local wt_path=""
-    if [[ "$project" == "core" ]]; then
-        # For core, check old location first
-        if [[ -d "$projects_dir/core-wts/$worktree" ]]; then
-            wt_path="$projects_dir/core-wts/$worktree"
-        elif [[ -d "$worktrees_dir/$project/$worktree" ]]; then
-            wt_path="$worktrees_dir/$project/$worktree"
-        fi
-    else
-        # For other projects, check new location
-        if [[ -d "$worktrees_dir/$project/$worktree" ]]; then
-            wt_path="$worktrees_dir/$project/$worktree"
-        fi
-    fi
+    # Determine worktree path
+    local wt_path="$worktrees_dir/$project/$worktree"
 
     # If worktree doesn't exist, create it
-    if [[ -z "$wt_path" || ! -d "$wt_path" ]]; then
+    if [[ ! -d "$wt_path" ]]; then
         echo "Creating new worktree: $worktree"
 
         # Ensure worktrees directory exists
@@ -170,8 +145,6 @@ EOF
         # Determine branch name (use current username prefix)
         local branch_name="$USER/$worktree"
 
-        # Create the worktree in new location
-        wt_path="$worktrees_dir/$project/$worktree"
         (cd "$projects_dir/$project" && git worktree add "$wt_path" -b "$branch_name") || {
             echo "Failed to create worktree"
             return 1
@@ -243,30 +216,11 @@ _w() {
 
             local -a worktrees
 
-            # For core project, check both old and new locations
-            if [[ "$project" == "core" ]]; then
-                # Check old location
-                if [[ -d "$projects_dir/core-wts" ]]; then
-                    for wt in $projects_dir/core-wts/*(N/); do
-                        worktrees+=(${wt:t})
-                    done
-                fi
-                # Check new location
-                if [[ -d "$worktrees_dir/core" ]]; then
-                    for wt in $worktrees_dir/core/*(N/); do
-                        # Avoid duplicates
-                        if [[ ! " ${worktrees[@]} " =~ " ${wt:t} " ]]; then
-                            worktrees+=(${wt:t})
-                        fi
-                    done
-                fi
-            else
-                # For other projects, check new location only
-                if [[ -d "$worktrees_dir/$project" ]]; then
-                    for wt in $worktrees_dir/$project/*(N/); do
-                        worktrees+=(${wt:t})
-                    done
-                fi
+            # Check for existing worktrees
+            if [[ -d "$worktrees_dir/$project" ]]; then
+                for wt in $worktrees_dir/$project/*(N/); do
+                    worktrees+=(${wt:t})
+                done
             fi
 
             if (( ${#worktrees} > 0 )); then
@@ -282,15 +236,11 @@ _w() {
             common_commands=(
                 'claude:Start Claude Code session'
                 'gst:Git status'
-                'gaa:Git add all'
-                'gcmsg:Git commit with message'
                 'gp:Git push'
-                'gco:Git checkout'
                 'gd:Git diff'
                 'gl:Git log'
-                'npm:Run npm commands'
-                'yarn:Run yarn commands'
-                'make:Run make commands'
+                'pnpm:Run pnpm commands'
+                'just:Run just commands'
             )
 
             _describe -t commands 'command' common_commands
