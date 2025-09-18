@@ -1,11 +1,14 @@
 # Generic aarch64-linux Home Manager configuration
 # This configuration can be used for any Linux ARM64 environment (VMs, containers, cloud instances)
-{ config, pkgs, username ? "user", ... }:
+{ config, pkgs, username ? "user", worktreeManager, ... }:
 
 let sharedZsh = import ../../common/zsh/shared.nix;
 in {
-  imports =
-    [ ../../common/home-packages.nix ../../common/claude-code/default.nix ];
+  imports = [
+    ../../common/home-packages.nix
+    ../../common/claude-code/default.nix
+    ../../common/scripts/default.nix
+  ];
 
   # Home Manager configuration for Linux
   home = {
@@ -120,6 +123,9 @@ in {
       if command -v oh-my-posh &> /dev/null; then
         eval "$(oh-my-posh --init --shell zsh --config ~/.config/oh-my-posh/default.omp.json)"
       fi
+
+      # Load worktree manager
+      ${worktreeManager}
     '';
   };
 

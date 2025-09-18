@@ -1,4 +1,4 @@
-{ config, pkgs, username, lib, ... }:
+{ config, pkgs, username, lib, worktreeManager, ... }:
 
 let sharedZsh = import ../../common/zsh/shared.nix;
 in {
@@ -6,6 +6,7 @@ in {
     ../../common/home-packages.nix
     ../../common/claude-code/default.nix
     ../../common/lazygit/default.nix
+    ../../common/scripts/default.nix
   ];
 
   # Home Manager configuration for macOS
@@ -116,6 +117,9 @@ in {
       if command -v oh-my-posh &> /dev/null; then
         eval "$(oh-my-posh --init --shell zsh --config ~/.config/oh-my-posh/default.omp.json)"
       fi
+
+      # Load worktree manager
+      ${worktreeManager}
     '';
   };
 

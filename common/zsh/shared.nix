@@ -146,6 +146,12 @@ rec {
     fi
   '';
 
+  # Custom scripts that need to be sourced in ZSH
+  customScripts = ''
+    # Load worktree manager (sourced from external file)
+    # This will be populated by the scripts module
+  '';
+
   # Module metadata
   meta = {
     description =

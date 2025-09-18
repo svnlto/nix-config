@@ -23,6 +23,7 @@
       "zoom"
       "whatsapp"
       "telegram"
+      "signal"
       "claude" # desktop
 
       # Development & Terminal

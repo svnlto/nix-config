@@ -19,7 +19,7 @@ return {
         },
         marks = {
           Cursor = {
-            text = "•",
+            text = "█",
             priority = 0,
             gui = nil,
             color = nil,
@@ -73,7 +73,7 @@ return {
             highlight = "DiagnosticVirtualTextHint",
           },
           GitAdd = {
-            text = "┆",
+            text = "|",
             priority = 7,
             gui = nil,
             color = nil,
@@ -82,7 +82,7 @@ return {
             highlight = "GitSignsAdd",
           },
           GitChange = {
-            text = "┆",
+            text = "|",
             priority = 7,
             gui = nil,
             color = nil,
