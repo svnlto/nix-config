@@ -34,15 +34,9 @@ rec {
       "echo '🧹 Starting deep cleanup...' && nix-collect-garbage -d && nix store optimise && echo '✨ Deep cleanup complete'";
     system-info = "nix-info -m";
 
-    # Quick diagnostics
-    check-flake = "nix flake check";
-    show-config = "nix show-config";
-    list-gens =
-      "nix profile list --profile /nix/var/nix/profiles/system 2>/dev/null || echo 'No system profile found'";
-
     # Update management
     nix-update = "nix flake update";
-    nix-check-updates = "nix flake show --json | jq '.inputs'";
+    nix-check-updates = "nix flake show --json --all-systems | jq '.inputs'";
 
     # Development shortcuts
     ports = "sudo lsof -i -P -n | grep LISTEN";

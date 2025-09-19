@@ -143,48 +143,19 @@
     bind -n S-Left previous-window
     bind -n S-Right next-window
 
-    # Theme configuration (Catppuccin Mocha matching your other tools)
-    set -g status-bg "#1e1e2e"
-    set -g status-fg "#cdd6f4"
+    # Catppuccin theme configuration
+    set -g @catppuccin_flavor 'mocha'
+    set -g @catppuccin_window_status_style "basic"
 
-    # Clean window list with only active window colored
-    # Current window - bright blue and bold with padding
-    setw -g window-status-current-style "fg=#1e1e2e,bg=#89b4fa,bold"
-    setw -g window-status-current-format "  #I #W  "
-
-    # Inactive windows - clean dark background with subtle text
-    setw -g window-status-style "fg=#7f849c,bg=#1e1e2e"
-    set -g window-status-format "  #I #W  "
-    set -g window-status-separator " "
-
-    # Pane borders - colored active border with dimmed inactive panes
-    set -g pane-border-style "fg=#45475a"
-    set -g pane-active-border-style "fg=#89b4fa,bold"
-
-    # Dim inactive panes, brighten active pane
-    set -g window-style "fg=#6c7086,bg=#1e1e2e"
-    set -g window-active-style "fg=#cdd6f4,bg=#1e1e2e"
-
-    # Message text
-    set -g message-style "bg=#f38ba8,fg=#1e1e2e"
-    set -g message-command-style "bg=#f38ba8,fg=#1e1e2e"
-
-    # Status bar - clean and full width
-    set -g status-left-length 30
-    set -g status-right-length 50
-    set -g status-justify left
-
-    # Simple status format that fills properly
-    set -g status-left "#[fg=#89b4fa,bold] #S #[default]"
-    set -g status-right "#[fg=#7f849c]%Y-%m-%d %H:%M #[fg=#89b4fa,bold]#h#[default]"
-
-    # Clock mode
-    setw -g clock-mode-colour "#89b4fa"
-    setw -g clock-mode-style 24
+    # Configure Catppuccin status modules
+    set -g @catppuccin_status_modules_right "session host date_time"
+    set -g @catppuccin_status_modules_left ""
+    set -g @catppuccin_date_time_text "%Y-%m-%d %H:%M"
 
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'
+    set -g @plugin 'catppuccin/tmux#v2.1.3'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
 
