@@ -88,13 +88,12 @@ home-manager switch --flake ~/.config/nix#vagrant # Vagrant user
 │   ├── neovim/           # ⚡ Editor configuration
 │   ├── tmux/             # 🖥️  Terminal multiplexer
 │   └── zsh/              # 🐚 Shell environment
-├── systems/
-│   ├── aarch64-darwin/   # 🍎 macOS-specific (nix-darwin)
-│   │   ├── homebrew.nix  # 🍺 GUI applications
-│   │   ├── defaults.nix  # ⚙️  System preferences
-│   │   └── dock.nix      # 📱 Dock configuration
-│   └── aarch64-linux/    # 🐧 Linux-specific (home-manager)
-└── packer/               # ☁️  Cloud image templates
+└── systems/
+    ├── aarch64-darwin/   # 🍎 macOS-specific (nix-darwin)
+    │   ├── homebrew.nix  # 🍺 GUI applications
+    │   ├── defaults.nix  # ⚙️  System preferences
+    │   └── dock.nix      # 📱 Dock configuration
+    └── aarch64-linux/    # 🐧 Linux-specific (home-manager)
 ```
 
 ### Package Categories

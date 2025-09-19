@@ -53,10 +53,9 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── neovim/           # Neovim configuration
 │   ├── tmux/             # Tmux configuration
 │   └── zsh/              # Shared ZSH configuration
-├── systems/
-│   ├── aarch64-darwin/    # macOS-specific (nix-darwin)
-│   └── aarch64-linux/     # Linux-specific (home-manager)
-└── packer/               # Cloud image templates (Packer)
+└── systems/
+    ├── aarch64-darwin/    # macOS-specific (nix-darwin)
+    └── aarch64-linux/     # Linux-specific (home-manager)
 ```
 
 ### Configuration Flow
