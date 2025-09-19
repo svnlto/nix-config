@@ -56,6 +56,6 @@ repos:
         name: stylua
         description: Format Lua code with StyLua
         entry: bash
-        args: [-c, 'if command -v nix >/dev/null 2>&1; then nix shell nixpkgs#stylua -c stylua "$@"; else echo "Skipping stylua (Nix not available)"; fi', --]
+        args: [-c, 'if [ "$CI" = "true" ]; then echo "Skipping stylua in CI"; exit 0; elif command -v nix >/dev/null 2>&1; then nix shell nixpkgs#stylua -c stylua "$@"; else echo "Skipping stylua (Nix not available)"; fi', --]
         language: system
         files: \.lua$

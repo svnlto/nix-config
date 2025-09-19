@@ -12,7 +12,7 @@ keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
 keymap("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 -- Use LazyVim's Snacks.bufdelete() for proper buffer management
 keymap("n", "<leader>x", function()
-  require("snacks").bufdelete()
+	require("snacks").bufdelete()
 end, { desc = "Close buffer" })
 
 keymap("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
