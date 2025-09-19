@@ -104,7 +104,7 @@
         {
           "properties": {
             "cache_duration": "none",
-            "display_default": true
+            "display_default": false
           },
           "template": " \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} ",
           "foreground": "p:orange",

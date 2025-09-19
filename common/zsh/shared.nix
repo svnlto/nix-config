@@ -12,23 +12,12 @@ rec {
     # Enhanced file operations
     ll =
       "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
-    la = "eza --all --group-directories-first";
-    ls = "eza --group-directories-first";
     lt = "eza --tree --level=2 --group-directories-first";
 
     # Better defaults
     vim = "nvim";
     cat = "bat";
     tree = "tree -C";
-
-    # Git shortcuts
-    g = "git";
-    gs = "git status";
-    ga = "git add";
-    gc = "git commit";
-    gp = "git push";
-    gl = "git pull";
-    gd = "git diff";
 
     # Nix utilities (platform-agnostic)
     nix-shell-pure = "nix-shell --pure";
@@ -56,7 +45,7 @@ rec {
     nix-check-updates = "nix flake show --json | jq '.inputs'";
 
     # Development shortcuts
-    ports = "netstat -tulp";
+    ports = "sudo lsof -i -P -n | grep LISTEN";
   };
 
   # Declarative history configuration for home-manager
