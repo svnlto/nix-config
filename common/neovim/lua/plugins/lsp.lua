@@ -107,15 +107,29 @@ return {
     },
   },
 
-  -- Mason configuration
+  -- Mason configuration (updated to mason-org)
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "typescript-language-server",
         "gopls",
         "terraform-ls",
         "lua-language-server",
+        "biome",
+      },
+    },
+  },
+
+  -- Mason LSP Config (also updated to mason-org)
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = {
+        "ts_ls",
+        "gopls",
+        "terraformls",
+        "lua_ls",
         "biome",
       },
     },

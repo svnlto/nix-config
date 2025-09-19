@@ -18,7 +18,7 @@
 #         └── new-feature/ (worktree)
 #
 # CUSTOMIZATION:
-# To use different directories, modify these lines in the w() function:
+# To use different directories, modify these lines in the wt() function:
 #   local projects_dir="$HOME/Projects"
 #   local worktrees_dir="$HOME/Projects/worktrees"
 #
@@ -31,26 +31,26 @@
 #
 # 3. Restart your terminal or run: source ~/.zshrc
 #
-# 4. Test it works: w <TAB> should show your projects
+# 4. Test it works: wt <TAB> should show your projects
 #
 # If tab completion doesn't work:
-# - Make sure the fpath line comes BEFORE the w function in your .zshrc
+# - Make sure the fpath line comes BEFORE the wt function in your .zshrc
 # - Restart your terminal completely
 #
 # USAGE:
-#   w <project> <worktree>              # cd to worktree (creates if needed)
-#   w <project> <worktree> <command>    # run command in worktree
-#   w --list                            # list all worktrees
-#   w --rm <project> <worktree>         # remove worktree
+#   wt <project> <worktree>              # cd to worktree (creates if needed)
+#   wt <project> <worktree> <command>    # run command in worktree
+#   wt --list                            # list all worktrees
+#   wt --rm <project> <worktree>         # remove worktree
 #
 # EXAMPLES:
-#   w myapp feature-x                   # cd to feature-x worktree
-#   w myapp feature-x claude            # run claude in worktree
-#   w myapp feature-x gst               # git status in worktree
-#   w myapp feature-x gcmsg "fix: bug"  # git commit in worktree
+#   wt myapp feature-x                   # cd to feature-x worktree
+#   wt myapp feature-x claude            # run claude in worktree
+#   wt myapp feature-x gst               # git status in worktree
+#   wt myapp feature-x gcmsg "fix: bug"  # git commit in worktree
 
 # Multi-project worktree manager
-w() {
+wt() {
     local projects_dir="$HOME/Projects"
     local worktrees_dir="$HOME/Projects/worktrees"
 
@@ -60,17 +60,17 @@ w() {
 Multi-project worktree manager with Claude support
 
 USAGE:
-  w <project> <worktree>              # cd to worktree (creates if needed)
-  w <project> <worktree> <command>    # run command in worktree
-  w --list                            # list all worktrees
-  w --rm <project> <worktree>         # remove worktree
-  w --help, -h                        # show this help
+  wt <project> <worktree>              # cd to worktree (creates if needed)
+  wt <project> <worktree> <command>    # run command in worktree
+  wt --list                            # list all worktrees
+  wt --rm <project> <worktree>         # remove worktree
+  wt --help, -h                        # show this help
 
 EXAMPLES:
-  w myapp feature-x                   # cd to feature-x worktree
-  w myapp feature-x claude            # run claude in worktree
-  w myapp feature-x gst               # git status in worktree
-  w myapp feature-x gcmsg "fix: bug"  # git commit in worktree
+  wt myapp feature-x                   # cd to feature-x worktree
+  wt myapp feature-x claude            # run claude in worktree
+  wt myapp feature-x gst               # git status in worktree
+  wt myapp feature-x gcmsg "fix: bug"  # git commit in worktree
 
 DIRECTORY STRUCTURE:
   ~/Projects/                         # Your git projects
@@ -99,7 +99,7 @@ EOF
         local project="$1"
         local worktree="$2"
         if [[ -z "$project" || -z "$worktree" ]]; then
-            echo "Usage: w --rm <project> <worktree>"
+            echo "Usage: wt --rm <project> <worktree>"
             return 1
         fi
         local wt_path="$worktrees_dir/$project/$worktree"
@@ -111,15 +111,15 @@ EOF
         return $?
     fi
 
-    # Normal usage: w <project> <worktree> [command...]
+    # Normal usage: wt <project> <worktree> [command...]
     local project="$1"
     local worktree="$2"
 
     if [[ -z "$project" || -z "$worktree" ]]; then
-        echo "Usage: w <project> <worktree> [command...]"
-        echo "       w --list"
-        echo "       w --rm <project> <worktree>"
-        echo "       w --help"
+        echo "Usage: wt <project> <worktree> [command...]"
+        echo "       wt --list"
+        echo "       wt --rm <project> <worktree>"
+        echo "       wt --help"
         return 1
     fi
 
@@ -166,13 +166,16 @@ EOF
     fi
 }
 
-# Setup completion if not already done
-if [[ ! -f ~/.zsh/completions/_w ]]; then
-    mkdir -p ~/.zsh/completions
-    cat > ~/.zsh/completions/_w << 'EOF'
-#compdef w
+# Clean up old completion file and setup new one
+rm -f ~/.zsh/completions/_w 2>/dev/null
 
-_w() {
+# Setup completion if not already done
+if [[ ! -f ~/.zsh/completions/_wt ]]; then
+    mkdir -p ~/.zsh/completions
+    cat > ~/.zsh/completions/_wt << 'EOF'
+#compdef wt
+
+_wt() {
     local curcontext="$curcontext" state line
     typeset -A opt_args
 
@@ -258,7 +261,7 @@ _w() {
     esac
 }
 
-_w "$@"
+_wt "$@"
 EOF
     # Add completions to fpath if not already there
     fpath=(~/.zsh/completions $fpath)

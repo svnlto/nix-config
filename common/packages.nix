@@ -3,13 +3,14 @@
   # These packages provide fundamental CLI improvements and are used daily
   corePackages = with pkgs; [
     oh-my-posh # Customizable prompt engine for shell theming
-    hstr # Shell history suggest box with search capabilities
+    atuin # Magical shell history search and sync with encryption
     eza # Modern replacement for ls with colors and icons
     zoxide # Smarter cd command that learns your habits
     bat # Cat clone with syntax highlighting and git integration
     nixfmt-classic # Nix code formatter for consistent code style
     diff-so-fancy # Enhanced diff visualization with better formatting
     nerd-fonts.hack # Programming font with icons
+    carapace # Multi-shell completion framework for 300+ CLI tools
   ];
 
   # Development tools - programming and productivity utilities
