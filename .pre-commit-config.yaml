@@ -15,12 +15,12 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
-    rev: v9.22.0
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
     hooks:
-      - id: commitlint
+      - id: conventional-pre-commit
         stages: [commit-msg]
-        additional_dependencies: ["@commitlint/config-conventional"]
+        args: [--strict]
 
   - repo: local
     hooks:
