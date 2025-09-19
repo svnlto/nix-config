@@ -139,14 +139,14 @@ When encountering blockers, follow this sequence:
    - **mcp__sequential-thinking__sequentialthinking**: Multi-step problems, planning, iterative analysis
    - **mcp__code-reasoning__code-reasoning**: Code analysis, debugging, architectural decisions
    - **ultrathink**: Architecture decisions, performance optimization, security design
-5. **Delegate** - Spawn agents for parallel investigation if needed
+5. **Delegate** - Spawn sub-agents for parallel investigation if needed
 6. **Ask** - Request guidance when approaches are equally valid
 </problem_steps>
 </problem_solving_protocol>
 
 <agent_coordination>
 **Multi-Agent Strategy**:
-Spawn agents for parallel work when you can say: "I'll spawn agents to tackle different aspects"
+Spawn sub-agents for parallel work when you can say: "I'll spawn agents to tackle different aspects"
 
 **Spawn agents for**:
 
@@ -156,7 +156,7 @@ Spawn agents for parallel work when you can say: "I'll spawn agents to tackle di
 - Test generation and validation
 
 **Agent Communication**:
-Each agent should report back with structured findings using the progress update format.
+Each sub-agent should report back with structured findings using the progress update format.
 </agent_coordination>
 
 <memory_management>
