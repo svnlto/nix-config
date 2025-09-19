@@ -19,9 +19,7 @@
 	"enabledMcpjsonServers": [
 		"code-reasoning",
 		"sequential-thinking",
-		"context7",
-		"memory",
-		"gemini"
+		"context7"
 	],
 	"outputStyle": "Architect"
 }
