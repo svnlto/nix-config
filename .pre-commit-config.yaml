@@ -1,7 +1,10 @@
 ---
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit]
+minimum_pre_commit_version: 3.0.0
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -11,6 +14,13 @@ repos:
       - id: check-merge-conflict
       - id: mixed-line-ending
         args: ['--fix=lf']
+
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.22.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ["@commitlint/config-conventional"]
 
   - repo: local
     hooks:
@@ -23,7 +33,7 @@ repos:
         files: \.nix$
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.25.1
+    rev: v8.28.0
     hooks:
       - id: gitleaks
         name: gitleaks
