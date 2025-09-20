@@ -1,5 +1,6 @@
 {
 	"BASH_DEFAULT_TIMEOUT_MS": "300000",
+	"model": "sonnet",
 	"permissions": {
 		"allow": [
 			"Bash(git:*)",

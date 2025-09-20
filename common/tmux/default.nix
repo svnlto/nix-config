@@ -152,6 +152,17 @@
     set -g @catppuccin_status_modules_left ""
     set -g @catppuccin_date_time_text "%Y-%m-%d %H:%M"
 
+    # Status bar spacing and appearance
+    set -g @catppuccin_status_left_separator " "
+    set -g @catppuccin_status_right_separator " "
+    set -g @catppuccin_status_connect_separator "yes"
+
+    # Window status padding
+    set -g @catppuccin_window_left_separator ""
+    set -g @catppuccin_window_right_separator " "
+    set -g @catppuccin_window_middle_separator " | "
+    set -g @catppuccin_window_number_position "left"
+
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'

@@ -4,7 +4,7 @@
   # Ghostty terminal configuration
   home.file.".config/ghostty/config".text = ''
     # Theme (matching Zed config)
-    theme = catppuccin-mocha
+    theme = Catppuccin Mocha
 
     # Font configuration (matching Zed config)
     font-family = "Hack Nerd Font"
