@@ -35,8 +35,8 @@
     scrollback-limit = 10000
 
     # Colors and transparency
-    background-opacity = 0.99
-    unfocused-split-opacity = 0.9
+    background-opacity = 1.0
+    unfocused-split-opacity = 1.0
 
     # Key bindings (corrected for Ghostty)
     keybind = cmd+t=new_tab

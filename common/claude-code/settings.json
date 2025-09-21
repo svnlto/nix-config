@@ -6,7 +6,7 @@
 	"enabledMcpjsonServers": [
 		"code-reasoning",
 		"sequential-thinking",
-		"context7",
+		"context7"
 	],
 	"statusLine": {
 		"type": "command",

@@ -148,7 +148,7 @@
     set -g @catppuccin_window_status_style "basic"
 
     # Configure Catppuccin status modules
-    set -g @catppuccin_status_modules_right "session host date_time"
+    set -g @catppuccin_status_modules_right "date_time"
     set -g @catppuccin_status_modules_left ""
     set -g @catppuccin_date_time_text "%Y-%m-%d %H:%M"
 

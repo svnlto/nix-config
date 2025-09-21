@@ -138,7 +138,6 @@ When encountering blockers, follow this sequence:
 4. **Analyze** - Use appropriate reasoning tool:
    - **mcp__sequential-thinking__sequentialthinking**: Multi-step problems, planning, iterative analysis
    - **mcp__code-reasoning__code-reasoning**: Code analysis, debugging, architectural decisions
-   - **ultrathink**: Architecture decisions, performance optimization, security design
 5. **Delegate** - Spawn sub-agents for parallel investigation if needed
 6. **Ask** - Request guidance when approaches are equally valid
 </problem_steps>
@@ -183,13 +182,10 @@ Each sub-agent should report back with structured findings using the progress up
 - Debugging complex issues
 - Architectural decision making
 - Performance optimization analysis
-
-**ultrathink**: Use for
-
 - Complex system architecture design
 - Security threat modeling
-- Performance optimization strategies
 - Complex algorithm development
+
 </reasoning_tool_guide>
 
 <output_formatting>
