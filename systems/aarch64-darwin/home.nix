@@ -1,4 +1,4 @@
-{ config, pkgs, username, lib, worktreeManager, ... }:
+{ config, pkgs, username, lib, ... }:
 
 let sharedZsh = import ../../common/zsh/shared.nix;
 in {
@@ -118,8 +118,6 @@ in {
         eval "$(oh-my-posh --init --shell zsh --config ~/.config/oh-my-posh/default.omp.json)"
       fi
 
-      # Load worktree manager
-      ${worktreeManager}
     '';
   };
 

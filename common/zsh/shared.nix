@@ -40,6 +40,9 @@ rec {
 
     # Development shortcuts
     ports = "sudo lsof -i -P -n | grep LISTEN";
+
+    # GitHub tools
+    ghd = "gh-dash";
   };
 
   # Declarative history configuration for home-manager

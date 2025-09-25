@@ -17,10 +17,12 @@
   # These tools support software development and system administration
   devPackages = with pkgs; [
     gh # GitHub CLI for repository management
+    gh-dash # GitHub CLI extension for dashboard with PRs and issues
     lazygit # Terminal UI for git commands (LazyVim dependency)
     direnv # Environment variable manager per directory
     ack # Text search tool optimized for source code
     ripgrep # Fast text search (required for Neovim Telescope)
+    fzf # Command-line fuzzy finder for interactive searching
     pipx # Python package installer with isolation
     tmux # Terminal multiplexer for session management
     reattach-to-user-namespace # macOS tmux integration for clipboard/notification access

@@ -11,7 +11,6 @@
   # Create writable settings.json using out-of-store symlink
   home.file.".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
     "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
-  home.file.".claude/CLAUDE.md".source = ./CLAUDE.md;
   home.file.".claude/output-styles".source = ./output-styles;
 
   # Combine local commands with linear commands

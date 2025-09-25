@@ -20,6 +20,8 @@ This configuration provides a unified development setup across Apple Silicon Mac
 - **Zoxide** - Smart directory navigation
 - **Eza** - Modern `ls` replacement with colors and icons
 - **Carapace** - Universal shell completion for CLI tools
+- **fzf** - Interactive fuzzy finder for command line
+- **gh-dash** - GitHub CLI dashboard for PRs and issues (alias: `ghd`)
 
 ### 🎨 macOS Applications (via Homebrew)
 - **Productivity**: Raycast, Notion Calendar, SuperWhisper
