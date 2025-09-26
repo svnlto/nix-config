@@ -44,7 +44,7 @@ in {
     # Common aliases - platform-specific aliases merged separately
     shellAliases = sharedZsh.aliases;
 
-    initExtra = ''
+    initContent = ''
       ${sharedZsh.tools}
       ${sharedZsh.historyOptions}
       ${sharedZsh.options}
