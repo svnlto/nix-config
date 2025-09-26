@@ -113,45 +113,34 @@ rec {
   # Common key bindings
   keybindings = ''
     # Key bindings
-    bindkey '^r' _atuin_search_widget  # Ctrl+R for atuin history search
     bindkey '\e[A' history-search-backward
     bindkey '\e[B' history-search-forward
   '';
 
   # Tool initialization commands
   tools = ''
-        # Catppuccin Mocha LS_COLORS for eza
-        export LS_COLORS="di=38;2;137;180;250:ln=38;2;137;220;235:so=38;2;245;194;231:pi=38;2;249;226;175:ex=38;2;243;139;168:bd=38;2;137;180;250;48;2;49;50;68:cd=38;2;137;180;250;48;2;69;71;90:su=38;2;30;30;46;48;2;243;139;168:sg=38;2;30;30;46;48;2;137;180;250:tw=38;2;30;30;46;48;2;166;227;161:ow=38;2;30;30;46;48;2;249;226;175:*.md=38;2;166;227;161:*.json=38;2;249;226;175:*.nix=38;2;137;180;250:*.lua=38;2;137;220;235:*.yaml=38;2;245;194;231"
+    # Catppuccin Mocha LS_COLORS for eza
+    export LS_COLORS="di=38;2;137;180;250:ln=38;2;137;220;235:so=38;2;245;194;231:pi=38;2;249;226;175:ex=38;2;243;139;168:bd=38;2;137;180;250;48;2;49;50;68:cd=38;2;137;180;250;48;2;69;71;90:su=38;2;30;30;46;48;2;243;139;168:sg=38;2;30;30;46;48;2;137;180;250:tw=38;2;30;30;46;48;2;166;227;161:ow=38;2;30;30;46;48;2;249;226;175:*.md=38;2;166;227;161:*.json=38;2;249;226;175:*.nix=38;2;137;180;250:*.lua=38;2;137;220;235:*.yaml=38;2;245;194;231"
 
-        # Simple zoxide initialization
-        if command -v zoxide >/dev/null 2>&1; then
-          eval "$(zoxide init zsh)"
-        fi
+    # Simple zoxide initialization
+    if command -v zoxide >/dev/null 2>&1; then
+      eval "$(zoxide init zsh)"
+    fi
 
-        # Simple oh-my-posh initialization
-        if command -v oh-my-posh >/dev/null 2>&1; then
-          eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
-        fi
+    # Simple oh-my-posh initialization
+    if command -v oh-my-posh >/dev/null 2>&1; then
+      eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
+    fi
 
-        # Atuin shell history initialization with vim mode
-        if command -v atuin >/dev/null 2>&1; then
-          # Create atuin config directory if it doesn't exist
-          mkdir -p ~/.config/atuin
+    # FZF shell integration for history search and file finding
+    if command -v fzf >/dev/null 2>&1; then
+      source <(fzf --zsh)
+    fi
 
-          # Create minimal atuin configuration with vim keybindings
-          cat > ~/.config/atuin/config.toml << 'EOF'
-    # Atuin Configuration - Cross-platform shell history
-    keymap_mode = "vim-insert"
-    EOF
-
-          # Initialize atuin
-          eval "$(atuin init zsh)"
-        fi
-
-        # Carapace completion initialization
-        if command -v carapace >/dev/null 2>&1; then
-          source <(carapace _carapace zsh)
-        fi
+    # Carapace completion initialization
+    if command -v carapace >/dev/null 2>&1; then
+      source <(carapace _carapace zsh)
+    fi
   '';
 
   # Custom scripts that need to be sourced in ZSH

@@ -16,7 +16,6 @@ This configuration provides a unified development setup across Apple Silicon Mac
 
 ### 🖥️ Terminal & Shell
 - **ZSH** - Feature-rich shell with Oh My Posh theming
-- **Atuin** - Encrypted shell history sync across devices
 - **Zoxide** - Smart directory navigation
 - **Eza** - Modern `ls` replacement with colors and icons
 - **Carapace** - Universal shell completion for CLI tools
@@ -75,7 +74,6 @@ hmswitch  # Generic Linux configuration
 ```bash
 # For specific user configurations
 home-manager switch --flake ~/.config/nix#ubuntu  # Ubuntu user
-home-manager switch --flake ~/.config/nix#vagrant # Vagrant user
 ```
 
 ## 📁 Configuration Management
@@ -100,7 +98,7 @@ home-manager switch --flake ~/.config/nix#vagrant # Vagrant user
 
 ### Package Categories
 
-- **Core Packages**: Essential CLI tools (eza, bat, zoxide, atuin)
+- **Core Packages**: Essential CLI tools (eza, bat, zoxide, fzf)
 - **Dev Packages**: Development utilities (gh, lazygit, ripgrep, tmux)
 - **System Packages**: macOS system-level tools (git, tree)
 - **GUI Applications**: macOS apps via Homebrew
