@@ -49,8 +49,7 @@ in {
       ${sharedZsh.historyOptions}
       ${sharedZsh.options}
       ${sharedZsh.completion}
-      ${sharedZsh.keyBindings}
-      ${sharedZsh.atuin}
+      ${sharedZsh.keybindings}
 
       # Load Oh My Posh if available
       if command -v oh-my-posh &> /dev/null; then
