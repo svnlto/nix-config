@@ -18,6 +18,7 @@ rec {
     vim = "nvim";
     cat = "bat";
     tree = "tree -C";
+    cd = "z"; # Use zoxide for smarter directory navigation
 
     # Nix utilities (platform-agnostic)
     nix-shell-pure = "nix-shell --pure";

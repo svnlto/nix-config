@@ -18,6 +18,12 @@
   # Linux-specific session variables
   home.sessionVariables = { EDITOR = "nvim"; };
 
+  # Linux-specific shell aliases
+  programs.zsh.shellAliases = {
+    hmswitch = "home-manager switch --flake ~/.config/nix#linux";
+    hm-user = "home-manager switch --flake ~/.config/nix#$(whoami)";
+  };
+
   # Linux-specific ZSH initialization
   programs.zsh.initContent = ''
     # Load worktree manager
