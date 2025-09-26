@@ -38,7 +38,7 @@
     ];
     masApps = { };
     onActivation = {
-      cleanup = "uninstall"; # Less aggressive than "zap"
+      cleanup = "uninstall";
       upgrade = true;
       autoUpdate = true;
     };

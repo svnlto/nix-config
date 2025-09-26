@@ -84,6 +84,20 @@ rec {
     setopt complete_in_word    # allow completion from within a word/phrase
   '';
 
+  # Common session variables
+  sessionVariables = {
+    DIRENV_LOG_FORMAT = ""; # Make direnv less verbose
+    NPM_CONFIG_PREFIX = "$HOME/.npm-global"; # NPM global packages location
+    LANG = "en_GB.UTF-8"; # Locale settings
+    LC_ALL = "en_GB.UTF-8";
+  };
+
+  # Common session paths
+  sessionPath = [
+    "$HOME/.npm-global/bin" # NPM global packages
+    "$HOME/.bin" # User custom binaries
+  ];
+
   # Common ZSH completion styling
   completion = ''
     # Simplified completion styling
@@ -104,11 +118,8 @@ rec {
     bindkey '\e[B' history-search-forward
   '';
 
-  # Tool initialization commands (now uses shared environment)
+  # Tool initialization commands
   tools = ''
-        # Import shared environment setup
-        ${(import ../environment.nix).shellEnvironment}
-
         # Catppuccin Mocha LS_COLORS for eza
         export LS_COLORS="di=38;2;137;180;250:ln=38;2;137;220;235:so=38;2;245;194;231:pi=38;2;249;226;175:ex=38;2;243;139;168:bd=38;2;137;180;250;48;2;49;50;68:cd=38;2;137;180;250;48;2;69;71;90:su=38;2;30;30;46;48;2;243;139;168:sg=38;2;30;30;46;48;2;137;180;250:tw=38;2;30;30;46;48;2;166;227;161:ow=38;2;30;30;46;48;2;249;226;175:*.md=38;2;166;227;161:*.json=38;2;249;226;175:*.nix=38;2;137;180;250:*.lua=38;2;137;220;235:*.yaml=38;2;245;194;231"
 
