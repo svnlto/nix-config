@@ -148,7 +148,7 @@
     set -g @catppuccin_window_status_style "basic"
 
     # Configure Catppuccin status modules
-    set -g @catppuccin_status_modules_right "date_time"
+    set -g @catppuccin_status_modules_right "gh date_time"
     set -g @catppuccin_status_modules_left ""
     set -g @catppuccin_date_time_text "%Y-%m-%d %H:%M"
 
@@ -169,6 +169,7 @@
     set -g @plugin 'catppuccin/tmux#v2.1.3'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
+    set -g @plugin 'tardunge/tmux-gh'
 
     # tmux-resurrect settings
     set -g @resurrect-strategy-vim 'session'

@@ -29,12 +29,13 @@ opt.swapfile = false
 opt.colorcolumn = "80"
 
 opt.signcolumn = "yes"
-opt.statuscolumn = "%s%=%{&ft=='NvimTree'?'':v:relnum?v:relnum:v:lnum}   "
+opt.statuscolumn = "%s%{&ft=='NvimTree'?'':v:relnum?v:relnum:v:lnum} "
 opt.ttyfast = true
 opt.lazyredraw = false
 
 opt.shortmess:append("I")
 opt.spell = false
+opt.autoread = true
 
 -- Cursor configuration - pink blinking cursor
 opt.guicursor = {
@@ -42,5 +43,3 @@ opt.guicursor = {
 	"i-ci:ver25-Cursor/lCursor-blinkwait1000-blinkon500-blinkoff500",
 	"r-cr:hor20-Cursor/lCursor-blinkwait1000-blinkon500-blinkoff500",
 }
-
--- Cursor color is set in colorscheme.lua after theme loads

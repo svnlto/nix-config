@@ -1,17 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "palette": {
-    "blue": "#8AADF4",
+    "blue": "#89B4FA",
     "closer": "p:os",
-    "lavender": "#B7BDF8",
-    "orange": "#f78f40",
-    "os": "#ACB0BE",
-    "pink": "#F5BDE6",
-    "purple": "#C6A0F6",
-    "text": "#494D64",
-    "wight": "#FFFFFF",
-    "nix": "#7EBAE4",
-    "direnv": "#FFA500"
+    "lavender": "#B4BEFE",
+    "orange": "#FAB387",
+    "os": "#9399B2",
+    "pink": "#F5C2E7",
+    "purple": "#CBA6F7",
+    "text": "#45475A",
+    "white": "#CDD6F4"
   },
   "transient_prompt": {
     "template": "{{ .UserName }}@{{ .HostName }} > ",
@@ -74,23 +72,11 @@
           "type": "git",
           "style": "plain",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#FFEB3B{{ end }}",
-            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}",
-            "{{ if gt .Ahead 0 }}#B388FF{{ end }}",
-            "{{ if gt .Behind 0 }}#B388FB{{ end }}"
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#F9E2AF{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FAB387{{ end }}",
+            "{{ if gt .Ahead 0 }}#CBA6F7{{ end }}",
+            "{{ if gt .Behind 0 }}#B4BEFE{{ end }}"
           ]
-        },
-        {
-          "type": "nix-shell",
-          "style": "plain",
-          "foreground": "p:nix",
-          "template": " \uf313 {{ .Type }}"
-        },
-        {
-          "type": "text",
-          "style": "plain",
-          "foreground": "p:direnv",
-          "template": "{{ if .Env.DIRENV_DIR }} \uf07c direnv{{ end }}"
         },
         {
           "properties": {
