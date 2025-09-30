@@ -44,25 +44,49 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 
 ### Directory Structure
 ```
-├── flake.nix              # Main orchestrator - defines all configurations
-├── common/                # Shared configuration across platforms
-│   ├── default.nix        # Common Nix settings
-│   ├── packages.nix       # Package definitions for all systems
-│   ├── home-packages.nix  # Home Manager package imports
-│   ├── claude-code/       # Claude Code integration with custom commands
-│   ├── neovim/           # Neovim configuration
-│   ├── tmux/             # Tmux configuration
-│   └── zsh/              # Shared ZSH configuration
+├── flake.nix                    # Main orchestrator - defines all configurations
+├── common/                      # Shared configuration across platforms
+│   ├── default.nix              # Common Nix settings (performance, experimental features)
+│   ├── home-manager-base.nix    # Shared Home Manager configuration base
+│   ├── programs/default.nix     # Shared program configs (direnv, gh, zsh)
+│   ├── packages.nix             # Package definitions for all systems
+│   ├── home-packages.nix        # Home Manager package imports
+│   ├── claude-code/             # Claude Code integration with custom commands
+│   ├── neovim/                  # Neovim configuration
+│   ├── tmux/                    # Tmux configuration
+│   ├── zsh/
+│   │   ├── shared.nix           # Shared ZSH config (aliases, functions, tools)
+│   │   └── default.omp.json     # Oh My Posh theme
+│   ├── lazygit/                 # Lazygit configuration
+│   ├── ghostty/                 # Ghostty terminal configuration
+│   └── scripts/                 # Custom shell scripts
 └── systems/
-    ├── aarch64-darwin/    # macOS-specific (nix-darwin)
-    └── aarch64-linux/     # Linux-specific (home-manager)
+    ├── aarch64-darwin/          # macOS-specific (nix-darwin)
+    │   ├── home.nix             # Minimal - only homeDirectory and platform aliases
+    │   ├── homebrew.nix         # Homebrew cask definitions
+    │   ├── defaults.nix         # macOS system preferences
+    │   └── dock.nix             # Dock configuration
+    └── aarch64-linux/           # Linux-specific (home-manager)
+        ├── home-linux.nix       # Minimal - only Linux-specific settings
+        └── default.nix          # Linux system configuration
 ```
 
 ### Configuration Flow
 1. **flake.nix** - Entry point defining `darwinConfigurations` and `homeConfigurations`
-2. **common/** - Imported by all systems for shared settings
-3. **systems/{arch}/** - Platform-specific configurations that extend common base
-4. **packages.nix** - Centralized package definitions organized by category
+2. **common/home-manager-base.nix** - Imports shared modules (home-packages, claude-code, programs, scripts)
+3. **common/programs/default.nix** - Centralized program configurations (direnv, gh, zsh base)
+4. **common/default.nix** - Nix settings shared across platforms
+5. **systems/{arch}/** - Platform-specific configurations (minimal, only truly platform-specific settings)
+6. **packages.nix** - Centralized package definitions organized by category
+
+### Recent Architectural Changes (2025)
+**Major refactoring eliminated 479 lines of duplicate configuration:**
+- Created `common/home-manager-base.nix` to centralize Home Manager settings
+- Created `common/programs/default.nix` for shared program configurations
+- Reduced macOS config from 127 lines to 9 lines (93% reduction)
+- Reduced Linux config from 155 lines to 45 lines (71% reduction)
+- Platform configs now contain ONLY platform-specific settings
+- Replaced atuin with fzf for shell history (simpler, local-only)
 
 ## Development Workflow
 
@@ -103,6 +127,12 @@ Located in `common/claude-code/`, this provides:
 - **Sophisticated hooks**: Automated linting and quality checks
 - **Modular structure**: Combines local and remote commands via symlinkJoin
 
+### Shell Configuration
+- **History Search**: fzf with Catppuccin Mocha theme (`source <(fzf --zsh)`)
+- **Directory Navigation**: zoxide aliased to `cd` for smart directory jumping
+- **Prompt**: Oh My Posh with custom theme
+- **Completions**: Carapace for 300+ CLI tools
+
 ### Version Management
 - **Terraform**: Managed as regular nixpkgs in Linux configurations
 - **Node.js**: Uses nodePackages.pnpm from nixpkgs
@@ -121,10 +151,11 @@ Located in `common/claude-code/`, this provides:
 - SSH configuration for VM connectivity
 
 ### Linux (home-manager)
-- Docker integration with proper user permissions
-- Development-focused package selection
-- Cloud integrations (AWS CLI, Kubernetes tools)
-- Optimized for remote development workflows
+- Minimal configuration - only Linux-specific settings
+- Docker integration (docker-compose package)
+- Linux-specific packages: htop, neofetch, curl, wget
+- Imports both `common/home-manager-base.nix` and `common/default.nix`
+- Auto-optimise-store enabled (better suited for Linux than macOS)
 
 ## Security Considerations
 - SSH keys managed through 1Password integration
@@ -174,24 +205,36 @@ home-manager generations            # Linux - shows available generations
 ## Advanced Architecture Details
 
 ### Module Resolution System
-The configuration uses a sophisticated import system:
+The configuration uses a layered import system that eliminates duplication:
 
 1. **flake.nix**: Orchestrates everything using `mkDarwinSystem` and `mkHomeManagerConfig` functions
-2. **common/default.nix**: Base Nix settings imported by all systems
-3. **common/home-manager-base.nix**: Home Manager defaults for Linux systems
-4. **common/versions.nix**: Centralized state version management to prevent conflicts
+2. **common/home-manager-base.nix**:
+   - Imports shared modules: `home-packages.nix`, `claude-code/`, `programs/`, `scripts/`
+   - Sets base home configuration (username, stateVersion)
+   - Exports session variables and paths from `zsh/shared.nix`
+   - Configures Oh My Posh theme
+3. **common/programs/default.nix**: Centralized program configurations
+   - `programs.direnv` - Development environment management
+   - `programs.gh` - GitHub CLI settings (editor: nvim, protocol: ssh)
+   - `programs.zsh` - Base ZSH with completions, history, oh-my-zsh
+4. **common/default.nix**: Nix settings shared across platforms (performance tuning, experimental features)
+5. **systems/{arch}/home.nix**: Platform-specific ONLY
+   - **macOS**: homeDirectory + platform-specific aliases (nixswitch, darwin-rebuild)
+   - **Linux**: homeDirectory + nix settings + platform aliases (hmswitch, hm-user) + worktree manager
 
 ### Cross-Platform Module Strategy
-- **Shared modules** in `common/` use conditional logic for platform differences
-- **Platform modules** in `systems/{arch}/` extend shared configuration
-- **Import chains**: flake.nix → systems/{arch} → common → specialized modules
+- **Shared modules** in `common/` contain ALL cross-platform configuration
+- **Platform modules** in `systems/{arch}/` are minimal - only truly platform-specific settings
+- **Import chains**:
+  - flake.nix → systems/{arch}/home.nix → common/home-manager-base.nix → specialized modules
+  - systems/aarch64-linux also imports common/default.nix for nix settings
+- **DRY principle**: Zero duplication between platforms - shared config centralized once
 
 ### Performance Optimizations
 Built-in performance tuning throughout:
 - **Build parallelization**: `max-jobs = "auto"`, `cores = 0`
 - **Download optimization**: 256MB buffer, 50 HTTP connections
-- **Store optimization**: Automatic optimization, substituter caching
-- **RAM disk** (Linux): `/ramdisk` for temporary build artifacts
+- **Store optimization**: Automatic optimization, substituter caching (auto-optimise enabled on Linux)
 
 ### State Management Architecture
 - **Version pinning**: `common/versions.nix` prevents Home Manager version conflicts
@@ -218,6 +261,23 @@ Built-in performance tuning throughout:
 2. **systems/{arch}/default.nix**: Platform-specific overrides
 3. **common/**: Shared defaults
 4. **Individual modules**: Specific functionality
+
+### ZSH Configuration Pattern
+**IMPORTANT**: ZSH configuration uses `initContent` (not deprecated `initExtra`):
+- **common/programs/default.nix** sets base `programs.zsh.initContent`
+- **Platform configs** can extend with their own `programs.zsh.initContent` for platform-specific init
+- **Platform aliases** set via `programs.zsh.shellAliases` merge with shared aliases from `common/zsh/shared.nix`
+- Shared ZSH configuration in `common/zsh/shared.nix` exports:
+  - `aliases` - Common shell aliases
+  - `sessionVariables` - Environment variables (DIRENV_LOG_FORMAT, NPM_CONFIG_PREFIX, FZF_DEFAULT_OPTS, etc.)
+  - `sessionPath` - PATH additions
+  - `historyConfig` - ZSH history settings
+  - `autosuggestionConfig` - Autosuggestion settings
+  - `options` - ZSH options (setopt commands)
+  - `completion` - Completion styling
+  - `keybindings` - Key bindings
+  - `historyOptions` - History-specific options
+  - `tools` - Tool initialization (fzf, zoxide, oh-my-posh, carapace)
 
 ### Error Handling Patterns
 The codebase implements defensive configuration:
