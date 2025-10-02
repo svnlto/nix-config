@@ -18,7 +18,7 @@ rec {
     vim = "nvim";
     cat = "bat";
     tree = "tree -C";
-    cd = "z"; # Use zoxide for smarter directory navigation
+    cd = "z";
 
     # Nix utilities (platform-agnostic)
     nix-shell-pure = "nix-shell --pure";
@@ -44,12 +44,31 @@ rec {
 
     # GitHub tools
     ghd = "gh-dash";
+
+    # Git aliases
+    gst = "git status";
+    gco = "git checkout";
+    gcb = "git checkout -b";
+    gb = "git branch";
+    gp = "git push";
+    gl = "git pull";
+    ga = "git add";
+    gaa = "git add --all";
+    gc = "git commit";
+    gcm = "git commit -m";
+    gca = "git commit --amend";
+    gd = "git diff";
+    gds = "git diff --staged";
+    glog = "git log --oneline --decorate --graph";
+    gloga = "git log --oneline --decorate --graph --all";
+    gm = "git merge";
+    grb = "git rebase";
   };
 
   # Declarative history configuration for home-manager
   historyConfig = {
-    size = 10000;
-    save = 10000;
+    size = 50000;
+    save = 50000;
     path = "$HOME/.zsh_history";
     ignoreAllDups = true;
     ignoreDups = true;
@@ -129,11 +148,6 @@ rec {
     # Simple zoxide initialization
     if command -v zoxide >/dev/null 2>&1; then
       eval "$(zoxide init zsh)"
-    fi
-
-    # Simple oh-my-posh initialization
-    if command -v oh-my-posh >/dev/null 2>&1; then
-      eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
     fi
 
     # FZF shell integration for history search and file finding

@@ -35,12 +35,6 @@ in {
     autosuggestion = sharedZsh.autosuggestionConfig;
     history = sharedZsh.historyConfig;
 
-    oh-my-zsh = {
-      enable = true;
-      plugins = [ "git" ];
-      theme = "";
-    };
-
     # Common aliases - platform-specific aliases merged separately
     shellAliases = sharedZsh.aliases;
 

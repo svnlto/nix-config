@@ -18,7 +18,6 @@
     set-option -g default-command "reattach-to-user-namespace -l $SHELL"
 
     # Fix Touch ID authentication in tmux
-    # Enable use of the macOS keychain for SSH keys
     set -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
 
     # Terminal settings - optimized for Ghostty
@@ -44,7 +43,7 @@
     # Renumber windows when one is closed
     set -g renumber-windows on
 
-    # Increase scrollback buffer size (from your existing config)
+    # Increase scrollback buffer size
     set -g history-limit 50000
 
     # Enable mouse support
@@ -60,18 +59,18 @@
     setw -g monitor-activity on
     set -g visual-activity on
 
-    # Remap prefix to Ctrl-a (from your existing config)
+    # Remap prefix to Ctrl-a
     set -g prefix C-a
     unbind C-b
     bind C-a send-prefix
 
-    # Traditional prefix-based navigation (keeping your existing workflow)
+    # Traditional prefix-based navigation
     bind h select-pane -L
     bind j select-pane -D
     bind k select-pane -U
     bind l select-pane -R
 
-    # Direct Ctrl+hjkl navigation (your main request!) with vim-tmux-navigator
+    # Direct Ctrl+hjkl navigation
     is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
         | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
     bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
@@ -143,33 +142,21 @@
     bind -n S-Left previous-window
     bind -n S-Right next-window
 
-    # Catppuccin theme configuration
-    set -g @catppuccin_flavor 'mocha'
-    set -g @catppuccin_window_status_style "basic"
-
-    # Configure Catppuccin status modules
-    set -g @catppuccin_status_modules_right "gh date_time"
-    set -g @catppuccin_status_modules_left ""
-    set -g @catppuccin_date_time_text "%Y-%m-%d %H:%M"
-
-    # Status bar spacing and appearance
-    set -g @catppuccin_status_left_separator " "
-    set -g @catppuccin_status_right_separator " "
-    set -g @catppuccin_status_connect_separator "yes"
-
-    # Window status padding
-    set -g @catppuccin_window_left_separator ""
-    set -g @catppuccin_window_right_separator " "
-    set -g @catppuccin_window_middle_separator " | "
-    set -g @catppuccin_window_number_position "left"
+    # tmux-dotbar configuration with Catppuccin Mocha accent colors
+    set -g @tmux-dotbar-fg-current "#cdd6f4"      # Mocha text
+    set -g @tmux-dotbar-fg-session "#89b4fa"      # Mocha blue
+    set -g @tmux-dotbar-fg-prefix "#f38ba8"       # Mocha red (prefix indicator)
+    set -g @tmux-dotbar-status-left "#S"
+    set -g @tmux-dotbar-right "true"
+    set -g @tmux-dotbar-status-right "%Y-%m-%d %H:%M"
+    set -g @tmux-dotbar-window-status-separator " • "
 
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'
-    set -g @plugin 'catppuccin/tmux#v2.1.3'
+    set -g @plugin 'vaaleyard/tmux-dotbar'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
-    set -g @plugin 'tardunge/tmux-gh'
 
     # tmux-resurrect settings
     set -g @resurrect-strategy-vim 'session'
