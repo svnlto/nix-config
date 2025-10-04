@@ -25,7 +25,8 @@
     set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"
     set-option -ga terminal-overrides ",xterm-ghostty:RGB,tmux-256color:RGB"
 
-    # Cursor configuration - pink blinking cursor
+    # Cursor configuration - fix blinking cursor inside and outside Neovim
+    set-option -ga terminal-overrides ',xterm-ghostty:cnorm=\E[?12h\E[?25h'
     set-option -ga terminal-overrides ',*:Ss=\E[%p1%d q:Se=\E[2 q'
     set-option -g cursor-style blinking-block
     set-option -g cursor-colour "#FF24C0"

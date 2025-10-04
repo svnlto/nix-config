@@ -21,12 +21,18 @@ return {
 			},
 		},
 		config = function(_, opts)
+			-- Extend opts to customize cursor colors
+			opts.custom_highlights = function(colors)
+				return {
+					Cursor = { bg = "#FF24C0", fg = colors.base },
+					lCursor = { bg = "#FF24C0", fg = colors.base },
+					TermCursor = { bg = "#FF24C0", fg = colors.base },
+					TermCursorNC = { bg = "#FF24C0", fg = colors.base },
+				}
+			end
+
 			require("catppuccin").setup(opts)
 			vim.cmd.colorscheme("catppuccin")
-
-			-- Set pink cursor color after colorscheme loads
-			vim.api.nvim_set_hl(0, "Cursor", { bg = "#FF24C0", fg = "#1e1e2e" })
-			vim.api.nvim_set_hl(0, "lCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
 
 			vim.schedule(function()
 				if pcall(require, "nvim-tree") then
@@ -46,5 +52,11 @@ return {
 		opts = {
 			colorscheme = "catppuccin",
 		},
+		init = function()
+			-- Set cursor color before LazyVim loads
+			vim.api.nvim_set_hl(0, "Cursor", { bg = "#FF24C0", fg = "#1e1e2e" })
+			vim.api.nvim_set_hl(0, "lCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
+			vim.api.nvim_set_hl(0, "TermCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
+		end,
 	},
 }
