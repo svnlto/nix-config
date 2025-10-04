@@ -52,11 +52,5 @@ return {
 		opts = {
 			colorscheme = "catppuccin",
 		},
-		init = function()
-			-- Set cursor color before LazyVim loads
-			vim.api.nvim_set_hl(0, "Cursor", { bg = "#FF24C0", fg = "#1e1e2e" })
-			vim.api.nvim_set_hl(0, "lCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
-			vim.api.nvim_set_hl(0, "TermCursor", { bg = "#FF24C0", fg = "#1e1e2e" })
-		end,
 	},
 }
