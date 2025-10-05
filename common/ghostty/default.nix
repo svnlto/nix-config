@@ -11,14 +11,17 @@
     adjust-cell-height = 7
     adjust-cell-width = -1
 
+    window-theme = dark
     window-padding-x = 2
     window-padding-y = 0
-    window-decoration = false
-    window-theme = dark
-    macos-titlebar-style = hidden
+    window-decoration = true
+    macos-window-buttons = hidden
+    macos-titlebar-style = transparent
+    macos-titlebar-proxy-icon = hidden
 
     cursor-style = block
     cursor-style-blink = true
+    cursor-color = "#ff00ff"
 
     shell-integration = zsh
     shell-integration-features = cursor,sudo,title

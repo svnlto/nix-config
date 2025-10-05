@@ -13,6 +13,7 @@ Break down Linear issue into executable tasks based on project type, following t
 **Following**: Global `<universal_workflow>` → Research Phase + `<memory_management>` + `<reasoning_tool_guide>`
 
 <research_steps>
+
   1. Fetch issue details using Linear tools
   2. <thinking>
      Analyze issue context:

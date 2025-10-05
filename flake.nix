@@ -10,7 +10,6 @@
     ];
     max-jobs = "auto";
     cores = 0; # Use all available cores
-    auto-optimise-store = true;
     builders-use-substitutes = true;
     fallback = true;
     keep-going = true;

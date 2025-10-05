@@ -57,7 +57,6 @@ let
       };
     };
 
-    # No Git aliases here - using Oh My Zsh git plugin aliases instead
     aliases = { };
   };
 

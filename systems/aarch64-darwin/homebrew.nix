@@ -21,7 +21,6 @@
       # Communication & Collaboration
       "linear-linear"
       "slack"
-      "zoom"
       "whatsapp"
       "telegram"
       "signal"
@@ -30,6 +29,9 @@
       # Development & Terminal
       "orbstack"
       "ghostty"
+
+      # Networking & VPN
+      "tailscale-app"
 
       # Media & Entertainment
       "spotify"

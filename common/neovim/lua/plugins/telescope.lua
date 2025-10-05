@@ -22,6 +22,11 @@ return {
 					preview_cutoff = 120,
 				},
 			},
+			pickers = {
+				find_files = {
+					find_command = { "rg", "--files", "--sortr=modified", "--hidden", "--glob", "!.git" },
+				},
+			},
 		},
 	},
 }
