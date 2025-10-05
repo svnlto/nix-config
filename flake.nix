@@ -117,9 +117,6 @@
             "user"; # Override this when using: home-manager switch --flake .#linux --extra-experimental-features "nix-command flakes"
         };
 
-        # Specific user configurations (examples)
-        vagrant = mkHomeManagerConfig { username = "vagrant"; };
-
         ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
       };
 

@@ -143,6 +143,10 @@
     bind -n S-Left previous-window
     bind -n S-Right next-window
 
+    # Pane border colors - Catppuccin Mocha
+    set -g pane-border-style "fg=#45475a"          # Mocha surface1 (inactive border)
+    set -g pane-active-border-style "fg=#89b4fa"   # Mocha blue (active border)
+
     # tmux-dotbar configuration with Catppuccin Mocha accent colors
     set -g @tmux-dotbar-fg-current "#cdd6f4"      # Mocha text
     set -g @tmux-dotbar-fg-session "#89b4fa"      # Mocha blue

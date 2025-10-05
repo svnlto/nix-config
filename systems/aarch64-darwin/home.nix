@@ -7,6 +7,11 @@
   # macOS-specific home directory
   home.homeDirectory = "/Users/${username}";
 
+  # macOS-specific packages
+  home.packages =
+    let packages = import ../../common/packages.nix { inherit pkgs; };
+    in packages.darwinPackages;
+
   # macOS-specific shell aliases
   programs.zsh.shellAliases = {
     nixswitch =

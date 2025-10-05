@@ -8,6 +8,9 @@
     let packages = import ../../common/packages.nix { inherit pkgs; };
     in packages.allSystemPackages;
 
+  # macOS-specific Nix settings
+  nix.optimise.automatic = true;
+
   programs.zsh.enable = true;
 
   system.configurationRevision = lib.mkIf (builtins ? currentSystem) null;

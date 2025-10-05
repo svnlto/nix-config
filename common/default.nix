@@ -26,9 +26,6 @@
       connect-timeout = 30;
     };
 
-    # Set up automatic store optimization
-    optimise.automatic = true;
-
     # Shared extra options
     extraOptions = ''
       narinfo-cache-negative-ttl = 0

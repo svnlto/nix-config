@@ -24,8 +24,14 @@
     fzf # Command-line fuzzy finder for interactive searching
     pipx # Python package installer with isolation
     tmux # Terminal multiplexer for session management
-    reattach-to-user-namespace # macOS tmux integration for clipboard/notification access
   ];
+
+  # macOS-specific packages
+  # These packages only work on macOS
+  darwinPackages = with pkgs;
+    [
+      reattach-to-user-namespace # macOS tmux integration for clipboard/notification access
+    ];
 
   # macOS system-level packages
   # These packages need to be installed at the system level for proper integration

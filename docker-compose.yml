@@ -1,0 +1,11 @@
+services:
+  nix-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/ubuntu/workspace
+    working_dir: /home/ubuntu
+    stdin_open: true
+    tty: true
+    user: ubuntu
