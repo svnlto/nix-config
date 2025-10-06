@@ -100,9 +100,14 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 
 ### Package Management
 - **Add everywhere**: Edit `common/packages.nix` (corePackages or devPackages lists)
+- **macOS-only packages**: Edit `common/packages.nix` (darwinPackages list) - for packages like `reattach-to-user-namespace`
 - **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
 - **Linux-specific packages**: Edit `systems/aarch64-linux/home-linux.nix`
+
+**IMPORTANT**: Platform-specific packages must be separated:
+- macOS-only packages (like `reattach-to-user-namespace`) go in `darwinPackages` and are imported via `systems/aarch64-darwin/home.nix`
+- Never put macOS-only packages in shared `devPackages` or they'll break Linux builds
 
 ### Adding New Hosts
 Create new configuration in `flake.nix`:
@@ -163,6 +168,32 @@ Located in `common/claude-code/`, this provides:
 - Proper credential management for AWS profiles
 - Isolated development environments prevent host contamination
 
+## Testing with Docker
+
+Test the Nix configuration in a clean Ubuntu environment:
+
+```bash
+# Build the Docker image
+docker build -t nix-config-test .
+
+# Run interactively
+docker run -it --rm \
+  -v $(pwd):/home/ubuntu/workspace \
+  -w /home/ubuntu \
+  nix-config-test
+
+# Or use docker-compose (simpler)
+docker-compose run --rm nix-dev
+```
+
+**Docker Setup Details:**
+- Ubuntu 24.04 base with pinned SHA256
+- Pinned package versions (curl, git, sudo, xz-utils, ca-certificates, zsh)
+- Pinned Nix version: 2.24.10
+- Pinned home-manager: release-24.05
+- Applies `homeConfigurations.ubuntu` automatically during build
+- All tools (tmux, neovim, zsh) pre-configured and ready to test
+
 ## Configuration Development Commands
 
 ### Nix Development Tools (via `nix develop`)
@@ -185,6 +216,7 @@ nix flake check
 # Validate specific configuration
 nix eval .#darwinConfigurations.rick.system
 nix eval .#homeConfigurations.linux.activationPackage
+nix eval .#homeConfigurations.ubuntu.activationPackage
 ```
 
 ### Troubleshooting Commands
@@ -234,7 +266,9 @@ The configuration uses a layered import system that eliminates duplication:
 Built-in performance tuning throughout:
 - **Build parallelization**: `max-jobs = "auto"`, `cores = 0`
 - **Download optimization**: 256MB buffer, 50 HTTP connections
-- **Store optimization**: Automatic optimization, substituter caching (auto-optimise enabled on Linux)
+- **Store optimization**: `nix.optimise.automatic = true` on macOS only (in `systems/aarch64-darwin/default.nix`)
+  - **CRITICAL**: Do NOT set `nix.optimise` in `common/default.nix` - it only works with nix-darwin, not home-manager
+  - Linux uses standard nix settings without `optimise.automatic`
 
 ### State Management Architecture
 - **Version pinning**: `common/versions.nix` prevents Home Manager version conflicts
@@ -312,3 +346,23 @@ The codebase implements defensive configuration:
 - **Explicit dependencies**: Always declare inputs explicitly
 - **Modular design**: Each .nix file should have single responsibility
 - **Documentation**: Comment complex expressions and business logic
+
+### Common Pitfalls to Avoid
+
+1. **Platform-specific Nix options in shared configs**
+   - ❌ Setting `nix.optimise` in `common/default.nix` breaks home-manager
+   - ✅ Set `nix.optimise.automatic` only in `systems/aarch64-darwin/default.nix`
+
+2. **macOS-only packages in shared package lists**
+   - ❌ `reattach-to-user-namespace` in `devPackages` breaks Linux builds
+   - ✅ Create `darwinPackages` list and import only in macOS config
+
+3. **Git tracking required for Nix flakes**
+   - Nix flakes only include files tracked by Git
+   - Stage new files with `git add` before running `nixswitch` or builds will fail
+   - The error "file not found" often means the file isn't tracked by Git
+
+4. **Cursor color configuration in Neovim/tmux**
+   - Use Catppuccin's native `custom_highlights` for cursor colors in Neovim
+   - Set tmux cursor color via `terminal-overrides` with `cnorm` for proper blinking
+   - Example: `set-option -ga terminal-overrides ',xterm-ghostty:cnorm=\E[?12h\E[?25h'`
