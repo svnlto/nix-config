@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   sudo=1.9.15p5-3ubuntu5.24.04.1 \
   xz-utils=5.6.1+really5.4.5-1ubuntu0.2 \
   ca-certificates=20240203 \
+  zsh=5.9-6ubuntu2 \
   && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ubuntu
