@@ -1,12 +1,16 @@
 # 🏠 Cross-Platform Nix Configuration
 
-> A comprehensive, declarative development environment for macOS and Linux with integrated AI tooling
+> A comprehensive, declarative development environment for macOS and Linux with
+integrated AI tooling
 
-This configuration provides a unified development setup across Apple Silicon Macs and ARM64 Linux environments, featuring seamless package management, shell customization, and Claude Code integration for enhanced productivity.
+This configuration provides a unified development setup across Apple Silicon Macs
+and ARM64 Linux environments, featuring seamless package management, shell
+customization, and Claude Code integration for enhanced productivity.
 
 ## ✨ What's Included
 
 ### 🛠️ Development Tools
+
 - **Git & GitHub CLI** - Version control with seamless GitHub integration
 - **Neovim** - Modern Vim with LazyVim configuration and LSP support
 - **tmux** - Terminal multiplexer with custom configuration
@@ -15,6 +19,7 @@ This configuration provides a unified development setup across Apple Silicon Mac
 - **Docker & Docker Compose** - Containerization support (Linux)
 
 ### 🖥️ Terminal & Shell
+
 - **ZSH** - Feature-rich shell with Oh My Posh theming
 - **Zoxide** - Smart directory navigation
 - **Eza** - Modern `ls` replacement with colors and icons
@@ -23,6 +28,7 @@ This configuration provides a unified development setup across Apple Silicon Mac
 - **gh-dash** - GitHub CLI dashboard for PRs and issues (alias: `ghd`)
 
 ### 🎨 macOS Applications (via Homebrew)
+
 - **Productivity**: Raycast, Notion Calendar, SuperWhisper
 - **Development**: Orbstack, Ghostty terminal
 - **Security**: 1Password, 1Password CLI
@@ -30,12 +36,14 @@ This configuration provides a unified development setup across Apple Silicon Mac
 - **Media**: Spotify, VLC
 
 ### 🤖 AI Integration
+
 - **Claude Code** - Advanced AI coding assistant with custom commands
 - **Linear Commands** - Project management integration
 - **Custom Hooks** - Automated linting and quality checks
 - **MCP Servers** - Extended AI capabilities
 
 ### ☁️ Cloud & Infrastructure
+
 - **Tailscale** - Secure networking across devices
 - **AWS CLI & Tools** - Cloud development support
 - **SSH Configuration** - 1Password integration for seamless key management
@@ -184,6 +192,7 @@ Edit `flake.nix` to add new machine configurations:
 ### Shell Customization
 
 ZSH configuration is shared via `common/zsh/shared.nix`:
+
 - **Aliases**: Common shortcuts and system-specific commands
 - **History**: Encrypted sync with Atuin
 - **Prompt**: Oh My Posh with custom theme
@@ -192,6 +201,7 @@ ZSH configuration is shared via `common/zsh/shared.nix`:
 ### Claude Code Integration
 
 Advanced AI coding assistant with:
+
 - **Custom Commands**: Linear integration, conventional commits
 - **Quality Hooks**: Automated linting and formatting
 - **Remote Commands**: Fetched from dedicated repository
@@ -214,6 +224,7 @@ Advanced AI coding assistant with:
 ## 📊 Performance Optimizations
 
 Built-in performance tuning:
+
 - **Parallel Builds**: Auto-detected core count utilization
 - **Download Optimization**: 256MB buffers, 50 HTTP connections
 - **Store Optimization**: Automatic Nix store maintenance
