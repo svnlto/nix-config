@@ -58,8 +58,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Auto-reload files when changed outside Neovim (works in tmux)
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+-- Auto-reload files when changed outside Neovim (works in tmux and while idle)
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "CursorHold", "CursorHoldI" }, {
 	group = augroup("checktime"),
 	callback = function()
 		if vim.o.buftype ~= "nofile" then

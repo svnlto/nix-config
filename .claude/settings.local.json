@@ -1,7 +1,4 @@
 {
-  "BASH_DEFAULT_TIMEOUT_MS": "300000",
-  "enableAllProjectMcpServers": true,
-  "outputStyle": "Architect",
   "permissions": {
     "allow": [
       "Bash(git:*)",
@@ -16,5 +13,9 @@
       "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "outputStyle": "Architect",
+  "BASH_DEFAULT_TIMEOUT_MS": "300000",
+  "spinnerTipsEnabled": false
 }

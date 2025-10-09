@@ -13,13 +13,6 @@ return {
 					enabled = false,
 				},
 				filetypes = {
-					markdown = true,
-					help = true,
-					html = true,
-					javascript = true,
-					typescript = true,
-					terraform = true,
-					hcl = true,
 					["*"] = true,
 				},
 			})

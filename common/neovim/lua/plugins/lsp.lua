@@ -103,6 +103,21 @@ return {
 						return lspconfig.util.root_pattern("biome.json", ".git")(fname)
 					end,
 				},
+
+				yamlls = {
+					settings = {
+						yaml = {
+							keyOrdering = false,
+							validate = true,
+							schemas = {
+								["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.3-standalone-strict/all.json"] = "/manifests/*",
+								["https://json.schemastore.org/github-workflow.json"] = "*/.github/workflows/*",
+								["https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json"] = "*externalsecret.yaml",
+								[""] = "",
+							},
+						},
+					},
+				},
 			},
 		},
 	},

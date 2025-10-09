@@ -17,6 +17,8 @@
       "notion-calendar"
       "notion-mail"
       "superwhisper"
+      "obsidian"
+      "brainfm"
 
       # Communication & Collaboration
       "linear-linear"

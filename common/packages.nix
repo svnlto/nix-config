@@ -24,6 +24,7 @@
     fzf # Command-line fuzzy finder for interactive searching
     pipx # Python package installer with isolation
     tmux # Terminal multiplexer for session management
+    k9s # Terminal UI for Kubernetes cluster management
   ];
 
   # macOS-specific packages

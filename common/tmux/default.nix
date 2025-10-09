@@ -56,9 +56,9 @@
     # Status bar refresh rate
     set -g status-interval 60
 
-    # Enable activity alerts
-    setw -g monitor-activity on
-    set -g visual-activity on
+    # Disable activity alerts
+    setw -g monitor-activity off
+    set -g visual-activity off
 
     # Remap prefix to Ctrl-a
     set -g prefix C-a
@@ -147,19 +147,26 @@
     set -g pane-border-style "fg=#45475a"          # Mocha surface1 (inactive border)
     set -g pane-active-border-style "fg=#89b4fa"   # Mocha blue (active border)
 
-    # tmux-dotbar configuration with Catppuccin Mocha accent colors
-    set -g @tmux-dotbar-fg-current "#cdd6f4"      # Mocha text
-    set -g @tmux-dotbar-fg-session "#89b4fa"      # Mocha blue
-    set -g @tmux-dotbar-fg-prefix "#f38ba8"       # Mocha red (prefix indicator)
-    set -g @tmux-dotbar-status-left "#S"
-    set -g @tmux-dotbar-right "true"
-    set -g @tmux-dotbar-status-right "%Y-%m-%d %H:%M"
-    set -g @tmux-dotbar-window-status-separator " • "
+    # Status bar - Catppuccin Mocha colors
+    set -g status-style "bg=#1e1e2e,fg=#cdd6f4"
+    set -g status-left-length 100
+    set -g status-right-length 100
+    set -g status-justify centre
+
+    # Left: session name
+    set -g status-left "#[fg=#89b4fa,bold] #S #[fg=#45475a]│ "
+
+    # Right: date and time
+    set -g status-right "#[fg=#45475a] │ #[fg=#cdd6f4]%Y-%m-%d %H:%M"
+
+    # Window status format - no backgrounds
+    set -g window-status-format "#[fg=#6c7086] #I:#W "
+    set -g window-status-current-format "#[fg=#cdd6f4,bold] #I:#W "
+    set -g window-status-separator ""
 
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'
-    set -g @plugin 'vaaleyard/tmux-dotbar'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
 

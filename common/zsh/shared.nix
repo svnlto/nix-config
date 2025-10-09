@@ -45,6 +45,9 @@ rec {
     # GitHub tools
     ghd = "gh-dash";
 
+    # Kubernetes tools
+    k = "kubectl";
+
     # Git aliases
     gst = "git status";
     gco = "git checkout";
