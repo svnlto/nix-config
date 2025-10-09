@@ -156,8 +156,8 @@
     # Left: session name
     set -g status-left "#[fg=#89b4fa,bold] #S #[fg=#45475a]│ "
 
-    # Right: date and time
-    set -g status-right "#[fg=#45475a] │ #[fg=#cdd6f4]%Y-%m-%d %H:%M"
+    # Right: date and time (European format: HH:MM DD-MM-YYYY)
+    set -g status-right "#[fg=#45475a] │ #[fg=#cdd6f4]%H:%M %d-%m-%Y"
 
     # Window status format - no backgrounds
     set -g window-status-format "#[fg=#6c7086] #I:#W "
