@@ -31,6 +31,7 @@
       # Development & Terminal
       "orbstack"
       "ghostty"
+      "utm"
 
       # Networking & VPN
       "tailscale-app"

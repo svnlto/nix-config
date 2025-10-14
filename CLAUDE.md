@@ -18,11 +18,14 @@ git pull && nixswitch
 
 ### Linux (Home Manager)
 ```bash
-# Apply generic Linux configuration
+# Apply generic Linux configuration (minimal - for Docker/containers)
 hmswitch
 
 # Apply user-specific configuration (if exists)
 hm-user
+
+# Apply Arch VM with Wayland/Sway
+home-manager switch --flake ~/.config/nix#arch
 
 # Manual commands
 home-manager switch --flake ~/.config/nix#linux
@@ -51,6 +54,8 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── programs/default.nix     # Shared program configs (direnv, gh, zsh)
 │   ├── packages.nix             # Package definitions for all systems
 │   ├── home-packages.nix        # Home Manager package imports
+│   ├── profiles/                # Optional configuration profiles
+│   │   └── wayland.nix          # Wayland/Sway desktop environment
 │   ├── claude-code/             # Claude Code integration with custom commands
 │   ├── neovim/                  # Neovim configuration
 │   ├── tmux/                    # Tmux configuration
@@ -93,6 +98,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 ### Making Configuration Changes
 1. Edit configuration files in appropriate directory:
    - `common/` for shared changes
+   - `common/profiles/` for optional profiles (Wayland, etc.)
    - `systems/aarch64-darwin/` for macOS-specific
    - `systems/aarch64-linux/` for Linux-specific
 2. Apply changes using commands above
@@ -104,10 +110,41 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 - **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
 - **Linux-specific packages**: Edit `systems/aarch64-linux/home-linux.nix`
+- **Profile-specific packages**: Edit `common/profiles/*.nix` (e.g., `wayland.nix` for Sway/Wayland packages)
 
 **IMPORTANT**: Platform-specific packages must be separated:
 - macOS-only packages (like `reattach-to-user-namespace`) go in `darwinPackages` and are imported via `systems/aarch64-darwin/home.nix`
+- Profile-specific packages (like Sway/Wayland tools) go in `common/profiles/*.nix` and are opt-in via `extraModules`
 - Never put macOS-only packages in shared `devPackages` or they'll break Linux builds
+
+### Configuration Profiles
+
+**Profile Architecture**: Optional configurations that extend the base system without polluting minimal environments.
+
+**Available Profiles**:
+- `common/profiles/wayland.nix` - Wayland/Sway desktop environment with window manager, status bar, and utilities
+
+**Using Profiles**:
+Profiles are opt-in via `extraModules` in `flake.nix`:
+
+```nix
+# Minimal configuration (default)
+linux = mkHomeManagerConfig {
+  username = "user";
+};
+
+# With Wayland/Sway profile
+arch = mkHomeManagerConfig {
+  username = "svenlito";
+  extraModules = [ ./common/profiles/wayland.nix ];
+};
+```
+
+**Benefits**:
+- Default stays minimal (Docker/containers unaffected)
+- Explicit opt-in for additional functionality
+- Easy to compose multiple profiles
+- Clear separation of concerns
 
 ### Adding New Hosts
 Create new configuration in `flake.nix`:
@@ -143,7 +180,8 @@ Located in `common/claude-code/`, this provides:
 - **Node.js**: Uses nodePackages.pnpm from nixpkgs
 
 ### Multi-Environment Support
-- **Generic Linux**: Flexible Home Manager configuration for any Linux environment
+- **Generic Linux**: Flexible Home Manager configuration for any Linux environment (minimal by default)
+- **Profile-based configs**: Optional modules for desktop environments (Wayland/Sway), server tools, etc.
 - **Development Shell**: Available via `nix develop` for working on this configuration
 - **Auto-Detection**: Shell aliases automatically detect system type and hostname
 
@@ -156,11 +194,17 @@ Located in `common/claude-code/`, this provides:
 - SSH configuration for VM connectivity
 
 ### Linux (home-manager)
-- Minimal configuration - only Linux-specific settings
+- **Minimal by default** - base configuration for Docker/containers
+- **Profile system** - opt-in desktop environments (Wayland/Sway) or additional tools
 - Docker integration (docker-compose package)
 - Linux-specific packages: htop, neofetch, curl, wget
 - Imports both `common/home-manager-base.nix` and `common/default.nix`
 - Auto-optimise-store enabled (better suited for Linux than macOS)
+
+**Available Configurations**:
+- `#linux` - Minimal (Docker/containers)
+- `#ubuntu` - Minimal for Ubuntu environments
+- `#arch` - Full desktop with Wayland/Sway (via `wayland.nix` profile)
 
 ## Security Considerations
 - SSH keys managed through 1Password integration

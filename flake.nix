@@ -31,6 +31,9 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, }:
     let
+      # Default username across all configurations
+      defaultUsername = "svenlito";
+
       # Utility function to create nixpkgs for different systems
       mkNixpkgs = system:
         import nixpkgs {
@@ -105,7 +108,7 @@
       darwinConfigurations = {
         "rick" = mkDarwinSystem (validateUsername "rick" {
           hostname = "rick";
-          username = "svenlito";
+          username = defaultUsername;
         });
       };
 
@@ -118,6 +121,12 @@
         };
 
         ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
+
+        # Arch Linux VM with Wayland/Sway profile
+        arch = mkHomeManagerConfig {
+          username = defaultUsername;
+          extraModules = [ ./common/profiles/wayland.nix ];
+        };
       };
 
       # Development shell for working on this configuration
