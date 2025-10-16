@@ -10,12 +10,13 @@
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:www.lazyvim.org)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(zsh:*)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
   "outputStyle": "Architect",
-  "BASH_DEFAULT_TIMEOUT_MS": "300000",
-  "spinnerTipsEnabled": false
+  "spinnerTipsEnabled": false,
+  "BASH_DEFAULT_TIMEOUT_MS": "300000"
 }

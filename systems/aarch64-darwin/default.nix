@@ -8,6 +8,13 @@
     let packages = import ../../common/packages.nix { inherit pkgs; };
     in packages.allSystemPackages;
 
+  # System-wide environment variables
+  environment.variables = {
+    # Set NIX_SSL_CERT_FILE to use nix-managed certificates
+    NIX_SSL_CERT_FILE =
+      "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+  };
+
   # macOS-specific Nix settings
   nix.optimise.automatic = true;
 

@@ -133,10 +133,10 @@
       # Development shell for working on this configuration
       devShells.aarch64-darwin.default = let pkgs = mkNixpkgs "aarch64-darwin";
       in pkgs.mkShell {
-        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh ];
+        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh git ];
         shellHook = ''
           echo "🛠️  Nix configuration development environment"
-          echo "Available tools: nixfmt-classic, statix, deadnix, nil, zsh"
+          echo "Available tools: nixfmt-classic, statix, deadnix, nil, git, zsh"
           echo ""
           echo "Quick commands:"
           echo "  nixswitch                              # Rebuild Darwin system"
@@ -152,10 +152,10 @@
 
       devShells.aarch64-linux.default = let pkgs = mkNixpkgs "aarch64-linux";
       in pkgs.mkShell {
-        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh ];
+        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh git ];
         shellHook = ''
           echo "🛠️  Nix configuration development environment (Linux)"
-          echo "Available tools: nixfmt-classic, statix, deadnix, nil, zsh"
+          echo "Available tools: nixfmt-classic, statix, deadnix, nil, git, zsh"
           echo ""
           echo "Quick commands:"
           echo "  hmswitch                               # Rebuild Home Manager"
