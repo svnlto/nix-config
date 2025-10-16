@@ -77,7 +77,8 @@
             {
               home-manager = {
                 useGlobalPkgs = true;
-                useUserPackages = true;
+                useUserPackages =
+                  false; # Must be false on macOS to create user profiles
                 extraSpecialArgs = { inherit username; };
                 backupFileExtension = "backup";
                 users.${username} = import ./systems/${system}/home.nix;

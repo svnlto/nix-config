@@ -20,7 +20,7 @@
   # Set primary user for nix-darwin user-specific options
   system.primaryUser = username;
 
-  ids.gids.nixbld = 30000;
+  ids.gids.nixbld = 350;
 
   # System activation scripts
   system.activationScripts = {
