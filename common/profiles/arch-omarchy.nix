@@ -88,6 +88,13 @@
       # Gestures
       gestures = { workspace_swipe = true; };
 
+      # Monitor/Output settings
+      misc = {
+        background_color = "rgb(232323)"; # Background color matching wallpaper
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+      };
+
       # Keybindings
       "$mod" = "SUPER";
       bind = [
@@ -329,11 +336,11 @@
     settings = {
       # Preload wallpaper(s)
       preload = [ "~/.config/wallpaper.jpg" ];
-      # Apply wallpaper to all monitors
+      # Apply wallpaper to all monitors (centered, not stretched)
       wallpaper = [ ",~/.config/wallpaper.jpg" ]; # , = all monitors
-      # Optional: enable splash screen
+      # Don't splash
       splash = false;
-      # Optional: enable ipc for dynamic wallpaper changes
+      # Enable ipc for dynamic wallpaper changes
       ipc = "on";
     };
   };
