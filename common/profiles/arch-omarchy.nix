@@ -1,21 +1,13 @@
 # Omarchy-inspired Arch Linux Profile
-# Extends base configuration with Omarchy-specific features
-# Based on: https://github.com/basecamp/omarchy
-# Theme: Catppuccin Mocha (your preferred theme)
 { config, pkgs, ... }:
 
 {
-  # ==========================================
-  # Hyprland Window Manager (Omarchy's choice)
-  # ==========================================
   wayland.windowManager.hyprland = {
     enable = true;
 
     settings = {
-      # Monitor configuration
       monitor = [ ",preferred,auto,1" ];
 
-      # Autostart
       exec-once = [
         "waybar"
         "mako"
@@ -23,11 +15,9 @@
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
       ];
 
-      # Environment variables
       env =
         [ "XCURSOR_SIZE,24" "QT_QPA_PLATFORM,wayland" "MOZ_ENABLE_WAYLAND,1" ];
 
-      # Input configuration
       input = {
         kb_layout = "us";
         follow_mouse = 1;
@@ -38,7 +28,6 @@
         sensitivity = 0;
       };
 
-      # General settings with Catppuccin Mocha colors
       general = {
         gaps_in = 5;
         gaps_out = 10;
@@ -48,7 +37,6 @@
         layout = "dwindle";
       };
 
-      # Decoration
       decoration = {
         rounding = 8;
         blur = {
@@ -62,7 +50,6 @@
         "col.shadow" = "rgba(1a1a1aee)";
       };
 
-      # Animations
       animations = {
         enabled = true;
         bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
@@ -76,23 +63,19 @@
         ];
       };
 
-      # Layout
       dwindle = {
         pseudotile = true;
         preserve_split = true;
       };
 
-      # Gestures
       gestures = { workspace_swipe = true; };
 
-      # Monitor/Output settings
       misc = {
-        background_color = "rgb(232323)"; # Background color matching wallpaper
+        background_color = "rgb(232323)";
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
       };
 
-      # Keybindings
       "$mod" = "SUPER";
       bind = [
         "$mod, Return, exec, ghostty"
@@ -102,7 +85,6 @@
         "$mod, V, togglefloating"
         "$mod, F, fullscreen"
 
-        # Vi-style navigation
         "$mod, H, movefocus, l"
         "$mod, L, movefocus, r"
         "$mod, K, movefocus, u"
@@ -112,7 +94,6 @@
         "$mod SHIFT, K, movewindow, u"
         "$mod SHIFT, J, movewindow, d"
 
-        # Workspaces
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
@@ -145,59 +126,34 @@
     };
   };
 
-  # ==========================================
-  # Packages (ADDS to base packages from home-packages.nix)
-  # ==========================================
-  # Base already includes: gh, lazygit, direnv, ripgrep, fzf, tmux, k9s,
-  #                        oh-my-posh, eza, zoxide, bat, neovim, ghostty
   home.packages = with pkgs; [
-    # Hyprland ecosystem
     hyprland
     hyprpaper
     hypridle
     hyprlock
     hyprpicker
-
-    # UI components
     waybar
     wofi
     mako
     polkit_gnome
-
-    # Utilities
     grim
     slurp
     wl-clipboard
     firefox
-
     ghostty
-
-    # Development tools (Omarchy-specific additions)
-    lazydocker # Docker TUI
-    btop # Modern system monitor (upgrade from htop)
     docker
     docker-compose
-
-    # API development
-    httpie
+    lazydocker
+    btop
     jq
-
-    # Desktop applications
-    obsidian # Note-taking
-    signal-desktop # Encrypted messaging
-    chromium # Browser
-    localsend # File sharing
-
-    # Media (comment out what you don't want)
-    mpv # Media player
-    spotify # Music
+    obsidian
+    signal-desktop
+    chromium
+    localsend
+    mpv
+    spotify
   ];
 
-  # ==========================================
-  # Program Configurations
-  # ==========================================
-
-  # MPV
   programs.mpv = {
     enable = true;
     config = {
@@ -207,10 +163,8 @@
     };
   };
 
-  # Chromium
   programs.chromium = { enable = true; };
 
-  # Waybar with Catppuccin Mocha
   programs.waybar = {
     enable = true;
     settings = {
@@ -276,7 +230,6 @@
       };
     };
 
-    # Catppuccin Mocha theme
     style = ''
       * {
         font-family: "Hack Nerd Font";
@@ -314,7 +267,6 @@
     '';
   };
 
-  # Mako notifications (Catppuccin Mocha)
   services.mako = {
     enable = true;
     settings = {
@@ -327,7 +279,6 @@
     };
   };
 
-  # Hyprpaper (wallpaper)
   services.hyprpaper = {
     enable = true;
     settings = {
@@ -338,10 +289,8 @@
     };
   };
 
-  # Install your wallpaper
   home.file.".config/wallpaper.jpg".source = ./wallpapers/bg.jpg;
 
-  # Hypridle (idle management)
   services.hypridle = {
     enable = true;
     settings = {
@@ -364,7 +313,6 @@
     };
   };
 
-  # Hyprlock (screen locker with Catppuccin Mocha)
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -397,10 +345,8 @@
     };
   };
 
-  # Environment variables
   home.sessionVariables = { BROWSER = "chromium"; };
 
-  # XDG MIME associations
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -413,7 +359,6 @@
     };
   };
 
-  # XDG portal for Hyprland
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
