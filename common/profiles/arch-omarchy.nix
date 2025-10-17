@@ -1,7 +1,10 @@
 # Omarchy-inspired Arch Linux Profile
-# Single comprehensive profile replicating Omarchy's feature set
+# Extends base configuration with Omarchy-specific features
 # Based on: https://github.com/basecamp/omarchy
 # Theme: Catppuccin Mocha (your preferred theme)
+#
+# NOTE: This profile EXTENDS the base config (common packages, neovim, tmux, etc.)
+# It only ADDS Omarchy-specific features (Hyprland, desktop apps, media tools)
 { config, pkgs, ... }:
 
 {
@@ -139,8 +142,10 @@
   };
 
   # ==========================================
-  # Packages
+  # Packages (ADDS to base packages from home-packages.nix)
   # ==========================================
+  # Base already includes: gh, lazygit, direnv, ripgrep, fzf, tmux, k9s,
+  #                        oh-my-posh, eza, zoxide, bat, neovim, ghostty
   home.packages = with pkgs; [
     # Hyprland ecosystem
     hyprland
@@ -161,18 +166,12 @@
     wl-clipboard
     firefox
 
-    # Development tools (Omarchy essentials)
+    # Development tools (Omarchy-specific additions)
     mise # Version manager (Node, Ruby, Python, etc.)
     lazydocker # Docker TUI
-    btop # System monitor
+    btop # Modern system monitor (upgrade from htop)
     docker
     docker-compose
-
-    # Database CLIs
-    postgresql
-    mysql80
-    redis
-    sqlite
 
     # API development
     httpie
@@ -187,9 +186,9 @@
     # Media (comment out what you don't want)
     mpv # Media player
     spotify # Music
-    # obs-studio # Screen recording
-    # kdenlive # Video editing
-    # pinta # Image editing
+    # obs-studio # Screen recording (uncomment if needed)
+    # kdenlive # Video editing (uncomment if needed)
+    # pinta # Image editing (uncomment if needed)
   ];
 
   # ==========================================
