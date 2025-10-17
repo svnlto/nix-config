@@ -166,8 +166,9 @@
     wl-clipboard
     firefox
 
+    ghostty
+
     # Development tools (Omarchy-specific additions)
-    mise # Version manager (Node, Ruby, Python, etc.)
     lazydocker # Docker TUI
     btop # Modern system monitor (upgrade from htop)
     docker
@@ -186,20 +187,11 @@
     # Media (comment out what you don't want)
     mpv # Media player
     spotify # Music
-    # obs-studio # Screen recording (uncomment if needed)
-    # kdenlive # Video editing (uncomment if needed)
-    # pinta # Image editing (uncomment if needed)
   ];
 
   # ==========================================
   # Program Configurations
   # ==========================================
-
-  # Mise (version manager)
-  programs.mise = {
-    enable = true;
-    enableZshIntegration = true;
-  };
 
   # MPV
   programs.mpv = {
@@ -421,11 +413,7 @@
   };
 
   # Environment variables
-  home.sessionVariables = {
-    BROWSER = "chromium";
-    MISE_DATA_DIR = "${config.home.homeDirectory}/.local/share/mise";
-    MISE_CONFIG_DIR = "${config.home.homeDirectory}/.config/mise";
-  };
+  home.sessionVariables = { BROWSER = "chromium"; };
 
   # XDG MIME associations
   xdg.mimeApps = {
