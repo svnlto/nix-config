@@ -327,14 +327,19 @@
   services.hyprpaper = {
     enable = true;
     settings = {
-      preload = [
-        # Add your wallpaper path here
-      ];
-      wallpaper = [
-        # ",/path/to/wallpaper.png"
-      ];
+      # Preload wallpaper(s)
+      preload = [ "~/.config/wallpaper.jpg" ];
+      # Apply wallpaper to all monitors
+      wallpaper = [ ",~/.config/wallpaper.jpg" ]; # , = all monitors
+      # Optional: enable splash screen
+      splash = false;
+      # Optional: enable ipc for dynamic wallpaper changes
+      ipc = "on";
     };
   };
+
+  # Install your wallpaper
+  home.file.".config/wallpaper.jpg".source = ./wallpapers/bg.jpg;
 
   # Hypridle (idle management)
   services.hypridle = {
