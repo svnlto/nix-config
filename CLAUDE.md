@@ -24,7 +24,7 @@ hmswitch
 # Apply user-specific configuration (if exists)
 hm-user
 
-# Apply Arch VM with Wayland/Sway
+# Apply Arch with Omarchy-inspired setup (Hyprland + dev tools + apps)
 home-manager switch --flake ~/.config/nix#arch
 
 # Manual commands
@@ -55,7 +55,8 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── packages.nix             # Package definitions for all systems
 │   ├── home-packages.nix        # Home Manager package imports
 │   ├── profiles/                # Optional configuration profiles
-│   │   └── wayland.nix          # Wayland/Sway desktop environment
+│   │   ├── wayland.nix          # Wayland/Sway desktop environment
+│   │   └── arch-omarchy.nix     # Omarchy-inspired Arch setup (Hyprland + dev tools)
 │   ├── claude-code/             # Claude Code integration with custom commands
 │   ├── neovim/                  # Neovim configuration
 │   ├── tmux/                    # Tmux configuration
@@ -122,7 +123,16 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 **Profile Architecture**: Optional configurations that extend the base system without polluting minimal environments.
 
 **Available Profiles**:
-- `common/profiles/wayland.nix` - Wayland/Sway desktop environment with window manager, status bar, and utilities
+- `common/profiles/wayland.nix` - Wayland/Sway desktop environment (minimal)
+- `common/profiles/arch-omarchy.nix` - Omarchy-inspired Arch Linux setup
+
+**arch-omarchy.nix includes**:
+- **Hyprland** - Modern compositor with animations (Omarchy's choice)
+- **Dev tools** - mise, lazydocker, btop, Docker, databases
+- **Desktop apps** - Obsidian, Signal, Chromium, LocalSend
+- **Media** - mpv, Spotify (OBS/Kdenlive commented out)
+- **Theme** - Catppuccin Mocha throughout
+- **Keybindings** - Vi-style (Super+h/j/k/l), Super key modifier
 
 **Using Profiles**:
 Profiles are opt-in via `extraModules` in `flake.nix`:
@@ -133,11 +143,22 @@ linux = mkHomeManagerConfig {
   username = "user";
 };
 
-# With Wayland/Sway profile
+# Omarchy-inspired Arch (current default for #arch)
 arch = mkHomeManagerConfig {
   username = "svenlito";
-  extraModules = [ ./common/profiles/wayland.nix ];
+  extraModules = [ ./common/profiles/arch-omarchy.nix ];
 };
+```
+
+**Customizing arch-omarchy.nix**:
+Edit the profile and comment out packages you don't want:
+```nix
+# Media (comment out what you don't want)
+mpv
+spotify
+# obs-studio  # ← Already commented
+# kdenlive    # ← Video editing
+# pinta       # ← Image editing
 ```
 
 **Benefits**:
@@ -204,7 +225,7 @@ Located in `common/claude-code/`, this provides:
 **Available Configurations**:
 - `#linux` - Minimal (Docker/containers)
 - `#ubuntu` - Minimal for Ubuntu environments
-- `#arch` - Full desktop with Wayland/Sway (via `wayland.nix` profile)
+- `#arch` - Omarchy-inspired (Hyprland, dev tools, desktop apps via `arch-omarchy.nix`)
 
 ## Security Considerations
 - SSH keys managed through 1Password integration

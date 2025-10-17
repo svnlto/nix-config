@@ -123,10 +123,10 @@
 
         ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
 
-        # Arch Linux VM with Wayland/Sway profile
+        # Omarchy-inspired Arch Linux (Hyprland + dev tools + apps)
         arch = mkHomeManagerConfig {
           username = defaultUsername;
-          extraModules = [ ./common/profiles/wayland.nix ];
+          extraModules = [ ./common/profiles/arch-omarchy.nix ];
         };
       };
 
