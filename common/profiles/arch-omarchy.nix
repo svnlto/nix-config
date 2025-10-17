@@ -2,9 +2,6 @@
 # Extends base configuration with Omarchy-specific features
 # Based on: https://github.com/basecamp/omarchy
 # Theme: Catppuccin Mocha (your preferred theme)
-#
-# NOTE: This profile EXTENDS the base config (common packages, neovim, tmux, etc.)
-# It only ADDS Omarchy-specific features (Hyprland, desktop apps, media tools)
 { config, pkgs, ... }:
 
 {
@@ -334,14 +331,10 @@
   services.hyprpaper = {
     enable = true;
     settings = {
-      # Preload wallpaper(s)
       preload = [ "~/.config/wallpaper.jpg" ];
-      # Apply wallpaper to all monitors (centered, not stretched)
       wallpaper = [ ",~/.config/wallpaper.jpg" ]; # , = all monitors
-      # Don't splash
       splash = false;
-      # Enable ipc for dynamic wallpaper changes
-      ipc = "on";
+      ipc = false;
     };
   };
 
@@ -402,26 +395,6 @@
         shadow_passes = 2;
       }];
     };
-  };
-
-  # ==========================================
-  # Shell Configuration
-  # ==========================================
-  programs.zsh.shellAliases = {
-    # Docker shortcuts
-    dps = "docker ps";
-    dpa = "docker ps -a";
-    di = "docker images";
-    dex = "docker exec -it";
-    dlogs = "docker logs -f";
-    lzd = "lazydocker";
-
-    # Database shortcuts
-    pgstart =
-      "docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres";
-    mysqlstart =
-      "docker run --name mysql -e MYSQL_ROOT_PASSWORD=mysql -p 3306:3306 -d mysql:8.0";
-    redisstart = "docker run --name redis -p 6379:6379 -d redis";
   };
 
   # Environment variables
