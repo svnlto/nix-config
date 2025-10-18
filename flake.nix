@@ -123,10 +123,10 @@
 
         ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
 
-        # Omarchy-inspired Arch Linux (Hyprland + dev tools + apps)
-        arch = mkHomeManagerConfig {
+        # Desktop configuration with Hyprland compositor and full dev environment
+        desktop = mkHomeManagerConfig {
           username = defaultUsername;
-          extraModules = [ ./common/profiles/arch-omarchy.nix ];
+          extraModules = [ ./common/profiles/hyprland.nix ];
         };
       };
 

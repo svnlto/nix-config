@@ -24,8 +24,8 @@ hmswitch
 # Apply user-specific configuration (if exists)
 hm-user
 
-# Apply Arch with Omarchy-inspired setup (Hyprland + dev tools + apps)
-home-manager switch --flake ~/.config/nix#arch
+# Apply desktop configuration with Hyprland (full dev environment + GUI apps)
+home-manager switch --flake ~/.config/nix#desktop
 
 # Manual commands
 home-manager switch --flake ~/.config/nix#linux
@@ -56,7 +56,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── home-packages.nix        # Home Manager package imports
 │   ├── profiles/                # Optional configuration profiles
 │   │   ├── wayland.nix          # Wayland/Sway desktop environment
-│   │   └── arch-omarchy.nix     # Omarchy-inspired Arch setup (Hyprland + dev tools)
+│   │   └── hyprland.nix         # Hyprland desktop setup (compositor + dev tools + apps)
 │   ├── claude-code/             # Claude Code integration with custom commands
 │   ├── neovim/                  # Neovim configuration
 │   ├── tmux/                    # Tmux configuration
@@ -124,10 +124,10 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 
 **Available Profiles**:
 - `common/profiles/wayland.nix` - Wayland/Sway desktop environment (minimal)
-- `common/profiles/arch-omarchy.nix` - Omarchy-inspired Arch Linux setup
+- `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured)
 
-**arch-omarchy.nix includes**:
-- **Hyprland** - Modern compositor with animations (Omarchy's choice)
+**hyprland.nix includes**:
+- **Hyprland** - Modern Wayland compositor with animations
 - **Dev tools** - mise, lazydocker, btop, Docker, databases
 - **Desktop apps** - Obsidian, Signal, Chromium, LocalSend
 - **Media** - mpv, Spotify (OBS/Kdenlive commented out)
@@ -143,14 +143,14 @@ linux = mkHomeManagerConfig {
   username = "user";
 };
 
-# Omarchy-inspired Arch (current default for #arch)
-arch = mkHomeManagerConfig {
+# Desktop configuration with Hyprland
+desktop = mkHomeManagerConfig {
   username = "svenlito";
-  extraModules = [ ./common/profiles/arch-omarchy.nix ];
+  extraModules = [ ./common/profiles/hyprland.nix ];
 };
 ```
 
-**Customizing arch-omarchy.nix**:
+**Customizing hyprland.nix**:
 Edit the profile and comment out packages you don't want:
 ```nix
 # Media (comment out what you don't want)
@@ -225,7 +225,7 @@ Located in `common/claude-code/`, this provides:
 **Available Configurations**:
 - `#linux` - Minimal (Docker/containers)
 - `#ubuntu` - Minimal for Ubuntu environments
-- `#arch` - Omarchy-inspired (Hyprland, dev tools, desktop apps via `arch-omarchy.nix`)
+- `#desktop` - Full desktop environment (Hyprland, dev tools, GUI apps via `hyprland.nix`)
 
 ## Security Considerations
 - SSH keys managed through 1Password integration
