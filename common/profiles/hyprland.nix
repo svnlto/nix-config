@@ -151,7 +151,7 @@
     chromium
     localsend
     mpv
-    spotify
+    # spotify  # Not available on aarch64-linux
   ];
 
   programs.mpv = {
