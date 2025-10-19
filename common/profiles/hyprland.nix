@@ -6,7 +6,12 @@
     enable = true;
 
     settings = {
-      monitor = [ ",preferred,auto,1" ];
+
+      monitor = [
+        "DP-3,5120x2880@60,0x0,2.0"
+        "eDP-1,1920x1080@60,5120x0,1"
+        ",preferred,auto,1"
+      ];
 
       exec-once = [
         "waybar"
@@ -43,6 +48,7 @@
           enabled = true;
           size = 3;
           passes = 1;
+          new_optimizations = true;
         };
         drop_shadow = true;
         shadow_range = 4;

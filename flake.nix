@@ -41,24 +41,6 @@
           config.allowUnfree = true;
         };
 
-      # Enhanced validation helper with helpful error messages
-      validateUsername = name: config:
-        let
-          username = config.username;
-          isPlaceholder = username == "user" || username == "your_username";
-          errorMsg = ''
-            ❌ Configuration Error in ${name}:
-              • Invalid username: '${username}'
-              💡 Solution: Edit flake.nix and change username to your actual username
-
-            Example:
-              "${name}" = mkDarwinSystem {
-                hostname = "${name}";
-                username = "your-actual-username";  # ← Change this
-              };
-          '';
-        in if isPlaceholder then throw errorMsg else config;
-
       # Abstracted macOS configuration function
       mkDarwinSystem =
         { hostname, username, system ? "aarch64-darwin", extraModules ? [ ] }:
@@ -89,16 +71,16 @@
         };
 
       # Abstracted Home Manager configuration function for Linux
-      mkHomeManagerConfig =
-        { username, homeDirectory ? "/home/${username}", extraModules ? [ ] }:
+      mkHomeManagerConfig = { username, homeDirectory ? "/home/${username}"
+        , system ? "aarch64-linux", extraModules ? [ ] }:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = mkNixpkgs "aarch64-linux";
+          pkgs = mkNixpkgs system;
           modules = [
             ./systems/aarch64-linux/home-linux.nix
             {
               home = {
                 inherit username homeDirectory;
-                stateVersion = "24.05"; # Manage this manually for now
+                stateVersion = "24.05";
               };
             }
           ] ++ extraModules;
@@ -107,66 +89,59 @@
     in {
       # macOS configurations
       darwinConfigurations = {
-        "rick" = mkDarwinSystem (validateUsername "rick" {
+        "rick" = mkDarwinSystem {
           hostname = "rick";
           username = defaultUsername;
-        });
+        };
       };
 
       # Linux Home Manager configurations
       homeConfigurations = {
-        # Generic Linux configuration - can be used for VMs, containers, cloud instances
-        linux = mkHomeManagerConfig {
-          username =
-            "user"; # Override this when using: home-manager switch --flake .#linux --extra-experimental-features "nix-command flakes"
+        # Minimal server/container configs
+        minimal-x86 = mkHomeManagerConfig {
+          username = defaultUsername;
+          system = "x86_64-linux";
+        };
+        minimal-arm = mkHomeManagerConfig {
+          username = defaultUsername;
+          system = "aarch64-linux";
         };
 
-        ubuntu = mkHomeManagerConfig { username = "ubuntu"; };
-
-        # Desktop configuration with Hyprland compositor and full dev environment
-        desktop = mkHomeManagerConfig {
+        # Desktop configs with Hyprland
+        desktop-x86 = mkHomeManagerConfig {
           username = defaultUsername;
+          system = "x86_64-linux";
+          extraModules = [ ./common/profiles/hyprland.nix ];
+        };
+        desktop-arm = mkHomeManagerConfig {
+          username = defaultUsername;
+          system = "aarch64-linux";
           extraModules = [ ./common/profiles/hyprland.nix ];
         };
       };
 
-      # Development shell for working on this configuration
-      devShells.aarch64-darwin.default = let pkgs = mkNixpkgs "aarch64-darwin";
-      in pkgs.mkShell {
-        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh git ];
-        shellHook = ''
-          echo "🛠️  Nix configuration development environment"
-          echo "Available tools: nixfmt-classic, statix, deadnix, nil, git, zsh"
-          echo ""
-          echo "Quick commands:"
-          echo "  nixswitch                              # Rebuild Darwin system"
-          echo "  home-manager switch --flake .#linux   # Rebuild Linux home"
-          echo ""
-          # Auto-start zsh if available
-          if command -v zsh >/dev/null 2>&1; then
-            echo "Starting ZSH shell..."
-            exec zsh
-          fi
-        '';
-      };
-
-      devShells.aarch64-linux.default = let pkgs = mkNixpkgs "aarch64-linux";
-      in pkgs.mkShell {
-        buildInputs = with pkgs; [ nixfmt-classic statix deadnix nil zsh git ];
-        shellHook = ''
-          echo "🛠️  Nix configuration development environment (Linux)"
-          echo "Available tools: nixfmt-classic, statix, deadnix, nil, git, zsh"
-          echo ""
-          echo "Quick commands:"
-          echo "  hmswitch                               # Rebuild Home Manager"
-          echo "  home-manager switch --flake .#linux   # Manual rebuild"
-          echo ""
-          # Auto-start zsh if available
-          if command -v zsh >/dev/null 2>&1; then
-            echo "Starting ZSH shell..."
-            exec zsh
-          fi
-        '';
-      };
+      # Development shells
+      devShells = let
+        mkDevShell = system:
+          let pkgs = mkNixpkgs system;
+          in pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixfmt-classic
+              statix
+              deadnix
+              nil
+              zsh
+              git
+            ];
+            shellHook = ''
+              echo "🛠️  Nix config dev (${system})"
+              if command -v zsh >/dev/null 2>&1; then exec zsh; fi
+            '';
+          };
+      in nixpkgs.lib.genAttrs [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ] (system: { default = mkDevShell system; });
     };
 }

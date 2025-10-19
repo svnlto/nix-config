@@ -25,6 +25,7 @@
     pipx # Python package installer with isolation
     tmux # Terminal multiplexer for session management
     k9s # Terminal UI for Kubernetes cluster management
+    home-manager # Home Manager CLI for managing user environments
   ];
 
   # macOS-specific packages

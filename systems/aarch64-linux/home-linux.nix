@@ -24,15 +24,36 @@
   };
 
   # Linux-specific shell aliases
-  programs.zsh.shellAliases = {
-    hmswitch = "home-manager switch --flake ~/.config/nix#linux";
-    hm-user = "home-manager switch --flake ~/.config/nix#$(whoami)";
-  };
+  programs.zsh.shellAliases = { };
 
   # Linux-specific ZSH initialization
   programs.zsh.initContent = ''
     # Load worktree manager
     ${worktreeManager}
+
+    # nixswitch function - auto-detects architecture and config type
+    nixswitch() {
+      ARCH=$(uname -m)
+      # Detect if desktop (check for Hyprland) or minimal
+      if command -v hyprctl &>/dev/null; then
+        CONFIG="desktop"
+      else
+        CONFIG="minimal"
+      fi
+
+      case $ARCH in
+        x86_64)
+          home-manager switch --flake ~/.config/nix#''${CONFIG}-x86
+          ;;
+        aarch64|arm64)
+          home-manager switch --flake ~/.config/nix#''${CONFIG}-arm
+          ;;
+        *)
+          echo "❌ Unsupported architecture: $ARCH"
+          return 1
+          ;;
+      esac
+    }
   '';
 
   # Additional Linux packages for development environments

@@ -3,9 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        USERNAME: svenlito
     volumes:
-      - .:/home/ubuntu/workspace
-    working_dir: /home/ubuntu
+      - .:/home/svenlito/workspace
+    working_dir: /home/svenlito
     stdin_open: true
     tty: true
-    user: ubuntu

@@ -54,34 +54,47 @@ customization, and Claude Code integration for enhanced productivity.
 ### macOS (Apple Silicon)
 
 ```bash
-# Install Nix with flakes
+# Install Nix
 sh <(curl -L https://nixos.org/nix/install)
 
-# Clone configuration
+# Clone and apply
 git clone https://github.com/svnlto/nix-config.git ~/.config/nix
 cd ~/.config/nix
-
-# Apply configuration (auto-detects hostname)
 nixswitch
 ```
 
-### Linux (Ubuntu/Debian ARM64)
+### Linux Desktop (x86_64 or ARM64)
 
 ```bash
 # Install Nix
 sh <(curl -L https://nixos.org/nix/install) --daemon
 
-# Clone and apply configuration
+# Clone and apply (first time - specify architecture)
 git clone https://github.com/svnlto/nix-config.git ~/.config/nix
 cd ~/.config/nix
-hmswitch  # Generic Linux configuration
+home-manager switch --flake .#desktop-x86   # x86_64 (Intel/AMD)
+# OR
+home-manager switch --flake .#desktop-arm   # ARM64
+
+# After first install, auto-detects architecture:
+nixswitch
 ```
 
-### Cloud Deployment
+### Linux Server/Container (minimal)
 
 ```bash
-# For specific user configurations
-home-manager switch --flake ~/.config/nix#ubuntu  # Ubuntu user
+# Install Nix
+sh <(curl -L https://nixos.org/nix/install) --daemon
+
+# Clone and apply (first time)
+git clone https://github.com/svnlto/nix-config.git ~/.config/nix
+cd ~/.config/nix
+home-manager switch --flake .#minimal-x86   # x86_64
+# OR
+home-manager switch --flake .#minimal-arm   # ARM64 (EC2, DevPods)
+
+# After first install:
+nixswitch
 ```
 
 ## 📁 Configuration Management
@@ -92,6 +105,7 @@ home-manager switch --flake ~/.config/nix#ubuntu  # Ubuntu user
 ├── flake.nix              # 🎯 Main orchestrator - all configurations
 ├── common/                # 🔄 Shared across platforms
 │   ├── packages.nix       # 📦 Centralized package definitions
+│   ├── profiles/          # 🎨 Optional features (Hyprland, etc.)
 │   ├── claude-code/       # 🤖 AI assistant integration
 │   ├── neovim/           # ⚡ Editor configuration
 │   ├── tmux/             # 🖥️  Terminal multiplexer
@@ -102,6 +116,7 @@ home-manager switch --flake ~/.config/nix#ubuntu  # Ubuntu user
     │   ├── defaults.nix  # ⚙️  System preferences
     │   └── dock.nix      # 📱 Dock configuration
     └── aarch64-linux/    # 🐧 Linux-specific (home-manager)
+                          #    Works on both x86_64 and ARM64
 ```
 
 ### Package Categories
@@ -129,18 +144,30 @@ echo 'package-name' >> systems/aarch64-linux/home-linux.nix
 ### Core Commands
 
 ```bash
-# Apply configurations
-nixswitch              # macOS (auto-detects hostname)
-hmswitch               # Linux (generic configuration)
-hm-user                # Linux (user-specific configuration)
+# Apply configurations (works on macOS and Linux)
+nixswitch              # Auto-detects platform, architecture, and config type
 
 # Update and rebuild
-git pull && nixswitch  # macOS with updates
-hm-upgrade             # Linux with flake updates
+git pull && nixswitch  # Update flake inputs and rebuild
 
 # Development
 nix develop            # Enter development shell with tools
 nix flake check        # Validate configuration
+```
+
+### Available Configurations
+
+```bash
+# Linux Desktop (with Hyprland)
+.#desktop-x86          # x86_64 (Intel/AMD laptops/desktops)
+.#desktop-arm          # ARM64 (cloud instances, DevPods)
+
+# Linux Minimal (servers/containers)
+.#minimal-x86          # x86_64 servers
+.#minimal-arm          # ARM64 (EC2, cloud instances)
+
+# macOS
+.#rick                 # Auto-detects via hostname
 ```
 
 ### Maintenance Commands
