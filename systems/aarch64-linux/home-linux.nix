@@ -3,7 +3,11 @@
 { config, pkgs, username ? "user", worktreeManager, ... }:
 
 {
-  imports = [ ../../common/home-manager-base.nix ../../common/default.nix ];
+  imports = [
+    ../../common/home-manager-base.nix
+    ../../common/default.nix
+    ./git.nix
+  ];
 
   # Linux-specific home directory
   home.homeDirectory = "/home/${username}";
@@ -69,4 +73,13 @@
 
   # Disable fish if it causes issues (like in the original vagrant config)
   programs.fish.enable = false;
+
+  # SSH configuration for 1Password
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      identityAgent = "~/.1password/agent.sock";
+    };
+  };
 }

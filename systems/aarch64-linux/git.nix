@@ -33,8 +33,16 @@ let
         colorMoved = "default";
       };
       difftool.vscode = { cmd = "code --wait --diff $LOCAL $REMOTE"; };
+      user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYK1c6kxYT6FzMEqckP04e2unQgTvFPyNEFzT/q/eXR";
+      gpg = {
+        format = "ssh";
+        ssh = {
+          program = "/opt/1Password/op-ssh-sign";
+          allowedSignersFile = "~/.ssh/allowed_signers";
+        };
+      };
       commit = {
-        gpgsign = false; # Set to true if you use GPG signing
+        gpgsign = true;
       };
       rerere = { enabled = true; };
       help = { autocorrect = 10; };
@@ -102,6 +110,11 @@ in {
 
   # Create .gitignore file
   home.file.".gitignore".text = sharedGitignore;
+
+  # Create allowed_signers file for SSH commit verification
+  home.file.".ssh/allowed_signers".text = ''
+    me@svenlito.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYK1c6kxYT6FzMEqckP04e2unQgTvFPyNEFzT/q/eXR
+  '';
 
   home.activation.linkGitConfig =
     config.lib.dag.entryAfter [ "writeBoundary" ] ''
