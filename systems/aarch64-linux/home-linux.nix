@@ -24,6 +24,9 @@
     EDITOR = "nvim";
     # Set NIX_SSL_CERT_FILE to use system certificates
     NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+    # SSH askpass for 1Password GUI prompts
+    SSH_ASKPASS = "${pkgs.x11-ssh-askpass}/libexec/x11-ssh-askpass";
+    SSH_ASKPASS_REQUIRE = "prefer";
   };
 
   # Linux-specific shell aliases
