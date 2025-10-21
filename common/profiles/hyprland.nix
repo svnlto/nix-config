@@ -197,8 +197,6 @@
     mesa
     # macOS-like fonts
     inter
-    # SSH askpass for 1Password GUI prompts
-    x11-ssh-askpass
   ];
 
   programs.mpv = {
