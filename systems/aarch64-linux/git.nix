@@ -42,7 +42,7 @@ let
         };
       };
       commit = {
-        gpgsign = false; # Disabled due to 1Password Wayland dialog bug - use git commit -S to sign manually
+        gpgsign = true; # Enabled - 1Password running in XWayland mode for working auth prompts
       };
       rerere = { enabled = true; };
       help = { autocorrect = 10; };

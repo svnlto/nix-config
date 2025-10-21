@@ -17,10 +17,11 @@
         "waybar"
         "mako"
         "hyprpaper"
-        "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+        "/usr/lib/hyprpolkitagent/hyprpolkitagent"
         "blueman-applet"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
+        "ELECTRON_OZONE_PLATFORM_HINT=x11 /opt/1Password/1password --silent"
       ];
 
       env =
