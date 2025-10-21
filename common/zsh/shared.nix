@@ -154,12 +154,13 @@ rec {
     fi
 
     # FZF shell integration for history search and file finding
-    if command -v fzf >/dev/null 2>&1; then
+    # Skip process substitution in Claude Code to avoid snapshot corruption
+    if command -v fzf >/dev/null 2>&1 && [[ -z "$CLAUDE_CODE_SESSION" ]]; then
       source <(fzf --zsh)
     fi
 
     # Carapace completion initialization
-    if command -v carapace >/dev/null 2>&1; then
+    if command -v carapace >/dev/null 2>&1 && [[ -z "$CLAUDE_CODE_SESSION" ]]; then
       source <(carapace _carapace zsh)
     fi
   '';

@@ -2,22 +2,25 @@
 { config, pkgs, ... }:
 
 {
+  # macOS-like font configuration
+  fonts.fontconfig.enable = true;
+
+  # Using system Hyprland from pacman for hardware compatibility
+  # Config will still be generated at ~/.config/hypr/hyprland.conf
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = false; # Don't manage via systemd
 
     settings = {
-
-      monitor = [
-        "DP-3,5120x2880@60,0x0,2.0"
-        "eDP-1,1920x1080@60,5120x0,1"
-        ",preferred,auto,1"
-      ];
 
       exec-once = [
         "waybar"
         "mako"
         "hyprpaper"
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+        "blueman-applet"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
       ];
 
       env =
@@ -26,16 +29,15 @@
       input = {
         kb_layout = "us";
         follow_mouse = 1;
+        sensitivity = 0;
         touchpad = {
           natural_scroll = true;
-          tap-to-click = true;
         };
-        sensitivity = 0;
       };
 
       general = {
-        gaps_in = 5;
-        gaps_out = 10;
+        gaps_in = 2;
+        gaps_out = 5;
         border_size = 2;
         "col.active_border" = "rgba(89b4faee) rgba(cba6f7ee) 45deg";
         "col.inactive_border" = "rgba(585b70aa)";
@@ -43,17 +45,20 @@
       };
 
       decoration = {
-        rounding = 8;
         blur = {
           enabled = true;
-          size = 3;
-          passes = 1;
+          size = 8;
+          passes = 3;
           new_optimizations = true;
+          xray = true;
+          noise = 0.0117;
+          contrast = 0.8916;
+          brightness = 0.8172;
         };
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
+        rounding = 10;
+        active_opacity = 1.0;
+        inactive_opacity = 0.95;
+        fullscreen_opacity = 1.0;
       };
 
       animations = {
@@ -74,18 +79,21 @@
         preserve_split = true;
       };
 
-      gestures = { workspace_swipe = true; };
-
       misc = {
-        background_color = "rgb(232323)";
         disable_hyprland_logo = true;
-        disable_splash_rendering = true;
+        vfr = true;
+        vrr = 0;
+        animate_manual_resizes = true;
+        animate_mouse_windowdragging = true;
+        enable_swallow = true;
+        swallow_regex = "^(foot|kitty|alacritty)$";
       };
 
       "$mod" = "SUPER";
       bind = [
-        "$mod, Return, exec, ghostty"
-        "$mod, D, exec, wofi --show drun"
+        "$mod, Return, exec, /usr/bin/ghostty"
+        "$mod, Space, exec, rofi -show drun"
+        "$mod, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mod SHIFT, Q, killactive"
         "$mod SHIFT, E, exit"
         "$mod, V, togglefloating"
@@ -122,31 +130,60 @@
         "$mod SHIFT, 9, movetoworkspace, 9"
         "$mod SHIFT, 0, movetoworkspace, 10"
 
-        # Screenshots
-        '', Print, exec, grim -g "$(slurp)" - | wl-copy''
-        ''
-          SHIFT, Print, exec, grim -g "$(slurp)" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png''
+        # Screenshots: saves file AND copies FILE PATH to clipboard (Claude Code can read the path)
+        "$mod SHIFT, S, exec, bash -c 'mkdir -p ~/Pictures/screenshots && FILE=~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png && grim -g \"$(slurp)\" \"$FILE\" && echo -n \"$FILE\" | wl-copy'"
+
+        # Audio output switcher
+        "$mod, A, exec, ~/.local/bin/rofi-audio-switcher"
+      ];
+
+      bindl = [
+        # Media keys
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+      ];
+
+      bindle = [
+        # Volume control (repeatable)
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+
+        # Brightness control
+        ", XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
 
       bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow" ];
     };
   };
 
+  # Monitor configuration as a separate file
+  home.file.".config/hypr/monitors.conf".text = ''
+    monitor=eDP-1,1920x1080@60,0x0,1
+    monitor=DP-3,5120x2880@60,1920x0,2
+    monitor=,preferred,auto,1
+  '';
+
   home.packages = with pkgs; [
-    hyprland
     hyprpaper
     hypridle
     hyprlock
     hyprpicker
     waybar
-    wofi
+    rofi
+    wlogout
     mako
     polkit_gnome
     grim
     slurp
     wl-clipboard
-    firefox
-    ghostty
+    cliphist
+    foot
+    pavucontrol
+    brightnessctl
+    bluez
+    bluez-tools
+    blueman
     docker
     docker-compose
     lazydocker
@@ -157,7 +194,9 @@
     chromium
     localsend
     mpv
-    # spotify  # Not available on aarch64-linux
+    mesa
+    # macOS-like fonts
+    inter
   ];
 
   programs.mpv = {
@@ -178,17 +217,33 @@
         layer = "top";
         position = "top";
         height = 30;
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
-        modules-center = [ "clock" ];
+        modules-left = [ "clock" "hyprland/workspaces" "tray" ];
+        modules-center = [ "hyprland/window" ];
         modules-right =
-          [ "cpu" "memory" "pulseaudio" "network" "battery" "tray" ];
+          [ "temperature" "memory" "cpu" "pulseaudio" "battery" "bluetooth" "network" "custom/powermenu" ];
 
         "hyprland/workspaces" = {
-          format = "{id}";
+          format = "{icon}";
           on-click = "activate";
+          separate-outputs = false;
+          active-only = false;
+          all-outputs = false;
+          format-icons = {
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "6" = "6";
+            "7" = "7";
+            "8" = "8";
+            "9" = "9";
+            "10" = "10";
+          };
         };
 
         "hyprland/window" = {
+          format = "{}";
           max-length = 50;
           separate-outputs = true;
         };
@@ -199,46 +254,77 @@
         };
 
         memory = {
-          format = " {}%";
+          format = "󰫗 {}%";
           tooltip = false;
         };
 
+        temperature = {
+          format = "{icon} {temperatureC}°C";
+          hwmon-path = "/sys/class/hwmon/hwmon6/temp1_input";
+          critical-threshold = 80;
+          format-icons = [ "" "" "" ];
+        };
+
         pulseaudio = {
-          format = "{icon} {volume}%";
+          format = " {volume}%";
           format-muted = " Muted";
-          format-icons = { default = [ "" "" "" ]; };
+          scroll-step = 1;
           on-click = "pavucontrol";
         };
 
         network = {
-          format-wifi = " {essid}";
-          format-ethernet = " {ifname}";
+          format = " 󰖩";
+          format-wifi = " {essid} ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}";
+          format-ethernet = " {ifname} ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}";
           format-disconnected = "⚠ Disconnected";
-          tooltip-format = "{ifname}: {ipaddr}";
+          tooltip-format = "{essid}\nIP: {ipaddr}\n↓ {bandwidthDownBytes} ↑ {bandwidthUpBytes}";
+          interval = 2;
+        };
+
+        bluetooth = {
+          format = "";
+          format-on = "";
+          format-off = "";
+          format-disabled = "";
+          format-connected = " {device_alias}";
+          format-connected-battery = " {device_alias} {device_battery_percentage}%";
+          tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
+          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+          tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
+          on-click = "blueman-manager";
         };
 
         battery = {
-          format = "{icon} {capacity}%";
+          format = "{capacity}% {icon}";
           format-icons = [ "" "" "" "" "" ];
           format-charging = " {capacity}%";
         };
 
         clock = {
-          format = " {:%H:%M}";
-          format-alt = " {:%Y-%m-%d}";
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          format = " 󰸗 {:%H:%M}";
+          format-alt = " 󰸗 {:%Y-%m-%d}";
+          interval = 60;
+          tooltip = true;
+          tooltip-format = "{:%d %B %H:%M}";
         };
 
         tray = {
           icon-size = 16;
-          spacing = 10;
+          spacing = 8;
+        };
+
+        "custom/powermenu" = {
+          format = "⏻";
+          tooltip = false;
+          on-click = "wlogout -p layer-shell";
         };
       };
     };
 
     style = ''
       * {
-        font-family: "Hack Nerd Font";
+        font-family: "Inter", "Hack Nerd Font";
         font-size: 13px;
         border: none;
         border-radius: 0;
@@ -289,7 +375,7 @@
     enable = true;
     settings = {
       preload = [ "~/.config/wallpaper.jpg" ];
-      wallpaper = [ ",~/.config/wallpaper.jpg" ]; # , = all monitors
+      wallpaper = [ ",contain:~/.config/wallpaper.jpg" ]; # contain instead of stretch
       splash = false;
       ipc = false;
     };
@@ -351,14 +437,14 @@
     };
   };
 
-  home.sessionVariables = { BROWSER = "chromium"; };
+  home.sessionVariables = { BROWSER = "zen-browser"; };
 
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "text/html" = "chromium.desktop";
-      "x-scheme-handler/http" = "chromium.desktop";
-      "x-scheme-handler/https" = "chromium.desktop";
+      "text/html" = "zen-browser.desktop";
+      "x-scheme-handler/http" = "zen-browser.desktop";
+      "x-scheme-handler/https" = "zen-browser.desktop";
       "text/markdown" = "obsidian.desktop";
       "video/mp4" = "mpv.desktop";
       "audio/mpeg" = "mpv.desktop";
@@ -370,4 +456,54 @@
     extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
     config.common.default = "*";
   };
+
+  # PipeWire audio profile configuration - use Speaker instead of Headphones
+  xdg.configFile."wireplumber/main.lua.d/51-thinkpad-speaker.lua".text = ''
+    rule = {
+      matches = {
+        {
+          { "device.name", "equals", "alsa_card.pci-0000_00_1f.3-platform-skl_hda_dsp_generic" },
+        },
+      },
+      apply_properties = {
+        ["device.profile"] = "HiFi (HDMI1, HDMI2, HDMI3, Mic1, Mic2, Speaker)",
+      },
+    }
+
+    table.insert(alsa_monitor.rules, rule)
+  '';
+
+  # MOTU UltraLite-mk4 configuration
+  xdg.configFile."wireplumber/main.lua.d/52-motu-ultralite.lua".text = ''
+    -- Channel mapping - route stereo to main outputs (channels 0-1)
+    rule = {
+      matches = {
+        {
+          { "node.name", "equals", "alsa_output.usb-MOTU_UltraLite-mk4_0001f2fffe00a1fe-00.multichannel-output" },
+        },
+      },
+      apply_properties = {
+        ["audio.position"] = "FL,FR",
+        ["api.alsa.period-size"] = 256,
+        ["api.alsa.headroom"] = 1024,
+        ["priority.session"] = 2000,  -- Higher priority than laptop speakers (1100)
+      },
+    }
+    table.insert(alsa_monitor.rules, rule)
+
+    -- Auto-select UltraLite when connected
+    ultralite_rule = {
+      matches = {
+        {
+          { "device.name", "equals", "alsa_card.usb-MOTU_UltraLite-mk4_0001f2fffe00a1fe-00" },
+        },
+      },
+      apply_properties = {
+        ["device.disabled"] = false,
+        ["priority.driver"] = 2000,
+        ["priority.session"] = 2000,
+      },
+    }
+    table.insert(alsa_monitor.rules, ultralite_rule)
+  '';
 }

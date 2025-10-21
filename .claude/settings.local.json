@@ -18,5 +18,10 @@
   "enableAllProjectMcpServers": true,
   "outputStyle": "Architect",
   "spinnerTipsEnabled": false,
-  "BASH_DEFAULT_TIMEOUT_MS": "300000"
+  "BASH_DEFAULT_TIMEOUT_MS": "300000",
+  "enabledMcpjsonServers": [
+    "code-reasoning",
+    "sequential-thinking",
+    "context7"
+  ]
 }
