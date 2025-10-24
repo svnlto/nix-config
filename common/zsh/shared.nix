@@ -3,16 +3,14 @@
 
 # Return a simple attribute set for direct import by other modules
 rec {
-  # Common shell aliases defined as a regular Nix attribute set
   aliases = {
     # Shell utilities
-    reloadcli = "source $HOME/.zshrc";
     c = "clear";
 
     # Enhanced file operations
     ll =
-      "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all";
-    lt = "eza --tree --level=2 --group-directories-first";
+      "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all --git";
+    lt = "eza --tree --level=2 --group-directories-first --git";
 
     # Better defaults
     vim = "nvim";
@@ -20,20 +18,11 @@ rec {
     tree = "tree -C";
     cd = "z";
 
-    # Nix utilities (platform-agnostic)
-    nix-shell-pure = "nix-shell --pure";
-    nix-gc = "nix-collect-garbage -d";
-    nix-search = "nix search nixpkgs";
-    nix-which = "nix-locate --top-level";
-
     # System maintenance shortcuts
-    nix-health = "nix store verify --all";
-    nix-repair = "nix store repair --all";
     nix-clean =
       "echo '🧹 Starting cleanup...' && nix-collect-garbage --delete-older-than 7d && echo '✨ Quick cleanup complete'";
     nix-clean-deep =
       "echo '🧹 Starting deep cleanup...' && nix-collect-garbage -d && nix store optimise && echo '✨ Deep cleanup complete'";
-    system-info = "nix-info -m";
 
     # Update management
     nix-update = "nix flake update";
@@ -166,10 +155,7 @@ rec {
   '';
 
   # Custom scripts that need to be sourced in ZSH
-  customScripts = ''
-    # Load worktree manager (sourced from external file)
-    # This will be populated by the scripts module
-  '';
+  customScripts = "";
 
   # Module metadata
   meta = {

@@ -1,8 +1,12 @@
-{ config, pkgs, username, lib, ... }:
+{ pkgs, username, ... }:
 
 {
-  imports =
-    [ ../../common/home-manager-base.nix ../../common/lazygit/default.nix ];
+  imports = [
+    ../../common/home-manager-base.nix
+    ../../common/lazygit/default.nix
+    ../../common/git
+    ./aerospace/default.nix
+  ];
 
   # macOS-specific home directory
   home.homeDirectory = "/Users/${username}";
@@ -15,9 +19,9 @@
   # macOS-specific shell aliases
   programs.zsh.shellAliases = {
     nixswitch =
-      "sudo darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
+      "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
     darwin-rebuild =
-      "sudo darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
+      "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
   };
 
   # CRITICAL: Source nix-darwin's system zshrc to get /run/current-system/sw/bin in PATH

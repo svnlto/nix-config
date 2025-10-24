@@ -1,5 +1,5 @@
 # macOS Dock configuration
-{ config, lib, pkgs, username, hostname, ... }:
+{ lib, username, hostname, ... }:
 
 let
   # Use the actual path to dockutil instead of pkgs.homebrew

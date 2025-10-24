@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, ... }: {
+{ lib, config, pkgs, ... }: {
   # Install Node.js to enable npm
   home.packages = with pkgs; [ nodejs_22 ];
 

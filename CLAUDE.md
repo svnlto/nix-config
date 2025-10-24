@@ -54,8 +54,8 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── programs/default.nix     # Shared program configs (direnv, gh, zsh)
 │   ├── packages.nix             # Package definitions for all systems
 │   ├── home-packages.nix        # Home Manager package imports
+│   ├── git/                     # Unified cross-platform git configuration
 │   ├── profiles/                # Optional configuration profiles
-│   │   ├── wayland.nix          # Wayland/Sway desktop environment
 │   │   └── hyprland.nix         # Hyprland desktop setup (compositor + dev tools + apps)
 │   ├── claude-code/             # Claude Code integration with custom commands
 │   ├── neovim/                  # Neovim configuration
@@ -63,18 +63,18 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── zsh/
 │   │   ├── shared.nix           # Shared ZSH config (aliases, functions, tools)
 │   │   └── default.omp.json     # Oh My Posh theme
-│   ├── lazygit/                 # Lazygit configuration
+│   ├── lazygit/                 # Lazygit configuration (cross-platform via xdg)
 │   ├── ghostty/                 # Ghostty terminal configuration
 │   └── scripts/                 # Custom shell scripts
 └── systems/
     ├── aarch64-darwin/          # macOS-specific (nix-darwin)
-    │   ├── home.nix             # Minimal - only homeDirectory and platform aliases
+    │   ├── home.nix             # Home Manager config - imports common modules
+    │   ├── aerospace/           # AeroSpace tiling window manager (macOS only)
     │   ├── homebrew.nix         # Homebrew cask definitions
     │   ├── defaults.nix         # macOS system preferences
     │   └── dock.nix             # Dock configuration
     └── aarch64-linux/           # Linux-specific (home-manager)
-        ├── home-linux.nix       # Minimal - only Linux-specific settings
-        └── default.nix          # Linux system configuration
+        └── default.nix          # Home Manager config for Linux
 ```
 
 ### Configuration Flow
@@ -86,11 +86,14 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 6. **packages.nix** - Centralized package definitions organized by category
 
 ### Recent Architectural Changes (2025)
-**Major refactoring eliminated 479 lines of duplicate configuration:**
+**Major refactoring eliminated 479+ lines of duplicate configuration:**
 - Created `common/home-manager-base.nix` to centralize Home Manager settings
 - Created `common/programs/default.nix` for shared program configurations
-- Reduced macOS config from 127 lines to 9 lines (93% reduction)
-- Reduced Linux config from 155 lines to 45 lines (71% reduction)
+- **Unified git configuration** in `common/git/` with platform detection for SSH signing
+- **Moved platform-specific modules** to proper locations (aerospace → macOS-only)
+- **Made lazygit cross-platform** via `xdg.configFile` instead of hardcoded macOS paths
+- **Removed all NixOS-specific code** (this config only supports nix-darwin and home-manager)
+- Reduced macOS config from 127 lines to minimal platform-specific settings
 - Platform configs now contain ONLY platform-specific settings
 - Replaced atuin with fzf for shell history (simpler, local-only)
 
@@ -106,25 +109,26 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 3. Commit changes: `git commit -am "description"`
 
 ### Package Management
-- **Add everywhere**: Edit `common/packages.nix` (corePackages or devPackages lists)
+- **Add everywhere**: Edit `common/packages.nix`:
+  - `corePackages` - Essential CLI tools (oh-my-posh, eza, zoxide, bat, etc.)
+  - `devPackages` - Development tools (gh, lazygit, docker-compose, htop, curl, wget, etc.)
 - **macOS-only packages**: Edit `common/packages.nix` (darwinPackages list) - for packages like `reattach-to-user-namespace`
 - **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
-- **Linux-specific packages**: Edit `systems/aarch64-linux/home-linux.nix`
-- **Profile-specific packages**: Edit `common/profiles/*.nix` (e.g., `wayland.nix` for Sway/Wayland packages)
+- **Profile-specific packages**: Edit `common/profiles/hyprland.nix` for Linux desktop apps
 
 **IMPORTANT**: Platform-specific packages must be separated:
 - macOS-only packages (like `reattach-to-user-namespace`) go in `darwinPackages` and are imported via `systems/aarch64-darwin/home.nix`
-- Profile-specific packages (like Sway/Wayland tools) go in `common/profiles/*.nix` and are opt-in via `extraModules`
-- Never put macOS-only packages in shared `devPackages` or they'll break Linux builds
+- Profile-specific packages (like Hyprland/Wayland tools) go in `common/profiles/hyprland.nix` and are opt-in via `extraModules`
+- Never put macOS-only packages in shared `corePackages` or `devPackages` or they'll break Linux builds
+- Common development tools (curl, wget, htop, docker-compose) belong in `devPackages`, not platform-specific configs
 
 ### Configuration Profiles
 
 **Profile Architecture**: Optional configurations that extend the base system without polluting minimal environments.
 
 **Available Profiles**:
-- `common/profiles/wayland.nix` - Wayland/Sway desktop environment (minimal)
-- `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured)
+- `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured, Linux only)
 
 **hyprland.nix includes**:
 - **Hyprland** - Modern Wayland compositor with animations
@@ -223,9 +227,8 @@ Located in `common/claude-code/`, this provides:
 - Auto-optimise-store enabled (better suited for Linux than macOS)
 
 **Available Configurations**:
-- `#linux` - Minimal (Docker/containers)
-- `#ubuntu` - Minimal for Ubuntu environments
-- `#desktop` - Full desktop environment (Hyprland, dev tools, GUI apps via `hyprland.nix`)
+- `#minimal-x86` / `#minimal-arm` - Minimal (Docker/containers)
+- `#desktop-x86` / `#desktop-arm` - Full desktop environment (Hyprland, dev tools, GUI apps)
 
 ## Security Considerations
 - SSH keys managed through 1Password integration
@@ -422,12 +425,23 @@ The codebase implements defensive configuration:
    - ❌ `reattach-to-user-namespace` in `devPackages` breaks Linux builds
    - ✅ Create `darwinPackages` list and import only in macOS config
 
-3. **Git tracking required for Nix flakes**
+3. **NixOS-specific code**
+   - ❌ This config does NOT support NixOS (no `nixosConfigurations`)
+   - ✅ Only nix-darwin (macOS) and standalone home-manager (Linux) are supported
+   - ❌ Don't add `boot.*`, `services.*`, `virtualisation.*`, or other NixOS modules
+
+4. **Git tracking required for Nix flakes**
    - Nix flakes only include files tracked by Git
    - Stage new files with `git add` before running `nixswitch` or builds will fail
    - The error "file not found" often means the file isn't tracked by Git
 
-4. **Cursor color configuration in Neovim/tmux**
-   - Use Catppuccin's native `custom_highlights` for cursor colors in Neovim
-   - Set tmux cursor color via `terminal-overrides` with `cnorm` for proper blinking
-   - Example: `set-option -ga terminal-overrides ',xterm-ghostty:cnorm=\E[?12h\E[?25h'`
+5. **Platform detection for cross-platform modules**
+   - Use `pkgs.stdenv.isLinux` or `pkgs.stdenv.isDarwin` for platform-specific config
+   - Use `lib.optionalAttrs` to conditionally include settings
+   - Example: `common/git/default.nix` enables SSH signing only on Linux
+
+6. **Cross-platform file paths**
+   - ❌ Don't hardcode `Library/Application Support/` (macOS-specific)
+   - ✅ Use `xdg.configFile` which resolves correctly on both platforms
+   - macOS: `~/Library/Application Support/app/config.yml`
+   - Linux: `~/.config/app/config.yml`

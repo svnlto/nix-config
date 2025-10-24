@@ -28,7 +28,15 @@ repos:
         name: nixfmt
         description: Format nix code with nixfmt
         entry: nix
-        args: [shell, nixpkgs#nixfmt-classic, -c, nixfmt]
+        args: [--extra-experimental-features, "nix-command flakes", shell, nixpkgs#nixfmt-classic, -c, nixfmt]
+        language: system
+        files: \.nix$
+
+      - id: deadnix
+        name: deadnix
+        description: Find unused Nix code
+        entry: nix
+        args: [--extra-experimental-features, "nix-command flakes", shell, nixpkgs#deadnix, -c, deadnix, --fail]
         language: system
         files: \.nix$
 

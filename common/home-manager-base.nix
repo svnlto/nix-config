@@ -1,6 +1,6 @@
 # Shared Home Manager base configuration
 # Contains common settings used by both macOS and Linux configurations
-{ config, pkgs, username, ... }:
+{ username, ... }:
 
 let sharedZsh = import ./zsh/shared.nix;
 in {

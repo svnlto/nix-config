@@ -1,7 +1,7 @@
 { config, pkgs, lib, username, hostname, ... }:
 
 {
-  imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ./git.nix ];
+  imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ];
 
   # macOS specific packages
   environment.systemPackages =
@@ -10,13 +10,18 @@
 
   # System-wide environment variables
   environment.variables = {
-    # Set NIX_SSL_CERT_FILE to use nix-managed certificates
     NIX_SSL_CERT_FILE =
       "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
   };
 
   # macOS-specific Nix settings
-  nix.optimise.automatic = true;
+  nix = {
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" username ];
+    };
+    optimise.automatic = true;
+  };
 
   programs.zsh.enable = true;
 
@@ -24,12 +29,10 @@
 
   system.stateVersion = 5;
 
-  # Set primary user for nix-darwin user-specific options
   system.primaryUser = username;
 
   ids.gids.nixbld = 350;
 
-  # System activation scripts
   system.activationScripts = {
     applications.text = let
       env = pkgs.buildEnv {

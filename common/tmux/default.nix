@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 
 {
   # Install TPM (Tmux Plugin Manager)
@@ -15,8 +15,8 @@
   # Merged tmux configuration combining productivity features with Neovim-compatible navigation
   home.file.".tmux.conf".text = ''
     ${lib.optionalString pkgs.stdenv.isDarwin ''
-    # macOS clipboard integration
-    set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+      # macOS clipboard integration
+      set-option -g default-command "reattach-to-user-namespace -l $SHELL"
     ''}
 
     # Fix Touch ID authentication in tmux
@@ -121,14 +121,18 @@
     # Copy mode with vim keybindings
     setw -g mode-keys vi
     bind-key -T copy-mode-vi 'v' send -X begin-selection
-    ${lib.optionalString pkgs.stdenv.isDarwin ''bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"''}
-    ${lib.optionalString pkgs.stdenv.isLinux ''bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "wl-copy"''}
+    ${lib.optionalString pkgs.stdenv.isDarwin ''
+      bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"''}
+    ${lib.optionalString pkgs.stdenv.isLinux
+    ''bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "wl-copy"''}
 
     # Mouse wheel scrolling in copy mode
     bind-key -T copy-mode-vi WheelUpPane send -X scroll-up
     bind-key -T copy-mode-vi WheelDownPane send -X scroll-down
-    ${lib.optionalString pkgs.stdenv.isDarwin ''bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"''}
-    ${lib.optionalString pkgs.stdenv.isLinux ''bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"''}
+    ${lib.optionalString pkgs.stdenv.isDarwin ''
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"''}
+    ${lib.optionalString pkgs.stdenv.isLinux ''
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"''}
 
     # Config reload (from your existing config)
     unbind r

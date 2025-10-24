@@ -29,7 +29,7 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, home-manager, }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
     let
       # Default username across all configurations
       defaultUsername = "svenlito";
@@ -44,8 +44,7 @@
       # Abstracted macOS configuration function
       mkDarwinSystem =
         { hostname, username, system ? "aarch64-darwin", extraModules ? [ ] }:
-        let config = { inherit hostname username system extraModules; };
-        in nix-darwin.lib.darwinSystem {
+        nix-darwin.lib.darwinSystem {
           inherit system;
           modules = [
             ./common
@@ -76,7 +75,7 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = mkNixpkgs system;
           modules = [
-            ./systems/aarch64-linux/home-linux.nix
+            ./systems/aarch64-linux
             {
               home = {
                 inherit username homeDirectory;

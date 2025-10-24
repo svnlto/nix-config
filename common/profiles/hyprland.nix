@@ -1,5 +1,5 @@
 # Omarchy-inspired Arch Linux Profile
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # macOS-like font configuration
@@ -31,9 +31,7 @@
         kb_layout = "us";
         follow_mouse = 1;
         sensitivity = 0;
-        touchpad = {
-          natural_scroll = true;
-        };
+        touchpad = { natural_scroll = true; };
       };
 
       general = {
@@ -52,7 +50,7 @@
           passes = 3;
           new_optimizations = true;
           xray = true;
-          noise = 0.0117;
+          noise = 1.17e-2;
           contrast = 0.8916;
           brightness = 0.8172;
         };
@@ -220,8 +218,16 @@
         height = 30;
         modules-left = [ "clock" "hyprland/workspaces" "tray" ];
         modules-center = [ "hyprland/window" ];
-        modules-right =
-          [ "temperature" "memory" "cpu" "pulseaudio" "battery" "bluetooth" "network" "custom/powermenu" ];
+        modules-right = [
+          "temperature"
+          "memory"
+          "cpu"
+          "pulseaudio"
+          "battery"
+          "bluetooth"
+          "network"
+          "custom/powermenu"
+        ];
 
         "hyprland/workspaces" = {
           format = "{icon}";
@@ -276,9 +282,13 @@
         network = {
           format = " 󰖩";
           format-wifi = " {essid} ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}";
-          format-ethernet = " {ifname} ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}";
+          format-ethernet =
+            " {ifname} ↓{bandwidthDownBytes} ↑{bandwidthUpBytes}";
           format-disconnected = "⚠ Disconnected";
-          tooltip-format = "{essid}\nIP: {ipaddr}\n↓ {bandwidthDownBytes} ↑ {bandwidthUpBytes}";
+          tooltip-format = ''
+            {essid}
+            IP: {ipaddr}
+            ↓ {bandwidthDownBytes} ↑ {bandwidthUpBytes}'';
           interval = 2;
         };
 
@@ -288,11 +298,22 @@
           format-off = "";
           format-disabled = "";
           format-connected = " {device_alias}";
-          format-connected-battery = " {device_alias} {device_battery_percentage}%";
-          tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} connected";
-          tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
-          tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
-          tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
+          format-connected-battery =
+            " {device_alias} {device_battery_percentage}%";
+          tooltip-format = ''
+            {controller_alias}	{controller_address}
+
+            {num_connections} connected'';
+          tooltip-format-connected = ''
+            {controller_alias}	{controller_address}
+
+            {num_connections} connected
+
+            {device_enumerate}'';
+          tooltip-format-enumerate-connected =
+            "{device_alias}	{device_address}";
+          tooltip-format-enumerate-connected-battery =
+            "{device_alias}	{device_address}	{device_battery_percentage}%";
           on-click = "blueman-manager";
         };
 
@@ -376,7 +397,8 @@
     enable = true;
     settings = {
       preload = [ "~/.config/wallpaper.jpg" ];
-      wallpaper = [ ",contain:~/.config/wallpaper.jpg" ]; # contain instead of stretch
+      wallpaper =
+        [ ",contain:~/.config/wallpaper.jpg" ]; # contain instead of stretch
       splash = false;
       ipc = false;
     };

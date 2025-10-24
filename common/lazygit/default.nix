@@ -1,7 +1,10 @@
 { ... }:
 
 {
-  home.file."Library/Application Support/lazygit/config.yml".text = ''
+  # Cross-platform lazygit config
+  # macOS: ~/Library/Application Support/lazygit/config.yml
+  # Linux: ~/.config/lazygit/config.yml
+  xdg.configFile."lazygit/config.yml".text = ''
     gui:
       theme:
         lightTheme: false

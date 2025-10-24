@@ -1,5 +1,5 @@
 # This file defines a proper NixOS module for ZSH configuration
-{ config, lib, pkgs, ... }:
+{ ... }:
 
 let
   # Import the shared configuration, but don't return it directly

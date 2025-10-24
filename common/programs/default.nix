@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 let sharedZsh = import ../zsh/shared.nix;
 in {

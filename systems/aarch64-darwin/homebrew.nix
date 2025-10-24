@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   homebrew = {
     enable = true;
-    taps = [ "FelixKratz/formulae" ];
-    brews = [ "mas" "dockutil" "pre-commit" ];
+    taps = [ "FelixKratz/formulae" "nikitabobko/tap" ];
+    brews = [ "mas" "dockutil" "pre-commit" "borders" "sketchybar" ];
     casks = [
       # Security & Password Management
       "1password"
@@ -13,6 +13,7 @@
 
       # Productivity Tools
       "raycast"
+      "nikitabobko/tap/aerospace"
       "setapp"
       "notion-calendar"
       "notion-mail"
