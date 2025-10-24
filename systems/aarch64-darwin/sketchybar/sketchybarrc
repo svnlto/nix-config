@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Sketchybar configuration
+# Colors based on Catppuccin Mocha theme
+
+# Plugin directory
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
+
+# Color Palette
+export BLACK=0xff1e1e2e
+export WHITE=0xffcdd6f4
+export RED=0xfff38ba8
+export GREEN=0xffa6e3a1
+export BLUE=0xff89b4fa
+export YELLOW=0xfff9e2af
+export ORANGE=0xfffab387
+export MAGENTA=0xffcba6f7
+export GREY=0xff6c7086
+export TRANSPARENT=0x00000000
+
+# General bar colors
+export BAR_COLOR=0xff1e1e2e
+export ITEM_BG_COLOR=0xff313244
+export ACCENT_COLOR=0xff89b4fa
+
+# General bar properties
+sketchybar --bar position=top \
+                 height=32 \
+                 blur_radius=30 \
+                 color=$BAR_COLOR
+
+# Default item properties
+sketchybar --default updates=when_shown \
+                     icon.font="SF Pro:Semibold:14.0" \
+                     icon.color=$WHITE \
+                     icon.padding_left=4 \
+                     icon.padding_right=4 \
+                     label.font="SF Pro:Semibold:13.0" \
+                     label.color=$WHITE \
+                     label.padding_left=4 \
+                     label.padding_right=4 \
+                     padding_right=5 \
+                     padding_left=5 \
+                     background.height=24 \
+                     background.corner_radius=6 \
+                     background.padding_right=4 \
+                     background.padding_left=4
+
+# Add AeroSpace workspace change event
+sketchybar --add event aerospace_workspace_change
+
+# Left side items
+sketchybar --add item aerospace_workspace left \
+           --set aerospace_workspace icon= \
+                                     icon.color=$BLUE \
+                                     label.color=$WHITE \
+                                     background.color=$ITEM_BG_COLOR \
+                                     background.padding_left=8 \
+                                     background.padding_right=8 \
+                                     script="$PLUGIN_DIR/aerospace_workspace.sh" \
+           --subscribe aerospace_workspace aerospace_workspace_change
+
+# Right side items
+sketchybar --add item battery right \
+           --set battery update_freq=120 \
+                        icon.color=$GREEN \
+                        script="$PLUGIN_DIR/battery.sh" \
+                        background.color=$ITEM_BG_COLOR \
+           --subscribe battery system_woke power_source_change
+
+sketchybar --add item clock right \
+           --set clock update_freq=10 \
+                      icon= \
+                      icon.color=$YELLOW \
+                      script="$PLUGIN_DIR/clock.sh" \
+                      background.color=$ITEM_BG_COLOR
+
+# Finalizing setup
+sketchybar --update

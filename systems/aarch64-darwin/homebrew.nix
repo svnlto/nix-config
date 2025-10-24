@@ -6,6 +6,9 @@
     taps = [ "FelixKratz/formulae" "nikitabobko/tap" ];
     brews = [ "mas" "dockutil" "pre-commit" "borders" "sketchybar" ];
     casks = [
+      # Fonts
+      "font-sf-pro"
+
       # Security & Password Management
       "1password"
       "1password-cli"

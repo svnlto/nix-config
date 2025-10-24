@@ -31,6 +31,7 @@
     htop
     neofetch
     docker-compose
+    shellcheck
   ];
 
   # macOS-specific packages
