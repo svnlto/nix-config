@@ -2,5 +2,5 @@
 
 {
   # AeroSpace tiling window manager configuration
-  home.file.".aerospace.toml".source = ./aerospace.toml;
+  home.file.".config/aerospace/aerospace.toml".source = ./aerospace.toml;
 }
