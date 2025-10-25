@@ -177,12 +177,27 @@ run = "move-node-to-workspace 4"
 if.app-id = "com.electron.notionmail"
 run = "move-node-to-workspace 4"
 
-# 1Password: Main window to workspace 5, then float Touch ID/dialogs
+# 1Password: Main window to workspace 5 (floating)
 [[on-window-detected]]
 if.app-id = "com.1password.1password"
-run = "move-node-to-workspace 5"
+if.window-title-regex-substring = "— 1Password$"
+run = ["layout floating", "move-node-to-workspace 5"]
 
+# 1Password: Float Lock Screen dialog
+[[on-window-detected]]
+if.app-id = "com.1password.1password"
+if.window-title-regex-substring = "Lock Screen"
+run = "layout floating"
+check-further-callbacks = true
+
+# 1Password: Float Quick Access and other dialogs
 [[on-window-detected]]
 if.app-id = "com.1password.1password"
 if.window-title-regex-substring = "Quick Access|Touch ID|Unlock"
+run = "layout floating"
+check-further-callbacks = true
+
+# System Authentication: Float Touch ID dialogs (coreautha)
+[[on-window-detected]]
+if.app-id = "com.apple.LocalAuthentication.UIAgent"
 run = "layout floating"
