@@ -219,6 +219,46 @@ Located in `common/claude-code/`, this provides:
 - **Prompt**: Oh My Posh with custom theme
 - **Completions**: Carapace for 300+ CLI tools
 
+### Tmux Session Management
+
+Located in `common/tmux/` and `common/tmuxinator/`:
+
+- **Tmux Plugin Manager (TPM)**: Manages plugins (resurrect, continuum, sessionx)
+- **tmux-sessionx**: fzf-powered session switcher with zoxide integration
+  - Keybinding: `prefix + o` opens fuzzy session picker
+  - Integrated with zoxide for smart directory matching
+  - Shows tmux sessions + zoxide directories + tmuxinator configs
+- **Tmuxinator**: Project session manager with predefined layouts
+  - Default session: config, homelab, kubestronaut windows
+  - Pricelytics session: app and infra windows (separate session)
+  - Layout: nvim left (70%), claude + terminal right stacked (60/40)
+  - Aliases: `mux`, `muxn`, `muxs`, `muxl`
+  - Start with: `muxs default` or `muxs pricelytics`
+
+### AeroSpace Window Management (macOS)
+
+Located in `systems/aarch64-darwin/aerospace/`:
+
+- **Tiling window manager** for macOS with workspace management
+- **Sketchybar integration**: Clickable workspace buttons with opacity
+- **Window rules**: Auto-assignment to workspaces via `on-window-detected`
+- **Important rule patterns**:
+  - Multiple commands: `move-node-to-workspace` must be LAST (AeroSpace requirement)
+  - Correct: `run = ["layout floating", "move-node-to-workspace 5"]`
+  - Incorrect: `run = ["move-node-to-workspace 5", "layout floating"]` (will error)
+  - Match by title: `if.window-title-regex-substring = "— 1Password$"`
+  - Match by bundle ID: `if.app-id = "com.1password.1password"`
+  - System dialogs: `if.app-id = "com.apple.LocalAuthentication.UIAgent"` for Touch ID
+- **Sketchybar workspace buttons**: Clickable via `click_script="aerospace workspace $sid"`
+
+### Terminal & UI Theming
+
+- **Ghostty terminal**: 0.85 opacity for subtle transparency
+- **Neovim**: Catppuccin Mocha theme with `transparent_background = true`
+- **Tmux**: Catppuccin Mocha status bar, custom 2-pane layout support
+- **Sketchybar**: Catppuccin colors, dimmed inactive workspace indicators (`WHITE_DIMMED = 0x80ffffff`)
+- **Consistent theme**: Catppuccin Mocha across all tools (terminal, editor, tmux, fzf)
+
 ### Version Management
 
 - **Terraform**: Managed as regular nixpkgs in Linux configurations
@@ -489,3 +529,9 @@ The codebase implements defensive configuration:
    - ✅ Use `xdg.configFile` which resolves correctly on both platforms
    - macOS: `~/Library/Application Support/app/config.yml`
    - Linux: `~/.config/app/config.yml`
+
+7. **Tmux layout strings**
+   - Tmux layout strings are terminal-size specific (e.g., `362x77`)
+   - To capture current layout: `tmux display-message -p '#{window_layout}'`
+   - Layouts will adapt to different terminal sizes but proportions may vary
+   - For tmuxinator, use captured layout strings from actual working layouts
