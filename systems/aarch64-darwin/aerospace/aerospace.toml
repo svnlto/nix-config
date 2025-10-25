@@ -164,14 +164,6 @@ run = "move-node-to-workspace 1"
 if.app-id = "company.thebrowser.Browser"
 run = "move-node-to-workspace 2"
 
-[[on-window-detected]]
-if.app-id = "md.obsidian"
-run = "move-node-to-workspace 3"
-
-[[on-window-detected]]
-if.app-id = "com.spotify.client"
-run = "move-node-to-workspace 4"
-
 # Floating layouts
 [[on-window-detected]]
 if.app-id = "com.1password.1password"

@@ -17,9 +17,9 @@ export SPACE_BG_COLOR=0x1affffff # 10% white opacity for subtle active indicator
 # Fonts (matching native macOS menu bar)
 export FONT_FACE="SF Pro Text"
 export ICON_FONT="sketchybar-app-font:Regular:14.0"
-export LABEL_FONT="$FONT_FACE:Medium:13.0"
+export LABEL_FONT="$FONT_FACE:Medium:14.0"
 export DEFAULT_ICON_FONT="$FONT_FACE:Medium:14.0"
-export DEFAULT_LABEL_FONT="$FONT_FACE:Medium:13.0"
+export DEFAULT_LABEL_FONT="$FONT_FACE:Medium:14.0"
 
 # Icons (SF Symbols)
 export APPLE=􀣺
