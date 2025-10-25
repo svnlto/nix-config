@@ -7,21 +7,14 @@
       "mcp__sequential-thinking__sequentialthinking",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:www.lazyvim.org)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(zsh:*)"
+      "Bash(zsh:*)",
+      "WebSearch",
+      "WebFetch"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
   "outputStyle": "Architect",
   "spinnerTipsEnabled": false,
-  "BASH_DEFAULT_TIMEOUT_MS": "300000",
-  "enabledMcpjsonServers": [
-    "code-reasoning",
-    "sequential-thinking",
-    "context7"
-  ]
+  "BASH_DEFAULT_TIMEOUT_MS": "300000"
 }
