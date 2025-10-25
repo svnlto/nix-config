@@ -6,6 +6,7 @@ return {
 		lazy = false,
 		opts = {
 			flavour = "mocha",
+			transparent_background = true,
 			term_colors = false, -- Disable terminal color overrides to preserve terminal cursor color
 			integrations = {
 				bufferline = false,

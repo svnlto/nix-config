@@ -160,30 +160,28 @@
     set -g status-left-length 100
     set -g status-right-length 100
     set -g status-justify centre
-    set -g status 2  # Make status bar 2 lines tall for spacing
-    set -g status-format[0] ""  # Empty first line for padding
-    set -g status-format[1] "#[align=left range=left]#{T;=/100/...:status-left}#[norange default]#[list=on align=#{status-justify}]#[list=left-marker]<#[list=right-marker]>#[list=on]#{W:#[range=window|#{window_index} #{E:window-status-style}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-format}#[pop-default]#[norange default]#{?window_end_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}#{?#{&&:#{window_last_flag},#{!=:#{E:window-status-last-style},default}}, #{E:window-status-last-style},}#{?#{&&:#{window_bell_flag},#{!=:#{E:window-status-bell-style},default}}, #{E:window-status-bell-style},#{?#{&&:#{||:#{window_activity_flag},#{window_silence_flag}},#{!=:#{E:window-status-activity-style},default}}, #{E:window-status-activity-style},}}]#[push-default]#{T:window-status-current-format}#[pop-default]#[norange list=on default]#{?window_end_flag,,#{window-status-separator}}}#[nolist align=right range=right]#{T;=/100/...:status-right}#[norange default]"
 
-    # Add padding above status bar
-    set -g status-position bottom
-    setw -g pane-border-status off
-
-    # Left: session name (add space for padding)
-    set -g status-left " #[fg=#89b4fa,bold]#S #[fg=#45475a]│ "
+    # Left: session name
+    set -g status-left "#[fg=#89b4fa,bold] #S #[fg=#45475a]│ "
 
     # Right: date and time (European format: HH:MM DD-MM-YYYY)
-    set -g status-right " #[fg=#45475a]│ #[fg=#cdd6f4]%H:%M %d-%m-%Y "
+    set -g status-right "#[fg=#45475a] │ #[fg=#cdd6f4]%H:%M %d-%m-%Y"
 
-    # Window status format - add vertical spacing
-    set -g window-status-format " #[fg=#6c7086]#I:#W "
-    set -g window-status-current-format " #[fg=#cdd6f4,bold]#I:#W "
+    # Window status format - no backgrounds
+    set -g window-status-format "#[fg=#6c7086] #I:#W "
+    set -g window-status-current-format "#[fg=#cdd6f4,bold] #I:#W "
     set -g window-status-separator ""
 
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'
+    set -g @plugin 'omerxx/tmux-sessionx'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
+
+    # tmux-sessionx settings
+    set -g @sessionx-bind 'o'
+    set -g @sessionx-zoxide-mode 'on'
 
     # tmux-resurrect settings
     set -g @resurrect-strategy-vim 'session'

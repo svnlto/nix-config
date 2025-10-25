@@ -18,6 +18,7 @@
     macos-window-buttons = hidden
     macos-titlebar-style = transparent
     macos-titlebar-proxy-icon = hidden
+    background-opacity = 0.85
 
     cursor-style = block
     cursor-style-blink = true

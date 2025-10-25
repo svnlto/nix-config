@@ -26,6 +26,7 @@
     direnv
     pipx
     tmux
+    tmuxinator
     k9s
     home-manager
     htop
