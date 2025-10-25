@@ -2,11 +2,8 @@
 
 source "$CONFIG_DIR/colors.sh"
 
-# Plugin directory
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
-
-# General bar properties
 
 bar=(
   position=top
@@ -19,8 +16,6 @@ bar=(
 )
 sketchybar --bar "${bar[@]}"
 
-# Default item properties
-
 default=(
   updates=when_shown
   icon.font="$DEFAULT_ICON_FONT"
@@ -31,17 +26,10 @@ default=(
   label.color=$WHITE
   label.padding_left=4
   label.padding_right=4
-  padding_right=5
-  padding_left=5
   background.height=20
-  background.corner_radius=4
-  background.padding_right=4
-  background.padding_left=4
 )
 
 sketchybar --default "${default[@]}"
-
-# Add custom events
 sketchybar --add event aerospace_workspace_change
 sketchybar --add event space_windows_change
 
@@ -54,5 +42,4 @@ source $ITEM_DIR/calendar.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 
-# Finalizing setup
 sketchybar --update

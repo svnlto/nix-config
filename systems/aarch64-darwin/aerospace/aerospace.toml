@@ -60,7 +60,7 @@ inner.horizontal = 10
 inner.vertical =   10
 outer.left =       10
 outer.bottom =     10
-outer.top =        28
+outer.top =        [{ monitor.main = 28 }, { monitor.secondary = 0 }, 28]
 outer.right =      10
 
 # Main keybindings
@@ -121,9 +121,6 @@ alt-shift-u = ['move-node-to-monitor up', 'focus-monitor up']
 alt-shift-e = 'balance-sizes'
 alt-shift-r = 'flatten-workspace-tree'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-shift-semicolon = 'mode service'
-
 # Open applications
 alt-g = ['exec-and-forget open -a "Ghostty"']
 alt-b = ['exec-and-forget open -a "Arc"']
@@ -131,6 +128,9 @@ alt-m = ['exec-and-forget open -a "Notion Mail"']
 alt-c = ['exec-and-forget open -a "Notion Calendar"']
 alt-o = ['exec-and-forget open -a "Obsidian"']
 alt-s = ['exec-and-forget open -a "Spotify"']
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
+alt-shift-semicolon = 'mode service'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -145,6 +145,7 @@ alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 
+# Monitor assignments
 [workspace-to-monitor-force-assignment]
 1 = ['main']
 2 = ['main']
@@ -152,8 +153,8 @@ alt-shift-l = ['join-with right', 'mode main']
 4 = ['main']
 5 = ['main']
 6 = ['main']
-7 = ['main']
-8 = ['main']
+7 = ['secondary']
+8 = ['secondary']
 
 # Workspace assignments
 [[on-window-detected]]
@@ -164,7 +165,18 @@ run = "move-node-to-workspace 1"
 if.app-id = "company.thebrowser.Browser"
 run = "move-node-to-workspace 2"
 
-# Floating layouts
+[[on-window-detected]]
+if.app-id = "com.anthropic.claudefordesktop"
+run = "move-node-to-workspace 3"
+
+[[on-window-detected]]
+if.app-id = "com.cron.electron"
+run = "move-node-to-workspace 4"
+
+[[on-window-detected]]
+if.app-id = "com.electron.notionmail"
+run = "move-node-to-workspace 4"
+
 [[on-window-detected]]
 if.app-id = "com.1password.1password"
-run = "layout floating"
+run = ["layout floating", "move-node-to-workspace 5"]
