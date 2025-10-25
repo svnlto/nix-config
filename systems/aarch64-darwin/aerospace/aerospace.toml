@@ -177,6 +177,12 @@ run = "move-node-to-workspace 4"
 if.app-id = "com.electron.notionmail"
 run = "move-node-to-workspace 4"
 
+# 1Password: Touch ID/Quick Access should float
 [[on-window-detected]]
 if.app-id = "com.1password.1password"
-run = ["layout floating", "move-node-to-workspace 5"]
+if.window-title-regex-substring = "Quick Access|Touch ID|Unlock"
+run = "layout floating"
+
+[[on-window-detected]]
+if.app-id = "com.1password.1password"
+run = "move-node-to-workspace 5"
