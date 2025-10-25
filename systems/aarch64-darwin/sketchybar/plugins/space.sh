@@ -21,6 +21,6 @@ if [ "$SPACE_ID" = "$FOCUSED_WORKSPACE" ]; then
 else
   sketchybar --set "$NAME" \
     background.drawing=off \
-    label.color="$WHITE" \
-    icon.color="$WHITE"
+    label.color="$WHITE_DIMMED" \
+    icon.color="$WHITE_DIMMED"
 fi

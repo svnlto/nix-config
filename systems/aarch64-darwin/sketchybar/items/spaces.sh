@@ -15,6 +15,7 @@ for sid in "${SPACE_SIDS[@]}"; do
     background.height=20
     background.corner_radius=4
     background.drawing=off
+    click_script="aerospace workspace $sid"
   )
 
   sketchybar --add item "space.$sid" left \

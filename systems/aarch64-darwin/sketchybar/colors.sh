@@ -3,6 +3,7 @@
 # Color Palette
 export BLACK=0xff1e1e2e
 export WHITE=0xffffffff
+export WHITE_DIMMED=0x80ffffff
 export GREY=0xff6c7086
 export TRANSPARENT=0x00000000
 
