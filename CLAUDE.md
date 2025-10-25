@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Core Commands
 
 ### macOS (nix-darwin)
+
 ```bash
 # Apply system configuration (auto-detects hostname)
 nixswitch
@@ -17,6 +18,7 @@ git pull && nixswitch
 ```
 
 ### Linux (Home Manager)
+
 ```bash
 # Apply generic Linux configuration (minimal - for Docker/containers)
 hmswitch
@@ -40,12 +42,14 @@ git pull && hmswitch
 This is a **cross-platform Nix configuration** managing both macOS hosts and Linux development environments. The architecture follows a modular, hybrid approach:
 
 ### Key Design Principles
+
 - **Host-VM separation**: Clean macOS host with isolated Linux development environment
 - **ARM64-first**: Optimized for Apple Silicon and ARM cloud instances
 - **Shared configuration**: Common settings abstracted into reusable modules
 - **Hybrid package management**: Nix for development tools, Homebrew for macOS GUI apps
 
 ### Directory Structure
+
 ```
 ├── flake.nix                    # Main orchestrator - defines all configurations
 ├── common/                      # Shared configuration across platforms
@@ -78,6 +82,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 ```
 
 ### Configuration Flow
+
 1. **flake.nix** - Entry point defining `darwinConfigurations` and `homeConfigurations`
 2. **common/home-manager-base.nix** - Imports shared modules (home-packages, claude-code, programs, scripts)
 3. **common/programs/default.nix** - Centralized program configurations (direnv, gh, zsh base)
@@ -86,7 +91,9 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 6. **packages.nix** - Centralized package definitions organized by category
 
 ### Recent Architectural Changes (2025)
+
 **Major refactoring eliminated 479+ lines of duplicate configuration:**
+
 - Created `common/home-manager-base.nix` to centralize Home Manager settings
 - Created `common/programs/default.nix` for shared program configurations
 - **Unified git configuration** in `common/git/` with platform detection for SSH signing
@@ -100,6 +107,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 ## Development Workflow
 
 ### Making Configuration Changes
+
 1. Edit configuration files in appropriate directory:
    - `common/` for shared changes
    - `common/profiles/` for optional profiles (Wayland, etc.)
@@ -109,6 +117,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 3. Commit changes: `git commit -am "description"`
 
 ### Package Management
+
 - **Add everywhere**: Edit `common/packages.nix`:
   - `corePackages` - Essential CLI tools (oh-my-posh, eza, zoxide, bat, etc.)
   - `devPackages` - Development tools (gh, lazygit, docker-compose, htop, curl, wget, etc.)
@@ -118,6 +127,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 - **Profile-specific packages**: Edit `common/profiles/hyprland.nix` for Linux desktop apps
 
 **IMPORTANT**: Platform-specific packages must be separated:
+
 - macOS-only packages (like `reattach-to-user-namespace`) go in `darwinPackages` and are imported via `systems/aarch64-darwin/home.nix`
 - Profile-specific packages (like Hyprland/Wayland tools) go in `common/profiles/hyprland.nix` and are opt-in via `extraModules`
 - Never put macOS-only packages in shared `corePackages` or `devPackages` or they'll break Linux builds
@@ -128,9 +138,11 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 **Profile Architecture**: Optional configurations that extend the base system without polluting minimal environments.
 
 **Available Profiles**:
+
 - `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured, Linux only)
 
 **hyprland.nix includes**:
+
 - **Hyprland** - Modern Wayland compositor with animations
 - **Dev tools** - mise, lazydocker, btop, Docker, databases
 - **Desktop apps** - Obsidian, Signal, Chromium, LocalSend
@@ -156,6 +168,7 @@ desktop = mkHomeManagerConfig {
 
 **Customizing hyprland.nix**:
 Edit the profile and comment out packages you don't want:
+
 ```nix
 # Media (comment out what you don't want)
 mpv
@@ -166,13 +179,16 @@ spotify
 ```
 
 **Benefits**:
+
 - Default stays minimal (Docker/containers unaffected)
 - Explicit opt-in for additional functionality
 - Easy to compose multiple profiles
 - Clear separation of concerns
 
 ### Adding New Hosts
+
 Create new configuration in `flake.nix`:
+
 ```nix
 # For macOS
 "hostname" = mkDarwinSystem {
@@ -189,22 +205,27 @@ Create new configuration in `flake.nix`:
 ## Special Features
 
 ### Claude Code Integration
+
 Located in `common/claude-code/`, this provides:
+
 - **Custom commands**: Linear integration, conventional commits, breakdown command
 - **Sophisticated hooks**: Automated linting and quality checks
 - **Modular structure**: Combines local and remote commands via symlinkJoin
 
 ### Shell Configuration
+
 - **History Search**: fzf with Catppuccin Mocha theme (`source <(fzf --zsh)`)
 - **Directory Navigation**: zoxide aliased to `cd` for smart directory jumping
 - **Prompt**: Oh My Posh with custom theme
 - **Completions**: Carapace for 300+ CLI tools
 
 ### Version Management
+
 - **Terraform**: Managed as regular nixpkgs in Linux configurations
 - **Node.js**: Uses nodePackages.pnpm from nixpkgs
 
 ### Multi-Environment Support
+
 - **Generic Linux**: Flexible Home Manager configuration for any Linux environment (minimal by default)
 - **Profile-based configs**: Optional modules for desktop environments (Wayland/Sway), server tools, etc.
 - **Development Shell**: Available via `nix develop` for working on this configuration
@@ -213,12 +234,14 @@ Located in `common/claude-code/`, this provides:
 ## Platform-Specific Notes
 
 ### macOS (nix-darwin)
+
 - Manages system preferences via `systems/aarch64-darwin/defaults.nix`
 - Dock configuration in `systems/aarch64-darwin/dock.nix`
 - Homebrew integration for GUI applications
 - SSH configuration for VM connectivity
 
 ### Linux (home-manager)
+
 - **Minimal by default** - base configuration for Docker/containers
 - **Profile system** - opt-in desktop environments (Wayland/Sway) or additional tools
 - Docker integration (docker-compose package)
@@ -227,10 +250,12 @@ Located in `common/claude-code/`, this provides:
 - Auto-optimise-store enabled (better suited for Linux than macOS)
 
 **Available Configurations**:
+
 - `#minimal-x86` / `#minimal-arm` - Minimal (Docker/containers)
 - `#desktop-x86` / `#desktop-arm` - Full desktop environment (Hyprland, dev tools, GUI apps)
 
 ## Security Considerations
+
 - SSH keys managed through 1Password integration
 - Tailscale for secure cloud connectivity
 - Proper credential management for AWS profiles
@@ -255,6 +280,7 @@ docker-compose run --rm nix-dev
 ```
 
 **Docker Setup Details:**
+
 - Ubuntu 24.04 base with pinned SHA256
 - Pinned package versions (curl, git, sudo, xz-utils, ca-certificates, zsh)
 - Pinned Nix version: 2.24.10
@@ -265,6 +291,7 @@ docker-compose run --rm nix-dev
 ## Configuration Development Commands
 
 ### Nix Development Tools (via `nix develop`)
+
 ```bash
 # Enter development shell with Nix tools
 nix develop
@@ -277,6 +304,7 @@ nil               # Nix LSP for editor integration
 ```
 
 ### Configuration Validation
+
 ```bash
 # Check flake syntax and evaluation
 nix flake check
@@ -288,6 +316,7 @@ nix eval .#homeConfigurations.ubuntu.activationPackage
 ```
 
 ### Troubleshooting Commands
+
 ```bash
 # Debug build issues
 nixswitch --show-trace
@@ -305,6 +334,7 @@ home-manager generations            # Linux - shows available generations
 ## Advanced Architecture Details
 
 ### Module Resolution System
+
 The configuration uses a layered import system that eliminates duplication:
 
 1. **flake.nix**: Orchestrates everything using `mkDarwinSystem` and `mkHomeManagerConfig` functions
@@ -323,6 +353,7 @@ The configuration uses a layered import system that eliminates duplication:
    - **Linux**: homeDirectory + nix settings + platform aliases (hmswitch, hm-user) + worktree manager
 
 ### Cross-Platform Module Strategy
+
 - **Shared modules** in `common/` contain ALL cross-platform configuration
 - **Platform modules** in `systems/{arch}/` are minimal - only truly platform-specific settings
 - **Import chains**:
@@ -331,7 +362,9 @@ The configuration uses a layered import system that eliminates duplication:
 - **DRY principle**: Zero duplication between platforms - shared config centralized once
 
 ### Performance Optimizations
+
 Built-in performance tuning throughout:
+
 - **Build parallelization**: `max-jobs = "auto"`, `cores = 0`
 - **Download optimization**: 256MB buffer, 50 HTTP connections
 - **Store optimization**: `nix.optimise.automatic = true` on macOS only (in `systems/aarch64-darwin/default.nix`)
@@ -339,6 +372,7 @@ Built-in performance tuning throughout:
   - Linux uses standard nix settings without `optimise.automatic`
 
 ### State Management Architecture
+
 - **Version pinning**: `common/versions.nix` prevents Home Manager version conflicts
 - **Hostname detection**: Auto-detects via `scutil --get LocalHostName` (macOS)
 - **Username validation**: Runtime validation with helpful error messages
@@ -347,6 +381,7 @@ Built-in performance tuning throughout:
 ## Critical Implementation Patterns
 
 ### Module Import Best Practices
+
 ```nix
 # ✅ Correct: Import with proper parameter passing
 ./common/module.nix
@@ -359,13 +394,16 @@ Built-in performance tuning throughout:
 ```
 
 ### Configuration Override Hierarchy
+
 1. **flake.nix**: System-level overrides
 2. **systems/{arch}/default.nix**: Platform-specific overrides
 3. **common/**: Shared defaults
 4. **Individual modules**: Specific functionality
 
 ### ZSH Configuration Pattern
+
 **IMPORTANT**: ZSH configuration uses `initContent` (not deprecated `initExtra`):
+
 - **common/programs/default.nix** sets base `programs.zsh.initContent`
 - **Platform configs** can extend with their own `programs.zsh.initContent` for platform-specific init
 - **Platform aliases** set via `programs.zsh.shellAliases` merge with shared aliases from `common/zsh/shared.nix`
@@ -382,7 +420,9 @@ Built-in performance tuning throughout:
   - `tools` - Tool initialization (fzf, zoxide, oh-my-posh, carapace)
 
 ### Error Handling Patterns
+
 The codebase implements defensive configuration:
+
 - **Validation functions**: `validateUsername` with helpful error messages
 - **Fallback options**: `fallback = true` in Nix settings
 - **Graceful degradation**: Optional features with null checks
@@ -390,11 +430,13 @@ The codebase implements defensive configuration:
 ## Security Architecture
 
 ### SSH Key Management
+
 - **1Password integration**: SSH agent socket configuration for seamless key access
 - **Per-platform paths**: macOS uses Library/Group Containers path
 - **Automatic setup**: System activation scripts configure SSH properly
 
 ### Credential Isolation
+
 - **Home Manager**: User-level secrets and configurations
 - **System-level**: Only essential system packages and settings
 - **Cloud integration**: AWS profiles, Tailscale for secure connectivity
@@ -402,6 +444,7 @@ The codebase implements defensive configuration:
 ## Code Quality Standards
 
 **6 Golden Rules for Clean Code** (Neo Kim):
+
 1. **SOC** - Separation of concerns
 2. **DYC** - Document your code
 3. **DRY** - Don't repeat yourself
@@ -410,6 +453,7 @@ The codebase implements defensive configuration:
 6. **YAGNI** - You ain't gonna need it
 
 ### Nix-Specific Quality Guidelines
+
 - **Pure functions**: All configuration functions should be deterministic
 - **Explicit dependencies**: Always declare inputs explicitly
 - **Modular design**: Each .nix file should have single responsibility

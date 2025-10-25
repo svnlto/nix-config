@@ -39,6 +39,7 @@
 
       # Networking & VPN
       "tailscale-app"
+      "mullvad-vpn@beta"
 
       # Media & Entertainment
       "spotify"
