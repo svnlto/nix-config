@@ -7,7 +7,7 @@ after-login-command = []
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
-  'exec-and-forget borders active_color=0xff494d64 inactive_color=0x00000000 width=3.0 blacklist="iPhone Mirroring"'
+  'exec-and-forget borders active_color=0xcc464f91 inactive_color=0x00000000 width=3.0 blacklist="iPhone Mirroring"'
 ]
 
 # Notify Sketchybar about workspace change
