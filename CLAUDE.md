@@ -73,7 +73,6 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 └── systems/
     ├── aarch64-darwin/          # macOS-specific (nix-darwin)
     │   ├── home.nix             # Home Manager config - imports common modules
-    │   ├── aerospace/           # AeroSpace tiling window manager (macOS only)
     │   ├── homebrew.nix         # Homebrew cask definitions
     │   ├── defaults.nix         # macOS system preferences
     │   └── dock.nix             # Dock configuration
@@ -97,7 +96,6 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 - Created `common/home-manager-base.nix` to centralize Home Manager settings
 - Created `common/programs/default.nix` for shared program configurations
 - **Unified git configuration** in `common/git/` with platform detection for SSH signing
-- **Moved platform-specific modules** to proper locations (aerospace → macOS-only)
 - **Made lazygit cross-platform** via `xdg.configFile` instead of hardcoded macOS paths
 - **Removed all NixOS-specific code** (this config only supports nix-darwin and home-manager)
 - Reduced macOS config from 127 lines to minimal platform-specific settings
@@ -235,28 +233,11 @@ Located in `common/tmux/` and `common/tmuxinator/`:
   - Aliases: `mux`, `muxn`, `muxs`, `muxl`
   - Start with: `muxs default` or `muxs pricelytics`
 
-### AeroSpace Window Management (macOS)
-
-Located in `systems/aarch64-darwin/aerospace/`:
-
-- **Tiling window manager** for macOS with workspace management
-- **Sketchybar integration**: Clickable workspace buttons with opacity
-- **Window rules**: Auto-assignment to workspaces via `on-window-detected`
-- **Important rule patterns**:
-  - Multiple commands: `move-node-to-workspace` must be LAST (AeroSpace requirement)
-  - Correct: `run = ["layout floating", "move-node-to-workspace 5"]`
-  - Incorrect: `run = ["move-node-to-workspace 5", "layout floating"]` (will error)
-  - Match by title: `if.window-title-regex-substring = "— 1Password$"`
-  - Match by bundle ID: `if.app-id = "com.1password.1password"`
-  - System dialogs: `if.app-id = "com.apple.LocalAuthentication.UIAgent"` for Touch ID
-- **Sketchybar workspace buttons**: Clickable via `click_script="aerospace workspace $sid"`
-
 ### Terminal & UI Theming
 
 - **Ghostty terminal**: 0.85 opacity for subtle transparency
 - **Neovim**: Catppuccin Mocha theme with `transparent_background = true`
 - **Tmux**: Catppuccin Mocha status bar, custom 2-pane layout support
-- **Sketchybar**: Catppuccin colors, dimmed inactive workspace indicators (`WHITE_DIMMED = 0x80ffffff`)
 - **Consistent theme**: Catppuccin Mocha across all tools (terminal, editor, tmux, fzf)
 
 ### Version Management
