@@ -104,20 +104,39 @@ return {
 					end,
 				},
 
+				-- YAML Language Server with Kubernetes support
 				yamlls = {
 					settings = {
 						yaml = {
 							keyOrdering = false,
 							validate = true,
 							schemas = {
-								["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.3-standalone-strict/all.json"] = "/manifests/*",
-								["https://json.schemastore.org/github-workflow.json"] = "*/.github/workflows/*",
+								-- Kubernetes - match common filename patterns
+								kubernetes = {
+									"deployment.yaml",
+									"service.yaml",
+									"configmap.yaml",
+									"secret.yaml",
+									"ingress.yaml",
+									"*-deployment.yaml",
+									"*-service.yaml",
+									"*-configmap.yaml",
+									"*-secret.yaml",
+									"*-ingress.yaml",
+									"**/*-deployment.yaml",
+									"**/*-service.yaml",
+								},
+								-- GitHub Actions
+								["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.{yaml,yml}",
+								-- External Secrets
 								["https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json"] = "*externalsecret.yaml",
-								[""] = "",
 							},
 						},
 					},
 				},
+
+				-- Helm Language Server
+				helm_ls = {},
 			},
 		},
 	},
@@ -132,6 +151,7 @@ return {
 				"terraform-ls",
 				"lua-language-server",
 				"biome",
+				"helm-ls",
 			},
 		},
 	},
@@ -146,7 +166,32 @@ return {
 				"terraformls",
 				"lua_ls",
 				"biome",
+				"helm_ls",
 			},
 		},
+	},
+
+	-- Prevent yamlls from attaching to Helm template files
+	{
+		"neovim/nvim-lspconfig",
+		opts = function(_, opts)
+			-- Setup on_attach hook to handle LSP conflicts
+			local on_attach = opts.on_attach or function() end
+			opts.on_attach = function(client, bufnr)
+				-- Call existing on_attach first
+				on_attach(client, bufnr)
+
+				-- Stop yamlls on helm filetype to prevent conflicts
+				if client.name == "yamlls" then
+					local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+					if filetype == "helm" then
+						vim.schedule(function()
+							vim.cmd("LspStop yamlls")
+						end)
+					end
+				end
+			end
+			return opts
+		end,
 	},
 }
