@@ -106,6 +106,8 @@ return {
 
 				-- YAML Language Server with Kubernetes support
 				yamlls = {
+					-- Explicitly set filetypes to exclude helm and jinja templates
+					filetypes = { "yaml", "yaml.ansible" },
 					settings = {
 						yaml = {
 							keyOrdering = false,
@@ -171,24 +173,5 @@ return {
 				"helm_ls",
 			},
 		},
-	},
-
-	-- Prevent yamlls from attaching to Helm and Jinja template files
-	{
-		"neovim/nvim-lspconfig",
-		opts = function(_, opts)
-			-- Modify yamlls configuration to exclude helm and jinja filetypes
-			if not opts.servers then
-				opts.servers = {}
-			end
-			if not opts.servers.yamlls then
-				opts.servers.yamlls = {}
-			end
-
-			-- Override filetypes to exclude helm and yaml.jinja
-			opts.servers.yamlls.filetypes = { "yaml", "yaml.ansible" }
-
-			return opts
-		end,
 	},
 }
