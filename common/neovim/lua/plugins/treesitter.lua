@@ -19,6 +19,7 @@ return {
 				"yaml",
 				"markdown",
 				"dockerfile",
+				"jinja2",
 			},
 			highlight = {
 				enable = true,
@@ -31,5 +32,11 @@ return {
 				enable = true,
 			},
 		},
+		config = function(_, opts)
+			require("nvim-treesitter.configs").setup(opts)
+
+			-- Register jinja2 parser for compound filetypes
+			vim.treesitter.language.register("jinja2", "jinja")
+		end,
 	},
 }

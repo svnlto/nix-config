@@ -141,7 +141,7 @@ return {
 		},
 	},
 
-	-- Mason configuration (updated to mason-org)
+	-- Mason configuration
 	{
 		"mason-org/mason.nvim",
 		opts = {
@@ -151,12 +151,13 @@ return {
 				"terraform-ls",
 				"lua-language-server",
 				"biome",
+				"yaml-language-server",
 				"helm-ls",
 			},
 		},
 	},
 
-	-- Mason LSP Config (also updated to mason-org)
+	-- Mason LSP Config
 	{
 		"mason-org/mason-lspconfig.nvim",
 		opts = {
@@ -166,31 +167,27 @@ return {
 				"terraformls",
 				"lua_ls",
 				"biome",
+				"yamlls",
 				"helm_ls",
 			},
 		},
 	},
 
-	-- Prevent yamlls from attaching to Helm template files
+	-- Prevent yamlls from attaching to Helm and Jinja template files
 	{
 		"neovim/nvim-lspconfig",
 		opts = function(_, opts)
-			-- Setup on_attach hook to handle LSP conflicts
-			local on_attach = opts.on_attach or function() end
-			opts.on_attach = function(client, bufnr)
-				-- Call existing on_attach first
-				on_attach(client, bufnr)
-
-				-- Stop yamlls on helm filetype to prevent conflicts
-				if client.name == "yamlls" then
-					local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
-					if filetype == "helm" then
-						vim.schedule(function()
-							vim.cmd("LspStop yamlls")
-						end)
-					end
-				end
+			-- Modify yamlls configuration to exclude helm and jinja filetypes
+			if not opts.servers then
+				opts.servers = {}
 			end
+			if not opts.servers.yamlls then
+				opts.servers.yamlls = {}
+			end
+
+			-- Override filetypes to exclude helm and yaml.jinja
+			opts.servers.yamlls.filetypes = { "yaml", "yaml.ansible" }
+
 			return opts
 		end,
 	},

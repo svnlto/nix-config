@@ -1,6 +1,9 @@
 -- LazyVim Bootstrap
 -- This file loads the LazyVim configuration
 
+-- Load filetype detection for Jinja templates
+require("config.filetype")
+
 -- Set leader keys early
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
