@@ -7,6 +7,10 @@ return {
 			inlay_hints = { enabled = false }, -- Disable inlay hints by default (toggle with <leader>uh)
 			-- Configure LSP servers
 			servers = {
+				-- YAML Language Server - exclude helm values files (handled by helm_ls)
+				yamlls = {
+					filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab" },
+				},
 				-- Helm Language Server - disable yamlls diagnostics for Jinja2 templates
 				helm_ls = {
 					settings = {
