@@ -7,6 +7,19 @@ return {
 			inlay_hints = { enabled = false }, -- Disable inlay hints by default (toggle with <leader>uh)
 			-- Configure LSP servers
 			servers = {
+				-- YAML Language Server - disable for helm templates (which may contain Jinja2)
+				yamlls = {
+					filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
+					-- Helm templates are handled by helm_ls, not yamlls
+					root_dir = function(fname)
+						local lspconfig = require("lspconfig")
+						-- Don't attach yamlls to helm chart templates
+						if fname:match("/templates/.*%.yaml$") or fname:match("/templates/.*%.yml$") then
+							return nil
+						end
+						return lspconfig.util.root_pattern(".git")(fname)
+					end,
+				},
 				-- TypeScript/JavaScript (updated name)
 				ts_ls = {
 					settings = {
