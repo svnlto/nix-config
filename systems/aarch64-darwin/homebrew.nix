@@ -3,8 +3,8 @@
 {
   homebrew = {
     enable = true;
-    taps = [ "FelixKratz/formulae" "nikitabobko/tap" ];
-    brews = [ "mas" "dockutil" "pre-commit" "borders" "sketchybar" ];
+    taps = [ ];
+    brews = [ "mas" "dockutil" "pre-commit" ];
     casks = [
       # Fonts
       "font-sf-pro"
@@ -16,7 +16,6 @@
 
       # Productivity Tools
       "raycast"
-      "nikitabobko/tap/aerospace"
       "setapp"
       "notion-calendar"
       "notion-mail"

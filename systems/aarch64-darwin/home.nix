@@ -5,8 +5,6 @@
     ../../common/home-manager-base.nix
     ../../common/lazygit/default.nix
     ../../common/git
-    ./aerospace/default.nix
-    ./sketchybar/default.nix
   ];
 
   # macOS-specific home directory
