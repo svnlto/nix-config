@@ -67,16 +67,3 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "CursorHo
 		end
 	end,
 })
-
--- Detect Helm templates early to prevent yamlls attachment
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	group = augroup("helm_filetype"),
-	pattern = {
-		"*/templates/*.yaml",
-		"*/templates/*.yml",
-		"*/templates/*.tpl",
-	},
-	callback = function()
-		vim.opt_local.filetype = "helm"
-	end,
-})

@@ -1,9 +1,6 @@
 -- LazyVim Bootstrap
 -- This file loads the LazyVim configuration
 
--- Load filetype detection for Jinja templates
-require("config.filetype")
-
 -- Set leader keys early
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -32,10 +29,10 @@ require("lazy").setup({
 		-- Add LazyVim and import its plugins
 		{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
 		{ import = "lazyvim.plugins.extras.lang.go" },
+		{ import = "lazyvim.plugins.extras.lang.helm" },
 		{ import = "lazyvim.plugins.extras.lang.terraform" },
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		{ import = "lazyvim.plugins.extras.lang.yaml" },
-		{ import = "lazyvim.plugins.extras.lang.helm" },
 		-- Import any extras modules here
 		-- { import = "lazyvim.plugins.extras.lang.typescript" },
 		-- { import = "lazyvim.plugins.extras.lang.json" },

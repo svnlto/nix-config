@@ -103,47 +103,11 @@ return {
 						return lspconfig.util.root_pattern("biome.json", ".git")(fname)
 					end,
 				},
-
-				-- YAML Language Server with Kubernetes support
-				yamlls = {
-					-- Explicitly set filetypes to exclude helm and jinja templates
-					filetypes = { "yaml", "yaml.ansible" },
-					settings = {
-						yaml = {
-							keyOrdering = false,
-							validate = true,
-							schemas = {
-								-- Kubernetes - match common filename patterns
-								kubernetes = {
-									"deployment.yaml",
-									"service.yaml",
-									"configmap.yaml",
-									"secret.yaml",
-									"ingress.yaml",
-									"*-deployment.yaml",
-									"*-service.yaml",
-									"*-configmap.yaml",
-									"*-secret.yaml",
-									"*-ingress.yaml",
-									"**/*-deployment.yaml",
-									"**/*-service.yaml",
-								},
-								-- GitHub Actions
-								["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.{yaml,yml}",
-								-- External Secrets
-								["https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json"] = "*externalsecret.yaml",
-							},
-						},
-					},
-				},
-
-				-- Helm Language Server
-				helm_ls = {},
 			},
 		},
 	},
 
-	-- Mason configuration
+	-- Mason configuration (LazyVim helm/yaml extras handle yamlls and helm_ls)
 	{
 		"mason-org/mason.nvim",
 		opts = {
@@ -153,13 +117,11 @@ return {
 				"terraform-ls",
 				"lua-language-server",
 				"biome",
-				"yaml-language-server",
-				"helm-ls",
 			},
 		},
 	},
 
-	-- Mason LSP Config
+	-- Mason LSP Config (LazyVim helm/yaml extras handle yamlls and helm_ls)
 	{
 		"mason-org/mason-lspconfig.nvim",
 		opts = {
@@ -169,8 +131,6 @@ return {
 				"terraformls",
 				"lua_ls",
 				"biome",
-				"yamlls",
-				"helm_ls",
 			},
 		},
 	},
