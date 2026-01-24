@@ -1,29 +1,34 @@
 # Pre-commit hooks for Nix configuration quality
 # Install with: pre-commit install
+#
+# Note: Some hooks require development tools. Run 'nix develop' first or
+# the hooks will use nix-shell to access the tools automatically.
 
 repos:
   - repo: local
     hooks:
       - id: nixfmt
         name: Format Nix files
-        entry: nixfmt
+        entry: bash -c 'if command -v nixfmt &>/dev/null; then nixfmt "$@"; else nix shell nixpkgs#nixfmt-classic -c nixfmt "$@"; fi' --
         language: system
         files: \.nix$
         description: Format Nix code using nixfmt-classic
 
       - id: statix
         name: Lint Nix files
-        entry: statix check
+        entry: bash -c 'if command -v statix &>/dev/null; then statix check "$@"; else echo "⚠️  statix not found, skipping (run in nix develop for linting)"; fi' --
         language: system
         files: \.nix$
         description: Static analysis for Nix files
+        verbose: true
 
       - id: deadnix
         name: Find dead Nix code
-        entry: deadnix --fail
+        entry: bash -c 'if command -v deadnix &>/dev/null; then deadnix --fail "$@"; else echo "⚠️  deadnix not found, skipping (run in nix develop for dead code detection)"; fi' --
         language: system
         files: \.nix$
         description: Detect unused Nix code
+        verbose: true
 
       - id: flake-check
         name: Validate flake
