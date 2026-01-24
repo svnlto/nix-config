@@ -2,7 +2,9 @@
 # Contains common settings used by both macOS and Linux configurations
 { username, ... }:
 
-let sharedZsh = import ./zsh/shared.nix;
+let
+  sharedZsh = import ./zsh/shared.nix;
+  versions = import ./versions.nix;
 in {
   # Common imports for all Home Manager configurations
   imports = [
@@ -15,7 +17,7 @@ in {
   # Base home configuration (homeDirectory set per platform)
   home = {
     username = username;
-    stateVersion = "24.05"; # Manage this manually for now
+    stateVersion = versions.homeManagerStateVersion;
   };
 
   # Import shared session variables and paths

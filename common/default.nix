@@ -1,8 +1,7 @@
 { username, ... }:
 
-{
-  imports = [ ./zsh ];
-
+let constants = import ./constants.nix;
+in {
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
@@ -18,12 +17,12 @@
       fallback = true;
       keep-going = true;
       log-lines = 25;
-      download-buffer-size = 268435456;
+      download-buffer-size = constants.performance.downloadBufferSize;
       builders-use-substitutes = true;
-      http-connections = 50;
-      max-substitution-jobs = 32;
-      stalled-download-timeout = 90;
-      connect-timeout = 30;
+      http-connections = constants.performance.httpConnections;
+      max-substitution-jobs = constants.performance.maxSubstitutionJobs;
+      stalled-download-timeout = constants.performance.stalledDownloadTimeout;
+      connect-timeout = constants.performance.connectTimeout;
     };
 
     # Shared extra options

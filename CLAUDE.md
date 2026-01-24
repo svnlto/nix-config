@@ -199,6 +199,88 @@ Create new configuration in `flake.nix`:
 };
 ```
 
+### Creating Custom Profiles
+
+Profiles allow you to extend configurations without polluting minimal environments. Follow the Hyprland profile pattern:
+
+**1. Create your profile file:**
+
+```nix
+# common/profiles/your-profile.nix
+{ pkgs, lib, ... }:
+
+# Add platform assertion if needed (optional)
+assert lib.assertMsg pkgs.stdenv.isLinux
+  "This profile is Linux-only. Remove from macOS configurations.";
+
+{
+  # Add your packages
+  home.packages = with pkgs; [
+    # your-package-1
+    # your-package-2
+  ];
+
+  # Add your program configurations
+  programs.yourProgram = {
+    enable = true;
+    # ... settings
+  };
+
+  # Add any other Home Manager options
+  home.sessionVariables = {
+    YOUR_VAR = "value";
+  };
+}
+```
+
+**2. Add profile to flake.nix:**
+
+```nix
+# In flake.nix homeConfigurations section
+yourconfig = mkHomeManagerConfig {
+  username = "youruser";
+  extraModules = [ ./common/profiles/your-profile.nix ];
+};
+
+# Or combine multiple profiles
+advanced = mkHomeManagerConfig {
+  username = "youruser";
+  extraModules = [
+    ./common/profiles/hyprland.nix
+    ./common/profiles/your-profile.nix
+  ];
+};
+```
+
+**3. Apply the configuration:**
+
+```bash
+# For the new configuration
+home-manager switch --flake ~/.config/nix#yourconfig
+
+# Or update your existing config to include it
+vim ~/.config/nix/flake.nix  # Add to extraModules
+nixswitch  # or hmswitch
+```
+
+**Profile Best Practices:**
+
+- ✅ Use platform assertions (`pkgs.stdenv.isLinux` / `isDarwin`)
+- ✅ Document what the profile provides at the top
+- ✅ Group related functionality (desktop, development, media, etc.)
+- ✅ Make profiles optional - don't require them in base config
+- ✅ Test profile in isolation before combining with others
+- ❌ Don't add platform-specific code to cross-platform profiles
+- ❌ Don't create circular dependencies between profiles
+
+**Example Use Cases:**
+
+- **Gaming profile**: Steam, gaming tools, performance tweaks
+- **Work profile**: VPN configs, work-specific tools, credentials
+- **Media profile**: Video/audio editing tools, codecs
+- **Server profile**: Monitoring tools, server-specific settings
+- **Development profile**: Language-specific toolchains, IDEs
+
 ## Special Features
 
 ### Claude Code Integration
@@ -274,6 +356,93 @@ Located in `common/tmux/` and `common/tmuxinator/`:
 - `#minimal-x86` / `#minimal-arm` - Minimal (Docker/containers)
 - `#desktop-x86` / `#desktop-arm` - Full desktop environment (Hyprland, dev tools, GUI apps)
 
+## Backup & Recovery Strategy
+
+### Automatic Backups
+
+Home Manager automatically creates backups when replacing existing configuration files:
+
+- **Location**: Original file path with `.backup` extension
+  - Example: `~/.zshrc.backup`, `~/.config/nvim/init.lua.backup`
+- **When created**: During `nixswitch` or `home-manager switch` when files would be overwritten
+- **Retention**: Not automatically cleaned up - manual management required
+- **Restore**: Simply move the backup file back to original location
+
+```bash
+# Restore a backed-up file
+mv ~/.zshrc.backup ~/.zshrc
+
+# Find all backup files
+find ~/ -name "*.backup" -type f
+
+# List backup files with modification times
+find ~/ -name "*.backup" -type f -exec ls -lh {} \;
+
+# Remove old backups (older than 30 days)
+find ~/ -name "*.backup" -mtime +30 -delete
+
+# Dry run to see what would be deleted
+find ~/ -name "*.backup" -mtime +30 -print
+```
+
+### Generation-Based Recovery
+
+Nix configurations are **versioned automatically** via generations:
+
+**macOS (nix-darwin):**
+```bash
+# List all system generations
+sudo darwin-rebuild --list-generations
+
+# Rollback to previous generation
+sudo darwin-rebuild rollback
+
+# Boot into specific generation (survives reboot)
+sudo darwin-rebuild switch --rollback
+```
+
+**Linux (home-manager):**
+```bash
+# List generations with activation paths
+home-manager generations
+
+# Activate specific generation
+/nix/store/HASH-home-manager-generation/activate
+
+# Rollback to previous
+home-manager --rollback
+```
+
+### Cleanup Recommendations
+
+**Safe cleanup strategy:**
+```bash
+# Keep recent generations (last 30 days), clean old ones
+nix-collect-garbage --delete-older-than 30d
+
+# Or use the quick cleanup alias
+nix-clean  # Keeps last 7 days
+
+# Deep cleanup (removes ALL old generations)
+nix-clean-deep  # Use with caution!
+```
+
+**IMPORTANT**: Always keep at least one or two recent generations as a safety net before running deep cleanup.
+
+### Disaster Recovery
+
+If a configuration breaks your system:
+
+1. **Immediate rollback**: Use generation rollback (see above)
+2. **Restore from backup**: Use `.backup` files for specific configs
+3. **Git history**: All changes tracked in this repository
+   ```bash
+   git log --oneline  # See recent changes
+   git diff HEAD~1    # Compare with previous commit
+   git checkout HEAD~1 -- path/to/file  # Restore specific file
+   ```
+4. **Clean rebuild**: Clone fresh repository and rebuild
+
 ## Security Considerations
 
 - SSH keys managed through 1Password integration
@@ -305,7 +474,7 @@ docker-compose run --rm nix-dev
 - Pinned package versions (curl, git, sudo, xz-utils, ca-certificates, zsh)
 - Pinned Nix version: 2.24.10
 - Pinned home-manager: release-24.05
-- Applies `homeConfigurations.ubuntu` automatically during build
+- Applies `homeConfigurations.minimal-arm` automatically during build
 - All tools (tmux, neovim, zsh) pre-configured and ready to test
 
 ## Configuration Development Commands
@@ -331,8 +500,64 @@ nix flake check
 
 # Validate specific configuration
 nix eval .#darwinConfigurations.rick.system
-nix eval .#homeConfigurations.linux.activationPackage
-nix eval .#homeConfigurations.ubuntu.activationPackage
+nix eval .#homeConfigurations.minimal-x86.activationPackage
+nix eval .#homeConfigurations.desktop-arm.activationPackage
+```
+
+### Version Management
+
+This configuration uses centralized version management in `common/versions.nix`.
+
+**IMPORTANT: State versions should RARELY be updated!**
+
+```bash
+# Check current versions
+cat common/versions.nix
+
+# Check what version your system is using
+nix eval .#darwinConfigurations.rick.system.stateVersion    # macOS
+home-manager --version                                       # Linux
+```
+
+**When to update state versions:**
+- ✅ When release notes explicitly recommend updating
+- ✅ After reading and understanding migration guides
+- ❌ NEVER "just because" a new version exists
+- ❌ NEVER to fix unrelated build issues
+
+State versions control backward compatibility. Updating them can **break your system** by changing default behaviors.
+
+**Updating nixpkgs (safe and recommended):**
+```bash
+# Update all flake inputs
+nix flake update
+
+# Update specific input only
+nix flake lock --update-input nixpkgs
+nix flake lock --update-input home-manager
+
+# Test before committing
+nixswitch --show-trace
+
+# Commit if successful
+git add flake.lock
+git commit -m "chore: update flake inputs"
+```
+
+**Updating state versions (rare, use caution):**
+```bash
+# Read release notes first!
+# Visit: https://github.com/nix-community/home-manager/releases
+
+# Edit versions file ONLY after reading migration guide
+vim common/versions.nix
+
+# Test thoroughly before committing
+nixswitch --show-trace
+
+# Commit only if everything works
+git add common/versions.nix
+git commit -m "feat: update state version to XX.YY (breaking change)"
 ```
 
 ### Troubleshooting Commands
@@ -347,8 +572,36 @@ nix-status                    # Detailed status (alias)
 darwin-rebuild --list-generations    # Show previous builds
 
 # Emergency rollback
-sudo darwin-rebuild rollback        # macOS
-home-manager generations            # Linux - shows available generations
+
+## macOS (nix-darwin)
+# Quick rollback to previous generation
+sudo darwin-rebuild rollback
+
+# Or use --rollback flag
+sudo darwin-rebuild --rollback
+
+# List all available generations
+sudo darwin-rebuild --list-generations
+
+# Switch to specific generation (replace N with generation number)
+sudo nix-env --switch-generation N --profile /nix/var/nix/profiles/system
+
+## Linux (home-manager)
+# List available generations with their paths
+home-manager generations
+
+# Activate specific generation (copy path from above command)
+/nix/store/HASH-home-manager-generation/activate
+
+# Or rollback to previous generation
+home-manager --rollback
+
+# List generations with details
+nix-env --list-generations --profile ~/.local/state/nix/profiles/home-manager
+
+# Switch to specific generation number
+nix-env --switch-generation N --profile ~/.local/state/nix/profiles/home-manager
+home-manager switch  # Re-activate after switching
 ```
 
 ## Advanced Architecture Details

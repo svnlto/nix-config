@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 
-{
+let constants = import ../constants.nix;
+in {
   # Install TPM (Tmux Plugin Manager)
   home.file.".tmux/plugins/tpm" = {
     source = pkgs.fetchFromGitHub {
@@ -47,7 +48,7 @@
     set -g renumber-windows on
 
     # Increase scrollback buffer size
-    set -g history-limit 50000
+    set -g history-limit ${toString constants.history.scrollbackLines}
 
     # Enable mouse support
     set -g mouse on

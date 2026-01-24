@@ -1,6 +1,7 @@
 { pkgs, lib, ... }:
 
-{
+let constants = import ../constants.nix;
+in {
   # Ghostty terminal configuration
   home.file.".config/ghostty/config".text = ''
     theme = Catppuccin Mocha
@@ -27,7 +28,7 @@
     shell-integration = zsh
     shell-integration-features = cursor,sudo,title
 
-    scrollback-limit = 50000
+    scrollback-limit = ${toString constants.history.scrollbackLines}
 
     mouse-hide-while-typing = true
     click-repeat-interval = 300

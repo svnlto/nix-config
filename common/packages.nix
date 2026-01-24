@@ -46,15 +46,6 @@
   # These packages need to be installed at the system level for proper integration
   darwinSystemPackages = with pkgs; [ git tree ];
 
-  # Package selection utility - filters out null packages
-  # Useful for conditional package inclusion based on system or user preferences
-  selectPackages = packages:
-    if packages == null then
-      [ ]
-    else
-      builtins.filter (pkg: pkg != null) packages;
-
-  # Convenient package combinations for different use cases
+  # Convenient package combination for user-level packages
   allCommonPackages = corePackages ++ devPackages;
-  allSystemPackages = darwinSystemPackages;
 }

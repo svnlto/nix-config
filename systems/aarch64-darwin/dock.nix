@@ -11,7 +11,7 @@ let
     "rick" = [
       "/Applications/Ghostty.app"
       "/Applications/Arc.app"
-      "/applications/Claude.app"
+      "/Applications/Claude.app"
     ];
 
     # Default configuration (used if no host-specific config exists)
@@ -23,6 +23,15 @@ let
     dockAppsByHost.${hostname}
   else
     dockAppsByHost.default;
+
+  # Build the dock configuration script (defined once, reused below)
+  dockConfigScript = apps: ''
+    ${dockutil} --remove all --no-restart
+    ${lib.concatStringsSep "\n" (map (app: ''
+      ${dockutil} --add "${app}" --no-restart
+    '') apps)}
+    killall Dock
+  '';
 in {
   # Export the configuration through options instead of _module.args
   options = { };
@@ -30,32 +39,11 @@ in {
   # Create a proper module configuration
   config = {
     system.activationScripts = {
-      dock.text = let
-        # Build the dock configuration script
-        dockConfigScript = apps: ''
-          ${dockutil} --remove all --no-restart
-          ${lib.concatStringsSep "\n" (map (app: ''
-            ${dockutil} --add "${app}" --no-restart
-          '') apps)}
-          killall Dock
-        '';
-      in dockConfigScript selectedDockApps;
-
-      # Update the postActivation script to use our dock config
+      # Dock configuration via postActivation
       postActivation.text = lib.mkAfter ''
         echo "==== Configuring Dock ====" >&2
         # Use su for dockutil commands
-        su ${username} -c '${
-          let
-            dockConfigScript = apps: ''
-              ${dockutil} --remove all --no-restart
-              ${lib.concatStringsSep "\n" (map (app: ''
-                ${dockutil} --add "${app}" --no-restart
-              '') apps)}
-              killall Dock
-            '';
-          in dockConfigScript selectedDockApps
-        }' >&2
+        su ${username} -c '${dockConfigScript selectedDockApps}' >&2
       '';
     };
   };

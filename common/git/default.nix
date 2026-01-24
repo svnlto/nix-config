@@ -57,14 +57,17 @@ in {
       gpg.format = "ssh";
       commit.gpgsign = true;
     } // lib.optionalAttrs isLinux {
-      # Linux-specific: 1Password agent path
+      # Linux-specific: 1Password SSH signing
+      # NOTE: Assumes 1Password installed in standard location (/opt/1Password)
+      # If using custom install path, override this in your platform-specific config
       gpg.ssh = {
         program = "/opt/1Password/op-ssh-sign";
         allowedSignersFile = "~/.ssh/allowed_signers";
       };
     } // lib.optionalAttrs isDarwin {
-      # macOS-specific: 1Password agent uses SSH_AUTH_SOCK
-      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
+      # macOS-specific: 1Password agent uses SSH_AUTH_SOCK environment variable
+      # No program path needed - handled by 1Password.app integration
+      gpg.ssh = { allowedSignersFile = "~/.ssh/allowed_signers"; };
     };
   };
 

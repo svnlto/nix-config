@@ -1,8 +1,9 @@
 # Generic aarch64-linux Home Manager configuration
 # This configuration can be used for any Linux ARM64 environment (VMs, containers, cloud instances)
-{ pkgs, username ? "user", worktreeManager, ... }:
+{ pkgs, username ? "user", ... }:
 
-{
+let sharedZsh = import ../../common/zsh/shared.nix;
+in {
   imports = [
     ../../common/home-manager-base.nix
     ../../common/default.nix
@@ -19,19 +20,14 @@
       true; # Linux can handle this better than macOS
   };
 
-  # Linux-specific session variables
-  home.sessionVariables = {
+  # Linux-specific session variables (merged with shared config)
+  home.sessionVariables = sharedZsh.sessionVariables // {
     EDITOR = "nvim";
     NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
   };
 
-  # Linux-specific shell aliases
-  programs.zsh.shellAliases = { };
-
   # Linux-specific ZSH initialization
   programs.zsh.initContent = ''
-    # Load worktree manager
-    ${worktreeManager}
 
     # nixswitch function - auto-detects architecture and config type
     nixswitch() {

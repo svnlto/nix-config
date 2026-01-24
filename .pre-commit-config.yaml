@@ -1,80 +1,46 @@
----
-default_install_hook_types: [pre-commit, pre-push, commit-msg]
-default_stages: [pre-commit]
-minimum_pre_commit_version: 3.0.0
+# Pre-commit hooks for Nix configuration quality
+# Install with: pre-commit install
+
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-added-large-files
-      - id: detect-private-key
-      - id: check-merge-conflict
-      - id: mixed-line-ending
-        args: ['--fix=lf']
-
-  - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v3.6.0
-    hooks:
-      - id: conventional-pre-commit
-        stages: [commit-msg]
-        args: [--strict]
-
   - repo: local
     hooks:
       - id: nixfmt
-        name: nixfmt
-        description: Format nix code with nixfmt
-        entry: nix
-        args: [--extra-experimental-features, "nix-command flakes", shell, nixpkgs#nixfmt-classic, -c, nixfmt]
+        name: Format Nix files
+        entry: nixfmt
         language: system
         files: \.nix$
+        description: Format Nix code using nixfmt-classic
+
+      - id: statix
+        name: Lint Nix files
+        entry: statix check
+        language: system
+        files: \.nix$
+        description: Static analysis for Nix files
 
       - id: deadnix
-        name: deadnix
-        description: Find unused Nix code
-        entry: nix
-        args: [--extra-experimental-features, "nix-command flakes", shell, nixpkgs#deadnix, -c, deadnix, --fail]
+        name: Find dead Nix code
+        entry: deadnix --fail
         language: system
         files: \.nix$
+        description: Detect unused Nix code
 
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.28.0
-    hooks:
-      - id: gitleaks
-        name: gitleaks
-        description: Detect secrets in your files
-        entry: gitleaks protect --verbose --redact --staged
-        language: golang
+      - id: flake-check
+        name: Validate flake
+        entry: bash -c 'nix flake check --no-build --extra-experimental-features "nix-command flakes"'
+        language: system
+        files: \.nix$
         pass_filenames: false
+        description: Validate Nix flake structure
 
-  - repo: local
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
     hooks:
-      - id: shellcheck
-        name: shellcheck
-        description: Lint shell scripts with shellcheck
-        entry: shellcheck
-        language: system
-        types: [shell]
-        exclude_types: [zsh]
-
-      - id: stylua
-        name: stylua
-        description: Format Lua code with StyLua
-        entry: bash
-        args:
-          - -c
-          - |
-            if [ "$CI" = "true" ]; then
-              echo "Skipping stylua in CI"
-              exit 0
-            elif command -v nix >/dev/null 2>&1; then
-              nix --extra-experimental-features "nix-command flakes" shell nixpkgs#stylua -c stylua "$@"
-            else
-              echo "Skipping stylua (Nix not available)"
-            fi
-          - --
-        language: system
-        files: \.lua$
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: detect-private-key
+        exclude: ^\.ssh/

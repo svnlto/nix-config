@@ -22,7 +22,6 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,8 +30,20 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
     let
+      # Centralized version management
+      versions = import ./common/versions.nix;
+
       # Default username across all configurations
       defaultUsername = "svenlito";
+
+      # Username validation - ensures valid UNIX username format
+      validateUsername = username:
+        assert username != null && username != ""
+          || throw "Username cannot be null or empty";
+        assert builtins.match "^[a-z_][a-z0-9_-]*[$]?$" username != null
+          || throw
+          "Username '${username}' is not a valid UNIX username (must start with lowercase letter or underscore, contain only lowercase letters, digits, underscores, and hyphens)";
+        username;
 
       # Utility function to create nixpkgs for different systems
       mkNixpkgs = system:
@@ -44,7 +55,8 @@
       # Abstracted macOS configuration function
       mkDarwinSystem =
         { hostname, username, system ? "aarch64-darwin", extraModules ? [ ] }:
-        nix-darwin.lib.darwinSystem {
+        let validUsername = validateUsername username;
+        in nix-darwin.lib.darwinSystem {
           inherit system;
           modules = [
             ./common
@@ -60,30 +72,41 @@
                 useGlobalPkgs = true;
                 useUserPackages =
                   false; # Must be false on macOS to create user profiles
-                extraSpecialArgs = { inherit username; };
+                extraSpecialArgs = { username = validUsername; };
                 backupFileExtension = "backup";
-                users.${username} = import ./systems/${system}/home.nix;
+                users.${validUsername} = import ./systems/${system}/home.nix;
               };
             }
           ] ++ extraModules;
-          specialArgs = { inherit inputs self hostname username; };
+          specialArgs = {
+            inherit inputs self hostname;
+            username = validUsername;
+          };
         };
 
       # Abstracted Home Manager configuration function for Linux
       mkHomeManagerConfig = { username, homeDirectory ? "/home/${username}"
         , system ? "aarch64-linux", extraModules ? [ ] }:
+        let
+          validUsername = validateUsername username;
+          validSystems = [ "x86_64-linux" "aarch64-linux" ];
+        in assert nixpkgs.lib.assertMsg (builtins.elem system validSystems)
+          "Invalid system '${system}'. Must be one of: ${
+            nixpkgs.lib.concatStringsSep ", " validSystems
+          }";
         home-manager.lib.homeManagerConfiguration {
           pkgs = mkNixpkgs system;
           modules = [
             ./systems/aarch64-linux
             {
               home = {
-                inherit username homeDirectory;
-                stateVersion = "24.05";
+                username = validUsername;
+                inherit homeDirectory;
+                stateVersion = versions.homeManagerStateVersion;
               };
             }
           ] ++ extraModules;
-          extraSpecialArgs = { inherit username; };
+          extraSpecialArgs = { username = validUsername; };
         };
     in {
       # macOS configurations

@@ -1,5 +1,9 @@
 # Omarchy-inspired Arch Linux Profile
-{ pkgs, ... }:
+# This profile is Linux-only and should not be applied to macOS systems
+{ pkgs, lib, ... }:
+
+assert lib.assertMsg pkgs.stdenv.isLinux
+  "Hyprland profile is Linux-only. Remove this profile from extraModules when building macOS configurations.";
 
 {
   # macOS-like font configuration
@@ -460,14 +464,14 @@
     };
   };
 
-  home.sessionVariables = { BROWSER = "zen-browser"; };
+  home.sessionVariables = { BROWSER = "chromium"; };
 
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "text/html" = "zen-browser.desktop";
-      "x-scheme-handler/http" = "zen-browser.desktop";
-      "x-scheme-handler/https" = "zen-browser.desktop";
+      "text/html" = "chromium.desktop";
+      "x-scheme-handler/http" = "chromium.desktop";
+      "x-scheme-handler/https" = "chromium.desktop";
       "text/markdown" = "obsidian.desktop";
       "video/mp4" = "mpv.desktop";
       "audio/mpeg" = "mpv.desktop";

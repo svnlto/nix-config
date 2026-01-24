@@ -154,13 +154,4 @@ rec {
       source <(carapace _carapace zsh)
     fi
   '';
-
-  # Custom scripts that need to be sourced in ZSH
-  customScripts = "";
-
-  # Module metadata
-  meta = {
-    description =
-      "Shared ZSH configuration for both nix-darwin and home-manager";
-  };
 }

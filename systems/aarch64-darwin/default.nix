@@ -1,12 +1,15 @@
 { config, pkgs, lib, username, hostname, ... }:
 
-{
+let
+  versions = import ../../common/versions.nix;
+  constants = import ../../common/constants.nix;
+in {
   imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ];
 
   # macOS specific packages
   environment.systemPackages =
     let packages = import ../../common/packages.nix { inherit pkgs; };
-    in packages.allSystemPackages;
+    in packages.darwinSystemPackages;
 
   # System-wide environment variables
   environment.variables = {
@@ -28,7 +31,7 @@
 
   system.configurationRevision = lib.mkIf (builtins ? currentSystem) null;
 
-  system.stateVersion = 5;
+  system.stateVersion = versions.darwinStateVersion;
 
   system.primaryUser = username;
 
@@ -54,15 +57,26 @@
       done
     '';
 
+    # Create necessary directories
+    createDirectories.text = ''
+      echo "Creating user directories..." >&2
+      mkdir -p /Users/${username}/Desktop/screenshots
+      chown ${username}:staff /Users/${username}/Desktop/screenshots
+    '';
+
     postActivation.text = lib.mkAfter ''
       echo "==== Starting Homebrew Updates ====" >&2
 
       # Run Homebrew commands as the user with proper environment setup and send output to stderr
       echo "Running brew update..." >&2
-      su ${username} -c '/opt/homebrew/bin/brew update' >&2
+      if ! su ${username} -c '/opt/homebrew/bin/brew update' >&2; then
+        echo "⚠️  Homebrew update failed, continuing..." >&2
+      fi
 
       echo "Running brew upgrade --cask --greedy..." >&2
-      su ${username} -c '/opt/homebrew/bin/brew upgrade --cask --greedy' >&2
+      if ! su ${username} -c '/opt/homebrew/bin/brew upgrade --cask --greedy' >&2; then
+        echo "⚠️  Homebrew cask upgrade failed, continuing..." >&2
+      fi
 
       # Dock configuration is now handled in dock.nix
 
@@ -71,8 +85,12 @@
       # Optional cleanup - only run if CLEANUP_ON_REBUILD is set
       if [[ "$CLEANUP_ON_REBUILD" == "true" ]]; then
         echo "==== Starting system cleanup ===="
-        # Clean up old generations (keep last 30 days)
-        nix-collect-garbage --delete-older-than 30d || true
+        # Clean up old generations (keep last ${
+          toString constants.cleanup.generationRetentionDays
+        } days)
+        nix-collect-garbage --delete-older-than ${
+          toString constants.cleanup.generationRetentionDays
+        }d || true
 
         # Optimize nix store
         nix store optimise || true
