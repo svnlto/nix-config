@@ -16,9 +16,10 @@ repos:
 
       - id: statix
         name: Lint Nix files
-        entry: bash -c 'if command -v statix &>/dev/null; then statix check "$@"; else echo "⚠️  statix not found, skipping (run in nix develop for linting)"; fi' --
+        entry: bash -c 'if command -v statix &>/dev/null; then statix check .; else echo "⚠️  statix not found, skipping (run in nix develop for linting)"; fi'
         language: system
         files: \.nix$
+        pass_filenames: false
         description: Static analysis for Nix files
         verbose: true
 
@@ -32,7 +33,7 @@ repos:
 
       - id: flake-check
         name: Validate flake
-        entry: bash -c 'nix flake check --no-build '
+        entry: bash -c 'nix --extra-experimental-features "nix-command flakes" flake check --no-build '
         language: system
         files: \.nix$
         pass_filenames: false

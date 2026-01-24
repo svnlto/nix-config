@@ -128,18 +128,6 @@
           username = defaultUsername;
           system = "aarch64-linux";
         };
-
-        # Desktop configs with Hyprland
-        desktop-x86 = mkHomeManagerConfig {
-          username = defaultUsername;
-          system = "x86_64-linux";
-          extraModules = [ ./common/profiles/hyprland.nix ];
-        };
-        desktop-arm = mkHomeManagerConfig {
-          username = defaultUsername;
-          system = "aarch64-linux";
-          extraModules = [ ./common/profiles/hyprland.nix ];
-        };
       };
 
       # Development shells
@@ -154,10 +142,14 @@
               nil
               zsh
               git
+              pre-commit
             ];
             shellHook = ''
               echo "🛠️  Nix config dev (${system})"
-              if command -v zsh >/dev/null 2>&1; then exec zsh; fi
+              # Only exec zsh if running interactively (not with --command)
+              if [ -z "$*" ] && [ -t 0 ] && command -v zsh >/dev/null 2>&1; then
+                exec zsh
+              fi
             '';
           };
       in nixpkgs.lib.genAttrs [
