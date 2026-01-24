@@ -109,6 +109,7 @@ rec {
 
   # Common session paths
   sessionPath = [
+    "$HOME/.local/bin" # pipx-installed Python tools
     "$HOME/.npm-global/bin" # NPM global packages
     "$HOME/.bin" # User custom binaries
   ];

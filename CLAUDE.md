@@ -138,7 +138,6 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 **Available Profiles**:
 
 - `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured, Linux only)
-
 **hyprland.nix includes**:
 
 - **Hyprland** - Modern Wayland compositor with animations

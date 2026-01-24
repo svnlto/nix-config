@@ -12,13 +12,12 @@
       # Security & Password Management
       "1password"
       "1password-cli"
-      "ledger-live"
+      "proton-pass"
+      "ledger-wallet"
 
       # Productivity Tools
       "raycast"
       "setapp"
-      "notion-calendar"
-      "notion-mail"
       "superwhisper"
       "obsidian"
       "brainfm"
@@ -26,22 +25,26 @@
       # Communication & Collaboration
       "linear-linear"
       "slack"
+      "discord"
       "whatsapp"
       "telegram"
       "signal"
       "claude" # desktop
+      "proton-drive"
 
       # Development & Terminal
       "orbstack"
       "ghostty"
+      "claude-code"
       "utm"
+      "vagrant-vmware-utility"
 
       # Networking & VPN
+      "arc"
       "tailscale-app"
       "mullvad-vpn@beta"
 
       # Media & Entertainment
-      "spotify"
       "vlc"
       "zwift"
     ];

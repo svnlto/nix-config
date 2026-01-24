@@ -11,7 +11,6 @@ let
     "rick" = [
       "/Applications/Ghostty.app"
       "/Applications/Arc.app"
-      "/Applications/Linear.app"
       "/applications/Claude.app"
     ];
 

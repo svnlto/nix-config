@@ -7,7 +7,7 @@
     "command": "npx -y ccusage@latest statusline  --visual-burn-rate emoji",
     "padding": 0
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   }

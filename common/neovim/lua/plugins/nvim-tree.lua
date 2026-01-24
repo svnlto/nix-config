@@ -38,7 +38,7 @@ return {
 
 				-- Window/UI settings
 				view = {
-					width = 40,
+					width = "25%", -- Dynamic width based on screen size
 					side = "left",
 					number = false,
 					relativenumber = false,
