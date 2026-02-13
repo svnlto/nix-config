@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # Cross-platform lazygit config

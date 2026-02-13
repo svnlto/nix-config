@@ -128,18 +128,6 @@
           username = defaultUsername;
           system = "aarch64-linux";
         };
-
-        # Desktop configs with Hyprland
-        desktop-x86 = mkHomeManagerConfig {
-          username = defaultUsername;
-          system = "x86_64-linux";
-          extraModules = [ ./common/profiles/hyprland.nix ];
-        };
-        desktop-arm = mkHomeManagerConfig {
-          username = defaultUsername;
-          system = "aarch64-linux";
-          extraModules = [ ./common/profiles/hyprland.nix ];
-        };
       };
 
       # Development shells

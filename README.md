@@ -63,24 +63,7 @@ cd ~/.config/nix
 nixswitch
 ```
 
-### Linux Desktop (x86_64 or ARM64)
-
-```bash
-# Install Nix
-sh <(curl -L https://nixos.org/nix/install) --daemon
-
-# Clone and apply (first time - specify architecture)
-git clone https://github.com/svnlto/nix-config.git ~/.config/nix
-cd ~/.config/nix
-home-manager switch --flake .#desktop-x86   # x86_64 (Intel/AMD)
-# OR
-home-manager switch --flake .#desktop-arm   # ARM64
-
-# After first install, auto-detects architecture:
-nixswitch
-```
-
-### Linux Server/Container (minimal)
+### Linux Server/Container
 
 ```bash
 # Install Nix
@@ -105,7 +88,7 @@ nixswitch
 ├── flake.nix              # 🎯 Main orchestrator - all configurations
 ├── common/                # 🔄 Shared across platforms
 │   ├── packages.nix       # 📦 Centralized package definitions
-│   ├── profiles/          # 🎨 Optional features (Hyprland, etc.)
+│   ├── profiles/          # 🎨 Optional features and wallpapers
 │   ├── claude-code/       # 🤖 AI assistant integration
 │   ├── neovim/           # ⚡ Editor configuration
 │   ├── tmux/             # 🖥️  Terminal multiplexer
@@ -158,11 +141,7 @@ nix flake check        # Validate configuration
 ### Available Configurations
 
 ```bash
-# Linux Desktop (with Hyprland)
-.#desktop-x86          # x86_64 (Intel/AMD laptops/desktops)
-.#desktop-arm          # ARM64 (cloud instances, DevPods)
-
-# Linux Minimal (servers/containers)
+# Linux (servers/containers)
 .#minimal-x86          # x86_64 servers
 .#minimal-arm          # ARM64 (EC2, cloud instances)
 
@@ -221,7 +200,7 @@ Edit `flake.nix` to add new machine configurations:
 ZSH configuration is shared via `common/zsh/shared.nix`:
 
 - **Aliases**: Common shortcuts and system-specific commands
-- **History**: Encrypted sync with Atuin
+- **History**: fzf-powered search with Catppuccin theme
 - **Prompt**: Oh My Posh with custom theme
 - **Completion**: Enhanced with Carapace
 

@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   homebrew = {
@@ -38,9 +38,11 @@
       "claude-code"
       "utm"
       "vagrant-vmware-utility"
+      "winbox"
 
       # Networking & VPN
       "arc"
+      "google-chrome"
       "tailscale-app"
       "mullvad-vpn@beta"
 

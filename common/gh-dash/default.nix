@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # gh-dash configuration with Catppuccin Mocha theme

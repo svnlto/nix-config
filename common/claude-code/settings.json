@@ -7,6 +7,10 @@
     "command": "npx -y ccusage@latest statusline  --visual-burn-rate emoji",
     "padding": 0
   },
+  "enabledPlugins": {
+    "terraform-skill@antonbabenko": true,
+    "terragrunt-skill@jfr992": true
+  },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075

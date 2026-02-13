@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # Default session with multiple project windows

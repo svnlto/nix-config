@@ -32,7 +32,7 @@ repos:
 
       - id: flake-check
         name: Validate flake
-        entry: bash -c 'nix flake check --no-build '
+        entry: bash -c 'nix --extra-experimental-features "nix-command flakes" flake check --no-build '
         language: system
         files: \.nix$
         pass_filenames: false

@@ -16,7 +16,7 @@ in {
 
   # Base home configuration (homeDirectory set per platform)
   home = {
-    username = username;
+    inherit username;
     stateVersion = versions.homeManagerStateVersion;
   };
 

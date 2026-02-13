@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # Export worktree manager content for ZSH integration

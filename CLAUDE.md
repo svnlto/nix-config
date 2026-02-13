@@ -26,9 +26,6 @@ hmswitch
 # Apply user-specific configuration (if exists)
 hm-user
 
-# Apply desktop configuration with Hyprland (full dev environment + GUI apps)
-home-manager switch --flake ~/.config/nix#desktop
-
 # Manual commands
 home-manager switch --flake ~/.config/nix#linux
 home-manager switch --flake ~/.config/nix#$(whoami)  # user-specific
@@ -60,7 +57,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   ├── home-packages.nix        # Home Manager package imports
 │   ├── git/                     # Unified cross-platform git configuration
 │   ├── profiles/                # Optional configuration profiles
-│   │   └── hyprland.nix         # Hyprland desktop setup (compositor + dev tools + apps)
+│   │   └── wallpapers/          # Wallpaper images for macOS desktop
 │   ├── claude-code/             # Claude Code integration with custom commands
 │   ├── neovim/                  # Neovim configuration
 │   ├── tmux/                    # Tmux configuration
@@ -108,7 +105,7 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 
 1. Edit configuration files in appropriate directory:
    - `common/` for shared changes
-   - `common/profiles/` for optional profiles (Wayland, etc.)
+   - `common/profiles/` for optional profiles
    - `systems/aarch64-darwin/` for macOS-specific
    - `systems/aarch64-linux/` for Linux-specific
 2. Apply changes using commands above
@@ -122,12 +119,9 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 - **macOS-only packages**: Edit `common/packages.nix` (darwinPackages list) - for packages like `reattach-to-user-namespace`
 - **macOS system packages**: Edit `common/packages.nix` (darwinSystemPackages list)
 - **macOS GUI apps**: Edit `systems/aarch64-darwin/homebrew.nix`
-- **Profile-specific packages**: Edit `common/profiles/hyprland.nix` for Linux desktop apps
-
 **IMPORTANT**: Platform-specific packages must be separated:
 
 - macOS-only packages (like `reattach-to-user-namespace`) go in `darwinPackages` and are imported via `systems/aarch64-darwin/home.nix`
-- Profile-specific packages (like Hyprland/Wayland tools) go in `common/profiles/hyprland.nix` and are opt-in via `extraModules`
 - Never put macOS-only packages in shared `corePackages` or `devPackages` or they'll break Linux builds
 - Common development tools (curl, wget, htop, docker-compose) belong in `devPackages`, not platform-specific configs
 
@@ -135,19 +129,6 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 
 **Profile Architecture**: Optional configurations that extend the base system without polluting minimal environments.
 
-**Available Profiles**:
-
-- `common/profiles/hyprland.nix` - Hyprland desktop environment (full-featured, Linux only)
-**hyprland.nix includes**:
-
-- **Hyprland** - Modern Wayland compositor with animations
-- **Dev tools** - mise, lazydocker, btop, Docker, databases
-- **Desktop apps** - Obsidian, Signal, Chromium, LocalSend
-- **Media** - mpv, Spotify (OBS/Kdenlive commented out)
-- **Theme** - Catppuccin Mocha throughout
-- **Keybindings** - Vi-style (Super+h/j/k/l), Super key modifier
-
-**Using Profiles**:
 Profiles are opt-in via `extraModules` in `flake.nix`:
 
 ```nix
@@ -156,23 +137,11 @@ linux = mkHomeManagerConfig {
   username = "user";
 };
 
-# Desktop configuration with Hyprland
-desktop = mkHomeManagerConfig {
-  username = "svenlito";
-  extraModules = [ ./common/profiles/hyprland.nix ];
+# Extended configuration with custom profile
+custom = mkHomeManagerConfig {
+  username = "user";
+  extraModules = [ ./common/profiles/your-profile.nix ];
 };
-```
-
-**Customizing hyprland.nix**:
-Edit the profile and comment out packages you don't want:
-
-```nix
-# Media (comment out what you don't want)
-mpv
-spotify
-# obs-studio  # ← Already commented
-# kdenlive    # ← Video editing
-# pinta       # ← Image editing
 ```
 
 **Benefits**:
@@ -201,7 +170,7 @@ Create new configuration in `flake.nix`:
 
 ### Creating Custom Profiles
 
-Profiles allow you to extend configurations without polluting minimal environments. Follow the Hyprland profile pattern:
+Profiles allow you to extend configurations without polluting minimal environments:
 
 **1. Create your profile file:**
 
@@ -246,8 +215,8 @@ yourconfig = mkHomeManagerConfig {
 advanced = mkHomeManagerConfig {
   username = "youruser";
   extraModules = [
-    ./common/profiles/hyprland.nix
     ./common/profiles/your-profile.nix
+    ./common/profiles/another-profile.nix
   ];
 };
 ```
@@ -329,7 +298,7 @@ Located in `common/tmux/` and `common/tmuxinator/`:
 ### Multi-Environment Support
 
 - **Generic Linux**: Flexible Home Manager configuration for any Linux environment (minimal by default)
-- **Profile-based configs**: Optional modules for desktop environments (Wayland/Sway), server tools, etc.
+- **Profile-based configs**: Optional modules for additional tools, server configs, etc.
 - **Development Shell**: Available via `nix develop` for working on this configuration
 - **Auto-Detection**: Shell aliases automatically detect system type and hostname
 
@@ -345,7 +314,7 @@ Located in `common/tmux/` and `common/tmuxinator/`:
 ### Linux (home-manager)
 
 - **Minimal by default** - base configuration for Docker/containers
-- **Profile system** - opt-in desktop environments (Wayland/Sway) or additional tools
+- **Profile system** - opt-in additional tools and configurations
 - Docker integration (docker-compose package)
 - Linux-specific packages: htop, neofetch, curl, wget
 - Imports both `common/home-manager-base.nix` and `common/default.nix`
@@ -354,7 +323,6 @@ Located in `common/tmux/` and `common/tmuxinator/`:
 **Available Configurations**:
 
 - `#minimal-x86` / `#minimal-arm` - Minimal (Docker/containers)
-- `#desktop-x86` / `#desktop-arm` - Full desktop environment (Hyprland, dev tools, GUI apps)
 
 ## Backup & Recovery Strategy
 
@@ -501,7 +469,7 @@ nix flake check
 # Validate specific configuration
 nix eval .#darwinConfigurations.rick.system
 nix eval .#homeConfigurations.minimal-x86.activationPackage
-nix eval .#homeConfigurations.desktop-arm.activationPackage
+nix eval .#homeConfigurations.minimal-arm.activationPackage
 ```
 
 ### Version Management
