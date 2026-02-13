@@ -142,10 +142,14 @@
               nil
               zsh
               git
+              pre-commit
             ];
             shellHook = ''
               echo "🛠️  Nix config dev (${system})"
-              if command -v zsh >/dev/null 2>&1; then exec zsh; fi
+              # Only exec zsh if running interactively (not with --command)
+              if [ -z "$*" ] && [ -t 0 ] && command -v zsh >/dev/null 2>&1; then
+                exec zsh
+              fi
             '';
           };
       in nixpkgs.lib.genAttrs [
