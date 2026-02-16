@@ -1,8 +1,10 @@
 local keymap = vim.keymap.set
-keymap("n", "<leader><leader>", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-keymap("n", "<leader>/", "<cmd>Telescope live_grep<cr>", { desc = "Search in files" })
-keymap("n", "<leader>b", "<cmd>Telescope buffers<cr>", { desc = "Switch buffer" })
-keymap("n", "<leader>:", "<cmd>Telescope commands<cr>", { desc = "Commands" })
+
+-- Fuzzy finder (fzf-lua, LazyVim v14+ default)
+keymap("n", "<leader><leader>", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+keymap("n", "<leader>/", "<cmd>FzfLua live_grep<cr>", { desc = "Search in files" })
+keymap("n", "<leader>b", "<cmd>FzfLua buffers<cr>", { desc = "Switch buffer" })
+keymap("n", "<leader>:", "<cmd>FzfLua commands<cr>", { desc = "Commands" })
 
 keymap("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle file explorer" })
 keymap("n", "<leader>E", "<cmd>NvimTreeFindFile<cr>", { desc = "Find current file in explorer" })
@@ -36,6 +38,4 @@ keymap("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move down" })
 keymap("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
 
 -- Git menu - <leader>g prefix
--- Note: GitHub-specific mappings are defined in lua/plugins/git.lua
--- This creates the git menu group for which-key
 keymap("n", "<leader>g", "", { desc = "+git" })

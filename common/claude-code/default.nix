@@ -6,6 +6,9 @@
 
     ".claude/output-styles".source = ./output-styles;
 
+    ".claude/hooks.json".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nix/common/claude-code/hooks.json";
+
     # Combine local commands with linear commands
     ".claude/commands".source = pkgs.symlinkJoin {
       name = "claude-commands";

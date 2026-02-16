@@ -9,12 +9,11 @@ return {
 			transparent_background = true,
 			term_colors = false, -- Disable terminal color overrides to preserve terminal cursor color
 			integrations = {
-				bufferline = false,
-				cmp = true,
+				blink_cmp = true,
+				fzf = true,
 				gitsigns = true,
 				nvimtree = true,
 				treesitter = true,
-				telescope = true,
 				which_key = true,
 				native_lsp = {
 					enabled = true,
@@ -41,11 +40,6 @@ return {
 				end
 			end)
 		end,
-	},
-
-	{
-		"akinsho/bufferline.nvim",
-		enabled = false,
 	},
 
 	{

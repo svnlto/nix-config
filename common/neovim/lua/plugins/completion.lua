@@ -1,41 +1,14 @@
--- Completion configuration - Tab to accept
+-- Completion configuration - Tab to accept (blink.cmp)
 return {
 	{
-		"hrsh7th/nvim-cmp",
-		keys = {
-			{
-				"<tab>",
-				function()
-					return vim.snippet.active({ direction = 1 }) and "<cmd>lua vim.snippet.jump(1)<cr>" or "<tab>"
-				end,
-				expr = true,
-				silent = true,
-				mode = "i",
-			},
-			{
-				"<tab>",
-				function()
-					return vim.snippet.active({ direction = 1 }) and "<cmd>lua vim.snippet.jump(1)<cr>" or "<tab>"
-				end,
-				expr = true,
-				silent = true,
-				mode = "s",
+		"saghen/blink.cmp",
+		opts = {
+			keymap = {
+				-- Tab to accept completion
+				["<Tab>"] = { "accept", "fallback" },
+				-- Enter does nothing with completion (normal newline)
+				["<CR>"] = {},
 			},
 		},
-		opts = function(_, opts)
-			local cmp = require("cmp")
-
-			opts.mapping = vim.tbl_extend("force", opts.mapping or {}, {
-				-- Simple Tab to accept
-				["<Tab>"] = cmp.mapping.confirm({ select = true }),
-
-				-- Enter does nothing with completion
-				["<CR>"] = cmp.mapping(function(fallback)
-					fallback()
-				end),
-			})
-
-			return opts
-		end,
 	},
 }

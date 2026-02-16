@@ -21,7 +21,7 @@ return {
 						},
 					},
 				},
-				-- TypeScript/JavaScript (updated name)
+				-- TypeScript/JavaScript
 				ts_ls = {
 					settings = {
 						typescript = {
@@ -121,7 +121,7 @@ return {
 		},
 	},
 
-	-- Mason configuration (LazyVim helm/yaml extras handle yamlls and helm_ls)
+	-- Mason configuration
 	{
 		"mason-org/mason.nvim",
 		opts = {
@@ -130,20 +130,6 @@ return {
 				"gopls",
 				"terraform-ls",
 				"lua-language-server",
-				"biome",
-			},
-		},
-	},
-
-	-- Mason LSP Config (LazyVim helm/yaml extras handle yamlls and helm_ls)
-	{
-		"mason-org/mason-lspconfig.nvim",
-		opts = {
-			ensure_installed = {
-				"ts_ls",
-				"gopls",
-				"terraformls",
-				"lua_ls",
 				"biome",
 			},
 		},
