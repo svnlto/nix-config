@@ -1,0 +1,18 @@
+aliases:
+  dp: deployments
+  sec: v1/secrets
+  jo: jobs
+  cr: clusterroles
+  crb: clusterrolebindings
+  ro: roles
+  rb: rolebindings
+  np: networkpolicies
+  pv: persistentvolumes
+  pvc: persistentvolumeclaims
+  ev: events
+  no: nodes
+  sts: statefulsets
+  ds: daemonsets
+  cm: configmaps
+  ing: ingresses
+  hr: helmreleases

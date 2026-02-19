@@ -99,6 +99,7 @@ rec {
   # Common session variables
   sessionVariables = {
     DIRENV_LOG_FORMAT = ""; # Make direnv less verbose
+    K9S_CONFIG_DIR = "$HOME/.config/k9s"; # Use XDG path on all platforms
     NPM_CONFIG_PREFIX = "$HOME/.npm-global"; # NPM global packages location
     LANG = "en_GB.UTF-8"; # Locale settings
     LC_ALL = "en_GB.UTF-8";

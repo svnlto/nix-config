@@ -1,104 +1,38 @@
-_:
+{ config, ... }:
 
 {
   # Cross-platform k9s config
-  # macOS: ~/Library/Application Support/k9s/
-  # Linux: ~/.config/k9s/
+  # On macOS, set K9S_CONFIG_DIR=$HOME/.config/k9s to use XDG path.
 
   xdg.configFile = {
-    "k9s/config.yaml".text = ''
-      k9s:
-        liveViewAutoRefresh: true
-        gpuVendors: {}
-        screenDumpDir: /tmp/k9s-screen-dumps
-        refreshRate: 2
-        apiServerTimeout: 15s
-        maxConnRetry: 5
-        readOnly: false
-        noExitOnCtrlC: false
-        portForwardAddress: localhost
-        ui:
-          enableMouse: false
-          headless: true
-          logoless: true
-          crumbsless: false
-          splashless: true
-          reactive: false
-          noIcons: false
-          defaultsToFullScreen: false
-          useFullGVRTitle: false
-          skin: catppuccin-mocha
-        skipLatestRevCheck: true
-        disablePodCounting: false
-        shellPod:
-          image: busybox:1.35.0
-          namespace: default
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        imageScans:
-          enable: false
-          exclusions:
-            namespaces: []
-            labels: {}
-        logger:
-          tail: 500
-          buffer: 5000
-          sinceSeconds: -1
-          textWrap: false
-          disableAutoscroll: false
-          showTime: true
-        thresholds:
-          cpu:
-            critical: 90
-            warn: 70
-          memory:
-            critical: 90
-            warn: 70
-        defaultView: pod
-    '';
+    # Config and aliases use out-of-store symlinks so k9s can write to them
+    "k9s/config.yaml".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nix/common/k9s/config.yaml";
 
-    "k9s/aliases.yaml".text = ''
-      aliases:
-        dp: deployments
-        sec: v1/secrets
-        jo: jobs
-        cr: clusterroles
-        crb: clusterrolebindings
-        ro: roles
-        rb: rolebindings
-        np: networkpolicies
-        pv: persistentvolumes
-        pvc: persistentvolumeclaims
-        ev: events
-        no: nodes
-        sts: statefulsets
-        ds: daemonsets
-        cm: configmaps
-        ing: ingresses
-        hr: helmreleases
-    '';
+    "k9s/aliases.yaml".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nix/common/k9s/aliases.yaml";
 
+    # Skin is read-only (k9s never writes to it)
     "k9s/skins/catppuccin-mocha.yaml".text = ''
       k9s:
         body:
           fgColor: '#cdd6f4'
-          bgColor: '#1e1e2e'
+          bgColor: default
           logoColor: '#cba6f7'
         prompt:
           fgColor: '#cdd6f4'
-          bgColor: '#181825'
+          bgColor: default
           suggestColor: '#89b4fa'
         help:
           fgColor: '#cdd6f4'
-          bgColor: '#1e1e2e'
+          bgColor: default
           sectionColor: '#a6e3a1'
           keyColor: '#89b4fa'
           numKeyColor: '#eba0ac'
         frame:
           title:
             fgColor: '#94e2d5'
-            bgColor: '#1e1e2e'
+            bgColor: default
             highlightColor: '#f5c2e7'
             counterColor: '#f9e2af'
             filterColor: '#a6e3a1'
@@ -111,7 +45,7 @@ _:
             numKeyColor: '#eba0ac'
           crumbs:
             fgColor: '#1e1e2e'
-            bgColor: '#eba0ac'
+            bgColor: default
             activeColor: '#f2cdcd'
           status:
             newColor: '#89b4fa'
@@ -128,24 +62,24 @@ _:
         views:
           table:
             fgColor: '#cdd6f4'
-            bgColor: '#1e1e2e'
+            bgColor: default
             cursorFgColor: '#313244'
             cursorBgColor: '#45475a'
             markColor: '#f5e0dc'
             header:
               fgColor: '#f9e2af'
-              bgColor: '#1e1e2e'
+              bgColor: default
               sorterColor: '#89dceb'
           xray:
             fgColor: '#cdd6f4'
-            bgColor: '#1e1e2e'
+            bgColor: default
             cursorColor: '#45475a'
             cursorTextColor: '#1e1e2e'
             graphicColor: '#f5c2e7'
           charts:
-            bgColor: '#1e1e2e'
-            chartBgColor: '#1e1e2e'
-            dialBgColor: '#1e1e2e'
+            bgColor: default
+            chartBgColor: default
+            dialBgColor: default
             defaultDialColors:
               - '#a6e3a1'
               - '#f38ba8'
@@ -165,17 +99,17 @@ _:
             colonColor: '#a6adc8'
           logs:
             fgColor: '#cdd6f4'
-            bgColor: '#1e1e2e'
+            bgColor: default
             indicator:
               fgColor: '#b4befe'
-              bgColor: '#1e1e2e'
+              bgColor: default
               toggleOnColor: '#a6e3a1'
               toggleOffColor: '#a6adc8'
         dialog:
           fgColor: '#f9e2af'
-          bgColor: '#9399b2'
+          bgColor: default
           buttonFgColor: '#1e1e2e'
-          buttonBgColor: '#7f849c'
+          buttonBgColor: default
           buttonFocusFgColor: '#1e1e2e'
           buttonFocusBgColor: '#f5c2e7'
           labelFgColor: '#f5e0dc'
