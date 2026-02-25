@@ -4,7 +4,7 @@ let
   versions = import ../../common/versions.nix;
   constants = import ../../common/constants.nix;
 in {
-  imports = [ ./homebrew.nix ./defaults.nix ./dock.nix ];
+  imports = [ ./homebrew/common.nix ./defaults.nix ./dock.nix ];
 
   environment = {
     # macOS specific packages

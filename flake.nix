@@ -114,6 +114,7 @@
         "rick" = mkDarwinSystem {
           hostname = "rick";
           username = defaultUsername;
+          extraModules = [ ./systems/aarch64-darwin/homebrew/personal.nix ];
         };
       };
 

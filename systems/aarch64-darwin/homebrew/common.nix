@@ -12,8 +12,6 @@ _:
       # Security & Password Management
       "1password"
       "1password-cli"
-      "proton-pass"
-      "ledger-wallet"
 
       # Productivity Tools
       "raycast"
@@ -25,20 +23,12 @@ _:
       # Communication & Collaboration
       "linear-linear"
       "slack"
-      "discord"
-      "whatsapp"
-      "telegram"
-      "signal"
       "claude" # desktop
-      "proton-drive"
 
       # Development & Terminal
       "orbstack"
       "ghostty"
       "claude-code"
-      "utm"
-      "vagrant-vmware-utility"
-      "winbox"
 
       # Networking & VPN
       "arc"
@@ -48,7 +38,6 @@ _:
 
       # Media & Entertainment
       "vlc"
-      "zwift"
     ];
     masApps = { };
     onActivation = {
