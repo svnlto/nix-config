@@ -16,8 +16,6 @@ rec {
     vim = "nvim";
     cat = "bat";
     tree = "tree -C";
-    cd = "z";
-
     # System maintenance shortcuts
     nix-clean =
       "echo '🧹 Starting cleanup...' && nix-collect-garbage --delete-older-than 7d && echo '✨ Quick cleanup complete'";
@@ -142,6 +140,7 @@ rec {
     # Zoxide initialization (skip in Claude Code to avoid cd override issues)
     if command -v zoxide >/dev/null 2>&1 && [[ "$CLAUDECODE" != "1" ]]; then
       eval "$(zoxide init zsh)"
+      alias cd=z
     fi
 
     # FZF shell integration for history search and file finding

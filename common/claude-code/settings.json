@@ -4,7 +4,8 @@
   "enableAllProjectMcpServers": true,
   "enabledPlugins": {
     "terraform-skill@antonbabenko": true,
-    "terragrunt-skill@jfr992": true
+    "terragrunt-skill@jfr992": true,
+    "context7@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
