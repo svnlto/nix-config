@@ -8,7 +8,6 @@ _:
     "ledger-wallet"
 
     # Communication
-    "discord"
     "whatsapp"
     "telegram"
     "signal"

@@ -16,13 +16,10 @@ _:
       # Productivity Tools
       "raycast"
       "setapp"
-      "superwhisper"
       "obsidian"
-      "brainfm"
 
       # Communication & Collaboration
       "linear-linear"
-      "slack"
       "claude" # desktop
 
       # Development & Terminal
