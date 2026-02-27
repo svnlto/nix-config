@@ -17,13 +17,14 @@ if [ "$part_count" -gt 3 ]; then
   short_path=".../${parts[$((part_count-2))]}/${parts[$((part_count-1))]}"
 fi
 
-# ANSI 24-bit color helpers
-blue='\033[38;2;137;180;250m'
-pink='\033[38;2;245;194;231m'
-lavender='\033[38;2;180;190;254m'
-orange='\033[38;2;250;179;135m'
-muted='\033[38;2;147;153;178m'
-reset='\033[0m'
+# ANSI 24-bit color helpers (using $'...' for real escape characters)
+blue=$'\033[38;2;137;180;250m'
+pink=$'\033[38;2;245;194;231m'
+lavender=$'\033[38;2;180;190;254m'
+orange=$'\033[38;2;250;179;135m'
+red=$'\033[38;2;243;139;168m'
+muted=$'\033[38;2;147;153;178m'
+reset=$'\033[0m'
 
 # Build status line
 user_host="$(whoami)@$(hostname -s)"
@@ -33,7 +34,7 @@ ctx_part=""
 if [ -n "$used_pct" ]; then
   pct_int=$(printf "%.0f" "$used_pct")
   if [ "$pct_int" -ge 80 ]; then
-    ctx_color='\033[38;2;243;139;168m'  # red (#F38BA8)
+    ctx_color="$red"
   elif [ "$pct_int" -ge 50 ]; then
     ctx_color="$orange"
   else
@@ -42,8 +43,4 @@ if [ -n "$used_pct" ]; then
   ctx_part=" ${ctx_color}ctx:${pct_int}%${reset}"
 fi
 
-printf "${blue}%s${reset} ${pink}%s${reset} ${muted}[%s]${reset}%s\n" \
-  "$user_host" \
-  "$short_path" \
-  "$model" \
-  "$ctx_part"
+echo "${blue}${user_host}${reset} ${pink}${short_path}${reset} ${muted}[${model}]${reset}${ctx_part}"
