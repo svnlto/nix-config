@@ -92,8 +92,8 @@
           "style": "plain"
         },
         {
-          "template": " \ufd31 {{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}",
-          "foreground": "#326CE5",
+          "template": " \ufd31 {{.Context}}{{if and .Namespace (ne .Namespace \"default\")}}:{{.Namespace}}{{end}}",
+          "foreground": "p:blue",
           "type": "kubectl",
           "style": "plain",
           "options": {
