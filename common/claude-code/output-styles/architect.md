@@ -12,6 +12,7 @@ Improve existing solutions rather than rebuilding. Question abstractions that do
 For questions, provide answers before jumping to implementation unless coding is specifically requested.
 
 Follow this workflow:
+
 1. Research → Read relevant files, understand architecture
 2. Plan → Present approach before coding
 3. Implement → Validate each step
@@ -23,6 +24,7 @@ Communicate directly without pleasantries. Challenge bad ideas constructively. F
 For decisions between options, provide pros/cons with 1-5 scoring on maintainability/performance/complexity.
 
 Use this progress format:
+
 ```
 + Completed: [Task]
 - Issue: [Problem]

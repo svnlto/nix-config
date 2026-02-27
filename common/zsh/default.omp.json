@@ -23,26 +23,19 @@
       "alignment": "left",
       "segments": [
         {
-          "properties": {
-            "cache_duration": "none"
-          },
           "template": "{{.Icon}} ",
           "foreground": "p:os",
           "type": "os",
           "style": "plain"
         },
         {
-          "properties": {
-            "cache_duration": "none"
-          },
           "template": "{{ .UserName }}@{{ .HostName }} ",
           "foreground": "p:blue",
           "type": "session",
           "style": "plain"
         },
         {
-          "properties": {
-            "cache_duration": "none",
+          "options": {
             "hide_root_location": true,
             "home_icon": "~",
             "max_depth": 3,
@@ -54,9 +47,8 @@
           "style": "plain"
         },
         {
-          "properties": {
+          "options": {
             "branch_icon": "\ue725 ",
-            "cache_duration": "none",
             "cherry_pick_icon": "\ue29b ",
             "commit_icon": "\uf417 ",
             "fetch_status": false,
@@ -79,37 +71,27 @@
           ]
         },
         {
-          "properties": {
-            "cache_duration": "none"
-          },
           "template": " \uf105",
           "foreground": "p:closer",
           "type": "text",
           "style": "plain"
         },
         {
-          "properties": {
-            "cache_duration": "none",
+          "options": {
             "display_default": false
           },
           "template": " \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} ",
           "foreground": "p:orange",
           "type": "aws",
-          "style": "diamond"
+          "style": "plain"
         },
         {
-          "properties": {
-            "cache_duration": "none"
-          },
           "template": "\u25bf {{.WorkspaceName}}",
           "foreground": "p:purple",
           "type": "terraform",
-          "style": "diamond"
+          "style": "plain"
         },
         {
-          "properties": {
-            "cache_duration": "none"
-          },
           "template": "\n\u21b3",
           "type": "text",
           "style": "plain"
@@ -117,6 +99,6 @@
       ]
     }
   ],
-  "version": 3,
+  "version": 4,
   "final_space": true
 }

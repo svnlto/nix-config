@@ -11,6 +11,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f flake.nix ] && nix flake check 2>&1 | head -20 || true",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }
