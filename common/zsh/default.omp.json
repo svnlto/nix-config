@@ -80,7 +80,7 @@
           "options": {
             "display_default": false
           },
-          "template": " \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} ",
+          "template": "{{ if ne .Profile \"default\" }} \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }}{{ end }}",
           "foreground": "p:orange",
           "type": "aws",
           "style": "plain"
@@ -90,6 +90,15 @@
           "foreground": "p:purple",
           "type": "terraform",
           "style": "plain"
+        },
+        {
+          "template": " \ufd31 {{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}",
+          "foreground": "#326CE5",
+          "type": "kubectl",
+          "style": "plain",
+          "options": {
+            "parse_kubeconfig": true
+          }
         },
         {
           "template": "\n\u21b3",
