@@ -66,7 +66,6 @@ This is a **cross-platform Nix configuration** managing both macOS hosts and Lin
 │   │   └── default.omp.json     # Oh My Posh theme
 │   ├── lazygit/                 # Lazygit configuration (cross-platform via xdg)
 │   ├── ghostty/                 # Ghostty terminal configuration
-│   └── scripts/                 # Custom shell scripts
 └── systems/
     ├── aarch64-darwin/          # macOS-specific (nix-darwin)
     │   ├── home.nix             # Home Manager config - imports common modules
@@ -420,30 +419,24 @@ If a configuration breaks your system:
 
 ## Testing with Docker
 
-Test the Nix configuration in a clean Ubuntu environment:
+Test the Nix configuration in a clean environment:
 
 ```bash
-# Build the Docker image
-docker build -t nix-config-test .
+# Build the image
+just build
 
-# Run interactively
-docker run -it --rm \
-  -v $(pwd):/home/ubuntu/workspace \
-  -w /home/ubuntu \
-  nix-config-test
-
-# Or use docker-compose (simpler)
-docker-compose run --rm nix-dev
+# Run interactively (drops into zsh as svenlito)
+just dev
 ```
 
 **Docker Setup Details:**
 
-- Ubuntu 24.04 base with pinned SHA256
-- Pinned package versions (curl, git, sudo, xz-utils, ca-certificates, zsh)
-- Pinned Nix version: 2.24.10
-- Pinned home-manager: release-24.05
-- Applies `homeConfigurations.minimal-arm` automatically during build
-- All tools (tmux, neovim, zsh) pre-configured and ready to test
+- Multi-stage build: Ubuntu 24.04 + Determinate Nix installer
+- Stage 1 (builder): installs Nix, runs `home-manager switch`, discarded after build
+- Stage 2 (runtime): slim Ubuntu with only `/nix/store` and user home copied over
+- Auto-detects architecture (`minimal-arm` or `minimal-x86`)
+- All tools (tmux, neovim, zsh, oh-my-posh) pre-configured and ready to test
+- No `nix-daemon` needed at runtime — packages are pre-built in the store
 
 ## Configuration Development Commands
 
@@ -580,7 +573,7 @@ The configuration uses a layered import system that eliminates duplication:
 
 1. **flake.nix**: Orchestrates everything using `mkDarwinSystem` and `mkHomeManagerConfig` functions
 2. **common/home-manager-base.nix**:
-   - Imports shared modules: `home-packages.nix`, `claude-code/`, `programs/`, `scripts/`
+   - Imports shared modules: `home-packages.nix`, `claude-code/`, `programs/`
    - Sets base home configuration (username, stateVersion)
    - Exports session variables and paths from `zsh/shared.nix`
    - Configures Oh My Posh theme
@@ -591,7 +584,7 @@ The configuration uses a layered import system that eliminates duplication:
 4. **common/default.nix**: Nix settings shared across platforms (performance tuning, experimental features)
 5. **systems/{arch}/home.nix**: Platform-specific ONLY
    - **macOS**: homeDirectory + platform-specific aliases (nixswitch, darwin-rebuild)
-   - **Linux**: homeDirectory + nix settings + platform aliases (hmswitch, hm-user) + worktree manager
+   - **Linux**: homeDirectory + nix settings + platform aliases (hmswitch, hm-user)
 
 ### Cross-Platform Module Strategy
 

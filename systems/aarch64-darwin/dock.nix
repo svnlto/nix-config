@@ -7,15 +7,12 @@ let
 
   # Define host-specific dock apps
   dockAppsByHost = {
-    # Configuration for Rick (your current Mac)
-    "rick" = [
+    # Default configuration (used if no host-specific config exists)
+    "default" = [
       "/Applications/Ghostty.app"
       "/Applications/Arc.app"
       "/Applications/Claude.app"
     ];
-
-    # Default configuration (used if no host-specific config exists)
-    "default" = [ ];
   };
 
   # Select the dock apps for the current hostname or fall back to default

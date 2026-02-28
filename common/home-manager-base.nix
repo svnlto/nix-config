@@ -7,12 +7,8 @@ let
   versions = import ./versions.nix;
 in {
   # Common imports for all Home Manager configurations
-  imports = [
-    ./home-packages.nix
-    ./claude-code/default.nix
-    ./programs/default.nix
-    ./scripts/default.nix
-  ];
+  imports =
+    [ ./home-packages.nix ./claude-code/default.nix ./programs/default.nix ];
 
   # Base home configuration (homeDirectory set per platform)
   home = {

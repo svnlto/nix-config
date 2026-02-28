@@ -145,6 +145,7 @@
               git
               pre-commit
               nodejs
+              just
             ];
             shellHook = ''
               echo "🛠️  Nix config dev (${system})"

@@ -33,6 +33,11 @@
     neofetch
     docker-compose
     shellcheck
+    fd
+    unzip
+    gcc
+    tree-sitter
+    gnused
   ];
 
   # macOS-specific packages
