@@ -44,7 +44,27 @@ hmswitch                 # Apply Home Manager config (Linux)
 nix develop              # Dev shell with nixfmt, statix, deadnix, nil
 nix flake check          # Validate configuration
 nixswitch --show-trace   # Debug build failures
+flake-init               # Scaffold new project (defaults to minimal template)
+flake-init <template>    # Scaffold with a specific template
 ```
+
+### flake-init
+
+Scaffolds a new project directory using Nix flake templates stored in this repo. Uses `nix flake init` under the hood.
+
+```bash
+cd ~/Projects/new-thing
+flake-init          # creates flake.nix, .envrc, .gitignore, .pre-commit-config.yaml
+direnv allow        # activate the devShell
+```
+
+**Available templates:**
+
+| Template | Description |
+|----------|-------------|
+| `minimal` (default) | devShell with pre-commit, direnv, gitignore |
+
+Templates live in `templates/` and are registered as flake outputs.
 
 ## Structure
 

@@ -20,6 +20,10 @@ nix develop
 
 # Validate flake
 nix flake check
+
+# Scaffold a new project from template
+flake-init              # uses "minimal" template
+flake-init <template>   # uses a specific template
 ```
 
 ## Commit Convention
@@ -57,6 +61,8 @@ common/
   ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
   lazygit/                       # Cross-platform via xdg.configFile
   profiles/                      # Optional opt-in modules
+templates/
+  minimal/                       # Default flake template (devShell, direnv, pre-commit)
 systems/
   aarch64-darwin/                # macOS: home.nix, homebrew/, defaults.nix, dock.nix
   aarch64-linux/default.nix      # Linux: minimal HM config for containers
