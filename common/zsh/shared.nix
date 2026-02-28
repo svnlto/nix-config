@@ -154,4 +154,13 @@ rec {
       source <(carapace _carapace zsh)
     fi
   '';
+
+  # Shell functions
+  functions = ''
+    # Initialize a new flake from template
+    flake-init() {
+      local template="''${1:-minimal}"
+      nix --extra-experimental-features 'nix-command flakes' flake init --accept-flake-config -t "path:$HOME/.config/nix#$template"
+    }
+  '';
 }

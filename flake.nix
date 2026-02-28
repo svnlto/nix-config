@@ -160,5 +160,14 @@
         "aarch64-linux"
         "x86_64-linux"
       ] (system: { default = mkDevShell system; });
+
+      # Flake templates for project scaffolding
+      templates = {
+        minimal = {
+          path = ./templates/minimal;
+          description = "Minimal development environment with devShell";
+        };
+        default = self.templates.minimal;
+      };
     };
 }
