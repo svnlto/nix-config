@@ -40,6 +40,7 @@ in {
 
       initContent = ''
         ${sharedZsh.tools}
+        ${sharedZsh.functions}
         ${sharedZsh.historyOptions}
         ${sharedZsh.options}
         ${sharedZsh.completion}
