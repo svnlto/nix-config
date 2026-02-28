@@ -33,7 +33,7 @@ This repo follows [Conventional Commits](https://www.conventionalcommits.org/). 
 Format: `<type>(<scope>): <subject>`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `chore`, `revert`
-Scopes: `darwin`, `common`, `overlays`, `deps`, `release`
+Scopes: `darwin`, `common`, `deps`, `release`
 
 ## Architecture Overview
 

@@ -31,9 +31,7 @@ Each commit message consists of a **header**, a **body**, and a **footer**. The 
 ### Scopes
 
 - **darwin**: macOS-specific configurations
-- **vagrant**: Vagrant VM configurations
 - **common**: Shared configurations
-- **overlays**: Nix overlays
 - **deps**: Dependency updates
 - **release**: Release-related changes
 
@@ -44,7 +42,7 @@ feat(darwin): add Firefox configuration
 ```
 
 ```
-fix(vagrant): resolve RAM disk permission issues
+fix(common): resolve path resolution on Linux
 ```
 
 ```

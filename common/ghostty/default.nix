@@ -36,15 +36,6 @@ in {
 
       link-url = true
 
-      ${lib.optionalString pkgs.stdenv.isLinux ''
-        # Linux-specific: disable problematic GTK settings
-        gtk-single-instance = false
-
-        # Linux: use Ctrl+V for paste (macOS-style, not Ctrl+Shift+V)
-        keybind = ctrl+v=paste_from_clipboard
-        keybind = ctrl+c=copy_to_clipboard
-      ''}
-
       ${lib.optionalString pkgs.stdenv.isDarwin ''
         macos-option-as-alt = true
       ''}
