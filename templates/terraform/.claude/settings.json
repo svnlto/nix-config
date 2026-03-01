@@ -1,0 +1,22 @@
+{
+  "includeCoAuthoredBy": false,
+  "enableAllProjectMcpServers": true,
+  "spinnerTipsEnabled": false,
+  "BASH_DEFAULT_TIMEOUT_MS": "300000",
+  "effortLevel": "high",
+  "permissions": {
+    "allow": [
+      "Bash(terraform:*)",
+      "Bash(tflint:*)",
+      "Bash(terragrunt:*)",
+      "Bash(checkov:*)",
+      "Bash(git:*)",
+      "Bash(pre-commit:*)"
+    ],
+    "deny": [
+      "Read(*.tfstate)",
+      "Read(*.tfstate.*)",
+      "Read(.terraform/**)"
+    ]
+  }
+}

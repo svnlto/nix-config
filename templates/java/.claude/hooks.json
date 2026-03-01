@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "case \"$CLAUDE_FILE_PATH\" in *.java) google-java-format --dry-run --set-exit-if-changed \"$CLAUDE_FILE_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "pre-commit run --files \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f pom.xml ] && mvn compile -q 2>&1 | tail -20 || true",
+            "timeout": 120
+          },
+          {
+            "type": "command",
+            "command": "[ -f flake.nix ] && nix flake check 2>&1 | head -20 || true",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

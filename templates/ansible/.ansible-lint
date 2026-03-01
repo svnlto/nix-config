@@ -1,0 +1,12 @@
+profile: moderate
+
+offline: true
+
+skip_list:
+  - yaml[line-length]
+  - name[missing]
+  - fqcn[action-core]
+
+exclude_paths:
+  - .cache/
+  - .git/

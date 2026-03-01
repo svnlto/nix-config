@@ -1,0 +1,26 @@
+{
+  "includeCoAuthoredBy": false,
+  "enableAllProjectMcpServers": true,
+  "spinnerTipsEnabled": false,
+  "BASH_DEFAULT_TIMEOUT_MS": "300000",
+  "effortLevel": "high",
+  "permissions": {
+    "allow": [
+      "Bash(kubectl:*)",
+      "Bash(helm:*)",
+      "Bash(kubeconform:*)",
+      "Bash(talosctl:*)",
+      "Bash(argocd:*)",
+      "Bash(cilium:*)",
+      "Bash(yq:*)",
+      "Bash(yamllint:*)",
+      "Bash(hadolint:*)",
+      "Bash(git:*)",
+      "Bash(pre-commit:*)"
+    ],
+    "deny": [
+      "Bash(kubectl delete namespace *)",
+      "Bash(kubectl delete -A *)"
+    ]
+  }
+}

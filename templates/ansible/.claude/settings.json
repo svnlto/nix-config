@@ -1,0 +1,23 @@
+{
+  "includeCoAuthoredBy": false,
+  "enableAllProjectMcpServers": true,
+  "spinnerTipsEnabled": false,
+  "BASH_DEFAULT_TIMEOUT_MS": "300000",
+  "effortLevel": "high",
+  "permissions": {
+    "allow": [
+      "Bash(ansible:*)",
+      "Bash(ansible-playbook:*)",
+      "Bash(ansible-lint:*)",
+      "Bash(ansible-vault:*)",
+      "Bash(yamllint:*)",
+      "Bash(yq:*)",
+      "Bash(git:*)",
+      "Bash(pre-commit:*)"
+    ],
+    "deny": [
+      "Read(group_vars/*/vault.yml)",
+      "Read(**/*vault*)"
+    ]
+  }
+}
