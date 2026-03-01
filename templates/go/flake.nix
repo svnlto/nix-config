@@ -11,7 +11,14 @@
       let pkgs = import nixpkgs { inherit system; };
       in {
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [ go gopls golangci-lint delve pre-commit ];
+          buildInputs = with pkgs; [
+            go
+            gopls
+            golangci-lint
+            delve
+            nodejs
+            pre-commit
+          ];
 
           shellHook = ''
             echo "go dev environment loaded"

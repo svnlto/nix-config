@@ -22,6 +22,7 @@
             yq-go
             yamllint
             hadolint
+            nodejs
             pre-commit
           ];
 

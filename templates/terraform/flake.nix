@@ -19,7 +19,9 @@
             terraform
             tflint
             terragrunt
-            checkov
+            # checkov — broken in nixpkgs-unstable (pycep-parser uv_build + psycopg)
+            # install manually: pip install checkov
+            nodejs
             pre-commit
           ];
 

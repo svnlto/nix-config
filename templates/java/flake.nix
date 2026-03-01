@@ -11,7 +11,13 @@
       let pkgs = import nixpkgs { inherit system; };
       in {
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [ jdk maven google-java-format pre-commit ];
+          buildInputs = with pkgs; [
+            jdk
+            maven
+            google-java-format
+            nodejs
+            pre-commit
+          ];
 
           shellHook = ''
             echo "java dev environment loaded"

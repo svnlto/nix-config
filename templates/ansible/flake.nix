@@ -16,6 +16,7 @@
             ansible-lint
             yamllint
             yq-go
+            nodejs
             pre-commit
           ];
 
