@@ -14,19 +14,15 @@
   # Force-disable all nix.* options that common/ and systems/ set unconditionally.
   nix.enable = false;
   nix.optimise.automatic = lib.mkForce false;
-  home-manager.sharedModules = [
-    {
-      home.sessionVariables = {
-        NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
-      };
+  home-manager.sharedModules = [{
+    home.sessionVariables = { NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem"; };
 
-      programs.zsh.shellAliases = {
-        refresh-zscaler = ''
-          curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
-          && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
-          || cp /tmp/zscaler.crt ~/.zscaler.pem \
-          && echo "Zscaler cert refreshed ✓"'';
-      };
-    }
-  ];
+    programs.zsh.shellAliases = {
+      refresh-zscaler = ''
+        curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
+        && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
+        || cp /tmp/zscaler.crt ~/.zscaler.pem \
+        && echo "Zscaler cert refreshed ✓"'';
+    };
+  }];
 }

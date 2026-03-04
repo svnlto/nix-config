@@ -55,7 +55,8 @@ in {
     } // lib.optionalAttrs isLinux {
       gpg.ssh.program = "/opt/1Password/op-ssh-sign";
     } // lib.optionalAttrs isDarwin {
-      gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      gpg.ssh.program =
+        "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
 
     signing = {
