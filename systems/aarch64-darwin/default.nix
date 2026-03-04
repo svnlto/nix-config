@@ -131,9 +131,7 @@ in {
         fi
 
         # Write managed config
-        cp ${
-          config.environment.etc."user-ssh-config".source
-        } "$SSH_CONFIG"
+        cp ${config.environment.etc."user-ssh-config".source} "$SSH_CONFIG"
 
         # Re-append OrbStack include
         if [ -n "$ORBSTACK_BLOCK" ]; then
