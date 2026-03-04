@@ -23,6 +23,13 @@ in {
     # Fix Touch ID authentication in tmux
     set -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
 
+    # Unset Home Manager session-vars guard so every new pane re-sources
+    # hm-session-vars.sh and picks up current environment variables.
+    # Without this, a long-lived tmux server inherits a stale guard that
+    # prevents new shells from exporting NODE_EXTRA_CA_CERTS, etc.
+    set-environment -g -u __HM_SESS_VARS_SOURCED
+    set-environment -g -u __HM_ZSH_SESS_VARS_SOURCED
+
     # Terminal settings - optimized for Ghostty
     set-option -g default-terminal "tmux-256color"
     set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"
