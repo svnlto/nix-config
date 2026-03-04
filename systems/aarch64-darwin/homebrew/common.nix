@@ -19,7 +19,6 @@ _:
       "obsidian"
 
       # Communication & Collaboration
-      "linear-linear"
       "claude" # desktop
 
       # Development & Terminal

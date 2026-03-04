@@ -7,6 +7,9 @@ _:
     "proton-drive"
     "ledger-wallet"
 
+    # Communication & Collaboration
+    "linear-linear"
+
     # Communication
     "whatsapp"
     "telegram"

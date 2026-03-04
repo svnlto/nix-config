@@ -53,8 +53,9 @@ in {
       };
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
     } // lib.optionalAttrs isLinux {
-      # Linux-specific: 1Password SSH signing
       gpg.ssh.program = "/opt/1Password/op-ssh-sign";
+    } // lib.optionalAttrs isDarwin {
+      gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
 
     signing = {
