@@ -122,11 +122,26 @@ in {
 
       userSshConfig.text = ''
         mkdir -p /Users/${username}/.ssh
+        SSH_CONFIG="/Users/${username}/.ssh/config"
+
+        # Preserve OrbStack include if present
+        ORBSTACK_BLOCK=""
+        if [ -f "$SSH_CONFIG" ] && grep -q 'orbstack' "$SSH_CONFIG"; then
+          ORBSTACK_BLOCK=$(grep -A1 'Include.*orbstack' "$SSH_CONFIG" | head -2)
+        fi
+
+        # Write managed config
         cp ${
           config.environment.etc."user-ssh-config".source
-        } /Users/${username}/.ssh/config
-        chown ${username}:staff /Users/${username}/.ssh/config
-        chmod 600 /Users/${username}/.ssh/config
+        } "$SSH_CONFIG"
+
+        # Re-append OrbStack include
+        if [ -n "$ORBSTACK_BLOCK" ]; then
+          printf '\n%s\n' "$ORBSTACK_BLOCK" >> "$SSH_CONFIG"
+        fi
+
+        chown ${username}:staff "$SSH_CONFIG"
+        chmod 600 "$SSH_CONFIG"
       '';
     };
   };
