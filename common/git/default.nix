@@ -51,22 +51,16 @@ in {
           newHighlight = "green bold 22";
         };
       };
-      # SSH signing with 1Password (cross-platform)
-      user.signingkey = signingKey;
-      gpg.format = "ssh";
-      commit.gpgsign = true;
+      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
     } // lib.optionalAttrs isLinux {
       # Linux-specific: 1Password SSH signing
-      # NOTE: Assumes 1Password installed in standard location (/opt/1Password)
-      # If using custom install path, override this in your platform-specific config
-      gpg.ssh = {
-        program = "/opt/1Password/op-ssh-sign";
-        allowedSignersFile = "~/.ssh/allowed_signers";
-      };
-    } // lib.optionalAttrs isDarwin {
-      # macOS-specific: 1Password agent uses SSH_AUTH_SOCK environment variable
-      # No program path needed - handled by 1Password.app integration
-      gpg.ssh = { allowedSignersFile = "~/.ssh/allowed_signers"; };
+      gpg.ssh.program = "/opt/1Password/op-ssh-sign";
+    };
+
+    signing = {
+      key = signingKey;
+      format = "ssh";
+      signByDefault = true;
     };
   };
 

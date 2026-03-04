@@ -30,8 +30,6 @@ _:
       # Networking & VPN
       "arc"
       "google-chrome"
-      "tailscale-app"
-      "mullvad-vpn@beta"
 
       # Media & Entertainment
       "vlc"

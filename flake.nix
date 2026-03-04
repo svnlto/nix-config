@@ -116,6 +116,14 @@
           username = defaultUsername;
           extraModules = [ ./systems/aarch64-darwin/homebrew/personal.nix ];
         };
+        "MSGMAC-MV69Q140FD" = mkDarwinSystem {
+          hostname = "MSGMAC-MV69Q140FD";
+          username = "hummes1";
+          extraModules = [
+            ./systems/aarch64-darwin/homebrew/work.nix
+            ./systems/aarch64-darwin/corporate.nix
+          ];
+        };
       };
 
       # Linux Home Manager configurations

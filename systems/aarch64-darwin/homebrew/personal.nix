@@ -19,5 +19,8 @@ _:
     "utm"
     "vagrant-vmware-utility"
     "winbox"
+
+    # Networking & VPN
+    "tailscale-app"
   ];
 }
