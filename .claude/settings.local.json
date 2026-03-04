@@ -1,5 +1,4 @@
 {
-  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(git:*)",
@@ -14,6 +13,7 @@
     ],
     "deny": []
   },
+  "includeCoAuthoredBy": false,
   "enableAllProjectMcpServers": true,
   "outputStyle": "Architect",
   "spinnerTipsEnabled": false,

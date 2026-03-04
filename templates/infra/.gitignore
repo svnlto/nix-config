@@ -1,0 +1,10 @@
+.direnv/
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*.tfvars
+charts/**/*.tgz
+*.pkr.hcl.lock.hcl

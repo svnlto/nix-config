@@ -187,6 +187,10 @@
           path = ./templates/java;
           description = "Java development with Maven";
         };
+        infra = {
+          path = ./templates/infra;
+          description = "Cloud infrastructure platform engineering";
+        };
         default = self.templates.minimal;
       };
     };

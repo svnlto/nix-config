@@ -121,6 +121,7 @@ Available templates for `flake-init <template>`:
 | `ansible` | Ansible playbooks and roles | ansible, ansible-lint, yamllint, yq |
 | `go` | Go development | go, gopls, golangci-lint, delve |
 | `java` | Java/Maven development | jdk, maven, google-java-format |
+| `infra` | Cloud infrastructure platform | terraform, kubectl, trivy, az, packer, helm, k9s |
 
 Each template scaffolds: `flake.nix`, `.envrc`, `.gitignore`, `.pre-commit-config.yaml`, `.mcp.json`, `CLAUDE.md`, `.claude/settings.json`, `.claude/hooks.json`.
 
