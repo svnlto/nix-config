@@ -17,6 +17,7 @@ _:
       "raycast"
       "setapp"
       "obsidian"
+      "marked-app"
 
       # Communication & Collaboration
       "claude" # desktop
