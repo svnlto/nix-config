@@ -5,5 +5,6 @@ _:
     # Communication
     "microsoft-teams"
     "spotify"
+    "whatsapp"
   ];
 }
