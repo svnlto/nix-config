@@ -6,5 +6,7 @@ _:
     "microsoft-teams"
     "spotify"
     "whatsapp"
+    "drawio"
+    "gray"
   ];
 }
