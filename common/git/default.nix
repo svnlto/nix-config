@@ -1,5 +1,5 @@
 # Unified cross-platform Git configuration
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (pkgs.stdenv) isLinux isDarwin;
@@ -58,6 +58,8 @@ in {
       gpg.ssh.program =
         "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
+
+    includes = [{ path = "${config.home.homeDirectory}/.gitconfig-local"; }];
 
     signing = {
       key = signingKey;
