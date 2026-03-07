@@ -59,7 +59,10 @@ in {
         "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
 
-    includes = [{ path = "${config.home.homeDirectory}/.gitconfig-local"; }];
+    includes = [{
+      condition = "gitdir:~/projects/msg/";
+      path = "${config.home.homeDirectory}/.gitconfig-local";
+    }];
 
     signing = {
       key = signingKey;
