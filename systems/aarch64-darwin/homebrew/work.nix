@@ -8,5 +8,8 @@ _:
     "whatsapp"
     "drawio"
     "gray"
+
+    # Development
+    "copilot-cli"
   ];
 }
