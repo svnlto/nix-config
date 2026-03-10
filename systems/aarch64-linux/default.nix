@@ -8,6 +8,7 @@ in {
     ../../common/home-manager-base.nix
     ../../common/default.nix
     ../../common/git
+    ../../common/ssh
   ];
 
   # Linux-specific home directory
@@ -47,11 +48,4 @@ in {
       esac
     }
   '';
-
-  # SSH configuration for 1Password
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    matchBlocks."*" = { identityAgent = "~/.1password/agent.sock"; };
-  };
 }

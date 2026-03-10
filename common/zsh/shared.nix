@@ -162,5 +162,20 @@ rec {
       local template="''${1:-minimal}"
       nix --extra-experimental-features 'nix-command flakes' flake init --accept-flake-config -t "path:$HOME/.config/nix#$template"
     }
+
+    # Remove quarantine and ad-hoc sign a macOS application
+    unquarantine() {
+      local target="''${1:?Usage: unquarantine <path or App Name>}"
+      # If no slashes, treat as app name in /Applications
+      if [[ "$target" != */* ]]; then
+        target="/Applications/''${target}.app"
+      fi
+      if [[ ! -e "$target" ]]; then
+        echo "Not found: $target" >&2
+        return 1
+      fi
+      xattr -cr "$target" && codesign --force --deep --sign - "$target"
+      echo "Unquarantined: $target"
+    }
   '';
 }

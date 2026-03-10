@@ -18,17 +18,6 @@ in {
         "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
     };
 
-    # SSH configuration
-    etc."user-ssh-config".source = pkgs.writeText "ssh-config" ''
-      Host *
-        AddKeysToAgent yes
-        IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-        Protocol 2
-        Compression yes
-        ServerAliveInterval 20
-        ServerAliveCountMax 10
-        TCPKeepAlive yes
-    '';
   };
 
   # macOS-specific Nix settings
@@ -120,27 +109,6 @@ in {
         fi >&2
       '';
 
-      userSshConfig.text = ''
-        mkdir -p /Users/${username}/.ssh
-        SSH_CONFIG="/Users/${username}/.ssh/config"
-
-        # Preserve OrbStack include if present
-        ORBSTACK_BLOCK=""
-        if [ -f "$SSH_CONFIG" ] && grep -q 'orbstack' "$SSH_CONFIG"; then
-          ORBSTACK_BLOCK=$(grep -A1 'Include.*orbstack' "$SSH_CONFIG" | head -2)
-        fi
-
-        # Write managed config
-        cp ${config.environment.etc."user-ssh-config".source} "$SSH_CONFIG"
-
-        # Re-append OrbStack include
-        if [ -n "$ORBSTACK_BLOCK" ]; then
-          printf '\n%s\n' "$ORBSTACK_BLOCK" >> "$SSH_CONFIG"
-        fi
-
-        chown ${username}:staff "$SSH_CONFIG"
-        chmod 600 "$SSH_CONFIG"
-      '';
     };
   };
 
