@@ -14,6 +14,13 @@
   # Force-disable all nix.* options that common/ and systems/ set unconditionally.
   nix.enable = false;
   nix.optimise.automatic = lib.mkForce false;
+
+  # Jamf blocks sudo on /Applications/ — disable brew operations that trigger it
+  # upgrade: sudo rm old app before installing new version
+  # cleanup: sudo rm app when removed from config
+  # Run `brewup` manually instead
+  homebrew.onActivation.upgrade = lib.mkForce false;
+  homebrew.onActivation.cleanup = lib.mkForce "none";
   home-manager.sharedModules = [{
     home.sessionVariables = { NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem"; };
 

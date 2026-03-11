@@ -73,22 +73,8 @@ in {
       '';
 
       postActivation.text = lib.mkAfter ''
-        echo "==== Starting Homebrew Updates ====" >&2
-
-        # Run Homebrew commands as the user with proper environment setup and send output to stderr
-        echo "Running brew update..." >&2
-        if ! su ${username} -c '/opt/homebrew/bin/brew update' >&2; then
-          echo "⚠️  Homebrew update failed, continuing..." >&2
-        fi
-
-        echo "Running brew upgrade --cask --greedy..." >&2
-        if ! su ${username} -c '/opt/homebrew/bin/brew upgrade --cask --greedy' >&2; then
-          echo "⚠️  Homebrew cask upgrade failed, continuing..." >&2
-        fi
-
-        # Dock configuration is now handled in dock.nix
-
-        echo "==== Homebrew update completed ===="
+        # Homebrew update/upgrade is handled by nix-darwin's onActivation settings
+        # (see common.nix homebrew.onActivation and corporate.nix override)
 
         # Optional cleanup - only run if CLEANUP_ON_REBUILD is set
         if [[ "$CLEANUP_ON_REBUILD" == "true" ]]; then
