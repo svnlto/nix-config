@@ -32,7 +32,7 @@ Scaffold new projects with `flake-init <template>`. Each template includes a dev
 
 ## Installed Skills
 
-Globally installed from `claude-skills-generator` (auto-invoked by description match):
+Globally installed (auto-invoked by description match):
 
 | Skill | Description | Best For |
 |-------|-------------|----------|
@@ -45,6 +45,7 @@ Globally installed from `claude-skills-generator` (auto-invoked by description m
 | cloud-api-integration | Cloud AI API integration | Go, Java |
 | database-design | Schema design, indexing, FTS | Java, Go |
 | talos-os-expert | Talos Linux cluster management | Kubernetes |
+| ado-standards | ADO pull request and pipeline standards | Azure DevOps projects |
 
 ## Plugin Marketplaces
 

@@ -13,6 +13,8 @@ let
                  database-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
+    # Local skills (not from upstream repo)
+    cp -r ${./skills}/* $out/
   '';
 in {
   home.file = {
