@@ -4,14 +4,16 @@
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
+    "command": "bash ~/.claude/statusline-command-custom.sh"
   },
   "enabledPlugins": {
     "terraform-skill@antonbabenko": true,
     "terragrunt-skill@jfr992": true,
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   }

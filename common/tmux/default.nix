@@ -30,6 +30,10 @@ in {
     set-environment -g -u __HM_SESS_VARS_SOURCED
     set-environment -g -u __HM_ZSH_SESS_VARS_SOURCED
 
+    # Allow OSC/DCS passthrough (tmux 3.3+) — enables terminal
+    # notifications and image protocols from within tmux panes
+    set -g allow-passthrough on
+
     # Terminal settings - optimized for Ghostty
     set-option -g default-terminal "tmux-256color"
     set-option -ga terminal-overrides ",xterm-ghostty:Tc,tmux-256color:Tc"

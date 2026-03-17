@@ -8,6 +8,7 @@ _:
     "whatsapp"
     "drawio"
     "gray"
+    "macwhisper"
 
     # Development
     "copilot-cli"
