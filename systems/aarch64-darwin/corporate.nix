@@ -23,16 +23,63 @@
   homebrew.onActivation.upgrade = lib.mkForce false;
   homebrew.onActivation.cleanup = lib.mkForce "none";
   home-manager.sharedModules = [
-    ({ pkgs, ... }: {
-      home.sessionVariables = {
-        NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
-        AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
-      };
+    ({ pkgs, lib, ... }: {
+      home = {
+        sessionVariables = {
+          NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
+          AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
+        };
 
-      home.packages = with pkgs; [
-        saml2aws # SAML → STS credential exchange; must be on PATH for saml2aws-multi
-        awscli2 # AWS CLI v2
-      ];
+        packages = with pkgs; [
+          saml2aws # SAML → STS credential exchange; must be on PATH for saml2aws-multi
+          awscli2 # AWS CLI v2
+        ];
+
+        activation.awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                    if [ ! -f "$HOME/.aws/config" ]; then
+                      mkdir -p "$HOME/.aws"
+                      cat > "$HOME/.aws/config" << EOF
+          [profile test-landing-zone]
+          region = eu-central-1
+          output = json
+
+          [profile prod-landing-zone]
+          region = eu-central-1
+          output = json
+          EOF
+                    fi
+        '';
+
+        activation.saml2awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                    if [ ! -f "$HOME/.saml2aws" ]; then
+                      cat > "$HOME/.saml2aws" << EOF
+          [default]
+          url                  = https://msg-dop-test.cyberark.cloud
+          username             = sven.hummelsberger@tst.do.msg.group
+          provider             = CyberArk
+          mfa                  = Auto
+          skip_verify          = false
+          timeout              = 0
+          aws_urn              = urn:amazon:webservices
+          aws_session_duration = 3600
+          aws_profile          = test-landing-zone
+          region               = eu-central-1
+
+          [prod]
+          url                  = https://msg-dop.cyberark.cloud
+          username             = sven.hummelsberger@do.msg.group
+          provider             = CyberArk
+          mfa                  = Auto
+          skip_verify          = false
+          timeout              = 0
+          aws_urn              = urn:amazon:webservices
+          aws_session_duration = 3600
+          aws_profile          = prod-landing-zone
+          region               = eu-central-1
+          EOF
+                    fi
+        '';
+      };
 
       programs.zsh.shellAliases = {
         refresh-zscaler = ''
