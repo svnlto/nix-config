@@ -28,6 +28,7 @@
         sessionVariables = {
           NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
           AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
+          SAML2AWS_AUTO_BROWSER_DOWNLOAD = "true";
         };
 
         packages = with pkgs; [
@@ -51,13 +52,15 @@
                         fi
           '';
 
+          # ~/.saml2aws: only [default] (TEST) — saml2aws-multi reads flat, ignoring sections.
+          # PROD config lives in a separate file used by saml2aws --idp-account prod.
           saml2awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
                         if [ ! -f "$HOME/.saml2aws" ]; then
                           cat > "$HOME/.saml2aws" << EOF
             [default]
             url                  = https://msg-dop-test.cyberark.cloud
             username             = sven.hummelsberger@tst.do.msg.group
-            provider             = CyberArk
+            provider             = Browser
             mfa                  = Auto
             skip_verify          = false
             timeout              = 0
@@ -65,11 +68,14 @@
             aws_session_duration = 3600
             aws_profile          = test-landing-zone
             region               = eu-central-1
-
-            [prod]
+            EOF
+                        fi
+                        if [ ! -f "$HOME/.saml2aws-prod" ]; then
+                          cat > "$HOME/.saml2aws-prod" << EOF
+            [default]
             url                  = https://msg-dop.cyberark.cloud
-            username             = sven.hummelsberger@do.msg.group
-            provider             = CyberArk
+            username             = sven.hummelsberger@prd.do.msg.group
+            provider             = Browser
             mfa                  = Auto
             skip_verify          = false
             timeout              = 0
@@ -84,12 +90,26 @@
           saml2awsMulti = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             if ! command -v awslogin >/dev/null 2>&1; then
               echo "Installing saml2aws-multi via pipx..."
-              ${pkgs.pipx}/bin/pipx install git+https://github.com/kyhau/saml2aws-multi.git \
+              PATH="${pkgs.git}/bin:$PATH" ${pkgs.pipx}/bin/pipx install git+https://github.com/kyhau/saml2aws-multi.git \
                 || echo "WARNING: saml2aws-multi install failed — run manually: pipx install git+https://github.com/kyhau/saml2aws-multi.git"
             fi
           '';
         };
       };
+
+      programs.zsh.initContent = ''
+        # Auto-detect browser for saml2aws Browser provider
+        if [ -z "$SAML2AWS_BROWSER_EXECUTABLE_PATH" ]; then
+          for _b in "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+                    "/Applications/Arc.app/Contents/MacOS/Arc" \
+                    "/Applications/Chromium.app/Contents/MacOS/Chromium"; do
+            if [ -x "$_b" ]; then
+              export SAML2AWS_BROWSER_EXECUTABLE_PATH="$_b"
+              break
+            fi
+          done
+        fi
+      '';
 
       programs.zsh.shellAliases = {
         refresh-zscaler = ''
@@ -99,7 +119,7 @@
           && echo "Zscaler cert refreshed ✓"'';
         awswho = "aws sts get-caller-identity";
         awstest = "awslogin -s test";
-        awsprod = "saml2aws login --idp-account prod";
+        awsprod = "saml2aws login --config=$HOME/.saml2aws-prod";
       };
     })
   ];
