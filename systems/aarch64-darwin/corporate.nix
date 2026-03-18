@@ -35,50 +35,60 @@
           awscli2 # AWS CLI v2
         ];
 
-        activation.awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                    if [ ! -f "$HOME/.aws/config" ]; then
-                      mkdir -p "$HOME/.aws"
-                      cat > "$HOME/.aws/config" << EOF
-          [profile test-landing-zone]
-          region = eu-central-1
-          output = json
+        activation = {
+          awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                        if [ ! -f "$HOME/.aws/config" ]; then
+                          mkdir -p "$HOME/.aws"
+                          cat > "$HOME/.aws/config" << EOF
+            [profile test-landing-zone]
+            region = eu-central-1
+            output = json
 
-          [profile prod-landing-zone]
-          region = eu-central-1
-          output = json
-          EOF
-                    fi
-        '';
+            [profile prod-landing-zone]
+            region = eu-central-1
+            output = json
+            EOF
+                        fi
+          '';
 
-        activation.saml2awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                    if [ ! -f "$HOME/.saml2aws" ]; then
-                      cat > "$HOME/.saml2aws" << EOF
-          [default]
-          url                  = https://msg-dop-test.cyberark.cloud
-          username             = sven.hummelsberger@tst.do.msg.group
-          provider             = CyberArk
-          mfa                  = Auto
-          skip_verify          = false
-          timeout              = 0
-          aws_urn              = urn:amazon:webservices
-          aws_session_duration = 3600
-          aws_profile          = test-landing-zone
-          region               = eu-central-1
+          saml2awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                        if [ ! -f "$HOME/.saml2aws" ]; then
+                          cat > "$HOME/.saml2aws" << EOF
+            [default]
+            url                  = https://msg-dop-test.cyberark.cloud
+            username             = sven.hummelsberger@tst.do.msg.group
+            provider             = CyberArk
+            mfa                  = Auto
+            skip_verify          = false
+            timeout              = 0
+            aws_urn              = urn:amazon:webservices
+            aws_session_duration = 3600
+            aws_profile          = test-landing-zone
+            region               = eu-central-1
 
-          [prod]
-          url                  = https://msg-dop.cyberark.cloud
-          username             = sven.hummelsberger@do.msg.group
-          provider             = CyberArk
-          mfa                  = Auto
-          skip_verify          = false
-          timeout              = 0
-          aws_urn              = urn:amazon:webservices
-          aws_session_duration = 3600
-          aws_profile          = prod-landing-zone
-          region               = eu-central-1
-          EOF
-                    fi
-        '';
+            [prod]
+            url                  = https://msg-dop.cyberark.cloud
+            username             = sven.hummelsberger@do.msg.group
+            provider             = CyberArk
+            mfa                  = Auto
+            skip_verify          = false
+            timeout              = 0
+            aws_urn              = urn:amazon:webservices
+            aws_session_duration = 3600
+            aws_profile          = prod-landing-zone
+            region               = eu-central-1
+            EOF
+                        fi
+          '';
+
+          saml2awsMulti = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            if ! command -v awslogin >/dev/null 2>&1; then
+              echo "Installing saml2aws-multi via pipx..."
+              ${pkgs.pipx}/bin/pipx install git+https://github.com/kyhau/saml2aws-multi.git \
+                || echo "WARNING: saml2aws-multi install failed — run manually: pipx install git+https://github.com/kyhau/saml2aws-multi.git"
+            fi
+          '';
+        };
       };
 
       programs.zsh.shellAliases = {
