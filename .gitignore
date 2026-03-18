@@ -15,6 +15,9 @@ result-*
 # macOS files
 .DS_Store
 
+# Git worktrees
+.worktrees/
+
 # Temporary files
 *.tmp
 *.temp
