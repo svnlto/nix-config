@@ -4,6 +4,7 @@
 #    Determinate's own daemon).
 # 2. Zscaler SSL inspection — corporate VPN replaces TLS certs with a Zscaler
 #    CA not in Node's default trust store.  NODE_EXTRA_CA_CERTS fixes this.
+# 3. AWS / saml2aws — SAML→STS credential exchange via CyberArk IdP.
 #
 # Refresh the cert after rotation:
 #   refresh-zscaler
@@ -21,15 +22,28 @@
   # Run `brewup` manually instead
   homebrew.onActivation.upgrade = lib.mkForce false;
   homebrew.onActivation.cleanup = lib.mkForce "none";
-  home-manager.sharedModules = [{
-    home.sessionVariables = { NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem"; };
+  home-manager.sharedModules = [
+    ({ pkgs, ... }: {
+      home.sessionVariables = {
+        NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
+        AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
+      };
 
-    programs.zsh.shellAliases = {
-      refresh-zscaler = ''
-        curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
-        && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
-        || cp /tmp/zscaler.crt ~/.zscaler.pem \
-        && echo "Zscaler cert refreshed ✓"'';
-    };
-  }];
+      home.packages = with pkgs; [
+        saml2aws # SAML → STS credential exchange; must be on PATH for saml2aws-multi
+        awscli2 # AWS CLI v2
+      ];
+
+      programs.zsh.shellAliases = {
+        refresh-zscaler = ''
+          curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
+          && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
+          || cp /tmp/zscaler.crt ~/.zscaler.pem \
+          && echo "Zscaler cert refreshed ✓"'';
+        awswho = "aws sts get-caller-identity";
+        awstest = "awslogin -s test";
+        awsprod = "saml2aws login --idp-account prod";
+      };
+    })
+  ];
 }
