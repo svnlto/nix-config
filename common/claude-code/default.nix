@@ -35,8 +35,9 @@ in {
     ".claude/CLAUDE.md".source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/.config/nix/common/claude-code/CLAUDE.md";
 
-    # Status line script (read-only, no need for out-of-store symlink)
-    ".claude/statusline-command.sh".source = ./statusline-command.sh;
+    # Status line script (out-of-store symlink for immediate iteration)
+    ".claude/statusline-command.sh".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/.config/nix/common/claude-code/statusline-command.sh";
 
     # External skills from claude-skills-generator (auto-invoked by description match)
     ".claude/skills".source = selectedSkills;
