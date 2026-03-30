@@ -1,16 +1,22 @@
 _:
 
 {
-  homebrew.casks = [
-    # Communication
-    "microsoft-teams"
-    "spotify"
-    "whatsapp"
-    "drawio"
-    "gray"
-    "macwhisper"
+  homebrew = {
+    taps = [ "abyss/tools" ];
 
-    # Development
-    "copilot-cli"
-  ];
+    brews = [ "abyss/tools/awsp" ];
+
+    casks = [
+      # Communication
+      "microsoft-teams"
+      "spotify"
+      "whatsapp"
+      "drawio"
+      "gray"
+      "macwhisper"
+
+      # Development
+      "copilot-cli"
+    ];
+  };
 }

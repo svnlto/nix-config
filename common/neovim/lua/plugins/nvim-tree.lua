@@ -38,7 +38,7 @@ return {
 
 				-- Window/UI settings
 				view = {
-					width = 25,
+					width = 35,
 					side = "left",
 					number = false,
 					relativenumber = false,

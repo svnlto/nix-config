@@ -33,65 +33,19 @@
           NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
           SSL_CERT_FILE = "$HOME/.corporate-ca-bundle.pem";
           CURL_CA_BUNDLE = "$HOME/.corporate-ca-bundle.pem";
-          AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
-          SAML2AWS_AUTO_BROWSER_DOWNLOAD = "true";
+          AWS_CA_BUNDLE = "$HOME/.corporate-ca-bundle.pem";
         };
 
         packages = with pkgs; [
-          saml2aws # SAML → STS credential exchange; must be on PATH for saml2aws-multi
           awscli2 # AWS CLI v2
           devbox # Isolated dev environments via Nix
         ];
 
         activation = {
+          # ~/.aws/config is managed manually — profiles added as accounts
+          # are provisioned through CyberArk SCA portal
           awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                        if [ ! -f "$HOME/.aws/config" ]; then
-                          mkdir -p "$HOME/.aws"
-                          cat > "$HOME/.aws/config" << EOF
-            [profile test-landing-zone]
-            region = eu-central-1
-            output = json
-
-            [profile prod-landing-zone]
-            region = eu-central-1
-            output = json
-            EOF
-                        fi
-          '';
-
-          # ~/.saml2aws: only [default] (TEST) — saml2aws-multi reads flat, ignoring sections.
-          # PROD config lives in a separate file used by saml2aws --idp-account prod.
-          saml2awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                        if [ ! -f "$HOME/.saml2aws" ]; then
-                          cat > "$HOME/.saml2aws" << EOF
-            [default]
-            url                  = https://msg-dop-test.cyberark.cloud
-            username             = sven.hummelsberger@tst.do.msg.group
-            provider             = Browser
-            mfa                  = Auto
-            skip_verify          = false
-            timeout              = 0
-            aws_urn              = urn:amazon:webservices
-            aws_session_duration = 3600
-            aws_profile          = test-landing-zone
-            region               = eu-central-1
-            EOF
-                        fi
-                        if [ ! -f "$HOME/.saml2aws-prod" ]; then
-                          cat > "$HOME/.saml2aws-prod" << EOF
-            [default]
-            url                  = https://msg-dop.cyberark.cloud
-            username             = sven.hummelsberger@prd.do.msg.group
-            provider             = Browser
-            mfa                  = Auto
-            skip_verify          = false
-            timeout              = 0
-            aws_urn              = urn:amazon:webservices
-            aws_session_duration = 3600
-            aws_profile          = prod-landing-zone
-            region               = eu-central-1
-            EOF
-                        fi
+            mkdir -p "$HOME/.aws"
           '';
 
           # Build combined CA bundle: macOS system roots + Zscaler CA
@@ -106,29 +60,8 @@
             fi
           '';
 
-          saml2awsMulti = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            if ! command -v awslogin >/dev/null 2>&1; then
-              echo "Installing saml2aws-multi via pipx..."
-              PATH="${pkgs.git}/bin:$PATH" ${pkgs.pipx}/bin/pipx install git+https://github.com/kyhau/saml2aws-multi.git \
-                || echo "WARNING: saml2aws-multi install failed — run manually: pipx install git+https://github.com/kyhau/saml2aws-multi.git"
-            fi
-          '';
         };
       };
-
-      programs.zsh.initContent = ''
-        # Auto-detect browser for saml2aws Browser provider
-        if [ -z "$SAML2AWS_BROWSER_EXECUTABLE_PATH" ]; then
-          for _b in "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-                    "/Applications/Arc.app/Contents/MacOS/Arc" \
-                    "/Applications/Chromium.app/Contents/MacOS/Chromium"; do
-            if [ -x "$_b" ]; then
-              export SAML2AWS_BROWSER_EXECUTABLE_PATH="$_b"
-              break
-            fi
-          done
-        fi
-      '';
 
       programs.zsh.shellAliases = {
         refresh-zscaler = ''
@@ -140,8 +73,7 @@
                cat ~/.zscaler.pem; } > ~/.corporate-ca-bundle.pem 2>/dev/null \
           && echo "Zscaler cert + CA bundle refreshed ✓"'';
         awswho = "aws sts get-caller-identity";
-        awstest = "awslogin -s test";
-        awsprod = "saml2aws login --config=$HOME/.saml2aws-prod";
+        awsp = ''source "$(brew --prefix awsp)/_source-awsp.sh"'';
       };
     })
   ];
