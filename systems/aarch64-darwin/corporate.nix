@@ -8,6 +8,10 @@
 #
 # Refresh the cert after rotation:
 #   refresh-zscaler
+#
+# SSL_CERT_FILE uses a combined bundle (system CAs + Zscaler) because tools
+# like curl treat it as a *replacement* for the default trust store, not an
+# addition.  NODE_EXTRA_CA_CERTS is additive, so it only needs the Zscaler cert.
 { lib, ... }:
 
 {
@@ -27,6 +31,8 @@
       home = {
         sessionVariables = {
           NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
+          SSL_CERT_FILE = "$HOME/.corporate-ca-bundle.pem";
+          CURL_CA_BUNDLE = "$HOME/.corporate-ca-bundle.pem";
           AWS_CA_BUNDLE = "$HOME/.zscaler.pem";
           SAML2AWS_AUTO_BROWSER_DOWNLOAD = "true";
         };
@@ -34,6 +40,7 @@
         packages = with pkgs; [
           saml2aws # SAML → STS credential exchange; must be on PATH for saml2aws-multi
           awscli2 # AWS CLI v2
+          devbox # Isolated dev environments via Nix
         ];
 
         activation = {
@@ -87,6 +94,18 @@
                         fi
           '';
 
+          # Build combined CA bundle: macOS system roots + Zscaler CA
+          # Needed because SSL_CERT_FILE replaces (not appends to) the trust store
+          corporateCaBundle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            if [ -f "$HOME/.zscaler.pem" ]; then
+              _bundle="$HOME/.corporate-ca-bundle.pem"
+              security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > "$_bundle" 2>/dev/null
+              security find-certificate -a -p /Library/Keychains/System.keychain >> "$_bundle" 2>/dev/null
+              cat "$HOME/.zscaler.pem" >> "$_bundle"
+              echo "Corporate CA bundle: $(grep -c 'BEGIN CERTIFICATE' "$_bundle") certificates"
+            fi
+          '';
+
           saml2awsMulti = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             if ! command -v awslogin >/dev/null 2>&1; then
               echo "Installing saml2aws-multi via pipx..."
@@ -116,7 +135,10 @@
           curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
           && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
           || cp /tmp/zscaler.crt ~/.zscaler.pem \
-          && echo "Zscaler cert refreshed ✓"'';
+          && { security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain; \
+               security find-certificate -a -p /Library/Keychains/System.keychain; \
+               cat ~/.zscaler.pem; } > ~/.corporate-ca-bundle.pem 2>/dev/null \
+          && echo "Zscaler cert + CA bundle refreshed ✓"'';
         awswho = "aws sts get-caller-identity";
         awstest = "awslogin -s test";
         awsprod = "saml2aws login --config=$HOME/.saml2aws-prod";

@@ -47,6 +47,12 @@ Globally installed (auto-invoked by description match):
 | talos-os-expert | Talos Linux cluster management | Kubernetes |
 | ado-standards | ADO pull request and pipeline standards | Azure DevOps projects |
 
+## Superpowers Output
+
+Superpowers specs and plans go to the Obsidian vault, not the project repo:
+- Specs: `/Users/hummes1/Documents/obsidian-vault/Work/superpowers/specs/`
+- Plans: `/Users/hummes1/Documents/obsidian-vault/Work/superpowers/plans/`
+
 ## Plugin Marketplaces
 
 Use `/setup-plugins` to browse and install additional skills from:

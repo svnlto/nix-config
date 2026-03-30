@@ -10,18 +10,21 @@
       "mcp__context7__get-library-docs",
       "Bash(zsh:*)",
       "WebSearch",
-      "WebFetch"
+      "WebFetch",
+      "Bash(curl:*)",
+      "Bash(gh api:*)",
+      "Bash(python3 -m json.tool)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
-  "outputStyle": "Architect",
-  "spinnerTipsEnabled": false,
-  "BASH_DEFAULT_TIMEOUT_MS": "300000",
-  "effortLevel": "high",
   "enabledMcpjsonServers": [
     "code-reasoning",
     "sequential-thinking",
     "context7"
-  ]
+  ],
+  "outputStyle": "Architect",
+  "spinnerTipsEnabled": false,
+  "effortLevel": "high",
+  "BASH_DEFAULT_TIMEOUT_MS": "300000"
 }
