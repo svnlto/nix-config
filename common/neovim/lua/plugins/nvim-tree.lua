@@ -38,7 +38,7 @@ return {
 
 				-- Window/UI settings
 				view = {
-					width = "25%", -- Dynamic width based on screen size
+					width = 25,
 					side = "left",
 					number = false,
 					relativenumber = false,
@@ -49,7 +49,7 @@ return {
 				renderer = {
 					add_trailing = false,
 					group_empty = false, -- Show all directories, don't group empty ones
-					highlight_git = true,
+					highlight_git = "name",
 					full_name = false,
 					highlight_opened_files = "none",
 					root_folder_label = ":~:s?$?/..",
@@ -58,10 +58,10 @@ return {
 						enable = false,
 					},
 					icons = {
-						webdev_colors = false,
 						git_placement = "after",
 						modified_placement = "after",
-						padding = " ",
+						padding = { icon = " " },
+						web_devicons = { file = { color = false } },
 						symlink_arrow = " → ",
 						show = {
 							file = false, -- No file icons for minimal look
@@ -101,7 +101,8 @@ return {
 				-- Show all files including dotfiles
 				filters = {
 					dotfiles = false, -- Show dotfiles (.env, .gitignore, etc.)
-					git_clean = false, -- Show git-ignored files
+					git_ignored = false, -- Show git-ignored files (was git.ignore)
+					git_clean = false,
 					no_buffer = false, -- Show all files regardless of buffer status
 					custom = { ".DS_Store" }, -- Only hide system files
 					exclude = {}, -- Don't exclude any patterns
@@ -110,7 +111,6 @@ return {
 				-- Git integration
 				git = {
 					enable = true,
-					ignore = false, -- Show git-ignored files (like .env, build files, etc.)
 					show_on_dirs = true,
 					show_on_open_dirs = true,
 					timeout = 400,
@@ -124,7 +124,7 @@ return {
 				-- Enable file sync to keep tree updated with current buffer
 				update_focused_file = {
 					enable = true,
-					update_root = false, -- Don't change root when following files
+					update_root = { enable = false },
 				},
 
 				-- Actions
@@ -173,7 +173,7 @@ return {
 					end
 
 					-- Default mappings (but filter out bookmark mappings that cause sign errors)
-					api.config.mappings.default_on_attach(bufnr)
+					api.map.on_attach.default(bufnr)
 
 					-- Remove any bookmark-related mappings that might trigger sign errors
 					pcall(vim.keymap.del, "n", "m", { buffer = bufnr })
@@ -191,8 +191,11 @@ return {
 				callback = function()
 					if vim.fn.argc() == 0 then
 						require("nvim-tree.api").tree.open()
-					elseif vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
-						require("nvim-tree.api").tree.open({ path = vim.fn.argv(0) })
+					elseif vim.fn.argc() == 1 then
+						local arg = vim.fn.argv(0) --[[@as string]]
+						if vim.fn.isdirectory(arg) == 1 then
+							require("nvim-tree.api").tree.open({ path = arg })
+						end
 					end
 				end,
 			})
