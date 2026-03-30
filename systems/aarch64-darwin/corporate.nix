@@ -50,13 +50,13 @@
 
           # Build combined CA bundle: macOS system roots + Zscaler CA
           # Needed because SSL_CERT_FILE replaces (not appends to) the trust store
+          # Use /usr/bin/security — HM activation runs with Nix-only PATH
           corporateCaBundle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             if [ -f "$HOME/.zscaler.pem" ]; then
               _bundle="$HOME/.corporate-ca-bundle.pem"
-              security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > "$_bundle" 2>/dev/null
-              security find-certificate -a -p /Library/Keychains/System.keychain >> "$_bundle" 2>/dev/null
+              /usr/bin/security find-certificate -a -p /System/Library/Keychains/SystemRootCertificates.keychain > "$_bundle" 2>/dev/null
+              /usr/bin/security find-certificate -a -p /Library/Keychains/System.keychain >> "$_bundle" 2>/dev/null
               cat "$HOME/.zscaler.pem" >> "$_bundle"
-              echo "Corporate CA bundle: $(grep -c 'BEGIN CERTIFICATE' "$_bundle") certificates"
             fi
           '';
 
