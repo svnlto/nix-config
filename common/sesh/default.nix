@@ -18,8 +18,12 @@ _:
     path = "~/Projects/msg/platform-next/"
 
     [[session]]
-    name = "platform-next"
+    name = "kaas-helm-validator"
     path = "~/Projects/msg/kaas-helm-validator/"
+
+    [[session]]
+    name = "workstation-configs"
+    path = "~/Projects/msg/workstation-configs/"
 
     [[session]]
     name = "obsidian-vault"

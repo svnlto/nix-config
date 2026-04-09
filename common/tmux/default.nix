@@ -23,14 +23,14 @@ in {
     # Fix Touch ID authentication in tmux
     set -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION DISPLAY"
 
-    # Unset environment guards so every new pane re-sources session vars.
-    # Without this, a long-lived tmux server inherits stale guards that
-    # prevent new shells from running /etc/zshenv (PATH setup) and
-    # hm-session-vars.sh (NODE_EXTRA_CA_CERTS, etc.).
-    set-environment -g -u __ETC_ZSHENV_SOURCED
-    set-environment -g -u __NIX_DARWIN_SET_ENVIRONMENT_DONE
-    set-environment -g -u __HM_SESS_VARS_SOURCED
-    set-environment -g -u __HM_ZSH_SESS_VARS_SOURCED
+    # Strip environment guards so every new pane re-sources session vars.
+    # -r (remove) explicitly strips vars from child processes, unlike -u
+    # which only removes them from tmux's table (server process still
+    # passes them via fork inheritance).
+    set-environment -gr __ETC_ZSHENV_SOURCED
+    set-environment -gr __NIX_DARWIN_SET_ENVIRONMENT_DONE
+    set-environment -gr __HM_SESS_VARS_SOURCED
+    set-environment -gr __HM_ZSH_SESS_VARS_SOURCED
 
     # Allow OSC/DCS passthrough (tmux 3.3+) — enables terminal
     # notifications and image protocols from within tmux panes
