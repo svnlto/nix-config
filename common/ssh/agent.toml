@@ -2,4 +2,7 @@
 vault = "Personal"
 
 [[ssh-keys]]
+vault = "Homelab"
+
+[[ssh-keys]]
 vault = "Employee"

@@ -7,7 +7,6 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "terraform-skill@antonbabenko": true,
     "terragrunt-skill@jfr992": true,
     "context7@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,

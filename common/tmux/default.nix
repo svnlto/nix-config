@@ -184,16 +184,29 @@ in {
     set -g window-status-current-format "#[fg=#cdd6f4,bold] #I:#W "
     set -g window-status-separator ""
 
+    # Sesh - smart session manager (replaces tmux-sessionx)
+    # prefix+T = fuzzy picker (all sources), prefix+L = toggle last session
+    bind-key "T" run-shell "sesh connect \"$(
+      sesh list --icons | fzf-tmux -p 80%,70% \
+        --no-sort --ansi --border-label ' sesh ' --prompt '⚡ ' \
+        --header ' ^a all ^t tmux ^g configs ^x zoxide ^d kill ^f find' \
+        --bind 'tab:down,btab:up' \
+        --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)' \
+        --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
+        --bind 'ctrl-g:change-prompt(⚙️ )+reload(sesh list -c --icons)' \
+        --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z --icons)' \
+        --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+        --bind 'ctrl-d:execute(tmux kill-session -t {2..})+reload(sesh list --icons)' \
+        --preview-window 'right:55%' \
+        --preview 'sesh preview {}'
+    )\""
+    bind-key "L" run-shell "sesh last"
+
     # TPM (Tmux Plugin Manager) configuration
     # Plugins will be installed to ~/.tmux/plugins/
     set -g @plugin 'tmux-plugins/tpm'
-    set -g @plugin 'omerxx/tmux-sessionx'
     set -g @plugin 'tmux-plugins/tmux-resurrect'
     set -g @plugin 'tmux-plugins/tmux-continuum'
-
-    # tmux-sessionx settings
-    set -g @sessionx-bind 'o'
-    set -g @sessionx-zoxide-mode 'on'
 
     # tmux-resurrect settings
     set -g @resurrect-strategy-vim 'session'

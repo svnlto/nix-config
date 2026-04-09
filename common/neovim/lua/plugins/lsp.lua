@@ -89,9 +89,12 @@ return {
 					},
 				},
 
-				-- Terraform
-				terraformls = {
-					filetypes = { "terraform", "tf" },
+				-- Disable terraform-ls (requires terraform CLI, we use OpenTofu)
+				terraformls = { enabled = false },
+
+				-- OpenTofu
+				tofu_ls = {
+					filetypes = { "terraform", "tf", "opentofu" },
 				},
 
 				-- Lua (for Neovim config)
@@ -128,7 +131,7 @@ return {
 			ensure_installed = {
 				"typescript-language-server",
 				"gopls",
-				"terraform-ls",
+				"tofu-ls",
 				"lua-language-server",
 				"biome",
 			},
