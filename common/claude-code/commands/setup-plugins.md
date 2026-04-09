@@ -12,8 +12,6 @@ The following marketplaces are registered as plugin sources:
 | `ahmedasmar/devops-claude-skills` | DevOps automation and infrastructure |
 | `akin-ozer/cc-devops-skills` | Cloud-native DevOps practices |
 | `Jeffallan/claude-skills` | General-purpose development skills |
-| `wshobson/agents` | Specialized agent workflows |
-| `dwmkerr/claude-toolkit` | Developer productivity toolkit |
 
 ## Instructions
 
