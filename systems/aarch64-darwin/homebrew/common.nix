@@ -25,7 +25,7 @@ _:
       # Development & Terminal
       "orbstack"
       "ghostty"
-      "claude-code@latest"
+      "claude-code"
 
       # Networking & VPN
       "arc"

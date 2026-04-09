@@ -27,6 +27,9 @@
       }
     }
   },
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
   "voiceEnabled": false,
