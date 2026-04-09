@@ -168,38 +168,5 @@
         "aarch64-linux"
         "x86_64-linux"
       ] (system: { default = mkDevShell system; });
-
-      # Flake templates for project scaffolding
-      templates = {
-        minimal = {
-          path = ./templates/minimal;
-          description = "Minimal development environment with devShell";
-        };
-        terraform = {
-          path = ./templates/terraform;
-          description = "Terraform/Terragrunt IaC development";
-        };
-        kubernetes = {
-          path = ./templates/kubernetes;
-          description = "Kubernetes manifests, Helm charts, and cluster ops";
-        };
-        ansible = {
-          path = ./templates/ansible;
-          description = "Ansible playbooks and roles";
-        };
-        go = {
-          path = ./templates/go;
-          description = "Go development with linting and debugging";
-        };
-        java = {
-          path = ./templates/java;
-          description = "Java development with Maven";
-        };
-        infra = {
-          path = ./templates/infra;
-          description = "Cloud infrastructure platform engineering";
-        };
-        default = self.templates.minimal;
-      };
     };
 }

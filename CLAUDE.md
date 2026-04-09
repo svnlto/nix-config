@@ -21,9 +21,6 @@ nix develop
 # Validate flake
 nix flake check
 
-# Scaffold a new project from template
-flake-init              # uses "minimal" template
-flake-init <template>   # uses a specific template
 ```
 
 ## Commit Convention
@@ -61,13 +58,6 @@ common/
   ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
   lazygit/                       # Cross-platform via xdg.configFile
   profiles/                      # Optional opt-in modules
-templates/
-  minimal/                       # Default flake template (devShell, direnv, pre-commit)
-  terraform/                     # Terraform/Terragrunt IaC (+ MCP server, checkov)
-  kubernetes/                    # K8s manifests, Helm, ArgoCD, Cilium (+ MCP server)
-  ansible/                       # Ansible playbooks and roles
-  go/                            # Go development (golangci-lint, delve)
-  java/                          # Java/Maven development (google-java-format)
 systems/
   aarch64-darwin/                # macOS: home.nix, homebrew/, defaults.nix, dock.nix
   aarch64-linux/default.nix      # Linux: minimal HM config for containers
@@ -103,27 +93,11 @@ Located in `common/claude-code/`, managed via `default.nix`:
 
 - **Settings**: `settings.json` (writable out-of-store symlink)
 - **Hooks**: `hooks.json` (automated linting/quality checks)
-- **Commands**: `commands/` (breakdown-linear-issue, setup-plugins)
+- **Commands**: `commands/` (setup-plugins)
 - **Skills**: External skills from `claude-skills-generator` repo (ci-cd, devsecops, rest-api-design, security-auditing, argo, cilium, cloud-api, database-design, talos-os)
 - **Output styles**: `output-styles/`
 - **Status line**: `statusline-command.sh`
 - **Global CLAUDE.md**: User preferences (writable out-of-store symlink)
-
-## Flake Templates
-
-Available templates for `flake-init <template>`:
-
-| Template | Description | Dev Shell Tools |
-|----------|-------------|----------------|
-| `minimal` | General-purpose starter | pre-commit |
-| `terraform` | Terraform/Terragrunt IaC | terraform, tflint, terragrunt, checkov |
-| `kubernetes` | K8s manifests, Helm, cluster ops | kubectl, helm, kubeconform, k9s, talosctl, argocd, cilium-cli |
-| `ansible` | Ansible playbooks and roles | ansible, ansible-lint, yamllint, yq |
-| `go` | Go development | go, gopls, golangci-lint, delve |
-| `java` | Java/Maven development | jdk, maven, google-java-format |
-| `infra` | Cloud infrastructure platform | terraform, kubectl, trivy, az, packer, helm, k9s |
-
-Each template scaffolds: `flake.nix`, `.envrc`, `.gitignore`, `.pre-commit-config.yaml`, `.mcp.json`, `CLAUDE.md`, `.claude/settings.json`, `.claude/hooks.json`.
 
 ## Docker Testing
 

@@ -17,19 +17,6 @@
 - Question abstractions that don't solve existing problems
 - Commit only when explicitly asked
 
-## Flake Templates
-
-Scaffold new projects with `flake-init <template>`. Each template includes a dev shell, `.envrc`, `.gitignore`, `.pre-commit-config.yaml`, `.mcp.json`, `CLAUDE.md`, and `.claude/` config.
-
-| Template | Tools | Use Case |
-|----------|-------|----------|
-| `minimal` | pre-commit | General-purpose starter |
-| `terraform` | terraform, tflint, terragrunt, checkov | IaC development |
-| `kubernetes` | kubectl, helm, kubeconform, k9s, talosctl, argocd, cilium | K8s cluster ops |
-| `ansible` | ansible, ansible-lint, yamllint, yq | Playbooks and roles |
-| `go` | go, gopls, golangci-lint, delve | Go development |
-| `java` | jdk, maven, google-java-format | Java/Maven development |
-
 ## Installed Skills
 
 Globally installed (auto-invoked by description match):

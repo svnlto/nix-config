@@ -157,12 +157,6 @@ rec {
 
   # Shell functions
   functions = ''
-    # Initialize a new flake from template
-    flake-init() {
-      local template="''${1:-minimal}"
-      nix --extra-experimental-features 'nix-command flakes' flake init --accept-flake-config -t "path:$HOME/.config/nix#$template"
-    }
-
     # Remove quarantine and ad-hoc sign a macOS application
     unquarantine() {
       local target="''${1:?Usage: unquarantine <path or App Name>}"
