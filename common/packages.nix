@@ -42,10 +42,10 @@
 
   # macOS-specific packages
   # These packages only work on macOS
-  darwinPackages = with pkgs;
-    [
-      reattach-to-user-namespace # macOS tmux integration for clipboard/notification access
-    ];
+  darwinPackages = with pkgs; [
+    reattach-to-user-namespace # macOS tmux integration for clipboard/notification access
+    terminal-notifier # native macOS notifications from CLI (used by claude-code hooks)
+  ];
 
   # macOS system-level packages
   # These packages need to be installed at the system level for proper integration
