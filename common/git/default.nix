@@ -35,7 +35,7 @@ in {
       help.autocorrect = 10;
 
       color = {
-        ui = "always";
+        ui = "auto";
         diff = {
           meta = "yellow";
           frag = "magenta bold";
