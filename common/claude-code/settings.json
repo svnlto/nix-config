@@ -7,11 +7,11 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
+    "terragrunt-skill@jfr992": true,
     "context7@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "frontend-design@claude-code-plugins": true,
-    "terraform-skill@antonbabenko": true,
-    "code-review@claude-plugins-official": true
+    "caveman@caveman": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
@@ -20,15 +20,16 @@
         "repo": "anthropics/claude-code"
       }
     },
-    "antonbabenko": {
+    "caveman": {
       "source": {
         "source": "github",
-        "repo": "antonbabenko/terraform-skill"
+        "repo": "JuliusBrussee/caveman"
       }
     }
   },
   "env": {
-    "DISABLE_AUTOUPDATER": "1"
+    "CAVEMAN_DEFAULT_MODE": "off",
+    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
