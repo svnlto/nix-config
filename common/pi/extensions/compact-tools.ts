@@ -28,7 +28,7 @@ function shorten(p: string): string {
 const dot = (t: any) => t.fg("dim", "  ·  ");
 const muted = (t: any, s: string) => t.fg("muted", s);
 const dim = (t: any, s: string) => t.fg("dim", s);
-const accent = (t: any, s: string) => t.fg("accent", s);
+const accent = (t: any, s: string) => t.fg("text", s);
 const ok = (t: any, s: string) => t.fg("success", s);
 const err = (t: any, s: string) => t.fg("error", s);
 const warn = (t: any, s: string) => t.fg("warning", s);

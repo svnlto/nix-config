@@ -57,7 +57,7 @@
     "mdHeading":        "mauve",
     "mdLink":           "blue",
     "mdLinkUrl":        "overlay1",
-    "mdCode":           "teal",
+    "mdCode":           "blue",
     "mdCodeBlock":      "text",
     "mdCodeBlockBorder": "surface2",
     "mdQuote":          "overlay2",
