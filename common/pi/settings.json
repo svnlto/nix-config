@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.72.0",
-  "defaultProvider": "openrouter",
-  "defaultModel": "anthropic/claude-sonnet-4.6",
+  "defaultProvider": "pi-claude-cli",
+  "defaultModel": "claude-sonnet-4-6",
   "defaultThinkingLevel": "medium",
   "editorPaddingX": 1,
   "theme": "catppuccin-mocha",
@@ -10,7 +10,8 @@
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
-    "npm:@juanibiapina/pi-powerbar"
+    "npm:@juanibiapina/pi-powerbar",
+    "https://github.com/svnlto/pi-claude-cli"
   ],
   "enableInstallTelemetry": false,
   "hideThinkingBlock": false,
