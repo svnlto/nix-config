@@ -38,6 +38,7 @@
     gcc
     tree-sitter
     gnused
+    devbox
   ];
 
   # macOS-specific packages
