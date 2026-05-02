@@ -1,0 +1,20 @@
+{
+  "lastChangelogVersion": "0.72.0",
+  "defaultProvider": "openrouter",
+  "defaultModel": "anthropic/claude-sonnet-4.6",
+  "defaultThinkingLevel": "medium",
+  "editorPaddingX": 1,
+  "theme": "catppuccin-mocha",
+  "packages": [
+    "npm:pi-mono-status-line",
+    "npm:pi-subagents",
+    "npm:pi-mcp-adapter",
+    "npm:pi-web-access",
+    "npm:@juanibiapina/pi-powerbar"
+  ],
+  "enableInstallTelemetry": false,
+  "hideThinkingBlock": false,
+  "compaction": {
+    "enabled": true
+  }
+}

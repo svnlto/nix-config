@@ -1,0 +1,68 @@
+{
+  "providers": {
+    "openrouter": {
+      "models": [
+        {
+          "id": "anthropic/claude-sonnet-4.6",
+          "name": "Sonnet 4.6 (Anthropic only)",
+          "input": ["text", "image"],
+          "compat": {
+            "openRouterRouting": {
+              "only": [
+                "anthropic",
+                "google-vertex/global",
+                "amazon-bedrock"
+              ],
+              "order": [
+                "anthropic",
+                "google-vertex/global",
+                "amazon-bedrock"
+              ],
+              "allow_fallbacks": true,
+              "data_collection": "deny"
+            }
+          }
+        },
+        {
+          "id": "anthropic/claude-opus-4.7",
+          "name": "Opus 4.7 (cost-routed)",
+          "input": ["text", "image"],
+          "compat": {
+            "openRouterRouting": {
+              "only": [
+                "google-vertex",
+                "amazon-bedrock"
+              ],
+              "order": [
+                "google-vertex",
+                "amazon-bedrock"
+              ],
+              "allow_fallbacks": true,
+              "data_collection": "deny"
+            }
+          }
+        },
+        {
+          "id": "z-ai/glm-4.6",
+          "name": "GLM 4.6",
+          "compat": {
+            "openRouterRouting": {
+              "data_collection": "deny",
+              "quantizations": [
+                "fp16",
+                "bf16"
+              ],
+              "ignore": [
+                "gmicloud",
+                "friendli"
+              ],
+              "sort": {
+                "by": "throughput"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
