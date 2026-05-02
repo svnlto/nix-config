@@ -1,7 +1,7 @@
 /**
  * Permissions extension — Claude Code-compatible allow/deny rules.
  *
- * Reads from (merged): ~/.pi/settings.json, <cwd>/.pi/settings.json
+ * Reads from (merged): ~/.pi/agent/settings.json, <cwd>/.pi/settings.json
  *
  * Format: { "permissions": { "allow": ["Bash(git *)", "Read"], "deny": ["Bash(rm -rf *)"] } }
  * Rule syntax: "ToolName" | "ToolName(glob)"
@@ -59,7 +59,7 @@ export default function (pi: ExtensionAPI) {
     let permissions: PermissionsConfig = {};
 
     function reload(cwd: string) {
-        const global = loadSettings(resolve(process.env.HOME ?? "~", ".pi", "settings.json"));
+        const global = loadSettings(resolve(process.env.HOME ?? "~", ".pi", "agent", "settings.json"));
         const local = loadSettings(resolve(cwd, ".pi", "settings.json"));
         permissions = mergePermissions(global.permissions ?? {}, local.permissions ?? {});
     }
