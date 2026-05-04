@@ -1,7 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "claude-opus-4-6",
+  "env": {
+    "CAVEMAN_DEFAULT_MODE": "off",
+    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
+  },
   "includeCoAuthoredBy": false,
-  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",
@@ -27,10 +31,6 @@
         "repo": "JuliusBrussee/caveman"
       }
     }
-  },
-  "env": {
-    "CAVEMAN_DEFAULT_MODE": "off",
-    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",

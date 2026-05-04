@@ -5,6 +5,14 @@ return {
 		"neovim/nvim-lspconfig",
 		opts = {
 			inlay_hints = { enabled = false }, -- Disable inlay hints by default (toggle with <leader>uh)
+			setup = {
+				golangci_lint_ls = function()
+					-- Disable: gopls staticcheck covers it, and v0.0.12 produces
+					-- false typecheck errors on multi-file packages
+					vim.lsp.enable("golangci_lint_ls", false)
+					return true -- returning true prevents LazyVim from configuring it
+				end,
+			},
 			-- Configure LSP servers
 			servers = {
 				-- YAML Language Server - exclude helm values files (handled by helm_ls)
@@ -83,7 +91,7 @@ return {
 							usePlaceholders = true,
 							completeUnimported = true,
 							staticcheck = true,
-							directoryFilters = { "-.git", "-node_modules" },
+							directoryFilters = { "-.git", "-node_modules", "-.claude" },
 							semanticTokens = true,
 						},
 					},

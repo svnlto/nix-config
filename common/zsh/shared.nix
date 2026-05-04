@@ -14,7 +14,7 @@ rec {
 
     # Better defaults
     vim = "nvim";
-    cat = "bat";
+    cat = "bat -p";
     tree = "tree -C";
     # System maintenance shortcuts
     nix-clean =

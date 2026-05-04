@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.72.0",
+  "lastChangelogVersion": "0.72.1",
   "defaultProvider": "pi-claude-cli",
   "defaultModel": "claude-sonnet-4-6",
   "defaultThinkingLevel": "medium",

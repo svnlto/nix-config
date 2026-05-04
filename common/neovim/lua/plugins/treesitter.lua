@@ -5,7 +5,9 @@ return {
 		opts = function(_, opts)
 			-- Extend ensure_installed list (LazyVim uses opts_extend for this)
 			vim.list_extend(opts.ensure_installed, {
+				"hcl",
 				"jinja2",
+				"terraform",
 			})
 
 			-- Register language mappings for compound filetypes

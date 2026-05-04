@@ -47,6 +47,9 @@ in {
     set-option -g cursor-style blinking-block
     set-option -g cursor-colour "#FF24C0"
 
+    # Extended keys — required for modified Enter/Tab keys (e.g. S-Enter in Neovim)
+    set -g extended-keys on
+
     # Essential vim integration - zero escape delay
     set -sg escape-time 0
 
