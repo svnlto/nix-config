@@ -1,11 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "claude-opus-4-6",
   "env": {
     "CAVEMAN_DEFAULT_MODE": "off",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
   "includeCoAuthoredBy": false,
+  "model": "claude-opus-4-6",
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",
@@ -37,5 +37,7 @@
   "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
-  }
+  },
+  "theme": "dark-ansi",
+  "remoteControlAtStartup": false
 }

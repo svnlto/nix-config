@@ -49,6 +49,7 @@ in {
 
     # Extended keys — required for modified Enter/Tab keys (e.g. S-Enter in Neovim)
     set -g extended-keys on
+    set -as terminal-features 'xterm*:extkeys'
 
     # Essential vim integration - zero escape delay
     set -sg escape-time 0
