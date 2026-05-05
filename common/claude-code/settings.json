@@ -4,6 +4,10 @@
     "CAVEMAN_DEFAULT_MODE": "off",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
+  "outputStyle": "Concise",
+  "preferredNotifChannel": "ghostty",
+  "skipWebFetchPreflight": true,
+  "terminalProgressBarEnabled": true,
   "includeCoAuthoredBy": false,
   "model": "claude-opus-4-6",
   "enableAllProjectMcpServers": true,
