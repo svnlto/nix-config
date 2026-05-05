@@ -4,10 +4,6 @@
     "CAVEMAN_DEFAULT_MODE": "off",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
-  "outputStyle": "Concise",
-  "preferredNotifChannel": "ghostty",
-  "skipWebFetchPreflight": true,
-  "terminalProgressBarEnabled": true,
   "includeCoAuthoredBy": false,
   "model": "claude-opus-4-6",
   "enableAllProjectMcpServers": true,
@@ -36,12 +32,17 @@
       }
     }
   },
+  "outputStyle": "Concise",
+  "skipWebFetchPreflight": true,
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
+  "theme": "dark-ansi",
+  "preferredNotifChannel": "ghostty",
+  "terminalProgressBarEnabled": true,
+  "remoteControlAtStartup": false,
   "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   },
-  "theme": "dark-ansi",
-  "remoteControlAtStartup": false
+  "tui": "fullscreen"
 }
