@@ -5,7 +5,7 @@
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
   "includeCoAuthoredBy": false,
-  "model": "claude-opus-4-6",
+  "model": "claude-opus-4-6[1m]",
   "enableAllProjectMcpServers": true,
   "statusLine": {
     "type": "command",

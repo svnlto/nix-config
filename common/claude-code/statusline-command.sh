@@ -7,6 +7,7 @@ input=$(cat)
 model=$(echo "$input" | jq -r '.model.display_name // ""')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 cwd=$(echo "$input" | jq -r '.cwd // ""')
+worktree_name=$(echo "$input" | jq -r '.workspace.git_worktree // empty')
 
 # Catppuccin Mocha palette — exact RGB values from default.omp.json
 blue=$'\033[38;2;137;180;250m'     # p:blue     #89B4FA
@@ -15,11 +16,13 @@ lavender=$'\033[38;2;180;190;254m' # p:lavender #B4BEFE
 orange=$'\033[38;2;250;179;135m'   # p:orange   #FAB387
 red=$'\033[38;2;243;139;168m'      #            #F38BA8
 os=$'\033[38;2;147;153;178m'       # p:os       #9399B2
+gray=$'\033[38;2;108;112;134m'    # p:overlay0 #6C7086
 reset=$'\033[0m'
 
 # Nerd Font icons — matching default.omp.json segments
 icon_apple=$'\uf179'    # os segment
 icon_branch=$'\ue725'   # git branch_icon
+icon_worktree=$'\uf07c' # worktree (folder icon)
 icon_modified=$'\uf044' # git working changes
 icon_staged=$'\uf046'   # git staged changes
 icon_chevron=$'\uf105'  # closer segment
@@ -65,6 +68,12 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   fi
 fi
 
+# Worktree segment (gray, shown only when in a linked worktree — branch already shown by git segment)
+wt_part=""
+if [ -n "$worktree_name" ]; then
+  wt_part=" ${gray}wt${reset}"
+fi
+
 # Separator (OMP closer segment, p:os)
 sep="${os}${icon_chevron}${reset}"
 
@@ -82,10 +91,11 @@ if [ -n "$used_pct" ]; then
   ctx_part=" ${ctx_color}ctx:${pct_int}%${reset}"
 fi
 
-printf '%s %s %s%s %s  %s[%s]%s%s\n' \
+printf '%s %s %s%s%s %s  %s[%s]%s%s\n' \
   "$os_part" \
   "$user_host" \
   "$path_part" \
+  "$wt_part" \
   "$git_part" \
   "$sep" \
   "$os" "$model" "$reset" \
