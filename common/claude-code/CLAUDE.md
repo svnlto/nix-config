@@ -33,6 +33,7 @@ Globally installed (auto-invoked by description match):
 | database-design | Schema design, indexing, FTS | Java, Go |
 | talos-os-expert | Talos Linux cluster management | Kubernetes |
 | ado-standards | ADO pull request and pipeline standards | Azure DevOps projects |
+| secrets-management | Secrets management (Key Vault, Vault, AWS SM) | All projects |
 
 ## Superpowers Output
 
