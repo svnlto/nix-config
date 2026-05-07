@@ -22,8 +22,6 @@ in {
     ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
 
-    ".claude/output-styles".source = ./output-styles;
-
     ".claude/hooks.json".source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/.config/nix/common/claude-code/hooks.json";
 
