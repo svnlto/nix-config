@@ -38,6 +38,7 @@ Globally installed (auto-invoked by description match):
 | ado-standards | ADO pull request and pipeline standards | Azure DevOps projects |
 | secrets-management | Secrets management (Key Vault, Vault, AWS SM) | All projects |
 | sre-engineer | SRE practices, SLOs, Datadog, Terraform reliability | Terraform, K8s, Datadog |
+| monitoring-expert | Go observability, slog, OTel, pprof, k6, Datadog APM | Go projects |
 
 ## Superpowers Output
 
