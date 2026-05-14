@@ -37,6 +37,7 @@ Globally installed (auto-invoked by description match):
 | talos-os-expert | Talos Linux cluster management | Kubernetes |
 | ado-standards | ADO pull request and pipeline standards | Azure DevOps projects |
 | secrets-management | Secrets management (Key Vault, Vault, AWS SM) | All projects |
+| sre-engineer | SRE practices, SLOs, Datadog, Terraform reliability | Terraform, K8s, Datadog |
 
 ## Superpowers Output
 
