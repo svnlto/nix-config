@@ -122,7 +122,8 @@ stages:
 - **Conditions**: apply stages run only on `main`, not on PR builds
 - **Templates**: extract reusable steps into `templates/` directory
 - **Variable groups**: secrets in ADO Library, never hardcoded in YAML
-- **Service connections**: use workload identity federation over service principal secrets
+- **Service connections**: use workload identity federation
+  over service principal secrets
 - **Bash steps**: prefer `script:` (bash) over ADO marketplace tasks where possible
 
 ### Template Patterns
@@ -163,7 +164,8 @@ stages:
 - Prefer `script:` (bash) over marketplace tasks — fewer supply chain dependencies
 - Use `checkout: self` with `fetchDepth: 1` for faster builds
 - Never echo secrets; use `issecret=true` for pipeline variables
-- Limit pipeline permissions: disable "Grant access to all pipelines" on service connections
+- Limit pipeline permissions: disable "Grant access to all
+  pipelines" on service connections
 - Use environments with approval gates for production deployments
 - Scan IaC in CI: `trivy config`, `checkov`, `tflint`
 
@@ -183,7 +185,7 @@ stages:
 
 ## 4. Environment Promotion
 
-```
+```text
 PR Build (validate + plan) → main Build (plan) → Dev (auto-apply) → Staging (approval) → Production (approval)
 ```
 

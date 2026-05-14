@@ -1,0 +1,10 @@
+{
+  "default": true,
+  "MD013": { "tables": false, "code_blocks": false },
+  // Allow duplicate headings in different sections
+  "MD024": { "siblings_only": true },
+  // Allow inline HTML (e.g. <details>, <summary>)
+  "MD033": false,
+  // Table pipe style — spaces on both sides of content
+  "MD060": { "style": "leading_and_trailing" }
+}

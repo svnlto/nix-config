@@ -152,6 +152,7 @@
               zsh
               git
               pre-commit
+              markdownlint-cli
               nodejs
               just
             ];

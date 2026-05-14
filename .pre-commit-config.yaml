@@ -39,6 +39,13 @@ repos:
         pass_filenames: false
         description: Validate Nix flake structure
 
+      - id: markdownlint
+        name: Lint Markdown files
+        entry: markdownlint
+        language: system
+        files: \.md$
+        description: Lint Markdown files using markdownlint-cli
+
   - repo: https://github.com/hadolint/hadolint
     rev: v2.12.0
     hooks:

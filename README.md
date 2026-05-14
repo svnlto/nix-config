@@ -1,6 +1,8 @@
 # Cross-Platform Nix Configuration
 
-Declarative development environment for macOS (nix-darwin) and Linux (home-manager). ARM64-first, optimized for Apple Silicon and ARM cloud instances.
+Declarative development environment for macOS (nix-darwin) and Linux
+(home-manager). ARM64-first, optimized for Apple Silicon and ARM
+cloud instances.
 
 ## Quick Start
 
@@ -48,7 +50,7 @@ nixswitch --show-trace   # Debug build failures
 
 ## Structure
 
-```
+```text
 flake.nix                    # Entry point — darwinConfigurations + homeConfigurations
 common/
   packages.nix               # All package definitions (core, dev, darwin)
@@ -89,7 +91,8 @@ systems/
 
 ## Key Design Decisions
 
-- **Shared-first**: All cross-platform config lives in `common/`, platform dirs are minimal
+- **Shared-first**: All cross-platform config lives in `common/`,
+  platform dirs are minimal
 - **Hybrid package management**: Nix for CLI tools, Homebrew for macOS GUI apps
 - **Catppuccin Mocha**: Consistent theme across Ghostty, Neovim, tmux, fzf
 - **Pre-commit hooks**: nixfmt, statix, deadnix, flake-check, hadolint

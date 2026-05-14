@@ -1,6 +1,8 @@
 # Setup Plugins
 
-Install Claude Code plugins from curated marketplaces. This command registers plugin sources and installs selected plugins for enhanced development workflows.
+Install Claude Code plugins from curated marketplaces. This command
+registers plugin sources and installs selected plugins for enhanced
+development workflows.
 
 ## Plugin Marketplaces
 
@@ -25,7 +27,8 @@ For each marketplace listed above:
    - **Go/Java projects**: prioritize general development and API skills
    - **Ansible projects**: prioritize devops and automation skills
 
-4. Install by copying skill files to `~/.claude/skills/` following the existing skill structure
+4. Install by copying skill files to `~/.claude/skills/`
+   following the existing skill structure
 5. Report what was installed and any conflicts with existing skills
 
 ## Steps

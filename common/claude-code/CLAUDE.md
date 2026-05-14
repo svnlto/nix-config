@@ -1,17 +1,20 @@
 # Global Preferences
 
 ## Languages & Tools
+
 - Primary: Nix, Go, HCL, Bash, Ansible, Java
 - JS package manager: pnpm (never npm or yarn)
 - Testing: Vitest or Jest for JS/TS projects
 
 ## Code Style
+
 - Functional and declarative over imperative
 - Immutable data, pure functions, composition
 - Explicit over implicit, simple over abstract
 - Clarity over cleverness
 
 ## Workflow
+
 - Read before modifying — never assume file contents
 - Prefer editing existing files over creating new ones
 - Question abstractions that don't solve existing problems
@@ -38,12 +41,20 @@ Globally installed (auto-invoked by description match):
 ## Superpowers Output
 
 Superpowers specs and plans go to the Obsidian vault, not the project repo:
-- Specs: `/Users/hummes1/Documents/obsidian-vault/Work/superpowers/specs/`
-- Plans: `/Users/hummes1/Documents/obsidian-vault/Work/superpowers/plans/`
+
+- Specs: `$HOME/Documents/obsidian-vault/Work/superpowers/specs/`
+- Plans: `$HOME/Documents/obsidian-vault/Work/superpowers/plans/`
+
+These files live in an Obsidian vault. When writing specs or
+plans, invoke the `obsidian:obsidian-markdown` skill and use
+Obsidian Flavored Markdown: frontmatter properties (title,
+date, tags, aliases), wikilinks to related specs/plans, and
+callouts for key decisions or warnings.
 
 ## Plugin Marketplaces
 
 Use `/setup-plugins` to browse and install additional skills from:
+
 - `hashicorp/agent-skills` — HashiCorp tooling
 - `ahmedasmar/devops-claude-skills` — DevOps automation
 - `akin-ozer/cc-devops-skills` — Cloud-native DevOps

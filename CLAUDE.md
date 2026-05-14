@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when
+working with code in this repository.
 
 ## Core Commands
 
@@ -25,7 +26,8 @@ nix flake check
 
 ## Commit Convention
 
-This repo follows [Conventional Commits](https://www.conventionalcommits.org/). See `docs/COMMIT_CONVENTION.md` for full spec.
+This repo follows [Conventional Commits](https://www.conventionalcommits.org/).
+See `docs/COMMIT_CONVENTION.md` for full spec.
 
 Format: `<type>(<scope>): <subject>`
 
@@ -34,11 +36,12 @@ Scopes: `darwin`, `common`, `deps`, `release`
 
 ## Architecture Overview
 
-Cross-platform Nix configuration managing macOS hosts (nix-darwin) and Linux dev environments (home-manager). No NixOS support.
+Cross-platform Nix configuration managing macOS hosts (nix-darwin)
+and Linux dev environments (home-manager). No NixOS support.
 
 ### Directory Structure
 
-```
+```text
 flake.nix                        # Entry point — mkDarwinSystem, mkHomeManagerConfig
 common/
   default.nix                    # Shared Nix settings (performance, experimental features)
@@ -66,7 +69,8 @@ systems/
 ### Configuration Flow
 
 1. `flake.nix` defines `darwinConfigurations` and `homeConfigurations`
-2. `common/home-manager-base.nix` imports shared modules (home-packages, claude-code, programs)
+2. `common/home-manager-base.nix` imports shared modules
+   (home-packages, claude-code, programs)
 3. `common/programs/default.nix` configures direnv, gh, zsh
 4. `common/default.nix` sets Nix performance settings
 5. `systems/{arch}/` adds only platform-specific settings
@@ -74,7 +78,7 @@ systems/
 
 ### Import Chain
 
-```
+```text
 flake.nix -> systems/{arch}/home.nix -> common/home-manager-base.nix -> specialized modules
                                      -> common/default.nix (Linux only, for nix settings)
 ```
@@ -85,7 +89,8 @@ flake.nix -> systems/{arch}/home.nix -> common/home-manager-base.nix -> speciali
 - **macOS-only**: `common/packages.nix` (`darwinPackages`) — imported via `systems/aarch64-darwin/home.nix`
 - **macOS GUI apps**: `systems/aarch64-darwin/homebrew/`
 
-**Never** put macOS-only packages (like `reattach-to-user-namespace`) in shared lists — they break Linux builds.
+**Never** put macOS-only packages (like `reattach-to-user-namespace`)
+in shared lists — they break Linux builds.
 
 ## Claude Code Integration
 
@@ -94,7 +99,9 @@ Located in `common/claude-code/`, managed via `default.nix`:
 - **Settings**: `settings.json` (writable out-of-store symlink)
 - **Hooks**: `hooks.json` (automated linting/quality checks)
 - **Commands**: `commands/` (setup-plugins)
-- **Skills**: External skills from `claude-skills-generator` repo (ci-cd, devsecops, rest-api-design, security-auditing, argo, cilium, cloud-api, database-design, talos-os)
+- **Skills**: External skills from `claude-skills-generator` repo
+  (ci-cd, devsecops, rest-api-design, security-auditing, argo,
+  cilium, cloud-api, database-design, talos-os)
 - **Output styles**: `output-styles/`
 - **Status line**: `statusline-command.sh`
 - **Global CLAUDE.md**: User preferences (writable out-of-store symlink)
@@ -110,19 +117,29 @@ Multi-stage build: Ubuntu 24.04 builder + Debian bookworm-slim runtime.
 
 ## Pre-commit Hooks
 
-Installed via `pre-commit install`. Hooks: nixfmt, statix, deadnix, flake-check, hadolint, trailing-whitespace, check-yaml, detect-private-key.
+Installed via `pre-commit install`. Hooks: nixfmt, statix, deadnix,
+flake-check, hadolint, trailing-whitespace, check-yaml,
+detect-private-key.
 
 ## Critical Pitfalls
 
-1. **`nix.optimise` is nix-darwin only** — never set in `common/default.nix`, only in `systems/aarch64-darwin/`
-2. **Nix flakes require git tracking** — `git add` new files before `nixswitch` or builds silently fail
-3. **No NixOS support** — no `boot.*`, `services.*`, `virtualisation.*` modules
-4. **Platform detection** — use `pkgs.stdenv.isLinux`/`isDarwin` and `lib.mkIf` for conditional config
-5. **Cross-platform paths** — use `xdg.configFile` not hardcoded `Library/Application Support/`
+1. **`nix.optimise` is nix-darwin only** — never set in
+   `common/default.nix`, only in `systems/aarch64-darwin/`
+2. **Nix flakes require git tracking** — `git add` new files
+   before `nixswitch` or builds silently fail
+3. **No NixOS support** — no `boot.*`, `services.*`,
+   `virtualisation.*` modules
+4. **Platform detection** — use
+   `pkgs.stdenv.isLinux`/`isDarwin` and `lib.mkIf`
+5. **Cross-platform paths** — use `xdg.configFile` not
+   hardcoded `Library/Application Support/`
 6. **ZSH uses `initContent`** not deprecated `initExtra`
-7. **State versions rarely change** — `common/versions.nix` controls backward compat, update only after reading migration guides
-8. **Imports can't depend on pkgs** — use `lib.mkIf` inside modules, not `lib.optionals` in import lists (causes infinite recursion)
-9. **Ghostty is macOS-only** — guarded with `lib.mkIf (!pkgs.stdenv.isLinux)` in `common/ghostty/default.nix`
+7. **State versions rarely change** — `common/versions.nix`
+   controls backward compat, update only after migration guides
+8. **Imports can't depend on pkgs** — use `lib.mkIf` inside
+   modules, not `lib.optionals` in import lists (infinite recursion)
+9. **Ghostty is macOS-only** — guarded with
+   `lib.mkIf (!pkgs.stdenv.isLinux)` in `common/ghostty/default.nix`
 
 ## Profiles
 

@@ -7,7 +7,9 @@ tags: [secrets, vault, azure-key-vault, ado, aws-secrets-manager, kubernetes, te
 
 # Secrets Management
 
-Secure secrets management across applications, infrastructure, Kubernetes, and CI/CD — using Azure Key Vault, HashiCorp Vault, AWS Secrets Manager, and platform-native solutions.
+Secure secrets management across applications, infrastructure,
+Kubernetes, and CI/CD — using Azure Key Vault, HashiCorp Vault,
+AWS Secrets Manager, and platform-native solutions.
 
 ## When to Use
 
@@ -273,7 +275,9 @@ output "connection_string" {
 }
 ```
 
-Never store secrets in `.tfvars` files committed to Git. Use environment variables (`TF_VAR_db_password`), Vault provider, or Key Vault data sources.
+Never store secrets in `.tfvars` files committed to Git. Use
+environment variables (`TF_VAR_db_password`), Vault provider,
+or Key Vault data sources.
 
 ### Ansible Vault
 
@@ -455,6 +459,7 @@ steps:
 ```
 
 **ADO Library setup:**
+
 1. Project Settings → Pipelines → Library → + Variable group
 2. Toggle "Link secrets from an Azure key vault as variables"
 3. Select service connection and Key Vault
@@ -479,8 +484,11 @@ Prefer workload identity over service principal secrets:
 ```
 
 **Setup:**
+
 1. Create app registration in Entra ID
-2. Add federated credential: issuer = `https://vstoken.dev.azure.com/<org-id>`, subject = `sc://<org>/<project>/<service-connection>`
+2. Add federated credential:
+   issuer = `https://vstoken.dev.azure.com/<org-id>`,
+   subject = `sc://<org>/<project>/<service-connection>`
 3. Assign Key Vault RBAC to the app registration
 4. Create ADO service connection with workload identity federation type
 
@@ -639,15 +647,24 @@ aws secretsmanager get-secret-value \
 
 1. **Never commit secrets** to Git — use `.gitignore`, pre-commit hooks, and scanning
 2. **Use different secrets per environment** — separate Key Vaults for prod/non-prod
-3. **Rotate secrets regularly** — automate with Key Vault rotation policies or Vault dynamic secrets
-4. **Scope access to individual secrets** — RBAC at secret level, not vault level
-5. **Enable audit logging** — Key Vault diagnostics, Vault audit backend, CloudTrail
-6. **Scan for secrets** in repos and CI (TruffleHog, GitGuardian, Trivy)
-7. **Mask secrets in logs** — `issecret=true` (ADO), `::add-mask::` (GitHub), masked variables (GitLab)
-8. **Prefer managed identity** — Azure Managed Identity, workload identity federation, AWS IAM Roles
-9. **Use short-lived credentials** — dynamic secrets, federated tokens over long-lived keys
-10. **Never store secrets in Terraform state unencrypted** — use remote backend with encryption, mark variables `sensitive`
-11. **Document secret inventory** — what each secret is, who owns it, rotation schedule, consumers
+3. **Rotate secrets regularly** — automate with Key Vault
+   rotation policies or Vault dynamic secrets
+4. **Scope access to individual secrets** — RBAC at secret
+   level, not vault level
+5. **Enable audit logging** — Key Vault diagnostics, Vault
+   audit backend, CloudTrail
+6. **Scan for secrets** in repos and CI
+   (TruffleHog, GitGuardian, Trivy)
+7. **Mask secrets in logs** — `issecret=true` (ADO),
+   `::add-mask::` (GitHub), masked variables (GitLab)
+8. **Prefer managed identity** — Azure Managed Identity,
+   workload identity federation, AWS IAM Roles
+9. **Use short-lived credentials** — dynamic secrets,
+   federated tokens over long-lived keys
+10. **Never store secrets in Terraform state unencrypted** —
+    use remote backend with encryption, mark variables `sensitive`
+11. **Document secret inventory** — what each secret is,
+    who owns it, rotation schedule, consumers
 
 ## Related Skills
 
