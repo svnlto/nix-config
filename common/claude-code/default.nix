@@ -9,8 +9,7 @@ let
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
-                 argo-expert cilium-expert cloud-api-integration \
-                 database-design talos-os-expert; do
+                 cloud-api-integration database-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
     # Local skills (not from upstream repo)

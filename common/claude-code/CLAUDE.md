@@ -30,8 +30,10 @@ Globally installed (auto-invoked by description match):
 | devsecops-expert | Secure pipelines, shift-left security | Terraform, K8s, Ansible |
 | rest-api-design | API design patterns | Go, Java |
 | security-auditing | Code and infra security review | All projects |
-| argo-expert | ArgoCD GitOps workflows | Kubernetes |
-| cilium-expert | eBPF networking, network policies | Kubernetes |
+| cli-developer | Go CLI with Cobra, Bubbletea, Charmbracelet | Go projects |
+| architecture-designer | System design, ADRs, trade-off analysis | All projects |
+| kubernetes-specialist | K8s workloads, Helm, troubleshooting, operators | Kubernetes |
+| cloud-architect | AWS/Azure architecture, Terraform, cost | All projects |
 | cloud-api-integration | Cloud AI API integration | Go, Java |
 | database-design | Schema design, indexing, FTS | Java, Go |
 | talos-os-expert | Talos Linux cluster management | Kubernetes |
