@@ -22,7 +22,7 @@
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "code-reasoning",
     "sequential-thinking",

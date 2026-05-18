@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pre-commit run --files \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+            "command": "pre-commit run --files \"$CLAUDE_FILE_PATH\" 2>&1 || true",
             "timeout": 30
           }
         ]
