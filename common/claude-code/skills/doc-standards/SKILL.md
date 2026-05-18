@@ -48,18 +48,15 @@ consumption.
 ## Collaboration
 
 1. **Document reviews** for significant updates to ensure accuracy.
-2. **Version history** maintained in the document header where applicable.
-3. **Document decisions and rationale** during discussions. Save
-   decisions as remarks or in the version history.
+2. **Document decisions and rationale** during discussions.
 
 ## Review Etiquette
 
 1. **Comment only when content is unclear.** Don't nitpick style if meaning is clear.
 2. **Fix spelling, grammar, and sentence structure directly**
    rather than commenting about them.
-3. **Use a different color** for changes if unsure about rewording.
-4. **Communicate directly** with the writer. Call rather than start a comment thread.
-5. **State clearly when the review is done.**
+3. **Communicate directly** with the writer. Call rather than start a comment thread.
+4. **State clearly when the review is done.**
 
 ## Applying These Guidelines
 
