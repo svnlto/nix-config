@@ -15,10 +15,10 @@ _:
     resize_mode = "r"
     detach = "q"
     reload_config = "R"
-    focus_pane_left = "h"
-    focus_pane_down = "j"
-    focus_pane_up = "k"
-    focus_pane_right = "l"
+    focus_pane_left = "ctrl+h"
+    focus_pane_down = "ctrl+j"
+    focus_pane_up = "ctrl+k"
+    focus_pane_right = "ctrl+l"
     previous_workspace = "H"
     next_workspace = "L"
     previous_tab = "J"
@@ -32,13 +32,20 @@ _:
     [theme]
     name = "catppuccin"
 
+    [theme.custom]
+    accent = "#6c7086"
+    panel_bg = "reset"
+
     [ui]
     mouse_capture = true
     confirm_close = true
     show_agent_labels_on_pane_borders = true
 
     [ui.toast]
-    delivery = "auto"
+    delivery = "system"
+
+    [ui.sound]
+    enabled = false
   '';
 
   programs.zsh.shellAliases = { h = "herdr"; };
