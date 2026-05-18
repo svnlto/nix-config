@@ -22,11 +22,12 @@
     ],
     "deny": []
   },
-  "enableAllProjectMcpServers": false,
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "code-reasoning",
     "sequential-thinking",
-    "context7"
+    "context7",
+    "playwright"
   ],
   "outputStyle": "Architect",
   "spinnerTipsEnabled": false,
