@@ -6,12 +6,20 @@ let
     rev = "1086ef25672acba2916220c6ce032a612cd9dc98";
     sha256 = "1shvigcnm63a62w0nynqcnly292dz4zchybzjg90nwv0vz38c1a3";
   };
+  terraform-skill-repo = pkgs.fetchFromGitHub {
+    owner = "antonbabenko";
+    repo = "terraform-skill";
+    rev = "9c188f5ee15606d85871e0b012f4b00df6cf10fa";
+    sha256 = "14nmmxhfr1p2hzkxr11425vhrq712mk3krc6hkaslrqavk3bpy0f";
+  };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
                  cloud-api-integration database-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
+    # antonbabenko/terraform-skill
+    cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';

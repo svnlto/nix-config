@@ -41,6 +41,7 @@ Globally installed (auto-invoked by description match):
 | secrets-management | Secrets management (Key Vault, Vault, AWS SM) | All projects |
 | sre-engineer | SRE practices, SLOs, Datadog, Terraform reliability | Terraform, K8s, Datadog |
 | monitoring-expert | Go observability, slog, OTel, pprof, k6, Datadog APM | Go projects |
+| terraform-skill | Terraform/OpenTofu modules, testing, CI/CD, state management | Terraform, HCL |
 
 ## Superpowers Output
 
