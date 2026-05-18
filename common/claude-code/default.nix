@@ -12,6 +12,12 @@ let
     rev = "9c188f5ee15606d85871e0b012f4b00df6cf10fa";
     sha256 = "14nmmxhfr1p2hzkxr11425vhrq712mk3krc6hkaslrqavk3bpy0f";
   };
+  herdr-repo = pkgs.fetchFromGitHub {
+    owner = "ogulcancelik";
+    repo = "herdr";
+    rev = "3189ede2b9225b1b930cc43368248c6b4f3a4daf";
+    sha256 = "18v2x16l69p7c1vlfrc8k4yx33gr13ki91wxsya9wm2dla1iybss";
+  };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
@@ -20,6 +26,9 @@ let
     done
     # antonbabenko/terraform-skill
     cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
+    # ogulcancelik/herdr agent skill
+    mkdir -p $out/herdr
+    cp ${herdr-repo}/SKILL.md $out/herdr/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';

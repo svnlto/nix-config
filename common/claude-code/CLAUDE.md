@@ -42,6 +42,7 @@ Globally installed (auto-invoked by description match):
 | sre-engineer | SRE practices, SLOs, Datadog, Terraform reliability | Terraform, K8s, Datadog |
 | monitoring-expert | Go observability, slog, OTel, pprof, k6, Datadog APM | Go projects |
 | terraform-skill | Terraform/OpenTofu modules, testing, CI/CD, state management | Terraform, HCL |
+| herdr | Herdr pane orchestration, agent state, workspace management | All projects |
 
 ## Superpowers Output
 
