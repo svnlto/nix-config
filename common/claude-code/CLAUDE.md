@@ -43,6 +43,7 @@ Globally installed (auto-invoked by description match):
 | monitoring-expert | Go observability, slog, OTel, pprof, k6, Datadog APM | Go projects |
 | terraform-skill | Terraform/OpenTofu modules, testing, CI/CD, state management | Terraform, HCL |
 | herdr | Herdr pane orchestration, agent state, workspace management | All projects |
+| platform-engineer | IDP design, golden paths, self-service, developer experience | All projects |
 | pr-review | PR review for GitHub and Azure DevOps, or local branch diffs | All projects |
 
 ## Superpowers Output
