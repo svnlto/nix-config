@@ -15,8 +15,8 @@ let
   herdr-repo = pkgs.fetchFromGitHub {
     owner = "ogulcancelik";
     repo = "herdr";
-    rev = "3189ede2b9225b1b930cc43368248c6b4f3a4daf";
-    sha256 = "18v2x16l69p7c1vlfrc8k4yx33gr13ki91wxsya9wm2dla1iybss";
+    rev = "e53cea4ed6fdd49d70caacc1eccc07225bed5dd8";
+    sha256 = "1h4lxbggw3vwvpk7wjjmr4ff609qzqx9wh41jpcad5kfjafx53pk";
   };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
