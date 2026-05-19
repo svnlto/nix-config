@@ -65,6 +65,37 @@ Load detailed guidance based on context:
 | Maturity Model | `references/maturity-model.md` | Assessing platform maturity, progression planning |
 | Examples | `references/examples.md` | Crossplane compositions, golden path templates, portal config |
 
+## KaaS Platform Context
+
+When working on the KaaS platform (project: kaas), load the
+platform blueprint from the Obsidian vault. These documents
+define the domain model, maturity levels, operations model,
+and Vault's role as the platform data layer — they override
+generic IDP guidance where they conflict.
+
+| Document | Path |
+|----------|------|
+| Blueprint index | `~/Documents/obsidian-vault/Work/platform-next/platform-blueprint/platform-blueprint.md` |
+| Domain model | `~/Documents/obsidian-vault/Work/platform-next/platform-blueprint/platform-domain-model.md` |
+| Maturity model | `~/Documents/obsidian-vault/Work/platform-next/platform-blueprint/platform-maturity-model.md` |
+| Operations model | `~/Documents/obsidian-vault/Work/platform-next/platform-blueprint/platform-operations-model.md` |
+| Role of Vault | `~/Documents/obsidian-vault/Work/platform-next/platform-blueprint/platform-role-of-vault.md` |
+
+Key differences from generic IDP patterns:
+
+- **CLI-first, not portal-first** — kaasctl is the API client,
+  Backstage is the read-only catalog
+- **Three consumer roles** — platform team, SaaS team
+  (operations), software provider — not just "developers"
+- **Vault as data layer** — config overrides in Vault KV,
+  defaults in Tofu modules, not config-in-git
+- **Entity hierarchy** — Foundation → Hub → Tenant → Instance
+  → Application → App Instance
+- **Four change types** — direct, reviewed, multi-stage (n8n),
+  approved (ServiceNow)
+- **L1→L2→L3 maturity** — data layer + CLI before self-service
+  portal
+
 ## Constraints
 
 ### MUST DO
