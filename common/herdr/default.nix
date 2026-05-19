@@ -19,10 +19,6 @@ _:
     focus_pane_down = "ctrl+j"
     focus_pane_up = "ctrl+k"
     focus_pane_right = "ctrl+l"
-    previous_workspace = "H"
-    next_workspace = "L"
-    previous_tab = "J"
-    next_tab = "K"
 
     [[keys.command]]
     key = "g"
