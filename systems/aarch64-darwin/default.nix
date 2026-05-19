@@ -98,7 +98,7 @@ in {
     };
   };
 
-  # Enable Touch ID for sudo (including in tmux)
+  # Enable Touch ID for sudo
   security.pam.services.sudo_local = {
     touchIdAuth = true;
     reattach = true;

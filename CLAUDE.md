@@ -56,8 +56,6 @@ common/
   zsh/default.omp.json           # Oh My Posh theme
   claude-code/                   # Claude Code settings, hooks, commands, skills, statusline
   neovim/                        # Neovim config
-  tmux/                          # Tmux config + plugins
-  tmuxinator/                    # Session layouts
   ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
   lazygit/                       # Cross-platform via xdg.configFile
   profiles/                      # Optional opt-in modules

@@ -43,8 +43,6 @@ in {
 
     ".claude/commands".source = ./commands;
 
-    ".claude/hooks".source = ./hooks;
-
     # Global CLAUDE.md with user preferences (writable via out-of-store symlink)
     ".claude/CLAUDE.md".source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/.config/nix/common/claude-code/CLAUDE.md";

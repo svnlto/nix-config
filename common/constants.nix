@@ -10,10 +10,10 @@
     connectTimeout = 30; # seconds
   };
 
-  # History management - shared across shell, terminal, tmux
+  # History management - shared across shell and terminal
   history = {
     shellHistorySize = 50000; # ZSH history
-    scrollbackLines = 50000; # Terminal scrollback (Ghostty, Tmux)
+    scrollbackLines = 50000; # Terminal scrollback (Ghostty)
   };
 
   # Cleanup and maintenance
