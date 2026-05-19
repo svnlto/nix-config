@@ -12,7 +12,8 @@
 - **Title**: `<type>(<scope>)[KAAS-0000]: <subject>` matching Conventional Commits
 - **Description**: What changed, why, how to test, linked work items
 - **Size**: Aim for < 400 lines changed; split larger work into stacked PRs
-- **Work item linking**: Always link ADO work items (`AB#12345` in commit or PR description)
+- **Work item linking**: Always link ADO work items
+  (`AB#12345` in commit or PR description)
 - **Draft PRs**: Use for early feedback before the PR is ready for formal review
 
 ## Branch Policies (recommended defaults)
