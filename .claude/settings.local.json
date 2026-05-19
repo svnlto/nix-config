@@ -13,12 +13,7 @@
       "WebFetch",
       "Bash(curl:*)",
       "Bash(gh api:*)",
-      "Bash(python3 -m json.tool)",
-      "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_tabs"
+      "Bash(python3 -m json.tool)"
     ],
     "deny": []
   },
@@ -26,8 +21,7 @@
   "enabledMcpjsonServers": [
     "code-reasoning",
     "sequential-thinking",
-    "context7",
-    "playwright"
+    "context7"
   ],
   "outputStyle": "Architect",
   "spinnerTipsEnabled": false,
