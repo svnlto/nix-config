@@ -29,7 +29,7 @@ _:
     name = "catppuccin"
 
     [theme.custom]
-    accent = "#6c7086"
+    accent = "#313244"
     panel_bg = "reset"
 
     [ui]

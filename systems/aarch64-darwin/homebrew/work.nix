@@ -14,9 +14,7 @@ _:
       "drawio"
       "gray"
       "macwhisper"
-
-      # Development
-      "copilot-cli"
+      "granola"
     ];
   };
 }
