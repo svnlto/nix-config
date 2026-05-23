@@ -45,6 +45,7 @@ Globally installed (auto-invoked by description match):
 | herdr | Herdr pane orchestration, agent state, workspace management | All projects |
 | platform-engineer | IDP design, golden paths, self-service, developer experience | All projects |
 | pr-review | PR review for GitHub and Azure DevOps, or local branch diffs | All projects |
+| strategic-writing | Strategy document discipline: what/why not how, no implementation detail | All projects |
 
 ## Superpowers Output
 

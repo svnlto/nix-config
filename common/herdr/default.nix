@@ -38,7 +38,7 @@ _:
     show_agent_labels_on_pane_borders = true
 
     [ui.toast]
-    delivery = "system"
+    delivery = "herdr"
 
     [ui.sound]
     enabled = false
