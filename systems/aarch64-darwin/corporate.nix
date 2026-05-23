@@ -52,6 +52,7 @@ in {
           sessionVariables = {
             NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
             AWS_CA_BUNDLE = "/etc/ssl/cert.pem";
+            DD_SITE = "datadoghq.eu";
           };
 
           packages = with pkgs; [ awscli2 devbox granted jq ];
