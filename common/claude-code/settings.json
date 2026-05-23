@@ -19,7 +19,9 @@
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
     "andrej-karpathy-skills@karpathy-skills": true,
-    "n8n-mcp-skills@n8n-mcp-skills": true
+    "n8n-mcp-skills@n8n-mcp-skills": true,
+    "pup@datadog-pup": true,
+    "gemini-plugin-cc@gemini-plugin-cc": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
@@ -56,6 +58,18 @@
       "source": {
         "source": "github",
         "repo": "jfr992/terragrunt-skill"
+      }
+    },
+    "datadog-pup": {
+      "source": {
+        "source": "github",
+        "repo": "DataDog/pup"
+      }
+    },
+    "gemini-plugin-cc": {
+      "source": {
+        "source": "github",
+        "repo": "m-ghalib/gemini-plugin-cc"
       }
     }
   },
