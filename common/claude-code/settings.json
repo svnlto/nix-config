@@ -21,7 +21,7 @@
     "andrej-karpathy-skills@karpathy-skills": true,
     "n8n-mcp-skills@n8n-mcp-skills": true,
     "pup@datadog-pup": true,
-    "gemini-plugin-cc@gemini-plugin-cc": true
+    "gemini@gemini-plugin-cc": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
