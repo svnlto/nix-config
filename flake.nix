@@ -26,6 +26,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
@@ -50,6 +54,7 @@
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          overlays = [ inputs.herdr.overlays.default ];
         };
 
       # Abstracted macOS configuration function
@@ -63,6 +68,7 @@
             ./systems/${system}
             {
               networking.hostName = hostname;
+              nixpkgs.overlays = [ inputs.herdr.overlays.default ];
             }
 
             # Home Manager integration
@@ -72,7 +78,10 @@
                 useGlobalPkgs = true;
                 useUserPackages =
                   false; # Must be false on macOS to create user profiles
-                extraSpecialArgs = { username = validUsername; };
+                extraSpecialArgs = {
+                  inherit inputs;
+                  username = validUsername;
+                };
                 backupFileExtension = "backup";
                 users.${validUsername} = import ./systems/${system}/home.nix;
               };
@@ -106,7 +115,10 @@
               };
             }
           ] ++ extraModules;
-          extraSpecialArgs = { username = validUsername; };
+          extraSpecialArgs = {
+            inherit inputs;
+            username = validUsername;
+          };
         };
     in {
       # macOS configurations

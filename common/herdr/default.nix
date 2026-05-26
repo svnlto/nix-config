@@ -4,36 +4,40 @@ _:
   xdg.configFile."herdr/config.toml".text = ''
     [keys]
     prefix = "ctrl+a"
-    new_workspace = "n"
-    rename_workspace = "shift+n"
-    close_workspace = "shift+d"
-    new_tab = "c"
-    split_vertical = "v"
-    split_horizontal = "-"
-    close_pane = "x"
-    zoom = "f"
-    resize_mode = "r"
-    detach = "q"
-    reload_config = "R"
-    focus_pane_left = "ctrl+h"
-    focus_pane_down = "ctrl+j"
-    focus_pane_up = "ctrl+k"
-    focus_pane_right = "ctrl+l"
+    new_workspace = "prefix+n"
+    rename_workspace = "prefix+shift+n"
+    close_workspace = "prefix+shift+d"
+    new_tab = "prefix+c"
+    split_vertical = "prefix+v"
+    split_horizontal = "prefix+-"
+    close_pane = "prefix+x"
+    zoom = "prefix+f"
+    resize_mode = "prefix+r"
+    detach = "prefix+q"
+    reload_config = "prefix+shift+r"
+    focus_pane_left = "prefix+h"
+    focus_pane_down = "prefix+j"
+    focus_pane_up = "prefix+k"
+    focus_pane_right = "prefix+l"
 
     [[keys.command]]
-    key = "g"
+    key = "prefix+g"
     type = "pane"
     command = "lazygit"
 
     [theme]
-    name = "catppuccin"
+    name = "terminal"
 
     [theme.custom]
-    accent = "#313244"
     panel_bg = "reset"
+
+    [terminal]
+    default_shell = "zsh"
+    new_cwd = "source"
 
     [ui]
     mouse_capture = true
+    mouse_scroll_lines = 5
     confirm_close = true
     show_agent_labels_on_pane_borders = true
 

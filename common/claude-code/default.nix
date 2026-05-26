@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 let
   skills-repo = pkgs.fetchFromGitHub {
     owner = "martinholovsky";
@@ -12,12 +12,7 @@ let
     rev = "9c188f5ee15606d85871e0b012f4b00df6cf10fa";
     sha256 = "14nmmxhfr1p2hzkxr11425vhrq712mk3krc6hkaslrqavk3bpy0f";
   };
-  herdr-repo = pkgs.fetchFromGitHub {
-    owner = "ogulcancelik";
-    repo = "herdr";
-    rev = "e53cea4ed6fdd49d70caacc1eccc07225bed5dd8";
-    sha256 = "1h4lxbggw3vwvpk7wjjmr4ff609qzqx9wh41jpcad5kfjafx53pk";
-  };
+  herdr-src = inputs.herdr;
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
@@ -26,9 +21,9 @@ let
     done
     # antonbabenko/terraform-skill
     cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
-    # ogulcancelik/herdr agent skill
+    # ogulcancelik/herdr agent skill (from flake input)
     mkdir -p $out/herdr
-    cp ${herdr-repo}/SKILL.md $out/herdr/
+    cp ${herdr-src}/SKILL.md $out/herdr/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';
