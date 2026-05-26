@@ -26,10 +26,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    herdr = {
-      url = "github:ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    herdr.url = "github:ogulcancelik/herdr";
   };
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, ... }:
