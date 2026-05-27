@@ -4,14 +4,14 @@ _:
   xdg.configFile."herdr/config.toml".text = ''
     [keys]
     prefix = "ctrl+a"
-    new_workspace = "prefix+n"
-    rename_workspace = "prefix+shift+n"
+    new_workspace = "prefix+shift+n"
+    rename_workspace = "prefix+shift+w"
     close_workspace = "prefix+shift+d"
     new_tab = "prefix+c"
     split_vertical = "prefix+v"
-    split_horizontal = "prefix+-"
+    split_horizontal = "prefix+minus"
     close_pane = "prefix+x"
-    zoom = "prefix+f"
+    zoom = "prefix+z"
     resize_mode = "prefix+r"
     detach = "prefix+q"
     reload_config = "prefix+shift+r"
