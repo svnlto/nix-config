@@ -4,8 +4,14 @@ _:
   homebrew = {
     enable = true;
     taps = [ "datadog-labs/pack" ];
-    brews =
-      [ "mas" "dockutil" "pre-commit" "gemini-cli" "datadog-labs/pack/pup" ];
+    brews = [
+      "mas"
+      "dockutil"
+      "pre-commit"
+      "gemini-cli"
+      "datadog-labs/pack/pup"
+      "herdr"
+    ];
     casks = [
       # Fonts
       "font-sf-pro"

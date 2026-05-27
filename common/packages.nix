@@ -48,5 +48,5 @@
   darwinSystemPackages = with pkgs; [ git tree ];
 
   # Convenient package combination for user-level packages
-  allCommonPackages = corePackages ++ devPackages ++ [ pkgs.herdr ];
+  allCommonPackages = corePackages ++ devPackages;
 }
