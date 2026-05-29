@@ -13,12 +13,29 @@
 - Explicit over implicit, simple over abstract
 - Clarity over cleverness
 
+## Work Environment
+
+- Git hosting: Azure DevOps (not GitHub)
+  — use ADO conventions for PRs, checks, policies
+- SSH keys: RSA required (ADO rejects ED25519)
+- Personal repos (like nix config): GitHub
+
+## Documentation Editing
+
+- Edit documents holistically, not piecemeal
+- Stay at the requested abstraction level
+  — no cost figures, source declarations, status headers,
+  or version headers unless explicitly asked
+- When a message reads as thinking-aloud or debating
+  tradeoffs, ask before treating it as a change request
+
 ## Workflow
 
 - Read before modifying — never assume file contents
 - Prefer editing existing files over creating new ones
 - Question abstractions that don't solve existing problems
 - Commit only when explicitly asked
+- Verify config tokens/keys against docs or source before trying them — don't trial-and-error
 
 ## Installed Skills
 
