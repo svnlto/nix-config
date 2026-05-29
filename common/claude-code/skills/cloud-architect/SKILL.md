@@ -10,7 +10,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: devops-engineer, sre-engineer, kubernetes-specialist
+  related-skills: devops-engineer, sre-engineer, kubernetes-specialist, datadog-advisor, platform-engineer
 ---
 
 # Cloud Architect

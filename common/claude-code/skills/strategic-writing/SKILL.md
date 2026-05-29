@@ -7,6 +7,11 @@ description: >-
   Triggers: strategy, concept, SRE strategy,
   architecture strategy, platform strategy, decision
   document, strategy review, strategy trimming.
+metadata:
+  domain: writing
+  role: discipline
+  scope: strategy
+  related-skills: datadog-advisor, architecture-designer, platform-engineer, sre-engineer, doc-standards
 ---
 
 # Strategic Writing

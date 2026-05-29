@@ -10,7 +10,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: devops-engineer, cloud-architect, kubernetes-specialist, secrets-management, devsecops-expert
+  related-skills: devops-engineer, cloud-architect, kubernetes-specialist, secrets-management, devsecops-expert, datadog-advisor, monitoring-expert
 ---
 
 # SRE Engineer

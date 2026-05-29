@@ -21,7 +21,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: devops-engineer, debugging-wizard, architecture-designer
+  related-skills: devops-engineer, debugging-wizard, architecture-designer, sre-engineer, datadog-advisor
 ---
 
 # Monitoring Expert
