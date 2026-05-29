@@ -29,6 +29,7 @@ _:
     name = "terminal"
 
     [theme.custom]
+    accent = "#313244"
     panel_bg = "reset"
 
     [terminal]
