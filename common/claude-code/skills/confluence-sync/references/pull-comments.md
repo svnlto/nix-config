@@ -23,7 +23,7 @@
 ```javascript
 () => {
   const markers = document.querySelectorAll(
-    '[data-testid="inline-comment-marker"], .ak-editor-annotation, mark[data-mark-type="annotation"]'
+    'mark[data-mark-type="annotation"]'
   );
   return Array.from(markers).map((m, i) => ({
     index: i,
