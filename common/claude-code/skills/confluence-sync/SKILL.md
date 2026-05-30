@@ -3,8 +3,8 @@ name: confluence-sync
 description: >-
   Sync Obsidian documents to Confluence wiki pages via
   browser automation. Use when pushing docs to Confluence,
-  pulling Confluence comments, checking Confluence page
-  status, or creating new wiki pages.
+  pulling or replying to comments, incorporating comment
+  feedback, checking page status, or creating new wiki pages.
 version: 1.0.0
 tags: [confluence, wiki, sync, obsidian, browser-automation]
 metadata:
@@ -33,8 +33,7 @@ all interaction is browser-based.
    - Linux: `google-chrome`
      `--remote-debugging-port=9222`
      `--user-data-dir="$(mktemp -d)"`
-2. Logged into Confluence (`msggroup.atlassian.net`)
-   in that Chrome instance
+2. Logged into Confluence in that Chrome instance
 3. Chrome DevTools MCP configured in `.mcp.json`
    (port 9222)
 
@@ -51,8 +50,8 @@ note's YAML frontmatter:
 
 ```yaml
 confluence: >-
-  https://msggroup.atlassian.net/wiki/spaces/
-  MSGDIGITAL/pages/PAGE_ID/Page+Title
+  https://INSTANCE.atlassian.net/wiki/spaces/
+  SPACE_KEY/pages/PAGE_ID/Page+Title
 ```
 
 - Present: use that URL for push/pull/status
@@ -65,11 +64,20 @@ confluence: >-
 2. Parse YAML frontmatter to extract the `confluence` URL
 3. Route to the appropriate workflow:
 
-| Command       | Reference                    | Load When              |
-| ------------- | ---------------------------- | ---------------------- |
-| push          | `references/push.md`         | Pushing or creating    |
-| pull-comments | `references/pull-comments.md`| Extracting comments    |
-| status        | `references/status.md`       | Checking page metadata |
+| Command        | Reference                             | Load When                         |
+| -------------- | ------------------------------------- | --------------------------------- |
+| push           | `references/push.md`                  | Pushing or creating               |
+| pull-comments  | `references/pull-comments.md`         | Extracting comments               |
+| reply-comments | `references/reply-comments.md`        | Replying to comments              |
+| apply-feedback | `references/apply-feedback.md`        | Incorporating comment feedback    |
+| status         | `references/status.md`                | Checking page metadata            |
+
+### Supporting References
+
+| Reference                                  | Purpose                              |
+| ------------------------------------------ | ------------------------------------ |
+| `references/confluence-native-elements.md` | Native editor elements and shortcuts |
+| `references/diagram-conversion.md`         | Rendering diagrams for upload        |
 
 ## Error Handling
 
@@ -86,3 +94,7 @@ No retry loops.
 | Publish button not found      | Report not in edit mode        |
 | Chrome DevTools fails         | Report debug port issue        |
 | No comments found             | Report no comments             |
+| Reply field not found         | Report editor structure change |
+| Comment resolved unexpectedly | Report and stop                |
+| Diagram render fails          | Report tool/dependency issue   |
+| Image upload fails            | Report and suggest manual step |

@@ -1,11 +1,11 @@
 ---
-name: KaaS Documentation Standards
-description: "KaaS platform documentation code of conduct. Use when writing, reviewing, or editing documentation for the wiki, ADRs, specs, or any team-facing documents."
+name: Documentation Standards
+description: "Documentation code of conduct. Use when writing, reviewing, or editing documentation for the wiki, ADRs, specs, or any team-facing documents."
 version: 1.0.0
-tags: [documentation, writing, wiki, confluence, kaas]
+tags: [documentation, writing, wiki, confluence]
 ---
 
-# KaaS Documentation Standards
+# Documentation Standards
 
 Based on the team's Code of Conduct for Documentation. Apply these
 guidelines when writing any document intended for the wiki or team
