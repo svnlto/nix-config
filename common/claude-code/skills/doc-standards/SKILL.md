@@ -28,6 +28,18 @@ consumption.
    understanding. Tables and code blocks are preferred over
    long prose.
 
+## Tone and Framing
+
+1. **Frame positions as proposals, not conclusions.** Present direction,
+   invite alignment.
+2. **Acknowledge the current state without implying it is wrong.** The
+   people who built it are the audience.
+3. **Avoid postulating.** Replace "the platform must", "the only way"
+   with collaborative language: "the platform should", "one approach is".
+4. **Critique processes and systems, not people or teams.**
+5. **Separate aspiration from assessment.** When describing a future
+   state, don't let it read as criticism of the present.
+
 ## Structure and Formatting
 
 1. **Use templates** if one exists for the document type
