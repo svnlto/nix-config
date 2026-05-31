@@ -15,18 +15,16 @@
       ],
       "addLabels": [
         "nix"
-      ],
-      "pinDigests": true
+      ]
     },
     {
-      "matchDepTypes": [
+      "matchManagers": [
         "github-actions"
       ],
       "addLabels": [
         "github-actions"
       ],
-      "groupName": "github-actions",
-      "pinDigests": true
+      "groupName": "github-actions"
     },
     {
       "matchManagers": [
@@ -34,8 +32,7 @@
       ],
       "addLabels": [
         "pre-commit"
-      ],
-      "pinDigests": true
+      ]
     },
     {
       "matchUpdateTypes": [
@@ -47,44 +44,14 @@
       "automerge": true
     },
     {
-      "matchDepPatterns": [
-        "^nixpkgs"
+      "matchDepNames": [
+        "/^nixpkgs/"
       ],
       "schedule": [
-        "every 2 weeks"
-      ],
-      "pinDigests": true
-    },
-    {
-      "matchPackagePatterns": [
-        ".*"
-      ],
-      "pinDigests": true
+        "every 2 weeks on Saturday"
+      ]
     }
   ],
-  "nix": {
-    "enabled": true,
-    "fileMatch": [
-      "^flake\\.nix$",
-      "^overlays\\/.*\\.nix$",
-      "^common\\/.*\\.nix$",
-      "^darwin\\/.*\\.nix$",
-      "^vagrant\\/.*\\.nix$"
-    ]
-  },
-  "pre-commit": {
-    "enabled": true,
-    "fileMatch": [
-      "^\\.pre-commit-config\\.ya?ml$"
-    ]
-  },
-  "github-actions": {
-    "fileMatch": [
-      "^\\.github/workflows/[^/]+\\.ya?ml$"
-    ],
-    "enabled": true
-  },
-  "separateMajorMinor": true,
   "dependencyDashboard": false,
   "schedule": [
     "every weekend"
@@ -92,9 +59,6 @@
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
   "rebaseWhen": "auto",
-  "ignorePaths": [
-    "**/node_modules/**"
-  ],
   "pinDigests": true,
   "lockFileMaintenance": {
     "enabled": true,
