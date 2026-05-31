@@ -21,7 +21,7 @@ _:
     focus_pane_right = "prefix+l"
 
     [[keys.command]]
-    key = "prefix+g"
+    key = "prefix+alt+g"
     type = "pane"
     command = "lazygit"
 
@@ -34,7 +34,7 @@ _:
 
     [terminal]
     default_shell = "zsh"
-    new_cwd = "source"
+    new_cwd = "follow"
 
     [ui]
     mouse_capture = true
@@ -47,6 +47,12 @@ _:
 
     [ui.sound]
     enabled = false
+
+    [session]
+    resume_agents_on_restore = true
+
+    [experimental]
+    pane_history = true
   '';
 
   programs.zsh.shellAliases = { h = "herdr"; };

@@ -28,7 +28,7 @@
     k9s
     home-manager
     htop
-    neofetch
+    fastfetch
     docker-compose
     shellcheck
     fd

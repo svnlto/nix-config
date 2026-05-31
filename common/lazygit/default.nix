@@ -7,7 +7,6 @@ _:
   xdg.configFile."lazygit/config.yml".text = ''
     gui:
       theme:
-        lightTheme: false
         activeBorderColor:
           - '#89b4fa'
           - bold
@@ -16,8 +15,6 @@ _:
         optionsTextColor:
           - '#cdd6f4'
         selectedLineBgColor:
-          - '#313244'
-        selectedRangeBgColor:
           - '#313244'
         cherryPickedCommitBgColor:
           - '#94e2d5'
@@ -67,10 +64,6 @@ _:
       overrideGpg: false
       disableForcePushing: false
       parseEmoji: false
-
-    update:
-      method: prompt
-      days: 14
 
     confirmOnQuit: false
     customCommands:

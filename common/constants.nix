@@ -13,7 +13,8 @@
   # History management - shared across shell and terminal
   history = {
     shellHistorySize = 50000; # ZSH history
-    scrollbackLines = 50000; # Terminal scrollback (Ghostty)
+    scrollbackBytes =
+      10000000; # Terminal scrollback in bytes (Ghostty default: 10MB)
   };
 
   # Cleanup and maintenance

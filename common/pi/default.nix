@@ -10,10 +10,12 @@ in {
     ".pi/agent/models.json".source = config.lib.file.mkOutOfStoreSymlink
       "${home}/.config/nix/common/pi/models.json";
 
-    # Extensions
-    ".pi/agent/extensions".source = ./extensions;
+    # Extensions (writable so Pi can cache compiled extensions)
+    ".pi/agent/extensions".source = config.lib.file.mkOutOfStoreSymlink
+      "${home}/.config/nix/common/pi/extensions";
 
-    # Themes
-    ".pi/agent/themes".source = ./themes;
+    # Themes (writable for cached theme data)
+    ".pi/agent/themes".source = config.lib.file.mkOutOfStoreSymlink
+      "${home}/.config/nix/common/pi/themes";
   };
 }

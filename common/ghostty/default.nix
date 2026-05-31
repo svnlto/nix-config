@@ -16,7 +16,7 @@ in {
       window-theme = dark
       window-padding-x = 2
       window-padding-y = 0
-      window-decoration = true
+      window-decoration = auto
       macos-window-buttons = hidden
       macos-titlebar-style = transparent
       macos-titlebar-proxy-icon = hidden
@@ -29,10 +29,9 @@ in {
       shell-integration = zsh
       shell-integration-features = cursor,sudo,title
 
-      scrollback-limit = ${toString constants.history.scrollbackLines}
+      scrollback-limit = ${toString constants.history.scrollbackBytes}
 
       mouse-hide-while-typing = true
-      click-repeat-interval = 300
 
       link-url = true
 

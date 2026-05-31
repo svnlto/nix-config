@@ -27,7 +27,7 @@ in {
         pager = "diff-so-fancy | less --tabs=2 -RFX";
       };
 
-      merge = { conflictstyle = "diff3"; };
+      merge = { conflictstyle = "zdiff3"; };
 
       diff = { colorMoved = "default"; };
 

@@ -4,7 +4,7 @@ end
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = augroup("highlight_yank"),
 	callback = function()
-		vim.highlight.on_yank()
+		vim.hl.on_yank()
 	end,
 })
 
@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 		if event.match:match("^%w%w+://") then
 			return
 		end
-		local file = vim.loop.fs_realpath(event.match) or event.match
+		local file = vim.uv.fs_realpath(event.match) or event.match
 		vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
 	end,
 })

@@ -109,6 +109,18 @@
         "matcher": "*"
       }
     ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' idle",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
     "Stop": [
       {
         "hooks": [
