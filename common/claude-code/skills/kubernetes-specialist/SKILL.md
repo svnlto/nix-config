@@ -10,7 +10,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: devops-engineer, cloud-architect, sre-engineer, monitoring-expert, platform-engineer
+  related-skills: cloud-architect, sre-engineer, monitoring-expert, platform-engineer
 ---
 
 # Kubernetes Specialist

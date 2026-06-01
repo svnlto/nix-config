@@ -1,8 +1,90 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
+  "env": {
+    "CAVEMAN_DEFAULT_MODE": "off",
+    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "model": "claude-opus-4-6[1m]",
   "enableAllProjectMcpServers": false,
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' blocked",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' working",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' release",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' idle",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' idle",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' working",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
@@ -15,149 +97,68 @@
     "superpowers@claude-plugins-official": true,
     "terragrunt-skill@jfr992": true
   },
-  "env": {
-    "CAVEMAN_DEFAULT_MODE": "off",
-    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
-  },
   "extraKnownMarketplaces": {
     "caveman": {
       "source": {
-        "repo": "JuliusBrussee/caveman",
-        "source": "github"
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
       }
     },
     "claude-code-plugins": {
       "source": {
-        "repo": "anthropics/claude-code",
-        "source": "github"
+        "source": "github",
+        "repo": "anthropics/claude-code"
       }
     },
     "datadog-pup": {
       "source": {
-        "repo": "DataDog/pup",
-        "source": "github"
+        "source": "github",
+        "repo": "DataDog/pup"
       }
     },
     "gemini-plugin-cc": {
       "source": {
-        "repo": "m-ghalib/gemini-plugin-cc",
-        "source": "github"
+        "source": "github",
+        "repo": "m-ghalib/gemini-plugin-cc"
       }
     },
     "jfr992": {
       "source": {
-        "repo": "jfr992/terragrunt-skill",
-        "source": "github"
+        "source": "github",
+        "repo": "jfr992/terragrunt-skill"
       }
     },
     "karpathy-skills": {
       "source": {
-        "repo": "forrestchang/andrej-karpathy-skills",
-        "source": "github"
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
       }
     },
     "n8n-mcp-skills": {
       "source": {
-        "repo": "czlonkowski/n8n-skills",
-        "source": "github"
+        "source": "github",
+        "repo": "czlonkowski/n8n-skills"
       }
     },
     "obsidian-skills": {
       "source": {
-        "repo": "kepano/obsidian-skills",
-        "source": "github"
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
       }
     }
   },
+  "outputStyle": "Concise",
+  "skipWebFetchPreflight": true,
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "theme": "dark-ansi",
+  "preferredNotifChannel": "ghostty",
+  "terminalProgressBarEnabled": true,
+  "remoteControlAtStartup": false,
+  "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   },
-  "hooks": {
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' blocked",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' working",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' release",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' idle",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' idle",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "bash '/Users/hummes1/.claude/hooks/herdr-agent-state.sh' working",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ]
-  },
-  "includeCoAuthoredBy": false,
-  "model": "claude-opus-4-6[1m]",
-  "outputStyle": "Concise",
-  "preferredNotifChannel": "ghostty",
-  "remoteControlAtStartup": false,
-  "skipWebFetchPreflight": true,
-  "statusLine": {
-    "command": "bash ~/.claude/statusline-command.sh",
-    "type": "command"
-  },
-  "terminalProgressBarEnabled": true,
-  "theme": "dark-ansi",
-  "tui": "fullscreen",
-  "voiceEnabled": false
+  "skipAutoPermissionPrompt": true
 }

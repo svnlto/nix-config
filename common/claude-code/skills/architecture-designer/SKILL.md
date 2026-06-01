@@ -20,9 +20,8 @@ metadata:
   scope: implementation
   output-format: code
   related-skills:
-    - devops-engineer
-    - debugging-wizard
     - cloud-architect
+    - sre-engineer
 ---
 
 # Architecture Designer
