@@ -61,7 +61,9 @@ live page section map:
   formatting artefacts like tab characters, smart link
   decorations). Skip these entirely.
 - **Changed**: heading exists on both sides but body text
-  differs. These need updating.
+  differs. These need updating. For each changed section,
+  flag whether it contains tables. Table-containing sections
+  cannot be safely updated via HTML paste in live docs.
 - **New**: heading exists in Obsidian but not on the live page.
   These need inserting.
 - **Removed**: heading exists on the live page but not in
@@ -152,6 +154,23 @@ Then paste over the selection:
 
 Pass the HTML string as the first argument.
 
+### 6c-alt. Table-heavy sections
+
+The ClipboardEvent paste approach does not work reliably for
+sections containing tables in Confluence live docs. ProseMirror
+nests the pasted table inside the existing table wrapper instead
+of replacing it. Undo does not fully revert because live docs
+auto-save and cap the undo buffer.
+
+For sections that contain tables:
+
+- Do NOT use the paste approach
+- Report which sections changed and show the diff
+- Tell the user to copy-paste those sections manually from
+  the vault file
+- Only use the paste approach (6b/6c) for prose-only sections
+  (paragraphs, lists, headings — no tables)
+
 ### 6d. Verify
 
 Use `take_snapshot` after each section edit to confirm the
@@ -196,6 +215,10 @@ sections were updated.
 - **Skip Obsidian-only sections** -- sections whose body is
   entirely wikilinks (e.g. Related) are vault navigation and
   should never be pushed to Confluence
+- **Never paste HTML containing tables into a live doc** --
+  the ProseMirror editor nests tables instead of replacing
+  them. For table-containing sections, report the diff and
+  let the user paste manually from the vault
 - **Bold table headers** -- wrap `<th>` content in `<strong>`
   tags. Confluence ignores default `<th>` styling
 - **Use native Confluence elements** -- see
