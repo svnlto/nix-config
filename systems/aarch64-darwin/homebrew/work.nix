@@ -8,7 +8,6 @@ _:
 
     casks = [
       # Communication
-      "microsoft-teams"
       "spotify"
       "whatsapp"
       "drawio"

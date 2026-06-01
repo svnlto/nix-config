@@ -69,9 +69,20 @@ live page section map:
 - **Removed**: heading exists on the live page but not in
   Obsidian. Flag to the user but do NOT delete automatically.
 
-Report the diff summary to the user before making changes:
-"Sections to update: [list]. Sections unchanged: [list].
-New sections: [list]. Proceed?"
+Report the diff to the user before making changes. For each
+changed section, show a unified text diff (vault vs live):
+
+```diff
+## Section Name [contains tables]
+
+- live line that was removed
++ vault line that replaces it
+  unchanged context line
+```
+
+Include the `[contains tables]` flag for sections that will
+need manual paste. After showing all diffs, list unchanged
+and new sections, then ask "Proceed?"
 
 Wait for user confirmation before editing.
 
