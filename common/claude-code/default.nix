@@ -18,6 +18,12 @@ let
     rev = "e53cea4ed6fdd49d70caacc1eccc07225bed5dd8";
     sha256 = "1h4lxbggw3vwvpk7wjjmr4ff609qzqx9wh41jpcad5kfjafx53pk";
   };
+  agno-skills-repo = pkgs.fetchFromGitHub {
+    owner = "agno-agi";
+    repo = "agno-skills";
+    rev = "0ed7d1c92570384030184a6dfa18d275a9b5f694";
+    sha256 = "1rzdzn7pj8yab68hvbjq663r5kjj9z1wqpkdbn8zbz03cx4kssfd";
+  };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
@@ -29,6 +35,8 @@ let
     # ogulcancelik/herdr agent skill
     mkdir -p $out/herdr
     cp ${herdr-repo}/SKILL.md $out/herdr/
+    # agno-agi/agno-skills
+    cp -r ${agno-skills-repo}/plugins/agno/skills/agno $out/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';

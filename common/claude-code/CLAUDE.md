@@ -64,6 +64,7 @@ Globally installed (auto-invoked by description match):
 | pr-review | PR review for GitHub and Azure DevOps, or local branch diffs | All projects |
 | strategic-writing | Strategy document discipline: what/why not how, no implementation detail | All projects |
 | datadog-advisor | Datadog monitoring strategy, alerting, tagging, dashboards, SLOs, cost | All projects |
+| agno | Agno agent framework: agents, teams, workflows, MCP, AgentOS | Python agent projects |
 
 ## Superpowers Output
 
