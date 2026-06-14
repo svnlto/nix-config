@@ -66,6 +66,7 @@ Globally installed (auto-invoked by description match):
 | datadog-advisor | Datadog monitoring strategy, alerting, tagging, dashboards, SLOs, cost | All projects |
 | agno | Agno agent framework: agents, teams, workflows, MCP, AgentOS | Python agent projects |
 | airflow-engineer | Airflow DAG development, testing, performance, security, Airflow 3 migration | Data pipeline projects |
+| temporal-engineer | Temporal durable execution, workflows, activities, workers, versioning, operations | Go, distributed systems |
 
 ## Superpowers Output
 

@@ -35,7 +35,8 @@
     "obsidian@obsidian-skills": true,
     "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
-    "terragrunt-skill@jfr992": true
+    "terragrunt-skill@jfr992": true,
+    "terraform@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {

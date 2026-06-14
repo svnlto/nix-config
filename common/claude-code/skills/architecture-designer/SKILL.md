@@ -22,6 +22,8 @@ metadata:
   related-skills:
     - cloud-architect
     - sre-engineer
+    - temporal-engineer
+    - rest-api-design
 ---
 
 # Architecture Designer
