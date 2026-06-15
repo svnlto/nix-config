@@ -8,24 +8,29 @@ model=$(echo "$input" | jq -r '.model.display_name // ""')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 cwd=$(echo "$input" | jq -r '.cwd // ""')
 worktree_name=$(echo "$input" | jq -r '.workspace.git_worktree // empty')
+five_hour_used_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+five_hour_resets_at=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 
 # Catppuccin Mocha palette — exact RGB values from default.omp.json
 blue=$'\033[38;2;137;180;250m'     # p:blue     #89B4FA
 pink=$'\033[38;2;245;194;231m'     # p:pink     #F5C2E7
 lavender=$'\033[38;2;180;190;254m' # p:lavender #B4BEFE
+green=$'\033[38;2;166;227;161m'    # p:green    #A6E3A1
 orange=$'\033[38;2;250;179;135m'   # p:orange   #FAB387
 red=$'\033[38;2;243;139;168m'      #            #F38BA8
 os=$'\033[38;2;147;153;178m'       # p:os       #9399B2
-gray=$'\033[38;2;108;112;134m'    # p:overlay0 #6C7086
+gray=$'\033[38;2;108;112;134m'     # p:overlay0 #6C7086
 reset=$'\033[0m'
 
 # Nerd Font icons — matching default.omp.json segments
-icon_apple=$'\uf179'    # os segment
-icon_branch=$'\ue725'   # git branch_icon
-icon_worktree=$'\uf07c' # worktree (folder icon)
-icon_modified=$'\uf044' # git working changes
-icon_staged=$'\uf046'   # git staged changes
-icon_chevron=$'\uf105'  # closer segment
+icon_apple=$''    # nf-fa-apple        os segment
+icon_branch=$''   # nf-dev-git_branch  git branch_icon
+icon_worktree=$'' # nf-fa-folder_open  worktree
+icon_modified=$'' # nf-fa-pencil_square git working changes
+icon_staged=$''   # nf-fa-check_square git staged changes
+icon_chevron=$''  # nf-fa-angle_right  closer segment
+icon_tokens=$'󰀋' # nf-md-counter  session token count
+icon_clock=$''    # nf-fa-clock_o      time remaining
 
 # OS icon (OMP os segment, p:os)
 os_part="${os}${icon_apple}${reset}"
@@ -43,7 +48,7 @@ short_path() {
   if [ "$n" -le 3 ]; then
     printf '%s' "$p"
   else
-    printf '…/%s/%s' "${parts[$n-2]}" "${parts[$n-1]}"
+    printf '.../%s/%s' "${parts[$n-2]}" "${parts[$n-1]}"
   fi
 }
 path_part="${pink}$(short_path "$cwd")${reset}"
@@ -68,7 +73,7 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   fi
 fi
 
-# Worktree segment (gray, shown only when in a linked worktree — branch already shown by git segment)
+# Worktree segment (gray, shown only when in a linked worktree)
 wt_part=""
 if [ -n "$worktree_name" ]; then
   wt_part=" ${gray}wt${reset}"
@@ -91,7 +96,48 @@ if [ -n "$used_pct" ]; then
   ctx_part=" ${ctx_color}ctx:${pct_int}%${reset}"
 fi
 
-printf '%s %s %s%s%s %s  %s[%s]%s%s\n' \
+# Session usage percentage (5-hour window)
+usage_part=""
+if [ -n "$five_hour_used_pct" ]; then
+  used_int=$(printf "%.0f" "$five_hour_used_pct")
+  remaining=$((100 - used_int))
+  if [ "$remaining" -le 20 ]; then
+    usage_color="$red"
+  elif [ "$remaining" -le 50 ]; then
+    usage_color="$orange"
+  else
+    usage_color="$green"
+  fi
+  usage_part=" ${usage_color}${icon_tokens} ${used_int}%${reset}"
+fi
+
+# Time remaining in 5-hour session window (only shown for claude.ai subscribers)
+time_part=""
+if [ -n "$five_hour_resets_at" ]; then
+  now=$(date +%s)
+  secs_left=$((five_hour_resets_at - now))
+  if [ "$secs_left" -gt 0 ]; then
+    mins_left=$((secs_left / 60))
+    if [ "$mins_left" -ge 60 ]; then
+      hours=$((mins_left / 60))
+      mins=$((mins_left % 60))
+      time_fmt=$(printf "%dh%02dm" "$hours" "$mins")
+    else
+      time_fmt=$(printf "%dm" "$mins_left")
+    fi
+    # green >60m, orange 20-60m, red <20m
+    if [ "$mins_left" -ge 60 ]; then
+      time_color="$green"
+    elif [ "$mins_left" -ge 20 ]; then
+      time_color="$orange"
+    else
+      time_color="$red"
+    fi
+    time_part=" ${time_color}${icon_clock} ${time_fmt}${reset}"
+  fi
+fi
+
+printf '%s %s %s%s%s %s  %s[%s]%s%s%s%s\n' \
   "$os_part" \
   "$user_host" \
   "$path_part" \
@@ -99,4 +145,6 @@ printf '%s %s %s%s%s %s  %s[%s]%s%s\n' \
   "$git_part" \
   "$sep" \
   "$os" "$model" "$reset" \
-  "$ctx_part"
+  "$ctx_part" \
+  "$usage_part" \
+  "$time_part"

@@ -5,7 +5,7 @@
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
   "includeCoAuthoredBy": false,
-  "model": "claude-opus-4-6[1m]",
+  "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "SessionStart": [
