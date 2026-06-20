@@ -44,6 +44,9 @@ repos:
         entry: markdownlint
         language: system
         files: \.md$
+        # Jira issue-body templates are literal ticket content, not docs —
+        # they intentionally lead with prose, not an H1 (MD041).
+        exclude: ^common/claude-code/skills/jira/references/templates/
         description: Lint Markdown files using markdownlint-cli
 
   - repo: https://github.com/hadolint/hadolint

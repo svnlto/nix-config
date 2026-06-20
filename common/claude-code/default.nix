@@ -1,5 +1,19 @@
 { config, pkgs, ... }:
 let
+  # User-scope MCP servers — merged into the stateful ~/.claude.json on switch.
+  # Claude Code reads global MCP definitions only from ~/.claude.json's top-level
+  # mcpServers key; settings.json does not support server definitions.
+  userMcpJson = pkgs.writeText "claude-user-mcp.json" (builtins.toJSON {
+    mcpServers = {
+      chrome-devtools = {
+        command = "npx";
+        args = [
+          "chrome-devtools-mcp@latest"
+          "--browser-url=http://127.0.0.1:9222"
+        ];
+      };
+    };
+  });
   skills-repo = pkgs.fetchFromGitHub {
     owner = "martinholovsky";
     repo = "claude-skills-generator";
@@ -65,4 +79,21 @@ in {
     # Create necessary directories
     ".claude/.keep".text = "";
   };
+
+  # Merge user-scope MCP servers into the stateful ~/.claude.json without
+  # clobbering oauth tokens, project history, or servers added via the CLI.
+  # jq '*' deep-merges, so our definitions win on key collision but everything
+  # else is preserved. Idempotent — safe to re-run on every switch.
+  home.activation.claudeUserMcpServers =
+    config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      claudeConfig="${config.home.homeDirectory}/.claude.json"
+      [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"
+      if ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$claudeConfig" ${userMcpJson} \
+        > "$claudeConfig.tmp"; then
+        run mv $VERBOSE_ARG "$claudeConfig.tmp" "$claudeConfig"
+      else
+        echo "claudeUserMcpServers: jq merge failed, leaving ~/.claude.json untouched" >&2
+        rm -f "$claudeConfig.tmp"
+      fi
+    '';
 }
