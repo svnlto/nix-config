@@ -25,6 +25,7 @@ reverts to standard output.
 - Immutable data, pure functions, composition
 - Explicit over implicit, simple over abstract
 - Clarity over cleverness
+- YAGNI
 
 ## Work Environment
 
@@ -99,6 +100,11 @@ callouts for key decisions or warnings.
 Use `/setup-plugins` to browse and install additional skills from:
 
 - `hashicorp/agent-skills` — HashiCorp tooling
+
+claude plugin install terraform-code-generation@hashicorp
+claude plugin install terraform-module-generation@hashicorp
+claude plugin install terraform-provider-development@hashicorp
+
 - `ahmedasmar/devops-claude-skills` — DevOps automation
 - `akin-ozer/cc-devops-skills` — Cloud-native DevOps
 - `Jeffallan/claude-skills` — General development

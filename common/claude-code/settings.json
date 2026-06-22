@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "CAVEMAN_DEFAULT_MODE": "off",
-    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
+    "CLAUDE_CODE_TMUX_TRUECOLOR": "1",
+    "MCP_TIMEOUT": "60000"
   },
   "includeCoAuthoredBy": false,
   "model": "claude-opus-4-8[1m]",
@@ -35,8 +36,7 @@
     "obsidian@obsidian-skills": true,
     "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
-    "terragrunt-skill@jfr992": true,
-    "terraform@claude-plugins-official": true
+    "terragrunt-skill@jfr992": true
   },
   "extraKnownMarketplaces": {
     "caveman": {

@@ -8,7 +8,9 @@ let
       chrome-devtools = {
         command = "npx";
         args = [
-          "chrome-devtools-mcp@latest"
+          "-y"
+          "--prefer-offline"
+          "chrome-devtools-mcp@1.3.0"
           "--browser-url=http://127.0.0.1:9222"
         ];
       };
