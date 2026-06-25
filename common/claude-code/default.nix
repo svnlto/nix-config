@@ -10,9 +10,15 @@ let
         args = [
           "-y"
           "--prefer-offline"
-          "chrome-devtools-mcp@1.3.0"
+          "chrome-devtools-mcp@1.4.0"
           "--browser-url=http://127.0.0.1:9222"
         ];
+        # Stop the running server from polling npm for updates and from
+        # sending telemetry — both stall under corporate VPN SSL inspection.
+        env = {
+          CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
+          CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
+        };
       };
     };
   });
@@ -40,6 +46,12 @@ let
     rev = "0ed7d1c92570384030184a6dfa18d275a9b5f694";
     sha256 = "1rzdzn7pj8yab68hvbjq663r5kjj9z1wqpkdbn8zbz03cx4kssfd";
   };
+  chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
+    owner = "ChromeDevTools";
+    repo = "chrome-devtools-mcp";
+    rev = "chrome-devtools-mcp-v1.4.0";
+    sha256 = "18kg20g392r1vbnvr2q6xwz8x1ls6z13zhgcdmwgrdbb94d1vpnh";
+  };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
     for skill in ci-cd devsecops-expert rest-api-design security-auditing \
@@ -53,6 +65,8 @@ let
     cp ${herdr-repo}/SKILL.md $out/herdr/
     # agno-agi/agno-skills
     cp -r ${agno-skills-repo}/plugins/agno/skills/agno $out/
+    # ChromeDevTools/chrome-devtools-mcp companion skills
+    cp -r ${chrome-devtools-mcp-repo}/skills/* $out/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';
