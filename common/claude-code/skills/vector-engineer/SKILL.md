@@ -21,7 +21,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: datadog-advisor, sre-engineer, kubernetes-specialist
+  related-skills: datadog-advisor, sre-engineer, kubernetes-specialist, secrets-management
 ---
 
 # Vector Engineer
