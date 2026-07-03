@@ -64,3 +64,7 @@ write.
 - shipping to Datadog → `references/datadog-integration.md`
 - Datadog Agent / Fluent Bit upstreams →
   `references/upstream-integrations.md`
+- metrics pipeline / cardinality → `references/metrics.md`
+- common sources / archival sinks → `references/sources-and-sinks.md`
+- operating & observing Vector → `references/operations.md`
+- end-to-end worked example → `references/golden-path.md`
