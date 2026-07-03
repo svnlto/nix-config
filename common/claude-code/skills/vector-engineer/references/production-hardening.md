@@ -94,6 +94,41 @@ concurrency with `request.rate_limit_num` requests per
 second). Use it to stay under a destination's documented quota;
 it applies whether concurrency is adaptive or fixed.
 
+## Batching
+
+Sinks accumulate events into a batch and send the batch as one
+request rather than one request per event. Bigger batches raise
+throughput and cut per-request overhead but add latency, since an
+event waits for the batch to fill or age out; smaller batches lower
+latency at the cost of more, smaller requests. Tune to the
+destination's ingest economics and your freshness requirement.
+
+Three limits bound a batch — the **first one hit flushes** it:
+
+- `batch.max_bytes` — max uncompressed size of the batch, measured
+  before serialization/compression.
+- `batch.max_events` — max event count before flush.
+- `batch.timeout_secs` — max age of a batch before flush (default
+  `1`), the floor on added latency and the safety net that keeps a
+  low-traffic sink from holding events indefinitely.
+
+Defaults vary by sink (`max_bytes` is commonly `1000000`;
+`max_events` is unset or sink-specific), so check the per-sink docs
+before overriding.
+
+```yaml
+sinks:
+  http_out:
+    type: http
+    inputs:
+      - parsing
+    uri: https://example.internal/ingest
+    batch:
+      max_bytes: 1048576
+      max_events: 1000
+      timeout_secs: 5
+```
+
 ## Delivery guarantees
 
 End-to-end acknowledgements give at-least-once delivery. Set
@@ -118,6 +153,57 @@ For genuine at-least-once from origin through to destination you
 want both: acks enabled on the egress sink and a disk buffer in
 front of it, so an event is neither lost on crash nor acked before
 it is durably held.
+
+## Dead-letter routing (failed events)
+
+When a `remap` transform hits a VRL error (a failed parse, a type
+error) or an explicit `abort`, the default is to silently discard
+or pass through the offending event — you lose the very events that
+most need inspection. Instead, capture them. Set
+`reroute_dropped: true` on the transform: errored and aborted
+events are diverted to the transform's `.dropped` named output
+instead of being dropped, while good events flow out the normal
+output. Wire `<transform_id>.dropped` as the input of a
+dead-letter sink — an archival sink (S3/file) for later inspection
+and replay, or a `console` sink for debugging.
+
+```yaml
+transforms:
+  parsing:
+    type: remap
+    inputs:
+      - raw_logs
+    reroute_dropped: true
+    source: |
+      . = parse_json!(.message)
+
+sinks:
+  logs_out:
+    type: datadog_logs
+    inputs:
+      - parsing
+  dead_letter:
+    type: aws_s3
+    inputs:
+      - parsing.dropped
+    bucket: my-dlq-bucket
+    region: eu-central-1
+```
+
+**Relationship to `drop_on_error` / `drop_on_abort`.** Those two
+decide *whether* an event that errors or aborts is dropped from the
+main output at all: `drop_on_error` defaults to `false` (errored
+events pass downstream unmodified unless set to `true`),
+`drop_on_abort` defaults to `true` (aborted events are dropped).
+`reroute_dropped` decides *where dropped events go* — with it on,
+anything that would be dropped by those two settings lands on
+`.dropped` instead of vanishing. Set `drop_on_error: true` together
+with `reroute_dropped: true` so unparseable events are pulled out
+of the main stream and sent to the DLQ rather than flowing on
+half-processed.
+
+See `references/sources-and-sinks.md` for the archival sink config
+(bucket/prefix, compression, encoding) behind the DLQ.
 
 ## Health & shutdown
 
