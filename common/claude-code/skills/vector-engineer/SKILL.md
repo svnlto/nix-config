@@ -62,3 +62,5 @@ write.
 - buffers / reliability / self-monitoring →
   `references/production-hardening.md`
 - shipping to Datadog → `references/datadog-integration.md`
+- Datadog Agent / Fluent Bit upstreams →
+  `references/upstream-integrations.md`
