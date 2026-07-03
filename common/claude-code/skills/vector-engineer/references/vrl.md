@@ -110,6 +110,53 @@ replacing:
 }
 ```
 
+## PII redaction
+
+Redacting personally identifiable information before it leaves
+the network is a primary aggregator job (GDPR/PCI/HIPAA). VRL's
+`redact` function masks matches in a string or across a whole
+object. Its `filters` and `redactor` arguments must be **static
+expressions** — literals, not computed values.
+
+`filters` accepts named filters (`us_social_security_number`),
+regex literals, or `pattern` objects. Applied to the whole event,
+it walks every string field:
+
+```vrl
+. = redact(., filters: [
+  "us_social_security_number",
+  r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b',   # email
+  r'\b(?:\d[ -]*?){13,16}\b',                              # card PAN
+])
+```
+
+`redactor` sets the replacement. Default is `full` (`[REDACTED]`).
+Use `text` for a custom marker, or `sha2`/`sha3` to
+**pseudonymize** — hash the value so events stay correlatable
+without exposing it (e.g. group by a user across logs while the
+raw id never lands in storage):
+
+```vrl
+# mask a bearer token with a fixed marker
+.headers.authorization = redact(
+  .headers.authorization,
+  filters: [r'Bearer\s+[A-Za-z0-9._-]+'],
+  redactor: {"type": "text", "replacement": "Bearer [REDACTED]"}
+)
+
+# pseudonymize the user id (stable hash, base64)
+.user_id = redact(
+  .user_id,
+  filters: [r'.+'],
+  redactor: {"type": "sha2", "variant": "SHA-256", "encoding": "base64"}
+)
+```
+
+Redact as early as correctness allows — ideally at the aggregator
+before any sink — so raw PII never reaches a buffer, retry queue,
+or disk. Pair `redact` with `del` to drop fields that should never
+be collected at all, rather than masking them.
+
 ## Error handling
 
 This is VRL's core concept. Operations that can fail are
