@@ -93,7 +93,7 @@ sinks:
       - process
     buffer:
       type: disk
-      max_size: 268435456  # bytes = 256 MiB; the disk-buffer minimum
+      max_size: 268435488  # bytes; disk buffers require this ~256 MB minimum
       when_full: block
 ```
 
