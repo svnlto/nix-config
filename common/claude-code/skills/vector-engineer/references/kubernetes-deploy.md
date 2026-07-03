@@ -81,8 +81,9 @@ current value schema — check it before relying on any key.
 
 The aggregator is where durability matters, so give its sinks
 disk buffers backed by a PersistentVolume. A disk buffer survives
-forced restarts and crashes (data is synced to disk every 500ms);
-a memory buffer does not. Configure it per sink:
+forced restarts and crashes (data is written periodically, synced
+to disk on a short interval); a memory buffer does not. Configure
+it per sink:
 
 ```yaml
 sinks:
@@ -92,7 +93,7 @@ sinks:
       - process
     buffer:
       type: disk
-      max_size: 268435488  # bytes; disk buffers need ~256MB min
+      max_size: 268435456  # bytes = 256 MiB; the disk-buffer minimum
       when_full: block
 ```
 
@@ -100,8 +101,10 @@ sinks:
 dropping (see below); `drop_newest` sheds load instead. Disk
 buffers write under Vector's `data_dir`, so the StatefulSet needs
 a PersistentVolume mounted there — set `persistence.enabled: true`
-and size the PVC (`persistence.size`, default `10Gi`) to hold the
-buffer plus headroom. Deep buffer tuning (overflow topologies,
+and size the PVC (`persistence.size`) to hold the buffer plus
+headroom. The chart default varies by version — check
+`helm show values vector/vector` rather than assuming a fixed
+size. Deep buffer tuning (overflow topologies,
 sizing per throughput) lives in
 `references/production-hardening.md`.
 
