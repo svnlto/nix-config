@@ -273,7 +273,11 @@ offending component):
   **`buffer_sent_events_total`** — a widening gap between in and
   out is a sink falling behind before the buffer is visibly full.
 
-For SLO definitions, error-budget policy, and alert/monitor design
-around these signals, use the sre-engineer skill. The Datadog sink
-specifics — API key handling, `datadog_metrics` vs `datadog_logs`
-config, tagging — live in `references/datadog-integration.md`.
+For the full internal-metrics catalog (utilization, in/out event
+counters, suggested alert thresholds) and live-debugging tools
+(`vector top`, `vector tap`, the GraphQL API), see
+`references/operations.md`. For SLO definitions, error-budget
+policy, and alert/monitor design around these signals, use the
+sre-engineer skill. The Datadog sink specifics — API key handling,
+`datadog_metrics` vs `datadog_logs` config, tagging — live in
+`references/datadog-integration.md`.
