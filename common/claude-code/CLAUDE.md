@@ -81,6 +81,7 @@ Globally installed (auto-invoked by description match):
 | agno | Agno agent framework: agents, teams, workflows, MCP, AgentOS | Python agent projects |
 | airflow-engineer | Airflow DAG development, testing, performance, security, Airflow 3 migration | Data pipeline projects |
 | temporal-engineer | Temporal durable execution, workflows, activities, workers, versioning, operations | Go, distributed systems |
+| vector-engineer | Vector pipelines: VRL, sources/transforms/sinks, K8s agent+aggregator, buffering/backpressure, Datadog + upstream shippers | K8s, observability, Datadog |
 
 ## Superpowers Output
 
