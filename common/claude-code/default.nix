@@ -6,13 +6,8 @@ let
   userMcpJson = pkgs.writeText "claude-user-mcp.json" (builtins.toJSON {
     mcpServers = {
       chrome-devtools = {
-        command = "npx";
-        args = [
-          "-y"
-          "--prefer-offline"
-          "chrome-devtools-mcp@1.4.0"
-          "--browser-url=http://127.0.0.1:9222"
-        ];
+        command = "${chrome-devtools-mcp}/bin/chrome-devtools-mcp";
+        args = [ "--browser-url=http://127.0.0.1:9222" ];
         # Stop the running server from polling npm for updates and from
         # sending telemetry — both stall under corporate VPN SSL inspection.
         env = {
@@ -51,6 +46,30 @@ let
     repo = "chrome-devtools-mcp";
     rev = "chrome-devtools-mcp-v1.4.0";
     sha256 = "18kg20g392r1vbnvr2q6xwz8x1ls6z13zhgcdmwgrdbb94d1vpnh";
+  };
+  # Runtime MCP server, built from the published (fully bundled, dependencies:
+  # null) npm tarball so session start needs no npx or npm registry resolution.
+  # The previous `npx --prefer-offline chrome-devtools-mcp@1.4.0` intermittently
+  # failed to resolve the pinned version from stale npx metadata (ETARGET),
+  # leaving the server -- and all its tools -- absent for the whole session.
+  chrome-devtools-mcp = pkgs.stdenv.mkDerivation {
+    pname = "chrome-devtools-mcp";
+    version = "1.4.0";
+    src = pkgs.fetchurl {
+      url =
+        "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.4.0.tgz";
+      hash = "sha256-0tRNmnPaSZIILB8WhfvEoTaUF2cNSplI0w7L70FBmZk=";
+    };
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/lib/chrome-devtools-mcp
+      cp -r . $out/lib/chrome-devtools-mcp/
+      makeWrapper ${pkgs.nodejs_22}/bin/node $out/bin/chrome-devtools-mcp \
+        --add-flags $out/lib/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js
+      runHook postInstall
+    '';
   };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
