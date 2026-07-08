@@ -1,21 +1,34 @@
-{ config, pkgs, lib, username, hostname, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  hostname,
+  ...
+}:
 
 let
   versions = import ../../common/versions.nix;
   constants = import ../../common/constants.nix;
-in {
-  imports = [ ./homebrew/common.nix ./defaults.nix ./dock.nix ];
+in
+{
+  imports = [
+    ./homebrew/common.nix
+    ./defaults.nix
+    ./dock.nix
+  ];
 
   environment = {
     # macOS specific packages
     systemPackages =
-      let packages = import ../../common/packages.nix { inherit pkgs; };
-      in packages.darwinSystemPackages;
+      let
+        packages = import ../../common/packages.nix { inherit pkgs; };
+      in
+      packages.darwinSystemPackages;
 
     # System-wide environment variables
     variables = {
-      NIX_SSL_CERT_FILE =
-        "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+      NIX_SSL_CERT_FILE = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
     };
 
   };
@@ -24,8 +37,14 @@ in {
   nix = {
     package = pkgs.nixVersions.nix_2_29;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" username ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        username
+      ];
     };
     optimise.automatic = true;
   };
@@ -38,29 +57,33 @@ in {
     primaryUser = username;
 
     activationScripts = {
-      applications.text = let
-        env = pkgs.buildEnv {
-          name = "system-applications";
-          paths = config.environment.systemPackages;
-          pathsToLink = "/Applications";
-        };
-      in lib.mkForce ''
-        # Set up applications.
-        echo "setting up /Applications..." >&2
-        rm -rf /Applications/Nix\ Apps
-        mkdir -p /Applications/Nix\ Apps
-        find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-        while read -r src; do
-          app_name=$(basename "$src")
-          echo "copying $src" >&2
-          ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
-        done
-      '';
+      applications.text =
+        let
+          env = pkgs.buildEnv {
+            name = "system-applications";
+            paths = config.environment.systemPackages;
+            pathsToLink = "/Applications";
+          };
+        in
+        lib.mkForce ''
+          # Set up applications.
+          echo "setting up /Applications..." >&2
+          rm -rf /Applications/Nix\ Apps
+          mkdir -p /Applications/Nix\ Apps
+          find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
+          while read -r src; do
+            app_name=$(basename "$src")
+            echo "copying $src" >&2
+            ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
+          done
+        '';
 
       # Set desktop wallpaper
       setWallpaper.text =
-        let wallpaper = ../../common/profiles/wallpapers/bg.jpg;
-        in ''
+        let
+          wallpaper = ../../common/profiles/wallpapers/bg.jpg;
+        in
+        ''
           echo "Setting desktop wallpaper..." >&2
           su ${username} -c 'osascript -e "tell application \"System Events\" to tell every desktop to set picture to POSIX file \"${wallpaper}\""' >&2 || true
         '';
@@ -79,12 +102,8 @@ in {
         # Optional cleanup - only run if CLEANUP_ON_REBUILD is set
         if [[ "$CLEANUP_ON_REBUILD" == "true" ]]; then
           echo "==== Starting system cleanup ===="
-          # Clean up old generations (keep last ${
-            toString constants.cleanup.generationRetentionDays
-          } days)
-          nix-collect-garbage --delete-older-than ${
-            toString constants.cleanup.generationRetentionDays
-          }d || true
+          # Clean up old generations (keep last ${toString constants.cleanup.generationRetentionDays} days)
+          nix-collect-garbage --delete-older-than ${toString constants.cleanup.generationRetentionDays}d || true
 
           # Optimize nix store
           nix store optimise || true

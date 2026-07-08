@@ -20,7 +20,8 @@ let
       registrationScopes = "sso:account:access";
     };
   };
-in {
+in
+{
   # Determinate Nix manages its own daemon; nix-darwin must not compete.
   # Force-disable all nix.* options that common/ and systems/ set unconditionally.
   nix.enable = false;
@@ -33,7 +34,8 @@ in {
   homebrew.onActivation.upgrade = lib.mkForce false;
   homebrew.onActivation.cleanup = lib.mkForce "none";
   home-manager.sharedModules = [
-    ({ pkgs, lib, ... }:
+    (
+      { pkgs, lib, ... }:
       let
         seedConfig = pkgs.writeText "aws-config-seed" ''
           [default]
@@ -47,7 +49,8 @@ in {
           region = ${aws.sso.region}
           output = json
         '';
-      in {
+      in
+      {
         home = {
           sessionVariables = {
             NODE_EXTRA_CA_CERTS = "$HOME/.zscaler.pem";
@@ -55,7 +58,12 @@ in {
             DD_SITE = "datadoghq.eu";
           };
 
-          packages = with pkgs; [ awscli2 devbox granted jq ];
+          packages = with pkgs; [
+            awscli2
+            devbox
+            granted
+            jq
+          ];
 
           activation = {
             # Seed ~/.aws/config with SSO defaults on first run.
@@ -121,6 +129,7 @@ in {
             }
           '';
         };
-      })
+      }
+    )
   ];
 }

@@ -5,7 +5,8 @@
 let
   sharedZsh = import ./zsh/shared.nix;
   versions = import ./versions.nix;
-in {
+in
+{
   # Common imports for all Home Manager configurations
   imports = [
     ./home-packages.nix
@@ -25,6 +26,5 @@ in {
   home.sessionPath = sharedZsh.sessionPath;
 
   # Install Oh My Posh theme
-  home.file.".config/oh-my-posh/default.omp.json".source =
-    ./zsh/default.omp.json;
+  home.file.".config/oh-my-posh/default.omp.json".source = ./zsh/default.omp.json;
 }

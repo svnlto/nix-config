@@ -6,11 +6,11 @@
 
   xdg.configFile = {
     # Config and aliases use out-of-store symlinks so k9s can write to them
-    "k9s/config.yaml".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/k9s/config.yaml";
+    "k9s/config.yaml".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/k9s/config.yaml";
 
-    "k9s/aliases.yaml".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/k9s/aliases.yaml";
+    "k9s/aliases.yaml".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/k9s/aliases.yaml";
 
     # Skin is read-only (k9s never writes to it)
     "k9s/skins/catppuccin-mocha.yaml".text = ''

@@ -1,7 +1,9 @@
 _:
 
-let sharedZsh = import ../zsh/shared.nix;
-in {
+let
+  sharedZsh = import ../zsh/shared.nix;
+in
+{
   # Shared program configurations that are identical across platforms
   programs = {
     # Direnv configuration - development environment management
@@ -10,7 +12,11 @@ in {
       enableZshIntegration = true;
       nix-direnv.enable = true;
       # Reduce verbosity
-      config = { global = { hide_env_diff = true; }; };
+      config = {
+        global = {
+          hide_env_diff = true;
+        };
+      };
     };
 
     # GitHub CLI configuration

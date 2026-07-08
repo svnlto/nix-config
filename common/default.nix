@@ -1,11 +1,19 @@
 { username, ... }:
 
-let constants = import ./constants.nix;
-in {
+let
+  constants = import ./constants.nix;
+in
+{
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" username ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        username
+      ];
 
       # Performance optimizations
       max-jobs = "auto";

@@ -9,10 +9,10 @@ repos:
     hooks:
       - id: nixfmt
         name: Format Nix files
-        entry: bash -c 'if command -v nixfmt &>/dev/null; then nixfmt "$@"; else nix shell nixpkgs#nixfmt-classic -c nixfmt "$@"; fi' --
+        entry: bash -c 'if command -v nixfmt &>/dev/null; then nixfmt "$@"; else nix shell nixpkgs#nixfmt -c nixfmt "$@"; fi' --
         language: system
         files: \.nix$
-        description: Format Nix code using nixfmt-classic
+        description: Format Nix code using nixfmt (RFC style)
 
       - id: statix
         name: Lint Nix files

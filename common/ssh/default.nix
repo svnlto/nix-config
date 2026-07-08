@@ -3,8 +3,7 @@
 {
   # Darwin: Nix-managed SSH config and public keys
   # Linux: read-only managed config via programs.ssh
-  home.file.".ssh/config" =
-    lib.mkIf pkgs.stdenv.isDarwin { source = ./config; };
+  home.file.".ssh/config" = lib.mkIf pkgs.stdenv.isDarwin { source = ./config; };
 
   # Public keys for per-host identity matching (1Password resolves via fingerprint)
   home.file.".ssh/keys" = lib.mkIf pkgs.stdenv.isDarwin {
@@ -25,6 +24,7 @@
   };
 
   # 1Password SSH agent config
-  xdg.configFile."1Password/ssh/agent.toml" =
-    lib.mkIf pkgs.stdenv.isDarwin { source = ./agent.toml; };
+  xdg.configFile."1Password/ssh/agent.toml" = lib.mkIf pkgs.stdenv.isDarwin {
+    source = ./agent.toml;
+  };
 }

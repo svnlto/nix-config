@@ -8,8 +8,7 @@ rec {
     c = "clear";
 
     # Enhanced file operations
-    ll =
-      "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all --git";
+    ll = "eza --long --header --links --group-directories-first --color-scale --time-style=iso --all --git";
     lt = "eza --tree --level=2 --group-directories-first --git";
 
     # Better defaults
@@ -17,10 +16,8 @@ rec {
     cat = "bat -p";
     tree = "tree -C";
     # System maintenance shortcuts
-    nix-clean =
-      "echo '🧹 Starting cleanup...' && nix-collect-garbage --delete-older-than 7d && echo '✨ Quick cleanup complete'";
-    nix-clean-deep =
-      "echo '🧹 Starting deep cleanup...' && nix-collect-garbage -d && nix store optimise && echo '✨ Deep cleanup complete'";
+    nix-clean = "echo '🧹 Starting cleanup...' && nix-collect-garbage --delete-older-than 7d && echo '✨ Quick cleanup complete'";
+    nix-clean-deep = "echo '🧹 Starting deep cleanup...' && nix-collect-garbage -d && nix store optimise && echo '✨ Deep cleanup complete'";
 
     # Update management
     nix-update = "nix flake update";
@@ -70,7 +67,10 @@ rec {
   # ZSH autosuggestion configuration
   autosuggestionConfig = {
     enable = true;
-    strategy = [ "history" "completion" ];
+    strategy = [
+      "history"
+      "completion"
+    ];
   };
 
   # History options for shell initialization (setopt commands)
@@ -102,8 +102,7 @@ rec {
     LANG = "en_GB.UTF-8"; # Locale settings
     LC_ALL = "en_GB.UTF-8";
     # FZF Catppuccin Mocha theme
-    FZF_DEFAULT_OPTS =
-      "--color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 --color=selected-bg:#45475A --color=border:#6C7086,label:#CDD6F4";
+    FZF_DEFAULT_OPTS = "--color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 --color=selected-bg:#45475A --color=border:#6C7086,label:#CDD6F4";
   };
 
   # Common session paths

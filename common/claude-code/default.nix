@@ -3,20 +3,22 @@ let
   # User-scope MCP servers — merged into the stateful ~/.claude.json on switch.
   # Claude Code reads global MCP definitions only from ~/.claude.json's top-level
   # mcpServers key; settings.json does not support server definitions.
-  userMcpJson = pkgs.writeText "claude-user-mcp.json" (builtins.toJSON {
-    mcpServers = {
-      chrome-devtools = {
-        command = "${chrome-devtools-mcp}/bin/chrome-devtools-mcp";
-        args = [ "--browser-url=http://127.0.0.1:9222" ];
-        # Stop the running server from polling npm for updates and from
-        # sending telemetry — both stall under corporate VPN SSL inspection.
-        env = {
-          CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
-          CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
+  userMcpJson = pkgs.writeText "claude-user-mcp.json" (
+    builtins.toJSON {
+      mcpServers = {
+        chrome-devtools = {
+          command = "${chrome-devtools-mcp}/bin/chrome-devtools-mcp";
+          args = [ "--browser-url=http://127.0.0.1:9222" ];
+          # Stop the running server from polling npm for updates and from
+          # sending telemetry — both stall under corporate VPN SSL inspection.
+          env = {
+            CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
+            CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
+          };
         };
       };
-    };
-  });
+    }
+  );
   skills-repo = pkgs.fetchFromGitHub {
     owner = "martinholovsky";
     repo = "claude-skills-generator";
@@ -56,8 +58,7 @@ let
     pname = "chrome-devtools-mcp";
     version = "1.4.0";
     src = pkgs.fetchurl {
-      url =
-        "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.4.0.tgz";
+      url = "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.4.0.tgz";
       hash = "sha256-0tRNmnPaSZIILB8WhfvEoTaUF2cNSplI0w7L70FBmZk=";
     };
     nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -89,24 +90,25 @@ let
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';
-in {
+in
+{
   home.file = {
     # Create writable settings.json using out-of-store symlink
-    ".claude/settings.json".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
+    ".claude/settings.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
 
-    ".claude/hooks.json".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/claude-code/hooks.json";
+    ".claude/hooks.json".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/hooks.json";
 
     ".claude/commands".source = ./commands;
 
     # Global CLAUDE.md with user preferences (writable via out-of-store symlink)
-    ".claude/CLAUDE.md".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/claude-code/CLAUDE.md";
+    ".claude/CLAUDE.md".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/CLAUDE.md";
 
     # Status line script (out-of-store symlink for immediate iteration)
-    ".claude/statusline-command.sh".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/.config/nix/common/claude-code/statusline-command.sh";
+    ".claude/statusline-command.sh".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/statusline-command.sh";
 
     # External skills from claude-skills-generator (auto-invoked by description match)
     ".claude/skills".source = selectedSkills;
@@ -119,16 +121,15 @@ in {
   # clobbering oauth tokens, project history, or servers added via the CLI.
   # jq '*' deep-merges, so our definitions win on key collision but everything
   # else is preserved. Idempotent — safe to re-run on every switch.
-  home.activation.claudeUserMcpServers =
-    config.lib.dag.entryAfter [ "writeBoundary" ] ''
-      claudeConfig="${config.home.homeDirectory}/.claude.json"
-      [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"
-      if ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$claudeConfig" ${userMcpJson} \
-        > "$claudeConfig.tmp"; then
-        run mv $VERBOSE_ARG "$claudeConfig.tmp" "$claudeConfig"
-      else
-        echo "claudeUserMcpServers: jq merge failed, leaving ~/.claude.json untouched" >&2
-        rm -f "$claudeConfig.tmp"
-      fi
-    '';
+  home.activation.claudeUserMcpServers = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+    claudeConfig="${config.home.homeDirectory}/.claude.json"
+    [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"
+    if ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$claudeConfig" ${userMcpJson} \
+      > "$claudeConfig.tmp"; then
+      run mv $VERBOSE_ARG "$claudeConfig.tmp" "$claudeConfig"
+    else
+      echo "claudeUserMcpServers: jq merge failed, leaving ~/.claude.json untouched" >&2
+      rm -f "$claudeConfig.tmp"
+    fi
+  '';
 }

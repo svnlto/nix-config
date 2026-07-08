@@ -1,11 +1,16 @@
 # Unified cross-platform Git configuration
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (pkgs.stdenv) isLinux isDarwin;
-  signingKey =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYK1c6kxYT6FzMEqckP04e2unQgTvFPyNEFzT/q/eXR";
-in {
+  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYK1c6kxYT6FzMEqckP04e2unQgTvFPyNEFzT/q/eXR";
+in
+{
   programs.git = {
     enable = true;
 
@@ -27,9 +32,13 @@ in {
         pager = "diff-so-fancy | less --tabs=2 -RFX";
       };
 
-      merge = { conflictstyle = "zdiff3"; };
+      merge = {
+        conflictstyle = "zdiff3";
+      };
 
-      diff = { colorMoved = "default"; };
+      diff = {
+        colorMoved = "default";
+      };
 
       rerere.enabled = true;
       help.autocorrect = 10;
@@ -52,17 +61,20 @@ in {
         };
       };
       gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
-    } // lib.optionalAttrs isLinux {
+    }
+    // lib.optionalAttrs isLinux {
       gpg.ssh.program = "/opt/1Password/op-ssh-sign";
-    } // lib.optionalAttrs isDarwin {
-      gpg.ssh.program =
-        "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+    }
+    // lib.optionalAttrs isDarwin {
+      gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
     };
 
-    includes = [{
-      condition = "gitdir:~/projects/msg/";
-      path = "${config.home.homeDirectory}/.gitconfig-local";
-    }];
+    includes = [
+      {
+        condition = "gitdir:~/projects/msg/";
+        path = "${config.home.homeDirectory}/.gitconfig-local";
+      }
+    ];
 
     signing = {
       key = signingKey;

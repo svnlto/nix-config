@@ -45,7 +45,10 @@
 
   # macOS system-level packages
   # These packages need to be installed at the system level for proper integration
-  darwinSystemPackages = with pkgs; [ git tree ];
+  darwinSystemPackages = with pkgs; [
+    git
+    tree
+  ];
 
   # Convenient package combination for user-level packages
   allCommonPackages = corePackages ++ devPackages;

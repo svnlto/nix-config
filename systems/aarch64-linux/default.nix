@@ -1,9 +1,15 @@
 # Generic aarch64-linux Home Manager configuration
 # This configuration can be used for any Linux ARM64 environment (VMs, containers, cloud instances)
-{ pkgs, username ? "user", ... }:
+{
+  pkgs,
+  username ? "user",
+  ...
+}:
 
-let sharedZsh = import ../../common/zsh/shared.nix;
-in {
+let
+  sharedZsh = import ../../common/zsh/shared.nix;
+in
+{
   imports = [
     ../../common/home-manager-base.nix
     ../../common/default.nix
@@ -17,8 +23,7 @@ in {
   # Linux-specific nix settings
   nix = {
     package = pkgs.nix;
-    settings.auto-optimise-store =
-      true; # Linux can handle this better than macOS
+    settings.auto-optimise-store = true; # Linux can handle this better than macOS
   };
 
   # Linux-specific session variables (merged with shared config)

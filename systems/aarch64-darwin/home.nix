@@ -13,15 +13,15 @@
 
   # macOS-specific packages
   home.packages =
-    let packages = import ../../common/packages.nix { inherit pkgs; };
-    in packages.darwinPackages;
+    let
+      packages = import ../../common/packages.nix { inherit pkgs; };
+    in
+    packages.darwinPackages;
 
   # macOS-specific shell aliases
   programs.zsh.shellAliases = {
-    nixswitch =
-      "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
-    darwin-rebuild =
-      "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
+    nixswitch = "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
+    darwin-rebuild = "sudo /run/current-system/sw/bin/darwin-rebuild switch --flake ~/.config/nix#$(scutil --get LocalHostName)";
     brewup = "brew update && brew upgrade && brew upgrade --cask --greedy";
   };
 
