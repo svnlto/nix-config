@@ -26,9 +26,18 @@ Azure DevOps repos frequently ship a PR description template. The **web UI
 auto-fills** the description from it, but **`az repos pr create` does NOT** —
 so a CLI-created PR silently ignores the template unless you apply it
 yourself. Before creating any ADO PR, detect the repo's template, fill it
-in, and pass it as the description. A PR that discards the team's template
-(dropping its checklists, Jira/issue sections, or required headings) will
-bounce in review.
+in, and pass it as the description.
+
+**The on-disk template is the authoritative skeleton — not a checklist to
+tack on.** The PR description *is* the template, filled in. Start from the
+template file verbatim, keep its exact headings, order, and checklists, and
+write your content **into** its sections. Do not invent your own layout and
+then append the template, and do not reorder or drop its sections. If you
+have content the template has no home for, add it **under** the template's
+structure (e.g. a new trailing section), never by replacing the frame. A PR
+that imposes a generic What/Why/How layout over the team's template — or
+buries the template at the bottom — has failed even if every fact is
+present.
 
 ### Where ADO looks for templates
 
@@ -61,10 +70,22 @@ wins; otherwise the default template applies.
    done
    ```
 
-2. **Fill it in** — keep the template's headings, checklists, and sections;
-   replace placeholder prose with the real what/why/how-to-test, and add
-   the Jira issue key and link (e.g. `PROJ-1234`). Do not delete sections
-   you think are irrelevant; leave the structure intact.
+2. **Fill it in — template first, verbatim.** Copy the template file's
+   contents as-is and use it as the literal skeleton of the description.
+   Then, section by section, replace its placeholder/comment prose
+   (`<!-- ... -->`) with the real content — what/why/how-to-test, and the
+   Jira issue key and link (e.g. `PROJ-1234`) in whatever section fits.
+   Rules:
+   - Keep every heading, its order, and every checklist item exactly as
+     written. Do not rename, reorder, or remove them.
+   - Leave checkbox items unchecked unless the thing is genuinely done;
+     never fabricate a checked box.
+   - Extra content the template doesn't cover goes in a new section
+     **appended after** the template's sections — not before, and not by
+     restructuring what's there.
+   - Do NOT start from the generic What/Why/How structure and merge the
+     template into it. That structure is the fallback for when there is
+     **no** template (step 4), not a frame to wrap the template in.
 
 3. **Apply the filled template via the CLI.** Neither `az repos pr create`
    nor `az repos pr update` has a `--description-file`; pass the file
