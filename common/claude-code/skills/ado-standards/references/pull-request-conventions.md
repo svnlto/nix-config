@@ -66,8 +66,13 @@ wins; otherwise the default template applies.
    the Jira issue key and link (e.g. `PROJ-1234`). Do not delete sections
    you think are irrelevant; leave the structure intact.
 
-3. **Create the PR with the filled template.** `az repos pr create` has no
-   `--description-file`; pass the file contents to `--description`:
+3. **Apply the filled template via the CLI.** Neither `az repos pr create`
+   nor `az repos pr update` has a `--description-file`; pass the file
+   contents to `--description`. The template principle is identical whether
+   you are opening a new PR or backfilling an existing one — the CLI never
+   auto-applies the template in either case.
+
+   New PR:
 
    ```bash
    az repos pr create \
@@ -75,6 +80,16 @@ wins; otherwise the default template applies.
      --title "$title" \
      --description "$(cat filled-pr.md)"
    ```
+
+   Existing PR missing the template (backfill its description):
+
+   ```bash
+   az repos pr update --id "$pr_id" \
+     --description "$(cat filled-pr.md)"
+   ```
+
+   When updating, preserve any real content already in the PR description —
+   merge it into the template's sections rather than overwriting it.
 
 4. **No template found?** Fall back to the standard structure below
    (What / Why / How to test + the Jira issue key and link).

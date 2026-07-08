@@ -25,9 +25,10 @@ tags: [azure-devops, ado, pull-requests, pipelines, ci-cd, yaml]
 - **Bash over marketplace tasks** — `script:` steps reduce supply chain risk
 - **PR size < 400 lines** — split larger work into stacked PRs
 - **Same artifact promoted** — never re-plan per environment
-- **Use the repo's PR template** — before creating a PR, detect the
-  repo's existing ADO template and fill it in; `az repos pr create` does
-  not auto-apply it (see PR reference for locations and the CLI workflow)
+- **Use the repo's PR template** — when creating or updating a PR, detect
+  the repo's existing ADO template and fill it in; neither `az repos pr
+  create` nor `az repos pr update` auto-applies it (see PR reference for
+  locations and the CLI workflow)
 
 ## Reference Guide
 
@@ -56,5 +57,5 @@ PR Build (validate + plan) -> main Build (plan) -> Dev (auto-apply) -> Staging (
 - Using classic release pipelines alongside YAML (pick one)
 - Using marketplace tasks when a simple `script:` step would do
 - Running `terraform apply` without a saved plan file
-- Creating a PR from the CLI without applying the repo's PR template
-  (the web UI auto-fills it; `az repos pr create` does not)
+- Creating or updating a PR from the CLI without applying the repo's PR
+  template (the web UI auto-fills it; `az repos pr create`/`update` do not)
