@@ -43,6 +43,18 @@ let
     rev = "0ed7d1c92570384030184a6dfa18d275a9b5f694";
     sha256 = "1rzdzn7pj8yab68hvbjq663r5kjj9z1wqpkdbn8zbz03cx4kssfd";
   };
+  hashicorp-skills-repo = pkgs.fetchFromGitHub {
+    owner = "hashicorp";
+    repo = "agent-skills";
+    rev = "957d5f95911bc22eaf2b7e141c3b08ba824091fe";
+    sha256 = "1498z3nhp6da8y0avxi2blcwpck8ska448y4hfdgznsz9wwmlygs";
+  };
+  cc-devops-skills-repo = pkgs.fetchFromGitHub {
+    owner = "akin-ozer";
+    repo = "cc-devops-skills";
+    rev = "276af751e659315aaf56d3ad13d7c26f4e72e28a";
+    sha256 = "0xxsiaxjrjbqzb7rjx7l9d1hjp5id4kkf15qimgv1px7rh6289a5";
+  };
   chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
     owner = "ChromeDevTools";
     repo = "chrome-devtools-mcp";
@@ -87,6 +99,20 @@ let
     cp -r ${agno-skills-repo}/plugins/agno/skills/agno $out/
     # ChromeDevTools/chrome-devtools-mcp companion skills
     cp -r ${chrome-devtools-mcp-repo}/skills/* $out/
+    # hashicorp/agent-skills
+    for skill in azure-verified-modules terraform-search-import \
+                 terraform-test terraform-style-guide; do
+      cp -r ${hashicorp-skills-repo}/terraform/code-generation/skills/$skill $out/
+    done
+    for skill in terraform-stacks refactor-module; do
+      cp -r ${hashicorp-skills-repo}/terraform/module-generation/skills/$skill $out/
+    done
+    # akin-ozer/cc-devops-skills
+    for skill in ansible azure-pipelines dockerfile bash-script \
+                 k8s-yaml helm terragrunt; do
+      cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-generator $out/
+      cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-validator $out/
+    done
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';

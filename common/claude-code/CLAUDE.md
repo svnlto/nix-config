@@ -107,8 +107,4 @@ claude plugin install terraform-code-generation@hashicorp
 claude plugin install terraform-module-generation@hashicorp
 claude plugin install terraform-provider-development@hashicorp
 
-- `ahmedasmar/devops-claude-skills` — DevOps automation
 - `akin-ozer/cc-devops-skills` — Cloud-native DevOps
-- `Jeffallan/claude-skills` — General development
-- `wshobson/agents` — Specialized agents
-- `dwmkerr/claude-toolkit` — Developer productivity
