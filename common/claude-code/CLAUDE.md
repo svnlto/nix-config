@@ -13,6 +13,7 @@
 - Explicit over implicit, simple over abstract
 - Clarity over cleverness
 - YAGNI
+- Comments: single line only, explaining why not what
 
 ## Work Environment
 
