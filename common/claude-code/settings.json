@@ -31,7 +31,7 @@
     "caveman@caveman": true,
     "context7@claude-plugins-official": true,
     "frontend-design@claude-code-plugins": true,
-    "gemini@gemini-plugin-cc": true,
+    "gemini@gemini-plugin-cc": false,
     "n8n-mcp-skills@n8n-mcp-skills": true,
     "obsidian@obsidian-skills": true,
     "pup@datadog-pup": true,
