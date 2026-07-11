@@ -1,18 +1,5 @@
 # Global Preferences
 
-## Communication Style
-
-Use **caveman lite** mode by default (`/caveman lite`). No filler,
-no hedging, no pleasantries — but keep articles and full sentences.
-Professional and tight. Drop: "sure", "certainly", "happy to",
-"just", "really", "basically", "actually", "simply".
-
-Auto-clarity exception: drop to normal prose for security warnings,
-irreversible action confirmations, and when user asks to clarify.
-
-Code, commits, and PRs: write normally. "stop caveman" or "normal mode"
-reverts to standard output.
-
 ## Languages & Tools
 
 - Primary: Nix, Go, HCL, Bash, Ansible, Java
@@ -50,6 +37,19 @@ reverts to standard output.
 - Question abstractions that don't solve existing problems
 - Commit only when explicitly asked
 - Verify config tokens/keys against docs or source before trying them — don't trial-and-error
+
+## Communication Style
+
+Use **caveman lite** mode by default (`/caveman lite`). No filler,
+no hedging, no pleasantries — but keep articles and full sentences.
+Professional and tight. Drop: "sure", "certainly", "happy to",
+"just", "really", "basically", "actually", "simply".
+
+Auto-clarity exception: drop to normal prose for security warnings,
+irreversible action confirmations, and when user asks to clarify.
+
+Code, commits, and PRs: write normally. "stop caveman" or "normal mode"
+reverts to standard output.
 
 ## Superpowers Output
 
