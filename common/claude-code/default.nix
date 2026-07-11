@@ -116,10 +116,8 @@ in
     ".claude/settings.json".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/settings.json";
 
-    ".claude/hooks.json".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/hooks.json";
-
-    ".claude/commands".source = ./commands;
+    # SessionStart hook script referenced from settings.json hooks
+    ".claude/hooks/herdr-agent-state.sh".source = ./hooks/herdr-agent-state.sh;
 
     # Global CLAUDE.md with user preferences (writable via out-of-store symlink)
     ".claude/CLAUDE.md".source =
@@ -129,7 +127,7 @@ in
     ".claude/statusline-command.sh".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/statusline-command.sh";
 
-    # External skills from claude-skills-generator (auto-invoked by description match)
+    # Skills from pinned upstream repos and local ./skills, auto-invoked by description match
     ".claude/skills".source = selectedSkills;
 
     # Create necessary directories

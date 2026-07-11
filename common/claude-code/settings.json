@@ -20,6 +20,30 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path') && [ -n \"$f\" ] && pre-commit run --files \"$f\" 2>&1 || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f flake.nix ] && nix flake check 2>&1 | head -20 || true",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   },
   "statusLine": {

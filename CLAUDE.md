@@ -94,15 +94,15 @@ in shared lists — they break Linux builds.
 
 Located in `common/claude-code/`, managed via `default.nix`:
 
-- **Settings**: `settings.json` (writable out-of-store symlink)
-- **Hooks**: `hooks.json` (automated linting/quality checks)
-- **Commands**: `commands/` (setup-plugins)
-- **Skills**: External skills from `claude-skills-generator` repo
-  (ci-cd, devsecops, rest-api-design, security-auditing, argo,
-  cilium, cloud-api, database-design, talos-os)
-- **Output styles**: `output-styles/`
-- **Status line**: `statusline-command.sh`
-- **Global CLAUDE.md**: User preferences (writable out-of-store symlink)
+- **Settings**: `settings.json` (writable out-of-store symlink) — also
+  holds the hook definitions
+- **Hooks**: defined in `settings.json` — SessionStart (herdr agent
+  state), PostToolUse pre-commit on edited files, Stop `nix flake check`.
+  Hook scripts live in `hooks/`
+- **Skills**: merged by `default.nix` (`selectedSkills`) from pinned
+  upstream repos plus local `skills/`, auto-invoked by description match
+- **Status line**: `statusline-command.sh` (writable out-of-store symlink)
+- **Global CLAUDE.md**: user preferences (writable out-of-store symlink)
 
 ## Docker Testing
 
