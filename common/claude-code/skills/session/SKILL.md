@@ -41,14 +41,13 @@ Pick the mode from the user's trigger, then follow only that section.
 
 ## Save — end of session
 
-1. Ask which categories to preserve (multi-select):
-   - Key learnings
-   - Solutions & fixes
-   - Decisions made
-   - Files modified
-   - Setup & config
-   - Pending tasks
-   - Errors & workarounds
+1. Use the **AskUserQuestion** tool with `multiSelect: true` to ask which
+   categories to preserve — do not ask in plain prose. The tool caps at four
+   options, so offer these four; the auto-added "Other" covers anything else:
+   - **Key learnings** — insights, errors & workarounds
+   - **Decisions made**
+   - **Solutions & fixes** — including setup & config
+   - **Pending tasks** — plus files modified
 2. Determine the domain from context (`work` or `homelab`) and a short session
    slug (e.g. `kaas-argocd-fix`).
 3. Write the log to
