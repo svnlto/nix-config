@@ -12,7 +12,6 @@ _:
       "whatsapp"
       "drawio"
       "gray"
-      "macwhisper"
       "granola"
     ];
   };
