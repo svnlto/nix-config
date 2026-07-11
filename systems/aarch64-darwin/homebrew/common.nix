@@ -8,7 +8,6 @@ _:
       "mas"
       "dockutil"
       "pre-commit"
-      "gemini-cli"
       "datadog-labs/pack/pup"
       "herdr"
     ];
@@ -33,6 +32,7 @@ _:
       "orbstack"
       "ghostty"
       "claude-code"
+      "antigravity-cli"
 
       # Networking & VPN
       "arc"
