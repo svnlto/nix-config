@@ -1,8 +1,7 @@
 { config, ... }:
 
 {
-  # Cross-platform k9s config
-  # On macOS, set K9S_CONFIG_DIR=$HOME/.config/k9s to use XDG path.
+  # On macOS, set K9S_CONFIG_DIR=$HOME/.config/k9s so k9s uses the XDG path cross-platform.
 
   xdg.configFile = {
     # Config and aliases use out-of-store symlinks so k9s can write to them

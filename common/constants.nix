@@ -1,4 +1,3 @@
-# Centralized constants for Nix configuration
 # Single source of truth for tuning values and magic numbers
 {
   # Performance tuning - Nix downloads and builds

@@ -1,6 +1,6 @@
-{ pkgs }: rec {
-  # Core system utilities - essential tools for all environments
-  # These packages provide fundamental CLI improvements and are used daily
+{ pkgs }:
+rec {
+  # Core CLI utilities used daily across all environments
   corePackages = with pkgs; [
     oh-my-posh
     eza
@@ -17,8 +17,7 @@
     wget
   ];
 
-  # Development tools - programming and productivity utilities
-  # These tools support software development and system administration
+  # Development and system-administration tooling
   devPackages = with pkgs; [
     gh
     gh-dash
@@ -39,12 +38,10 @@
     devbox
   ];
 
-  # macOS-specific packages
-  # These packages only work on macOS
+  # macOS-only packages
   darwinPackages = with pkgs; [ ];
 
-  # macOS system-level packages
-  # These packages need to be installed at the system level for proper integration
+  # Installed at system level on macOS for proper integration
   darwinSystemPackages = with pkgs; [
     git
     tree

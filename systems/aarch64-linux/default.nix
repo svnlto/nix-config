@@ -1,5 +1,4 @@
-# Generic aarch64-linux Home Manager configuration
-# This configuration can be used for any Linux ARM64 environment (VMs, containers, cloud instances)
+# Generic aarch64-linux Home Manager config for any Linux ARM64 environment (VMs, containers, cloud instances)
 {
   pkgs,
   username ? "user",

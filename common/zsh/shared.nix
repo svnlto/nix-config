@@ -1,5 +1,4 @@
-# This file contains truly shared ZSH configuration that works in both
-# nix-darwin and home-manager without modification
+# Shared ZSH config that works unmodified in both nix-darwin and home-manager
 
 # Return a simple attribute set for direct import by other modules
 rec {
@@ -142,8 +141,7 @@ rec {
       alias cd=z
     fi
 
-    # FZF shell integration for history search and file finding
-    # Skip process substitution in Claude Code to avoid snapshot corruption
+    # Skip FZF's process substitution in Claude Code to avoid snapshot corruption.
     if command -v fzf >/dev/null 2>&1 && [[ -z "$CLAUDE_CODE_SESSION" ]]; then
       source <(fzf --zsh)
     fi

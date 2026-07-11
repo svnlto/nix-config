@@ -1,16 +1,13 @@
 { config, pkgs, ... }:
 let
-  # User-scope MCP servers — merged into the stateful ~/.claude.json on switch.
-  # Claude Code reads global MCP definitions only from ~/.claude.json's top-level
-  # mcpServers key; settings.json does not support server definitions.
+  # Claude Code reads global MCP definitions only from ~/.claude.json's top-level mcpServers key, not settings.json — so merge them there on switch.
   userMcpJson = pkgs.writeText "claude-user-mcp.json" (
     builtins.toJSON {
       mcpServers = {
         chrome-devtools = {
           command = "${chrome-devtools-mcp}/bin/chrome-devtools-mcp";
           args = [ "--browser-url=http://127.0.0.1:9222" ];
-          # Stop the running server from polling npm for updates and from
-          # sending telemetry — both stall under corporate VPN SSL inspection.
+          # Update checks and telemetry both stall under corporate VPN SSL inspection.
           env = {
             CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
             CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
@@ -61,11 +58,7 @@ let
     rev = "chrome-devtools-mcp-v1.4.0";
     sha256 = "18kg20g392r1vbnvr2q6xwz8x1ls6z13zhgcdmwgrdbb94d1vpnh";
   };
-  # Runtime MCP server, built from the published (fully bundled, dependencies:
-  # null) npm tarball so session start needs no npx or npm registry resolution.
-  # The previous `npx --prefer-offline chrome-devtools-mcp@1.4.0` intermittently
-  # failed to resolve the pinned version from stale npx metadata (ETARGET),
-  # leaving the server -- and all its tools -- absent for the whole session.
+  # Built from the bundled npm tarball to avoid npx registry resolution, which intermittently failed on the pinned version via stale metadata (ETARGET), leaving the server and its tools absent for the whole session.
   chrome-devtools-mcp = pkgs.stdenv.mkDerivation {
     pname = "chrome-devtools-mcp";
     version = "1.4.0";
@@ -143,10 +136,7 @@ in
     ".claude/.keep".text = "";
   };
 
-  # Merge user-scope MCP servers into the stateful ~/.claude.json without
-  # clobbering oauth tokens, project history, or servers added via the CLI.
-  # jq '*' deep-merges, so our definitions win on key collision but everything
-  # else is preserved. Idempotent — safe to re-run on every switch.
+  # jq deep-merge so our definitions win on collision while oauth tokens, project history, and CLI-added servers survive — idempotent, safe to re-run every switch.
   home.activation.claudeUserMcpServers = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     claudeConfig="${config.home.homeDirectory}/.claude.json"
     [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"

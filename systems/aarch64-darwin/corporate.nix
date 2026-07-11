@@ -1,13 +1,4 @@
-# Corporate Mac overrides
-#
-# 1. Determinate Nix — disable nix-darwin's Nix management (conflicts with
-#    Determinate's own daemon).
-# 2. Zscaler SSL inspection — corporate VPN replaces TLS certs with a Zscaler
-#    CA not in Node's default trust store.  NODE_EXTRA_CA_CERTS fixes this.
-# 3. AWS SSO — CyberArk SCA (grant-cli) + IAM Identity Center (granted/assume).
-#
-# Refresh the cert after rotation:
-#   refresh-zscaler
+# Corporate Mac overrides: disable nix-darwin's Nix (Determinate owns the daemon), trust the Zscaler VPN CA missing from Node's store (NODE_EXTRA_CA_CERTS, refresh via `refresh-zscaler`), and wire AWS SSO (CyberArk SCA grant-cli + IAM Identity Center granted/assume).
 { lib, ... }:
 
 let
@@ -22,15 +13,11 @@ let
   };
 in
 {
-  # Determinate Nix manages its own daemon; nix-darwin must not compete.
-  # Force-disable all nix.* options that common/ and systems/ set unconditionally.
+  # Force-disable nix.* options that common/ and systems/ set unconditionally — Determinate manages its own daemon.
   nix.enable = false;
   nix.optimise.automatic = lib.mkForce false;
 
-  # Jamf blocks sudo on /Applications/ — disable brew operations that trigger it
-  # upgrade: sudo rm old app before installing new version
-  # cleanup: sudo rm app when removed from config
-  # Run `brewup` manually instead
+  # Jamf blocks sudo on /Applications/, so disable the brew upgrade/cleanup steps that need it — run `brewup` manually instead.
   homebrew.onActivation.upgrade = lib.mkForce false;
   homebrew.onActivation.cleanup = lib.mkForce "none";
   home-manager.sharedModules = [
@@ -66,8 +53,7 @@ in
           ];
 
           activation = {
-            # Seed ~/.aws/config with SSO defaults on first run.
-            # User owns the file after that — edits are preserved.
+            # Seed ~/.aws/config only on first run; the user owns it afterward so edits survive.
             awsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
               mkdir -p "$HOME/.aws"
               if [ ! -f "$HOME/.aws/config" ]; then

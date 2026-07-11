@@ -96,8 +96,7 @@ in
       '';
 
       postActivation.text = lib.mkAfter ''
-        # Homebrew update/upgrade is handled by nix-darwin's onActivation settings
-        # (see common.nix homebrew.onActivation and corporate.nix override)
+        # Homebrew update/upgrade is handled by nix-darwin onActivation (common.nix homebrew.onActivation, corporate.nix override).
 
         # Optional cleanup - only run if CLEANUP_ON_REBUILD is set
         if [[ "$CLEANUP_ON_REBUILD" == "true" ]]; then

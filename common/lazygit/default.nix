@@ -1,9 +1,7 @@
 _:
 
 {
-  # Cross-platform lazygit config
-  # macOS: ~/Library/Application Support/lazygit/config.yml
-  # Linux: ~/.config/lazygit/config.yml
+  # xdg.configFile resolves the lazygit config path per-platform (macOS Application Support vs Linux .config).
   xdg.configFile."lazygit/config.yml".text = ''
     gui:
       theme:

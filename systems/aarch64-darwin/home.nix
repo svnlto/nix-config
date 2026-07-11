@@ -25,8 +25,7 @@
     brewup = "brew update && brew upgrade && brew upgrade --cask --greedy";
   };
 
-  # CRITICAL: Source nix-darwin's system zshrc to get /run/current-system/sw/bin in PATH
-  # This must run BEFORE any other zsh initialization
+  # CRITICAL: Source nix-darwin's system zshrc BEFORE any other zsh init so /run/current-system/sw/bin lands in PATH.
   programs.zsh.envExtra = ''
     # Source nix-darwin system configuration
     if [ -e /etc/zsh/zshrc ]; then

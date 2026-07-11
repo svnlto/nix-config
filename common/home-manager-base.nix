@@ -1,5 +1,4 @@
-# Shared Home Manager base configuration
-# Contains common settings used by both macOS and Linux configurations
+# Shared Home Manager base used by both macOS and Linux configurations
 { username, ... }:
 
 let

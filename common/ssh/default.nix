@@ -1,8 +1,7 @@
 { pkgs, lib, ... }:
 
 {
-  # Darwin: Nix-managed SSH config and public keys
-  # Linux: read-only managed config via programs.ssh
+  # Darwin gets a Nix-managed SSH config file and public keys; Linux uses read-only programs.ssh instead.
   home.file.".ssh/config" = lib.mkIf pkgs.stdenv.isDarwin { source = ./config; };
 
   # Public keys for per-host identity matching (1Password resolves via fingerprint)
