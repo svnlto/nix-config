@@ -82,6 +82,7 @@ Globally installed (auto-invoked by description match):
 | airflow-engineer | Airflow DAG development, testing, performance, security, Airflow 3 migration | Data pipeline projects |
 | temporal-engineer | Temporal durable execution, workflows, activities, workers, versioning, operations | Go, distributed systems |
 | vector-engineer | Vector pipelines: VRL, sources/transforms/sinks, K8s agent+aggregator, buffering/backpressure, Datadog + upstream shippers | K8s, observability, Datadog |
+| session | Load context at session start / save session log at end (Obsidian vault) | All projects |
 
 ## Superpowers Output
 
