@@ -130,6 +130,10 @@ in
     # Skills from pinned upstream repos and local ./skills, auto-invoked by description match
     ".claude/skills".source = selectedSkills;
 
+    # Skill-bound subagents (out-of-store symlink for immediate iteration) — each preloads a skill via its `skills:` frontmatter so dispatched agents inherit the skill's methodology instead of running general-purpose
+    ".claude/agents".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/agents";
+
     # Create necessary directories
     ".claude/.keep".text = "";
   };

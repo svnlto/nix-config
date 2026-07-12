@@ -39,6 +39,14 @@
 - Commit only when explicitly asked
 - Verify config tokens/keys against docs or source before trying them — don't trial-and-error
 
+## Agent Dispatch
+
+- When dispatching a subagent, if a skill-bound agent in `~/.claude/agents/`
+  matches the task, use that `subagent_type` — not `general-purpose`.
+- If no custom agent matches but a skill does, name the skill in the
+  subagent's prompt so it loads and follows it.
+- Reserve `general-purpose` for tasks no skill or specialist covers.
+
 ## Communication Style
 
 Use **caveman lite** mode by default (`/caveman lite`). No filler,
