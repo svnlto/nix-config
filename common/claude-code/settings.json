@@ -51,12 +51,8 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "context7@claude-plugins-official": true,
-    "frontend-design@claude-code-plugins": true,
-    "gemini@gemini-plugin-cc": false,
-    "n8n-mcp-skills@n8n-mcp-skills": true,
     "obsidian@obsidian-skills": true,
     "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
@@ -69,22 +65,10 @@
         "repo": "JuliusBrussee/caveman"
       }
     },
-    "claude-code-plugins": {
-      "source": {
-        "source": "github",
-        "repo": "anthropics/claude-code"
-      }
-    },
     "datadog-pup": {
       "source": {
         "source": "github",
         "repo": "DataDog/pup"
-      }
-    },
-    "gemini-plugin-cc": {
-      "source": {
-        "source": "github",
-        "repo": "m-ghalib/gemini-plugin-cc"
       }
     },
     "jfr992": {
@@ -93,22 +77,16 @@
         "repo": "jfr992/terragrunt-skill"
       }
     },
-    "karpathy-skills": {
-      "source": {
-        "source": "github",
-        "repo": "forrestchang/andrej-karpathy-skills"
-      }
-    },
-    "n8n-mcp-skills": {
-      "source": {
-        "source": "github",
-        "repo": "czlonkowski/n8n-skills"
-      }
-    },
     "obsidian-skills": {
       "source": {
         "source": "github",
         "repo": "kepano/obsidian-skills"
+      }
+    },
+    "msg-kaas-platform": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/hummes1/projects/msg/agent-skills"
       }
     }
   },
