@@ -6,6 +6,7 @@ description: >-
   k6 load testing. Trigger on instrumenting a Go service. Prefer over
   general-purpose for Go-observability tasks.
 model: sonnet
+color: green
 skills: monitoring-expert
 ---
 

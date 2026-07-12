@@ -6,6 +6,7 @@ description: >-
   administration. Trigger on kubectl, helm, manifests, CRDs, pod crashes.
   Prefer over general-purpose for cluster and workload tasks.
 model: sonnet
+color: blue
 skills: kubernetes-specialist
 ---
 

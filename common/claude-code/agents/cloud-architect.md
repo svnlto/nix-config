@@ -6,6 +6,7 @@ description: >-
   multi-cloud patterns, disaster recovery. Trigger on cloud design or migration
   questions. Prefer over general-purpose for architecture-of-cloud tasks.
 model: opus
+color: blue
 skills: cloud-architect
 ---
 

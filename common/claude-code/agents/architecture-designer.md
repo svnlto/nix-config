@@ -6,6 +6,7 @@ description: >-
   patterns. Trigger on "design the system", "write an ADR", "evaluate X vs Y".
   Prefer over general-purpose for architecture-decision tasks.
 model: opus
+color: purple
 skills: architecture-designer
 ---
 

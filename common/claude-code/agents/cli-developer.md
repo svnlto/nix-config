@@ -6,6 +6,7 @@ description: >-
   completions. Trigger on building a CLI, adding subcommands, interactive TUI.
   Prefer over general-purpose for Go-CLI tasks.
 model: sonnet
+color: yellow
 skills: cli-developer
 ---
 

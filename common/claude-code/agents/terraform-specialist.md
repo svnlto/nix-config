@@ -6,6 +6,7 @@ description: >-
   terraform, tofu, .tf/.hcl files, tfstate, or plan/apply failures. Prefer
   over general-purpose for IaC tasks.
 model: sonnet
+color: blue
 skills: terraform-skill
 ---
 

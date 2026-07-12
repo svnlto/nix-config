@@ -6,6 +6,7 @@ description: >-
   cross-pillar correlation. Trigger on Datadog monitoring/alerting/tagging
   decisions. Prefer over general-purpose for Datadog-strategy tasks.
 model: sonnet
+color: green
 skills: datadog-advisor
 ---
 

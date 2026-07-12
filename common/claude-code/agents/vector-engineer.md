@@ -6,6 +6,7 @@ description: >-
   buffer/backpressure tuning, Datadog integration. Trigger on VRL, Vector
   config, log pipelines. Prefer over general-purpose for Vector tasks.
 model: sonnet
+color: green
 skills: vector-engineer
 ---
 

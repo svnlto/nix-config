@@ -6,6 +6,7 @@ description: >-
   Trigger on DAG, Airflow, scheduler, operator/task. Prefer over
   general-purpose for Airflow tasks.
 model: sonnet
+color: orange
 skills: airflow-engineer
 ---
 

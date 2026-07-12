@@ -6,6 +6,7 @@ description: >-
   with patches, saga compensation, multi-tenant patterns. Trigger on Temporal,
   workflow, activity, non-determinism. Prefer over general-purpose here.
 model: sonnet
+color: orange
 skills: temporal-engineer
 ---
 

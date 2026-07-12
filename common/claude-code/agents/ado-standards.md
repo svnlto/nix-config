@@ -6,6 +6,7 @@ description: >-
   design, branch policies. Trigger on ADO, azure-pipelines, PR policy.
   Prefer over general-purpose for ADO tasks.
 model: sonnet
+color: cyan
 skills: ado-standards
 ---
 

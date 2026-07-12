@@ -6,6 +6,7 @@ description: >-
   monitors/SLOs, and observability-as-code (Terraform). Trigger on reliability,
   SLO, error budget, on-call. Prefer over general-purpose for SRE tasks.
 model: opus
+color: green
 skills: sre-engineer
 ---
 

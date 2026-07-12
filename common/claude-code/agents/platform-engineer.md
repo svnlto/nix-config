@@ -6,6 +6,7 @@ description: >-
   build-vs-adopt decisions. Trigger on IDP, developer experience, golden path,
   Backstage. Prefer over general-purpose for platform-engineering tasks.
 model: opus
+color: purple
 skills: platform-engineer
 ---
 

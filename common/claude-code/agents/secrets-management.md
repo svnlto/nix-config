@@ -6,6 +6,7 @@ description: >-
   variable groups, workload identity, least-privilege access. Trigger on
   storing credentials or secret access. Prefer over general-purpose here.
 model: sonnet
+color: red
 skills: secrets-management
 ---
 
