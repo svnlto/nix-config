@@ -17,6 +17,8 @@ let
       "/Applications/Ghostty.app"
       "/Applications/Arc.app"
       "/Applications/Claude.app"
+      "/Applications/Obsidian.app"
+      "/Applications/Granola.app"
     ];
   };
 

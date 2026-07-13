@@ -9,6 +9,7 @@ _:
 
     # Communication & Collaboration
     "linear-linear"
+    "granola"
 
     # Communication
     "whatsapp"
