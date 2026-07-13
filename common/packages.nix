@@ -21,6 +21,7 @@ rec {
   devPackages = with pkgs; [
     gh
     gh-dash
+    glab
     lazygit
     direnv
     pipx
