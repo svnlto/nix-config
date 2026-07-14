@@ -1,4 +1,5 @@
--- Switch nvim's global cwd to a git worktree of the current repo.
+-- Switch nvim's global cwd to a git worktree of the current repo, and
+-- re-point open file buffers to the same paths in the new worktree.
 -- Reuses fzf-lua (already the picker); no new plugin dependency.
 
 -- Directory to resolve the repo from: the current buffer's dir, else cwd.
@@ -10,9 +11,19 @@ local function repo_dir()
 	return vim.loop.cwd()
 end
 
+-- Absolute root of the worktree containing `dir`, or nil if not in a repo.
+local function toplevel(dir)
+	local out = vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })
+	if vim.v.shell_error ~= 0 then
+		return nil
+	end
+	return out[1]
+end
+
 -- Parse `git worktree list --porcelain` into an ordered list of entries.
--- Each entry: { path, is_main, branch?, detached? }. `bare` records are
--- dropped (no working dir to cd into). Main worktree is git's first record.
+-- Each entry: { path, is_main, branch?, detached? }. `bare` and `prunable`
+-- (stale/missing) records are dropped — nothing valid to cd into. Main
+-- worktree is git's first record.
 local function worktrees(dir)
 	local lines = vim.fn.systemlist({ "git", "-C", dir, "worktree", "list", "--porcelain" })
 	if vim.v.shell_error ~= 0 then
@@ -21,7 +32,7 @@ local function worktrees(dir)
 
 	local entries, cur, first = {}, nil, true
 	local function flush()
-		if cur and not cur.bare then
+		if cur and not cur.bare and not cur.prunable then
 			entries[#entries + 1] = cur
 		end
 		cur = nil
@@ -38,11 +49,51 @@ local function worktrees(dir)
 				cur.detached = true
 			elseif line == "bare" then
 				cur.bare = true
+			elseif line:match("^prunable") then
+				cur.prunable = true
 			end
 		end
 	end
 	flush()
 	return entries
+end
+
+-- Re-point loaded, unmodified file buffers under old_root to the same
+-- relative path under new_root, when that file exists there. Windows
+-- showing a buffer are switched in place; the stale buffer is wiped.
+-- Returns the count of unsaved buffers left untouched.
+local function follow_buffers(old_root, new_root)
+	local prefix = old_root .. "/"
+	local skipped = 0
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		local name = vim.api.nvim_buf_get_name(buf)
+		if
+			name ~= ""
+			and vim.api.nvim_buf_is_loaded(buf)
+			and vim.bo[buf].buftype == ""
+			and name:sub(1, #prefix) == prefix
+		then
+			local target = new_root .. "/" .. name:sub(#prefix + 1)
+			if vim.loop.fs_stat(target) then
+				if vim.bo[buf].modified then
+					skipped = skipped + 1
+				else
+					local wins = vim.fn.win_findbuf(buf)
+					if #wins > 0 then
+						for _, win in ipairs(wins) do
+							vim.api.nvim_win_call(win, function()
+								vim.cmd.edit(vim.fn.fnameescape(target))
+							end)
+						end
+					else
+						vim.fn.bufadd(target)
+					end
+					pcall(vim.api.nvim_buf_delete, buf, {})
+				end
+			end
+		end
+	end
+	return skipped
 end
 
 -- Open the picker and cd to the chosen worktree.
@@ -57,6 +108,9 @@ local function switch()
 		vim.notify("only one worktree", vim.log.levels.INFO)
 		return
 	end
+
+	-- Captured before cd so buffers can be re-pointed to the new worktree.
+	local old_root = toplevel(dir)
 
 	-- Line format: "<label>\t<~path>\t<raw path>". Only fields 1-2 are
 	-- shown (--with-nth); the raw path is parsed back on select.
@@ -88,10 +142,18 @@ local function switch()
 					vim.notify(tostring(cderr), vim.log.levels.ERROR)
 					return
 				end
+				local skipped = 0
+				if old_root and old_root ~= path then
+					skipped = follow_buffers(old_root, path)
+				end
 				pcall(function()
 					require("nvim-tree.api").tree.change_root(path)
 				end)
-				vim.notify("→ " .. path)
+				local msg = "→ " .. path
+				if skipped > 0 then
+					msg = msg .. string.format("  (%d unsaved left)", skipped)
+				end
+				vim.notify(msg)
 			end,
 		},
 	})
