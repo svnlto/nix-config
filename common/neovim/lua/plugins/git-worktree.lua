@@ -58,12 +58,25 @@ local function worktrees(dir)
 	return entries
 end
 
--- Re-point loaded, unmodified file buffers under old_root to the same
+-- The worktree in `roots` that owns `path`: the longest root that is a
+-- path-prefix of it. Longest wins so a buffer inside a worktree nested
+-- under another (e.g. main/.worktrees/feat) resolves to the inner root.
+local function owning_root(path, roots)
+	local owner
+	for _, r in ipairs(roots) do
+		local rp = r .. "/"
+		if path:sub(1, #rp) == rp and (not owner or #r > #owner) then
+			owner = r
+		end
+	end
+	return owner
+end
+
+-- Re-point loaded, unmodified file buffers owned by old_root to the same
 -- relative path under new_root, when that file exists there. Windows
 -- showing a buffer are switched in place; the stale buffer is wiped.
 -- Returns the count of unsaved buffers left untouched.
-local function follow_buffers(old_root, new_root)
-	local prefix = old_root .. "/"
+local function follow_buffers(old_root, new_root, roots)
 	local skipped = 0
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 		local name = vim.api.nvim_buf_get_name(buf)
@@ -71,9 +84,9 @@ local function follow_buffers(old_root, new_root)
 			name ~= ""
 			and vim.api.nvim_buf_is_loaded(buf)
 			and vim.bo[buf].buftype == ""
-			and name:sub(1, #prefix) == prefix
+			and owning_root(name, roots) == old_root
 		then
-			local target = new_root .. "/" .. name:sub(#prefix + 1)
+			local target = new_root .. "/" .. name:sub(#old_root + 2)
 			if vim.loop.fs_stat(target) then
 				if vim.bo[buf].modified then
 					skipped = skipped + 1
@@ -86,7 +99,9 @@ local function follow_buffers(old_root, new_root)
 							end)
 						end
 					else
-						vim.fn.bufadd(target)
+						-- bufadd creates an unlisted buffer; re-list it so it
+						-- stays in :ls / :bnext / buffer pickers.
+						vim.bo[vim.fn.bufadd(target)].buflisted = true
 					end
 					pcall(vim.api.nvim_buf_delete, buf, {})
 				end
@@ -110,7 +125,12 @@ local function switch()
 	end
 
 	-- Captured before cd so buffers can be re-pointed to the new worktree.
+	-- `roots` lets follow_buffers tell nested worktrees apart by ownership.
 	local old_root = toplevel(dir)
+	local roots = {}
+	for _, e in ipairs(entries) do
+		roots[#roots + 1] = e.path
+	end
 
 	-- Line format: "<label>\t<~path>\t<raw path>". Only fields 1-2 are
 	-- shown (--with-nth); the raw path is parsed back on select.
@@ -144,7 +164,7 @@ local function switch()
 				end
 				local skipped = 0
 				if old_root and old_root ~= path then
-					skipped = follow_buffers(old_root, path)
+					skipped = follow_buffers(old_root, path, roots)
 				end
 				pcall(function()
 					require("nvim-tree.api").tree.change_root(path)
