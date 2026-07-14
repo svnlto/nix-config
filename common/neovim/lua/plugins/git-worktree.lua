@@ -8,7 +8,7 @@ local function repo_dir()
 	if buf ~= "" then
 		return vim.fn.fnamemodify(buf, ":h")
 	end
-	return vim.loop.cwd()
+	return vim.uv.cwd()
 end
 
 -- Absolute root of the worktree containing `dir`, or nil if not in a repo.
@@ -87,7 +87,7 @@ local function follow_buffers(old_root, new_root, roots)
 			and owning_root(name, roots) == old_root
 		then
 			local target = new_root .. "/" .. name:sub(#old_root + 2)
-			if vim.loop.fs_stat(target) then
+			if vim.uv.fs_stat(target) then
 				if vim.bo[buf].modified then
 					skipped = skipped + 1
 				else
@@ -116,7 +116,7 @@ local function switch()
 	local dir = repo_dir()
 	local entries, err = worktrees(dir)
 	if not entries then
-		vim.notify(err, vim.log.levels.WARN)
+		vim.notify(err or "not a git repository", vim.log.levels.WARN)
 		return
 	end
 	if #entries < 2 then
@@ -145,6 +145,9 @@ local function switch()
 
 	require("fzf-lua").fzf_exec(display, {
 		prompt = "Worktree> ",
+		-- `false` disables the inherited path formatter (fzf-lua's type
+		-- annotation wrongly restricts this to string).
+		---@diagnostic disable-next-line: assign-type-mismatch
 		formatter = false,
 		fzf_opts = { ["--delimiter"] = "\t", ["--with-nth"] = "1,2" },
 		actions = {
