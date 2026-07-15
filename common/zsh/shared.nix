@@ -21,6 +21,8 @@ rec {
     # Update management
     nix-update = "nix flake update";
     nix-check-updates = "nix flake show --json --all-systems | jq '.inputs'";
+    # Update all inputs and rebuild in one step (nixswitch resolves per-host)
+    nix-upgrade = "nix flake update && nixswitch";
 
     # Development shortcuts
     ports = "sudo lsof -i -P -n | grep LISTEN";

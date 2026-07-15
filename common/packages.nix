@@ -6,7 +6,7 @@ rec {
     eza
     zoxide
     bat
-    nixfmt-classic
+    nixfmt
     diff-so-fancy
     nerd-fonts.hack
     carapace
@@ -24,7 +24,11 @@ rec {
     glab
     lazygit
     direnv
-    pipx
+    # pipx's test suite is broken on nixpkgs 26.05 (cosmetic name-normalization
+    # asserts); skip the checkphase until a backport lands.
+    (pipx.overridePythonAttrs (_: {
+      doCheck = false;
+    }))
     k9s
     home-manager
     htop

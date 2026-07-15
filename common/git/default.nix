@@ -14,10 +14,12 @@ in
   programs.git = {
     enable = true;
 
-    userName = "Sven Lito";
-    userEmail = "me@svenlito.com";
+    settings = {
+      user = {
+        name = "Sven Lito";
+        email = "me@svenlito.com";
+      };
 
-    extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;

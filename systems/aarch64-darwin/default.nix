@@ -62,7 +62,8 @@ in
           env = pkgs.buildEnv {
             name = "system-applications";
             paths = config.environment.systemPackages;
-            pathsToLink = "/Applications";
+            # 26.05 buildEnv (strict under structuredAttrs) requires a list.
+            pathsToLink = [ "/Applications" ];
           };
         in
         lib.mkForce ''
