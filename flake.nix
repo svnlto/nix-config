@@ -20,6 +20,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Separately-pinned channel for hand-picked fresh tools (see
+    # common/overlays/fresh-tools.nix). Advance independently of the
+    # stable base with `nix flake update nixpkgs-unstable`.
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,12 +58,17 @@
           || throw "Username '${username}' is not a valid UNIX username (must start with lowercase letter or underscore, contain only lowercase letters, digits, underscores, and hyphens)";
         username;
 
+      # Overlay pulling hand-picked tools from the separately-pinned
+      # nixpkgs-unstable input. Maintained in common/overlays/fresh-tools.nix.
+      freshToolsOverlay = import ./common/overlays/fresh-tools.nix { inherit inputs; };
+
       # Utility function to create nixpkgs for different systems
       mkNixpkgs =
         system:
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          overlays = [ freshToolsOverlay ];
         };
 
       # Abstracted macOS configuration function
@@ -80,6 +89,8 @@
             ./systems/${system}
             {
               networking.hostName = hostname;
+              # nix-darwin builds its own pkgs, so apply the overlay here too.
+              nixpkgs.overlays = [ freshToolsOverlay ];
             }
 
             # Home Manager integration
