@@ -119,6 +119,9 @@ in
     # SessionStart hook script referenced from settings.json hooks
     ".claude/hooks/herdr-agent-state.sh".source = ./hooks/herdr-agent-state.sh;
 
+    # PreToolUse(Bash) guard blocking irreversible commands
+    ".claude/hooks/block-destructive.sh".source = ./hooks/block-destructive.sh;
+
     # Global CLAUDE.md with user preferences (writable via out-of-store symlink)
     ".claude/CLAUDE.md".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/CLAUDE.md";
@@ -133,6 +136,10 @@ in
     # Skill-bound subagents (out-of-store symlink for immediate iteration) — each preloads a skill via its `skills:` frontmatter so dispatched agents inherit the skill's methodology instead of running general-purpose
     ".claude/agents".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/agents";
+
+    # Custom slash commands (out-of-store symlink for immediate iteration)
+    ".claude/commands".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/claude-code/commands";
 
     # Create necessary directories
     ".claude/.keep".text = "";

@@ -3,11 +3,57 @@
   "env": {
     "CAVEMAN_DEFAULT_MODE": "lite",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "MCP_TIMEOUT": "60000"
   },
+  "fileCheckpointingEnabled": true,
   "includeCoAuthoredBy": false,
   "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
+  "permissions": {
+    "additionalDirectories": [
+      "/Users/svenlito/Documents/obsidian-vault"
+    ],
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(nix flake check:*)",
+      "Bash(nix flake show:*)",
+      "Bash(nix eval:*)",
+      "Bash(nixfmt:*)",
+      "Bash(statix:*)",
+      "Bash(deadnix:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(tree:*)",
+      "Bash(rg:*)",
+      "Bash(fd:*)",
+      "Bash(jq:*)",
+      "Read(//Users/svenlito/Documents/obsidian-vault/**)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(sudo rm:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(dd:*)",
+      "Bash(mkfs:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/*.pem)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -21,13 +67,25 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/block-destructive.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path') && [ -n \"$f\" ] && pre-commit run --files \"$f\" 2>&1 || true",
+            "command": "f=$(jq -r '.tool_input.file_path'); [ -n \"$f\" ] || exit 0; out=$(pre-commit run --files \"$f\" 2>&1); [ $? -eq 0 ] && exit 0; echo \"$out\" >&2; exit 2",
             "timeout": 30
           }
         ]
@@ -39,7 +97,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f flake.nix ] && nix flake check 2>&1 | head -20 || true",
+            "command": "[ -f flake.nix ] && git status --porcelain 2>/dev/null | grep -qE '\\.nix$' && nix flake check 2>&1 | head -20 || true",
             "timeout": 120
           }
         ]
