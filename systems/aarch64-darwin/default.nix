@@ -35,7 +35,7 @@ in
 
   # macOS-specific Nix settings
   nix = {
-    package = pkgs.nixVersions.nix_2_29;
+    package = pkgs.nixVersions.nix_2_31;
     settings = {
       experimental-features = [
         "nix-command"
