@@ -9,12 +9,8 @@ working with code in this repository.
 # macOS — apply system configuration (auto-detects hostname)
 nixswitch
 
-# Linux — apply Home Manager configuration (for Docker/containers)
+# Linux — apply Home Manager configuration (containers, dev environments)
 hmswitch
-
-# Docker — build and test in clean environment
-just build          # builds the Docker image
-just dev            # drops into zsh shell as svenlito
 
 # Development shell with Nix tools (nixfmt, statix, deadnix, nil)
 nix develop
@@ -104,20 +100,10 @@ Located in `common/claude-code/`, managed via `default.nix`:
 - **Status line**: `statusline-command.sh` (writable out-of-store symlink)
 - **Global CLAUDE.md**: user preferences (writable out-of-store symlink)
 
-## Docker Testing
-
-Multi-stage build: Ubuntu 24.04 builder + Debian bookworm-slim runtime.
-
-- Builder: Determinate Nix installer, `home-manager switch`, `nix-collect-garbage`
-- Runtime: Only `/nix/store` and user home copied over — no nix-daemon needed
-- Auto-detects architecture (`minimal-arm` or `minimal-x86`)
-- `USERNAME` build arg (default from docker-compose: `svenlito`)
-
 ## Pre-commit Hooks
 
 Installed via `pre-commit install`. Hooks: nixfmt, statix, deadnix,
-flake-check, hadolint, trailing-whitespace, check-yaml,
-detect-private-key.
+flake-check, trailing-whitespace, check-yaml, detect-private-key.
 
 ## Critical Pitfalls
 

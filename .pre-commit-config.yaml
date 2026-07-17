@@ -49,12 +49,6 @@ repos:
         exclude: ^common/claude-code/(agents/|skills/jira/references/templates/)
         description: Lint Markdown files using markdownlint-cli
 
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
-    hooks:
-      - id: hadolint-docker
-        name: Lint Dockerfile
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:

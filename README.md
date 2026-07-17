@@ -31,13 +31,6 @@ nix run home-manager -- switch --flake .#minimal-arm   # ARM64
 hmswitch
 ```
 
-### Docker
-
-```bash
-just build    # Build image (multi-stage: Ubuntu builder + Debian slim runtime)
-just dev      # Drop into configured zsh shell
-```
-
 ## Commands
 
 ```bash
@@ -95,7 +88,7 @@ systems/
   platform dirs are minimal
 - **Hybrid package management**: Nix for CLI tools, Homebrew for macOS GUI apps
 - **Catppuccin Mocha**: Consistent theme across Ghostty, Neovim, fzf
-- **Pre-commit hooks**: nixfmt, statix, deadnix, flake-check, hadolint
+- **Pre-commit hooks**: nixfmt, statix, deadnix, flake-check
 - **1Password SSH**: Agent integration for key management
 - **Profiles**: Opt-in modules that extend without polluting the base config
 
