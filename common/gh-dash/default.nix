@@ -1,8 +1,10 @@
 _:
 
 {
-  # gh-dash configuration with Catppuccin Mocha theme
-  home.file.".gh-dash.yml".text = ''
+  # gh-dash configuration with Catppuccin Mocha theme.
+  # v4.25+ reads the global config from XDG config, not ~/.gh-dash.yml
+  # (that name is only honoured as a repo-local file inside a git checkout).
+  xdg.configFile."gh-dash/config.yml".text = ''
     prSections:
       - title: Mine
         filters: is:open author:@me sort:updated-desc
@@ -19,12 +21,8 @@ _:
         filters: is:open sort:updated-desc
 
     defaults:
-      view: prs
       refetchIntervalMinutes: 5
-      prsLimit: 20
-      issuesLimit: 20
       preview:
-        open: true
         width: 84
 
     theme:
@@ -53,13 +51,21 @@ _:
         - key: c
           builtin: checkout
         - key: O
-          builtin: view
+          name: open in browser
+          command: >
+            gh pr view {{.PrNumber}} --repo {{.RepoName}} --web
         - key: C
-          builtin: create
+          name: create pr
+          command: >
+            gh pr create --repo {{.RepoName}} --web
       issues:
         - key: O
-          builtin: view
+          name: open in browser
+          command: >
+            gh issue view {{.IssueNumber}} --repo {{.RepoName}} --web
         - key: C
-          builtin: create
+          name: create issue
+          command: >
+            gh issue create --repo {{.RepoName}} --web
   '';
 }

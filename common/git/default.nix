@@ -30,7 +30,6 @@ in
         autocrlf = "input";
         quotepath = false;
         compression = 9;
-        preloadindex = true;
         pager = "diff-so-fancy | less --tabs=2 -RFX";
       };
 
@@ -46,7 +45,6 @@ in
       help.autocorrect = 10;
 
       color = {
-        ui = "auto";
         diff = {
           meta = "yellow";
           frag = "magenta bold";

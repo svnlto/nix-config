@@ -123,10 +123,7 @@ return {
 				-- Biome LSP (official integration)
 				biome = {
 					filetypes = { "javascript", "javascriptreact", "json", "jsonc", "typescript", "typescriptreact" },
-					root_dir = function(fname)
-						local lspconfig = require("lspconfig")
-						return lspconfig.util.root_pattern("biome.json", ".git")(fname)
-					end,
+					root_markers = { "biome.json", "biome.jsonc", ".git" },
 				},
 			},
 		},

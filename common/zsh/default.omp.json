@@ -7,9 +7,7 @@
     "orange": "#FAB387",
     "os": "#9399B2",
     "pink": "#F5C2E7",
-    "purple": "#CBA6F7",
-    "text": "#45475A",
-    "white": "#CDD6F4"
+    "purple": "#CBA6F7"
   },
   "transient_prompt": {
     "template": "{{ .UserName }}@{{ .HostName }} > ",

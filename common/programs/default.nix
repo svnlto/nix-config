@@ -9,7 +9,6 @@ in
     # Direnv configuration - development environment management
     direnv = {
       enable = true;
-      enableZshIntegration = true;
       nix-direnv.enable = true;
       # Reduce verbosity
       config = {

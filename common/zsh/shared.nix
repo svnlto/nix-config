@@ -59,7 +59,6 @@ rec {
     save = 50000;
     path = "$HOME/.zsh_history";
     ignoreAllDups = true;
-    ignoreDups = true;
     share = true;
     extended = true;
     expireDuplicatesFirst = true;
@@ -75,11 +74,11 @@ rec {
   };
 
   # History options for shell initialization (setopt commands)
+  # share_history and HIST_EXPIRE_DUPS_FIRST are emitted by the history module
+  # (history.share / history.expireDuplicatesFirst) — don't duplicate them here.
   historyOptions = ''
     # History options - keep only what you need
     setopt hist_reduce_blanks
-    setopt share_history
-    setopt HIST_EXPIRE_DUPS_FIRST
     setopt APPEND_HISTORY
   '';
 
