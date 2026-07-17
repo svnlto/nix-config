@@ -10,7 +10,6 @@ in
   imports = [
     ./home-packages.nix
     ./claude-code/default.nix
-    ./pi/default.nix
     ./programs/default.nix
   ];
 
