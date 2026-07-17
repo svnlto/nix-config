@@ -8,7 +8,6 @@ _:
     "ledger-wallet"
 
     # Communication & Collaboration
-    "linear-linear"
     "granola"
 
     # Communication
