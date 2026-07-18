@@ -23,7 +23,6 @@ nix flake check
 ## Commit Convention
 
 This repo follows [Conventional Commits](https://www.conventionalcommits.org/).
-See `docs/COMMIT_CONVENTION.md` for full spec.
 
 Format: `<type>(<scope>): <subject>`
 
