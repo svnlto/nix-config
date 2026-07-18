@@ -52,6 +52,12 @@ let
     rev = "276af751e659315aaf56d3ad13d7c26f4e72e28a";
     sha256 = "0xxsiaxjrjbqzb7rjx7l9d1hjp5id4kkf15qimgv1px7rh6289a5";
   };
+  elements-of-style-repo = pkgs.fetchFromGitHub {
+    owner = "obra";
+    repo = "the-elements-of-style";
+    rev = "6099c505c2a8eb066f3777f83a97d9d828f7954c";
+    sha256 = "sha256-W9arG7zDUd2+1Z+o0QLBoCWMRr/TQJFmSQnfdEiJd5k=";
+  };
   chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
     owner = "ChromeDevTools";
     repo = "chrome-devtools-mcp";
@@ -106,6 +112,8 @@ let
       cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-generator $out/
       cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-validator $out/
     done
+    # obra/the-elements-of-style — sentence-level prose mechanics
+    cp -r ${elements-of-style-repo}/skills/writing-clearly-and-concisely $out/
     # Local skills (not from upstream repo)
     cp -r ${./skills}/* $out/
   '';
