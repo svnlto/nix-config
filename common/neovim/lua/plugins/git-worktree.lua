@@ -1,8 +1,8 @@
--- Switch nvim's global cwd to a git worktree of the current repo, and
--- re-point open file buffers to the same paths in the new worktree.
--- Reuses fzf-lua (already the picker); no new plugin dependency.
+-- <leader>gw: switch nvim's cwd to another worktree of the current repo and
+-- re-point open buffers to their counterpart paths there. Reuses fzf-lua as
+-- the picker; no extra plugin dependency.
 
--- Directory to resolve the repo from: the current buffer's dir, else cwd.
+-- Resolve the repo from the current buffer's dir, else cwd.
 local function repo_dir()
 	local buf = vim.api.nvim_buf_get_name(0)
 	if buf ~= "" then
@@ -20,10 +20,9 @@ local function toplevel(dir)
 	return out[1]
 end
 
--- Parse `git worktree list --porcelain` into an ordered list of entries.
--- Each entry: { path, is_main, branch?, detached? }. `bare` and `prunable`
--- (stale/missing) records are dropped — nothing valid to cd into. Main
--- worktree is git's first record.
+-- Parse `git worktree list --porcelain` into ordered entries. Drop `bare` and
+-- `prunable` (stale/missing) records — nothing valid to cd into. Git lists the
+-- main worktree first.
 local function worktrees(dir)
 	local lines = vim.fn.systemlist({ "git", "-C", dir, "worktree", "list", "--porcelain" })
 	if vim.v.shell_error ~= 0 then
@@ -72,10 +71,10 @@ local function owning_root(path, roots)
 	return owner
 end
 
--- Re-point loaded, unmodified file buffers owned by old_root to the same
--- relative path under new_root, when that file exists there. Windows
--- showing a buffer are switched in place; the stale buffer is wiped.
--- Returns the count of unsaved buffers left untouched.
+-- Re-point loaded, unmodified buffers owned by old_root to the same relative
+-- path under new_root when it exists there. Windows showing the buffer are
+-- switched in place; the stale buffer is wiped. Unsaved buffers are left
+-- alone — returns how many were skipped.
 local function follow_buffers(old_root, new_root, roots)
 	local skipped = 0
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -111,7 +110,6 @@ local function follow_buffers(old_root, new_root, roots)
 	return skipped
 end
 
--- Open the picker and cd to the chosen worktree.
 local function switch()
 	local dir = repo_dir()
 	local entries, err = worktrees(dir)
@@ -124,8 +122,8 @@ local function switch()
 		return
 	end
 
-	-- Captured before cd so buffers can be re-pointed to the new worktree.
-	-- `roots` lets follow_buffers tell nested worktrees apart by ownership.
+	-- Captured before cd so buffers can be re-pointed; `roots` lets
+	-- follow_buffers tell nested worktrees apart by ownership.
 	local old_root = toplevel(dir)
 	local roots = {}
 	for _, e in ipairs(entries) do
