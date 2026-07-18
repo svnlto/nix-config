@@ -32,6 +32,7 @@ _:
       "orbstack"
       "ghostty"
       "claude-code"
+      "claude-devtools"
       "antigravity-cli"
 
       # Networking & VPN
