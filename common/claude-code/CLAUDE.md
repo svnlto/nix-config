@@ -72,3 +72,26 @@ plans, invoke the `obsidian:obsidian-markdown` skill and use
 Obsidian Flavored Markdown: frontmatter properties (title,
 date, tags, aliases), wikilinks to related specs/plans, and
 callouts for key decisions or warnings.
+
+## Obsidian Vault Access
+
+Two-tier access to the vault at `$HOME/Documents/obsidian-vault`:
+
+- **Content read/write — use the filesystem tools** (Read, Write,
+  Edit, Grep, Glob). Fastest path: no process spawn, works when
+  Obsidian is closed, composes with search. This is the default
+  for editing note bodies and creating notes.
+- **Graph, index, and daily-note operations — use the
+  `obsidian-cli` skill** (native `obsidian` CLI; the app must be
+  running). Reach for it only when the filesystem can't do the job
+  natively:
+  - Wikilink/alias resolution (`file=` matches by link, not path)
+  - Backlinks and graph queries (`backlinks`, `links`, `orphans`,
+    `deadends`, `unresolved`)
+  - Daily notes (`daily:append` respects the daily-note config)
+  - Index-aware search (`search`, `search:context`, `format=json`)
+  - Frontmatter and metadata (`property:set`, `tags`, `aliases`)
+
+Do not route bulk content editing through the CLI — the filesystem
+is more efficient. The Local REST API / claude-code-mcp path is
+redundant with the native CLI; prefer the CLI.
