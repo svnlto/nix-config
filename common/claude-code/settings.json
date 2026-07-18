@@ -6,14 +6,8 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "MCP_TIMEOUT": "60000"
   },
-  "fileCheckpointingEnabled": true,
   "includeCoAuthoredBy": false,
-  "model": "claude-opus-4-8[1m]",
-  "enableAllProjectMcpServers": false,
   "permissions": {
-    "additionalDirectories": [
-      "/Users/svenlito/Documents/obsidian-vault"
-    ],
     "allow": [
       "Bash(git status:*)",
       "Bash(git diff:*)",
@@ -52,8 +46,13 @@
       "Read(**/id_rsa)",
       "Read(**/id_ed25519)",
       "Read(**/*.pem)"
+    ],
+    "additionalDirectories": [
+      "/Users/svenlito/Documents/obsidian-vault"
     ]
   },
+  "model": "claude-opus-4-8[1m]",
+  "enableAllProjectMcpServers": false,
   "hooks": {
     "SessionStart": [
       {
@@ -115,7 +114,8 @@
     "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
     "terragrunt-skill@jfr992": true,
-    "agent-skills@msg-kaas-platform": true
+    "agent-skills@msg-kaas-platform": true,
+    "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -157,6 +157,7 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "preferredNotifChannel": "ghostty",
+  "fileCheckpointingEnabled": true,
   "terminalProgressBarEnabled": true,
   "remoteControlAtStartup": false,
   "skipAutoPermissionPrompt": true,
