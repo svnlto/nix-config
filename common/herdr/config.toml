@@ -11,6 +11,7 @@ command = "lazygit"
 [theme]
 name = "terminal"
 
+auto_switch = false
 [theme.custom]
 accent = "#313244"
 panel_bg = "reset"

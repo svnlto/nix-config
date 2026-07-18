@@ -25,5 +25,7 @@ _:
 
     # Networking & VPN
     "tailscale-app"
+
+    "spotify"
   ];
 }

@@ -182,9 +182,12 @@ local function switch()
 	})
 end
 
+-- Register the keymap in `init`, not `keys`: a `keys` fragment flips fzf-lua
+-- into keys-based lazy-loading, which stops it loading at startup and breaks
+-- every other <cmd>FzfLua ...<cr> map (<leader><leader>, etc.) until pressed.
 return {
 	"ibhagwan/fzf-lua",
-	keys = {
-		{ "<leader>gw", switch, desc = "Switch Worktree" },
-	},
+	init = function()
+		vim.keymap.set("n", "<leader>gw", switch, { desc = "Switch Worktree" })
+	end,
 }
