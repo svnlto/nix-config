@@ -1,69 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
+    "config:best-practices",
     ":semanticCommits",
     ":enableVulnerabilityAlerts"
   ],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
+  "dependencyDashboard": false,
+  "schedule": ["every weekend"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
   "packageRules": [
     {
-      "matchManagers": [
-        "nix"
-      ],
-      "addLabels": [
-        "nix"
-      ]
-    },
-    {
-      "matchManagers": [
-        "github-actions"
-      ],
-      "addLabels": [
-        "github-actions"
-      ],
-      "groupName": "github-actions"
-    },
-    {
-      "matchManagers": [
-        "pre-commit"
-      ],
-      "addLabels": [
-        "pre-commit"
-      ]
-    },
-    {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
     {
-      "matchDepNames": [
-        "/^nixpkgs/"
-      ],
-      "schedule": [
-        "every 2 weeks on Saturday"
-      ]
+      "matchDepNames": ["/^nixpkgs/"],
+      "schedule": ["every 2 weeks on Saturday"]
     }
-  ],
-  "dependencyDashboard": false,
-  "schedule": [
-    "every weekend"
-  ],
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
-  "rebaseWhen": "auto",
-  "pinDigests": true,
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": [
-      "before 5am on Monday"
-    ]
-  }
+  ]
 }
