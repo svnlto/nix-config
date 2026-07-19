@@ -25,14 +25,14 @@ let
   terraform-skill-repo = pkgs.fetchFromGitHub {
     owner = "antonbabenko";
     repo = "terraform-skill";
-    rev = "9c188f5ee15606d85871e0b012f4b00df6cf10fa";
-    sha256 = "14nmmxhfr1p2hzkxr11425vhrq712mk3krc6hkaslrqavk3bpy0f";
+    rev = "0a3a4a66e99001347d36a41e10260a825be3ab62";
+    sha256 = "0zxj42dpjp7q42x0cxghhgazl3mjisplbb9rhsfs9fwyrggaxlms";
   };
   herdr-repo = pkgs.fetchFromGitHub {
     owner = "ogulcancelik";
     repo = "herdr";
-    rev = "e53cea4ed6fdd49d70caacc1eccc07225bed5dd8";
-    sha256 = "1h4lxbggw3vwvpk7wjjmr4ff609qzqx9wh41jpcad5kfjafx53pk";
+    rev = "b580103b956ef9cdf39798947a46ce4e8b78c322";
+    sha256 = "0vbpqfri4s8gbgnwwb623ihmax6aj4l7n0wilcj690n56d70cvg0";
   };
   agno-skills-repo = pkgs.fetchFromGitHub {
     owner = "agno-agi";
@@ -43,8 +43,8 @@ let
   hashicorp-skills-repo = pkgs.fetchFromGitHub {
     owner = "hashicorp";
     repo = "agent-skills";
-    rev = "957d5f95911bc22eaf2b7e141c3b08ba824091fe";
-    sha256 = "1498z3nhp6da8y0avxi2blcwpck8ska448y4hfdgznsz9wwmlygs";
+    rev = "8c6573abbd21e8094fab8f538eb5f97db63133fd";
+    sha256 = "1gjnvmh1j17xlw3hwbcm0k9fj1cawa5rxg0hpxwp2kc2n7c0zxgs";
   };
   cc-devops-skills-repo = pkgs.fetchFromGitHub {
     owner = "akin-ozer";
@@ -61,16 +61,16 @@ let
   chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
     owner = "ChromeDevTools";
     repo = "chrome-devtools-mcp";
-    rev = "chrome-devtools-mcp-v1.4.0";
-    sha256 = "18kg20g392r1vbnvr2q6xwz8x1ls6z13zhgcdmwgrdbb94d1vpnh";
+    rev = "chrome-devtools-mcp-v1.6.0";
+    sha256 = "0vi24yml8017i400fp5p96dmv6hry532c7qm2miy35nvrync2xk8";
   };
   # Built from the bundled npm tarball to avoid npx registry resolution, which intermittently failed on the pinned version via stale metadata (ETARGET), leaving the server and its tools absent for the whole session.
   chrome-devtools-mcp = pkgs.stdenv.mkDerivation {
     pname = "chrome-devtools-mcp";
-    version = "1.4.0";
+    version = "1.6.0";
     src = pkgs.fetchurl {
-      url = "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.4.0.tgz";
-      hash = "sha256-0tRNmnPaSZIILB8WhfvEoTaUF2cNSplI0w7L70FBmZk=";
+      url = "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.6.0.tgz";
+      hash = "sha256-HmMsLZcUtPgrTPq077nOV1CFx1/+XpdyODEprwEsnIQ=";
     };
     nativeBuildInputs = [ pkgs.makeWrapper ];
     dontBuild = true;
@@ -85,10 +85,25 @@ let
   };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
-    for skill in ci-cd devsecops-expert rest-api-design security-auditing \
+    for skill in devsecops-expert rest-api-design security-auditing \
                  cloud-api-integration database-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
+    # These two ship with malformed frontmatter (H1/code-fence, no description)
+    # so they never auto-invoke — rewrite the header. Guards no-op if upstream
+    # fixes it. chmod: cp from the store leaves dirs read-only, sed -i needs +w.
+    chmod -R u+w "$out/security-auditing" "$out/rest-api-design"
+    sec=$out/security-auditing/SKILL.md
+    if [ "$(head -1 "$sec")" = "# Security Auditing Skill" ]; then
+      sed -i '/^---$/,$!d' "$sec"
+      sed -i '0,/^---$/s//---\ndescription: Security auditing and compliance logging — GDPR, HIPAA, PCI-DSS, SOC2, ISO27001. Use for audit trails, tamper-evident logs, and compliance controls./' "$sec"
+    fi
+    rest=$out/rest-api-design/SKILL.md
+    if [ "$(head -1 "$rest")" = "# REST API Design Skill" ]; then
+      sed -i '/^```yaml$/,$!d' "$rest"
+      sed -i '0,/^```yaml$/s//---/' "$rest"
+      sed -i '0,/^```$/s//---/' "$rest"
+    fi
     # antonbabenko/terraform-skill
     cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
     # ogulcancelik/herdr agent skill
