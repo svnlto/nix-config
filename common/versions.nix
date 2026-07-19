@@ -5,7 +5,4 @@
 
   # nix-darwin system state version
   darwinStateVersion = 5;
-
-  # Nixpkgs state version (when applicable)
-  nixpkgsStateVersion = "24.05";
 }

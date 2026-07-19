@@ -21,7 +21,6 @@ in
       build-cores = 0;
 
       # Settings to improve lock handling and build performance
-      use-case-hack = true;
       fallback = true;
       keep-going = true;
       log-lines = 25;

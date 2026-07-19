@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  self,
   username,
   hostname,
   ...
@@ -33,26 +34,19 @@ in
 
   };
 
-  # macOS-specific Nix settings
+  # macOS-specific Nix settings (experimental-features and trusted-users come
+  # from common/default.nix; use-case-hack is a case-insensitive-APFS workaround
+  # that belongs only on darwin).
   nix = {
     package = pkgs.nixVersions.nix_2_31;
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [
-        "root"
-        username
-      ];
-    };
+    settings.use-case-hack = true;
     optimise.automatic = true;
   };
 
   programs.zsh.enable = true;
 
   system = {
-    configurationRevision = lib.mkIf (builtins ? currentSystem) null;
+    configurationRevision = self.rev or self.dirtyRev or null;
     stateVersion = versions.darwinStateVersion;
     primaryUser = username;
 
