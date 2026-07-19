@@ -52,13 +52,15 @@ Load detailed guidance based on context:
 ### MUST DO
 
 - Set resource requests and limits on all containers
-- Include liveness and readiness probes
+- Include liveness and readiness probes on long-running service
+  containers (not Jobs, init containers, or one-shot pods)
 - Use Secrets for sensitive data (never ConfigMaps)
 - Apply least-privilege RBAC
 - Use SecurityContext (non-root, read-only rootfs, drop
   capabilities)
 - Set pod disruption budgets for production workloads
-- Use namespaces for isolation
+- Isolate workloads by team and environment into dedicated
+  namespaces
 
 ### MUST NOT DO
 

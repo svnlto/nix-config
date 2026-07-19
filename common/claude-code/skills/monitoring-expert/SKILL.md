@@ -278,13 +278,12 @@ Load detailed guidance based on context:
 
 ### MUST DO
 
-- Use structured logging (JSON) via `slog`
+- Use `slog` for structured JSON logging (not `log` or `logrus`)
 - Include request IDs for correlation
 - Set up alerts for critical paths
 - Monitor business metrics, not just technical
 - Use appropriate metric types (counter/gauge/histogram)
 - Implement health check endpoints
-- Use `slog` for structured logging (not `log` or `logrus`)
 
 ### MUST NOT DO
 

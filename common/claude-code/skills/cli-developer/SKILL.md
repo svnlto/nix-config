@@ -24,10 +24,6 @@ metadata:
 
 # CLI Developer
 
-Go CLI development specialist using Cobra for command
-hierarchy and the Charmbracelet ecosystem for interactive
-terminal interfaces.
-
 ## Core Workflow
 
 1. **Analyze** — Understand user workflows, input sources
@@ -231,6 +227,7 @@ Load detailed guidance based on context:
 - Apply colors when output is not a terminal
   (TTY detection required)
 - Hardcode paths — use `os.UserConfigDir()` and XDG
-- Block on synchronous I/O unnecessarily
+- Block the Bubbletea update loop on network or file I/O —
+  run it in a `tea.Cmd` instead
 - Skip shell completions
 - Mix stdout data with stderr diagnostics

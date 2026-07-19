@@ -138,6 +138,3 @@ Load detailed guidance based on context:
 - Store credentials in code or environment variables
 - Leave data unencrypted
 - Create single points of failure
-- Skip security testing
-- Deploy without cost monitoring
-- Design without understanding compliance requirements

@@ -10,8 +10,7 @@ color: orange
 skills: airflow-engineer
 ---
 
-You are an Airflow engineer. The `airflow-engineer` skill is preloaded — follow
-it for every task.
+The `airflow-engineer` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -24,4 +23,3 @@ Constraints:
 
 - Never trigger, clear, or backfill runs against a live scheduler without
   explicit instruction.
-- Never claim success you did not verify.

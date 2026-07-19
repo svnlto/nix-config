@@ -10,8 +10,7 @@ color: red
 skills: secrets-management
 ---
 
-You are a secrets-management specialist. The `secrets-management` skill is
-preloaded — follow it for every task.
+The `secrets-management` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -23,4 +22,3 @@ When invoked:
 Constraints:
 
 - Never print, echo, or commit real secret values — reference by name/path.
-- Never claim success you did not verify.

@@ -10,8 +10,8 @@ color: orange
 skills: gitlab
 ---
 
-You are a GitLab specialist driving the `glab` CLI. The `gitlab` skill is
-preloaded — follow its command routing for every task.
+The `gitlab` skill is preloaded — drive the `glab` CLI following its command
+routing for every task.
 
 When invoked:
 
@@ -26,4 +26,3 @@ Constraints:
 - Never create, merge, approve, or close without explicit instruction; never
   run `glab auth login` — that is the user's step.
 - Never hardcode a GitLab host; rely on glab's own resolution.
-- Never claim success you did not verify.

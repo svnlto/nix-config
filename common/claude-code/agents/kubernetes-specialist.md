@@ -10,8 +10,7 @@ color: blue
 skills: kubernetes-specialist
 ---
 
-You are a Kubernetes specialist. The `kubernetes-specialist` skill is preloaded
-— follow it for every task.
+The `kubernetes-specialist` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -24,4 +23,3 @@ Constraints:
 
 - Never `apply`, `delete`, or mutate live cluster state without explicit
   instruction.
-- Never claim success you did not verify.

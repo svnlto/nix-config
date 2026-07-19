@@ -18,7 +18,7 @@ metadata:
     - technology selection
   role: specialist
   scope: implementation
-  output-format: code
+  output-format: docs
   related-skills:
     - cloud-architect
     - sre-engineer
@@ -27,10 +27,6 @@ metadata:
 ---
 
 # Architecture Designer
-
-Senior software architect specializing in system design,
-architecture decision records, microservices evaluation,
-technology trade-off analysis, and non-functional requirements.
 
 ## Core Workflow
 

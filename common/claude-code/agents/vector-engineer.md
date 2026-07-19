@@ -10,8 +10,7 @@ color: green
 skills: vector-engineer
 ---
 
-You are a Vector pipeline engineer. The `vector-engineer` skill is preloaded —
-follow it for every task.
+The `vector-engineer` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -24,4 +23,3 @@ When invoked:
 Constraints:
 
 - Preserve delivery guarantees in production configs.
-- Never claim success you did not verify.

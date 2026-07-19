@@ -1,5 +1,5 @@
 ---
-name: Secrets Management
+name: secrets-management
 description: "Secure secrets management using Azure Key Vault, HashiCorp Vault, AWS Secrets Manager, or platform-native solutions. Use when storing credentials, managing API keys, handling certificates, configuring secret access in applications, infrastructure (Terraform/Ansible), Kubernetes, or CI/CD pipelines. Also covers secret rotation, scanning, ADO variable groups, workload identity, and least-privilege access patterns."
 version: 1.0.0
 tags: [secrets, vault, azure-key-vault, ado, aws-secrets-manager, kubernetes, terraform, security]
@@ -77,7 +77,6 @@ Load detailed guidance based on context:
 ## Related Skills
 
 - `ado-standards` — ADO pipeline design, variable groups, service connections
-- `ci-cd` — GitHub Actions security, code signing, supply chain protection
-- `devsecops-expert` — Shift-left security, IaC scanning
+- `devsecops-expert` — Shift-left security, IaC scanning, supply chain protection
 - `security-auditing` — Code and infrastructure security review
 - `talos-os-expert` — Kubernetes cluster security

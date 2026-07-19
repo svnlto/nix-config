@@ -10,8 +10,7 @@ color: yellow
 skills: cli-developer
 ---
 
-You are a Go CLI developer. The `cli-developer` skill is preloaded — follow it
-for every task.
+The `cli-developer` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -24,4 +23,3 @@ When invoked:
 Constraints:
 
 - Match existing conventions rather than introducing new patterns.
-- Never claim success you did not verify.

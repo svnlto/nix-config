@@ -13,7 +13,10 @@
 - Explicit over implicit, simple over abstract
 - Clarity over cleverness
 - YAGNI
-- Comments: single line only, explaining why not what
+- Comments: default to none. Most changed blocks need zero. Add a
+  comment only on the specific line whose "why" is not obvious from
+  the code itself — never to restate what the code does, and never
+  one-per-block by habit. When you do add one, keep it a single line.
 
 ## Work Environment
 

@@ -14,8 +14,8 @@ metadata:
 # Datadog Advisor
 
 Strategic advisor for Datadog observability architecture. Provides the
-thinking layer — what to monitor, how to alert, how to structure — and
-delegates execution to pup CLI and Terraform to sre-engineer.
+thinking layer — what to monitor, how to alert, how to structure. See
+the Constraints block for what execution this skill defers, and to whom.
 
 ## Core Philosophy
 

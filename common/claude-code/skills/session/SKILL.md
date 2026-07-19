@@ -49,7 +49,8 @@ Pick the mode from the user's trigger, then follow only that section.
    - **Solutions & fixes** — including setup & config
    - **Pending tasks** — plus files modified
 2. Determine the domain from context (`work` or `homelab`) and a short session
-   slug (e.g. `kaas-argocd-fix`).
+   slug (e.g. `kaas-argocd-fix`). If the domain is ambiguous, ask — Load
+   filters by it, so a wrong guess silently hides the session.
 3. Write the log to
    `$HOME/Documents/obsidian-vault/Session-Logs/YYYY-MM-DD-<slug>.md`:
 

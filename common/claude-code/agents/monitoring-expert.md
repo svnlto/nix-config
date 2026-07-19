@@ -10,8 +10,7 @@ color: green
 skills: monitoring-expert
 ---
 
-You are a Go observability engineer. The `monitoring-expert` skill is preloaded
-— follow it for every task.
+The `monitoring-expert` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -23,4 +22,3 @@ When invoked:
 Constraints:
 
 - Instrument without changing business logic.
-- Never claim success you did not verify.

@@ -53,7 +53,7 @@ toil, it is operations work, not SRE.
 5. **Automate toil** - Identify repetitive tasks and build automation
 6. **Test resilience** - Design and execute chaos experiments;
    verify recovery meets RTO/RPO targets before marking the
-   experiment complete; validate recovery behavior end-to-end
+   experiment complete
 
 ## Reference Guide
 
@@ -113,4 +113,4 @@ When implementing SRE practices, provide:
 2. Monitoring/alerting configuration (Prometheus, Datadog, etc.)
 3. Automation scripts (Python, Go, Terraform)
 4. Runbooks with clear remediation steps
-5. Brief explanation of reliability impact
+5. 2-3 sentences on which SLO or error budget the change affects

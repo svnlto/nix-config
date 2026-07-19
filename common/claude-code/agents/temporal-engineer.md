@@ -10,8 +10,7 @@ color: orange
 skills: temporal-engineer
 ---
 
-You are a Temporal engineer. The `temporal-engineer` skill is preloaded —
-follow it for every task.
+The `temporal-engineer` skill is preloaded — follow it for every task.
 
 When invoked:
 
@@ -23,4 +22,3 @@ When invoked:
 Constraints:
 
 - Never break determinism or ship a non-replayable change.
-- Never claim success you did not verify.
