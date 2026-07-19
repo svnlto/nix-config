@@ -19,7 +19,7 @@ in
       window-padding-y = 0
       macos-window-buttons = hidden
       macos-titlebar-proxy-icon = hidden
-      macos-titlebar-style = hidden
+      title = " "
       background-opacity = 0.85
 
       cursor-style-blink = true
