@@ -21,5 +21,4 @@ When invoked:
 
 Constraints:
 
-- Never create, complete, or push PRs without explicit instruction; never skip
-  commit signing.
+- Never create, complete, or push PRs without explicit instruction; never skip commit signing.
