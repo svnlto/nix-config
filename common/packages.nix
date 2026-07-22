@@ -15,6 +15,7 @@ rec {
     fzf
     curl
     wget
+    nodejs_26
   ];
 
   # Development and system-administration tooling
