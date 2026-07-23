@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   # Claude Code reads global MCP definitions only from ~/.claude.json's top-level mcpServers key, not settings.json — so merge them there on switch.
   userMcpJson = pkgs.writeText "claude-user-mcp.json" (
@@ -16,48 +21,17 @@ let
       };
     }
   );
-  skills-repo = pkgs.fetchFromGitHub {
-    owner = "martinholovsky";
-    repo = "claude-skills-generator";
-    rev = "1086ef25672acba2916220c6ce032a612cd9dc98";
-    sha256 = "1shvigcnm63a62w0nynqcnly292dz4zchybzjg90nwv0vz38c1a3";
-  };
-  terraform-skill-repo = pkgs.fetchFromGitHub {
-    owner = "antonbabenko";
-    repo = "terraform-skill";
-    rev = "0a3a4a66e99001347d36a41e10260a825be3ab62";
-    sha256 = "0zxj42dpjp7q42x0cxghhgazl3mjisplbb9rhsfs9fwyrggaxlms";
-  };
-  herdr-repo = pkgs.fetchFromGitHub {
-    owner = "ogulcancelik";
-    repo = "herdr";
-    rev = "b580103b956ef9cdf39798947a46ce4e8b78c322";
-    sha256 = "0vbpqfri4s8gbgnwwb623ihmax6aj4l7n0wilcj690n56d70cvg0";
-  };
-  agno-skills-repo = pkgs.fetchFromGitHub {
-    owner = "agno-agi";
-    repo = "agno-skills";
-    rev = "0ed7d1c92570384030184a6dfa18d275a9b5f694";
-    sha256 = "1rzdzn7pj8yab68hvbjq663r5kjj9z1wqpkdbn8zbz03cx4kssfd";
-  };
-  hashicorp-skills-repo = pkgs.fetchFromGitHub {
-    owner = "hashicorp";
-    repo = "agent-skills";
-    rev = "8c6573abbd21e8094fab8f538eb5f97db63133fd";
-    sha256 = "1gjnvmh1j17xlw3hwbcm0k9fj1cawa5rxg0hpxwp2kc2n7c0zxgs";
-  };
-  cc-devops-skills-repo = pkgs.fetchFromGitHub {
-    owner = "akin-ozer";
-    repo = "cc-devops-skills";
-    rev = "276af751e659315aaf56d3ad13d7c26f4e72e28a";
-    sha256 = "0xxsiaxjrjbqzb7rjx7l9d1hjp5id4kkf15qimgv1px7rh6289a5";
-  };
-  elements-of-style-repo = pkgs.fetchFromGitHub {
-    owner = "obra";
-    repo = "the-elements-of-style";
-    rev = "6099c505c2a8eb066f3777f83a97d9d828f7954c";
-    sha256 = "sha256-W9arG7zDUd2+1Z+o0QLBoCWMRr/TQJFmSQnfdEiJd5k=";
-  };
+  # Skill sources come from flake inputs (flake=false) so rev + hash stay
+  # in flake.lock and ride along with `nix flake update`. See flake.nix.
+  skills-repo = inputs.cc-skills-generator;
+  terraform-skill-repo = inputs.cc-terraform-skill;
+  herdr-repo = inputs.cc-herdr;
+  agno-skills-repo = inputs.cc-agno-skills;
+  hashicorp-skills-repo = inputs.cc-hashicorp-skills;
+  cc-devops-skills-repo = inputs.cc-devops-skills;
+  elements-of-style-repo = inputs.cc-elements-of-style;
+  # Tag-pinned + version-coupled to the npm tarball below, so kept as an
+  # explicit fetch rather than a flake input.
   chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
     owner = "ChromeDevTools";
     repo = "chrome-devtools-mcp";

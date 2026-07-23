@@ -32,6 +32,39 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Claude Code skill sources. flake=false: consumed as plain source
+    # trees by common/claude-code. Locked in flake.lock (rev + hash) and
+    # bumped via `nix flake update` / Renovate lock maintenance, so they
+    # can't drift silently the way inline fetchFromGitHub pins do.
+    cc-skills-generator = {
+      url = "github:martinholovsky/claude-skills-generator";
+      flake = false;
+    };
+    cc-terraform-skill = {
+      url = "github:antonbabenko/terraform-skill";
+      flake = false;
+    };
+    cc-herdr = {
+      url = "github:ogulcancelik/herdr";
+      flake = false;
+    };
+    cc-agno-skills = {
+      url = "github:agno-agi/agno-skills";
+      flake = false;
+    };
+    cc-hashicorp-skills = {
+      url = "github:hashicorp/agent-skills";
+      flake = false;
+    };
+    cc-devops-skills = {
+      url = "github:akin-ozer/cc-devops-skills";
+      flake = false;
+    };
+    cc-elements-of-style = {
+      url = "github:obra/the-elements-of-style";
+      flake = false;
+    };
   };
 
   outputs =
@@ -100,6 +133,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = false; # Must be false on macOS to create user profiles
                 extraSpecialArgs = {
+                  inherit inputs;
                   username = validUsername;
                 };
                 backupFileExtension = "backup";
@@ -145,6 +179,7 @@
           ]
           ++ extraModules;
           extraSpecialArgs = {
+            inherit inputs;
             username = validUsername;
           };
         };

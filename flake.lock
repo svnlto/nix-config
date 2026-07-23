@@ -1,5 +1,117 @@
 {
   "nodes": {
+    "cc-agno-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771212918,
+        "narHash": "sha256-zWk9SWcD/PWRXW1ezMNPUs6ShzFYrg2RWcojeY/97ec=",
+        "owner": "agno-agi",
+        "repo": "agno-skills",
+        "rev": "0ed7d1c92570384030184a6dfa18d275a9b5f694",
+        "type": "github"
+      },
+      "original": {
+        "owner": "agno-agi",
+        "repo": "agno-skills",
+        "type": "github"
+      }
+    },
+    "cc-devops-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783752484,
+        "narHash": "sha256-RSUkDMyn37BfjbgENydpsVwJQ0v0dJnP+njJLLuKunc=",
+        "owner": "akin-ozer",
+        "repo": "cc-devops-skills",
+        "rev": "276af751e659315aaf56d3ad13d7c26f4e72e28a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akin-ozer",
+        "repo": "cc-devops-skills",
+        "type": "github"
+      }
+    },
+    "cc-elements-of-style": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1760759248,
+        "narHash": "sha256-W9arG7zDUd2+1Z+o0QLBoCWMRr/TQJFmSQnfdEiJd5k=",
+        "owner": "obra",
+        "repo": "the-elements-of-style",
+        "rev": "6099c505c2a8eb066f3777f83a97d9d828f7954c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "obra",
+        "repo": "the-elements-of-style",
+        "type": "github"
+      }
+    },
+    "cc-hashicorp-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784153118,
+        "narHash": "sha256-+vUP2LGCTXF5vxC8noviigXp0gSVLQ4Hp/0EGWDdVr4=",
+        "owner": "hashicorp",
+        "repo": "agent-skills",
+        "rev": "8c6573abbd21e8094fab8f538eb5f97db63133fd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hashicorp",
+        "repo": "agent-skills",
+        "type": "github"
+      }
+    },
+    "cc-herdr": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784760594,
+        "narHash": "sha256-SlmAeR1bZE3+kwpVZXK4iFEDOaaaDZZPfYOeCsdeIxU=",
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "rev": "2a20e90a026936d0d5b96823d74e2e4fe13a166f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
+    "cc-skills-generator": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1764868959,
+        "narHash": "sha256-QwWGxt9gcwvSk395yD75TSThqWXYegu4MGqYatmLG+o=",
+        "owner": "martinholovsky",
+        "repo": "claude-skills-generator",
+        "rev": "1086ef25672acba2916220c6ce032a612cd9dc98",
+        "type": "github"
+      },
+      "original": {
+        "owner": "martinholovsky",
+        "repo": "claude-skills-generator",
+        "type": "github"
+      }
+    },
+    "cc-terraform-skill": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783058190,
+        "narHash": "sha256-utKu3sueu6SdhjmtRa+Osg761YPwdQa6IPhceZsgsn8=",
+        "owner": "antonbabenko",
+        "repo": "terraform-skill",
+        "rev": "0a3a4a66e99001347d36a41e10260a825be3ab62",
+        "type": "github"
+      },
+      "original": {
+        "owner": "antonbabenko",
+        "repo": "terraform-skill",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -76,6 +188,13 @@
     },
     "root": {
       "inputs": {
+        "cc-agno-skills": "cc-agno-skills",
+        "cc-devops-skills": "cc-devops-skills",
+        "cc-elements-of-style": "cc-elements-of-style",
+        "cc-hashicorp-skills": "cc-hashicorp-skills",
+        "cc-herdr": "cc-herdr",
+        "cc-skills-generator": "cc-skills-generator",
+        "cc-terraform-skill": "cc-terraform-skill",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
