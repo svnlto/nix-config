@@ -50,7 +50,7 @@ common/
   home-manager-base.nix      # Shared HM config base
   programs/default.nix       # Shared programs (direnv, gh, zsh)
   claude-code/               # Claude Code settings, hooks, commands, skills
-  neovim/ tmux/ zsh/ git/    # Tool configurations
+  neovim/ zsh/ git/ ssh/     # Tool configurations
   ghostty/ lazygit/          # Terminal configs (ghostty macOS-only)
   profiles/                  # Optional opt-in modules
 systems/

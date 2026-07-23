@@ -18,6 +18,11 @@ nix develop
 # Validate flake
 nix flake check
 
+# Update all inputs
+nix flake update
+
+# Advance only the fresh-tools channel (hand-picked unstable tools)
+nix flake update nixpkgs-unstable
 ```
 
 ## Commit Convention
@@ -34,6 +39,28 @@ Scopes: `darwin`, `common`, `deps`, `release`
 Cross-platform Nix configuration managing macOS hosts (nix-darwin)
 and Linux dev environments (home-manager). No NixOS support.
 
+### Hosts
+
+Defined in `flake.nix`:
+
+- `rick` — personal macOS (user `svenlito`, personal Homebrew)
+- `MSGMAC-MV69Q140FD` — work macOS (user `hummes1`, work Homebrew +
+  `systems/aarch64-darwin/corporate.nix`)
+- `minimal-x86` / `minimal-arm` — Linux home-manager (containers, cloud)
+
+macOS builds via `mkDarwinSystem`, Linux via `mkHomeManagerConfig`.
+Both validate the username and apply the fresh-tools overlay.
+
+### Fresh-tools overlay
+
+`nixpkgs` is pinned to stable (`nixos-26.05`). Hand-picked tools that
+need to be newer come from a separately-pinned `nixpkgs-unstable` input
+via `common/overlays/fresh-tools.nix` (`freshToolsOverlay`). Advance the
+stable base and the fresh channel independently (`nix flake update` vs
+`nix flake update nixpkgs-unstable`). The overlay is applied in
+`mkNixpkgs` AND re-applied inside `mkDarwinSystem` (nix-darwin builds its
+own pkgs) — add it in both places if you change how pkgs is constructed.
+
 ### Directory Structure
 
 ```text
@@ -46,6 +73,7 @@ common/
   home-packages.nix              # HM package imports
   constants.nix                  # Centralized tuning values (performance, history, cleanup)
   versions.nix                   # State version pinning (rarely change!)
+  overlays/fresh-tools.nix       # Pulls hand-picked tools from nixpkgs-unstable
   git/                           # Cross-platform git config (SSH signing on Linux only)
   zsh/shared.nix                 # Aliases, session vars, PATH, tool init
   zsh/default.omp.json           # Oh My Posh theme
@@ -53,9 +81,10 @@ common/
   neovim/                        # Neovim config
   ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
   lazygit/                       # Cross-platform via xdg.configFile
+  ssh/ k9s/ herdr/ gh-dash/      # Additional tool configs
   profiles/                      # Optional opt-in modules
 systems/
-  aarch64-darwin/                # macOS: home.nix, homebrew/, defaults.nix, dock.nix
+  aarch64-darwin/                # macOS: home.nix, homebrew/, defaults.nix, dock.nix, corporate.nix
   aarch64-linux/default.nix      # Linux: minimal HM config for containers
 ```
 
