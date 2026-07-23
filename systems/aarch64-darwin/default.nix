@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   self,
@@ -51,28 +50,6 @@ in
     primaryUser = username;
 
     activationScripts = {
-      applications.text =
-        let
-          env = pkgs.buildEnv {
-            name = "system-applications";
-            paths = config.environment.systemPackages;
-            # 26.05 buildEnv (strict under structuredAttrs) requires a list.
-            pathsToLink = [ "/Applications" ];
-          };
-        in
-        lib.mkForce ''
-          # Set up applications.
-          echo "setting up /Applications..." >&2
-          rm -rf /Applications/Nix\ Apps
-          mkdir -p /Applications/Nix\ Apps
-          find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-          while read -r src; do
-            app_name=$(basename "$src")
-            echo "copying $src" >&2
-            ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
-          done
-        '';
-
       # Set desktop wallpaper
       setWallpaper.text =
         let
