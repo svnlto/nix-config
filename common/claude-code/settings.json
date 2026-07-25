@@ -29,7 +29,7 @@
       "Bash(rg:*)",
       "Bash(fd:*)",
       "Bash(jq:*)",
-      "Read(//Users/svenlito/Documents/obsidian-vault/**)",
+      "Read(~/Documents/obsidian-vault/**)",
       "WebSearch",
       "WebFetch"
     ],
@@ -47,9 +47,7 @@
       "Read(**/id_ed25519)",
       "Read(**/*.pem)"
     ],
-    "additionalDirectories": [
-      "/Users/svenlito/Documents/obsidian-vault"
-    ]
+    "additionalDirectories": []
   },
   "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
@@ -114,7 +112,6 @@
     "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
     "terragrunt-skill@jfr992": true,
-    "agent-skills@msg-kaas-platform": true,
     "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
@@ -140,12 +137,6 @@
       "source": {
         "source": "github",
         "repo": "kepano/obsidian-skills"
-      }
-    },
-    "msg-kaas-platform": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/hummes1/projects/msg/agent-skills"
       }
     }
   },

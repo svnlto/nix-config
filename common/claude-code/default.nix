@@ -1,7 +1,9 @@
 {
   config,
   pkgs,
+  lib,
   inputs,
+  username,
   ...
 }:
 let
@@ -142,16 +144,38 @@ in
     ".claude/.keep".text = "";
   };
 
-  # jq deep-merge so our definitions win on collision while oauth tokens, project history, and CLI-added servers survive — idempotent, safe to re-run every switch.
-  home.activation.claudeUserMcpServers = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    claudeConfig="${config.home.homeDirectory}/.claude.json"
-    [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"
-    if ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$claudeConfig" ${userMcpJson} \
-      > "$claudeConfig.tmp"; then
-      run mv $VERBOSE_ARG "$claudeConfig.tmp" "$claudeConfig"
-    else
-      echo "claudeUserMcpServers: jq merge failed, leaving ~/.claude.json untouched" >&2
-      rm -f "$claudeConfig.tmp"
-    fi
-  '';
+  home.activation = {
+    # jq deep-merge so our definitions win on collision while oauth tokens, project history, and CLI-added servers survive — idempotent, safe to re-run every switch.
+    claudeUserMcpServers = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      claudeConfig="${config.home.homeDirectory}/.claude.json"
+      [ -e "$claudeConfig" ] || echo '{}' > "$claudeConfig"
+      if ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$claudeConfig" ${userMcpJson} \
+        > "$claudeConfig.tmp"; then
+        run mv $VERBOSE_ARG "$claudeConfig.tmp" "$claudeConfig"
+      else
+        echo "claudeUserMcpServers: jq merge failed, leaving ~/.claude.json untouched" >&2
+        rm -f "$claudeConfig.tmp"
+      fi
+    '';
+
+    # Personal-only: grant the Obsidian vault as an additional working directory
+    # through the writable local settings file, so the committed settings.json stays
+    # host-agnostic (no hardcoded /Users/<name>). Idempotent jq merge, leaves the
+    # file writable for Claude Code's own runtime grants.
+    claudeVaultDir = lib.mkIf (pkgs.stdenv.isDarwin && username == "svenlito") (
+      config.lib.dag.entryAfter [ "writeBoundary" ] ''
+        settingsLocal="${config.home.homeDirectory}/.claude/settings.local.json"
+        vault="${config.home.homeDirectory}/Documents/obsidian-vault"
+        [ -e "$settingsLocal" ] || echo '{}' > "$settingsLocal"
+        if ${pkgs.jq}/bin/jq --arg d "$vault" \
+          '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + [$d] | unique)' \
+          "$settingsLocal" > "$settingsLocal.tmp"; then
+          run mv $VERBOSE_ARG "$settingsLocal.tmp" "$settingsLocal"
+        else
+          echo "claudeVaultDir: jq merge failed, leaving settings.local.json untouched" >&2
+          rm -f "$settingsLocal.tmp"
+        fi
+      ''
+    );
+  };
 }
