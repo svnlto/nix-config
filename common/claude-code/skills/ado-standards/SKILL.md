@@ -1,5 +1,5 @@
 ---
-name: Azure DevOps Standards
+name: ado-standards
 description: "Azure DevOps pull request workflows and pipeline design standards. Use when creating or reviewing ADO pull requests, writing azure-pipelines.yml, designing build/release pipelines, or setting branch policies."
 version: 1.0.0
 tags: [azure-devops, ado, pull-requests, pipelines, ci-cd, yaml]

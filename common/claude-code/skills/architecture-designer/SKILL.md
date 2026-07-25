@@ -1,6 +1,6 @@
 ---
 name: architecture-designer
-description: "Senior software architect for system design, ADRs, microservices evaluation, technology trade-off analysis. Use when designing system architecture, evaluating patterns, creating ADRs, analyzing technology choices, or planning migrations."
+description: "Senior software architect for system design, ADRs, microservices evaluation, technology trade-off analysis, and cloud architecture across AWS and Azure. Use when designing system architecture, evaluating patterns, creating ADRs, analyzing technology choices, designing VPCs/VNets/IAM/RBAC/compute/storage, cost optimization, multi-cloud patterns, disaster recovery, or planning migrations."
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
@@ -16,14 +16,26 @@ metadata:
     - NFR
     - non-functional requirements
     - technology selection
+    - cloud architecture
+    - AWS
+    - Azure
+    - VPC
+    - VNet
+    - IAM
+    - RBAC
+    - migration
+    - disaster recovery
+    - multi-cloud
+    - cost optimization
   role: specialist
   scope: implementation
   output-format: docs
   related-skills:
-    - cloud-architect
     - sre-engineer
+    - kubernetes-specialist
     - temporal-engineer
     - rest-api-design
+    - platform-engineer
 ---
 
 # Architecture Designer
@@ -170,6 +182,76 @@ What we decided, stated in active voice.
 - Existing systems that must be integrated: ...
 ```
 
+## Cloud Architecture (AWS / Azure)
+
+When the design targets AWS or Azure, apply cloud-specific workflow on
+top of the core one. Emit infrastructure as Terraform alongside CLI
+examples.
+
+### Cloud Workflow
+
+1. **Discover** — assess current state, requirements, constraints
+2. **Design** — multi-region topology with redundancy, HA patterns
+3. **Secure** — zero-trust, IAM/RBAC least privilege, encryption
+4. **Cost** — model costs, tagging, reserved capacity
+5. **Migrate** — 6Rs framework (rehost, replatform, refactor,
+   repurchase, retire, retain)
+6. **Operate** — monitoring, DR testing, continuous optimization
+
+### AWS VPC with Public/Private Subnets
+
+```hcl
+resource "aws_vpc" "main" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = { Name = "main-vpc" }
+}
+
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "eu-west-1a"
+  map_public_ip_on_launch = true
+
+  tags = { Name = "public-subnet" }
+}
+
+resource "aws_subnet" "private" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "eu-west-1a"
+
+  tags = { Name = "private-subnet" }
+}
+```
+
+### Azure Least-Privilege Role Assignment
+
+```hcl
+resource "azurerm_role_assignment" "reader" {
+  scope                = azurerm_resource_group.example.id
+  role_definition_name = "Reader"
+  principal_id         = azurerm_user_assigned_identity.app.principal_id
+}
+```
+
+### Cloud MUST DO
+
+- Use least-privilege IAM/RBAC everywhere
+- Encrypt data at rest and in transit
+- Tag all resources for cost allocation
+- Design for high availability (99.9%+ targets)
+- Define RTO/RPO for disaster recovery
+- Plan for multi-AZ/multi-region
+
+### Cloud MUST NOT DO
+
+- Store credentials in code or environment variables
+- Leave data unencrypted
+- Create single points of failure
+
 ## References
 
 | Topic | Reference | Load When |
@@ -179,6 +261,10 @@ What we decided, stated in active voice.
 | Database Selection | references/database-selection.md | Choosing databases |
 | NFR Checklist | references/nfr-checklist.md | Evaluating non-functional requirements |
 | System Design | references/system-design.md | Designing distributed systems |
+| AWS | references/aws.md | VPC, IAM, EC2/ECS/EKS, S3, RDS |
+| Azure | references/azure.md | VNet, RBAC, AKS, App Service, Key Vault |
+| Cost | references/cost.md | Right-sizing, reservations, FinOps |
+| Multi-Cloud | references/multi-cloud.md | Cross-cloud networking, federation, DR |
 
 ## Constraints
 

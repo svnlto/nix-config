@@ -49,6 +49,14 @@ repos:
         exclude: ^common/claude-code/(agents/|skills/jira/references/templates/)
         description: Lint Markdown files using markdownlint-cli
 
+      - id: claude-skills-lint
+        name: Lint Claude skills/agents frontmatter
+        entry: python3 common/claude-code/eval/lint-skills.py
+        language: system
+        files: ^common/claude-code/(skills|agents)/.*\.md$
+        pass_filenames: false
+        description: Validate name==dir, description presence/length, agent->skill bindings
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:

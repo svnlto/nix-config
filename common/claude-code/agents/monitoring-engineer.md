@@ -1,5 +1,5 @@
 ---
-name: monitoring-expert
+name: monitoring-engineer
 description: >-
   Use for Go application observability: structured logging with slog, Prometheus
   metrics, OpenTelemetry tracing, Datadog APM with dd-trace-go, pprof profiling,
@@ -7,10 +7,10 @@ description: >-
   general-purpose for Go-observability tasks.
 model: sonnet
 color: green
-skills: monitoring-expert
+skills: monitoring-engineer
 ---
 
-The `monitoring-expert` skill is preloaded — follow it for every task.
+The `monitoring-engineer` skill is preloaded — follow it for every task.
 
 When invoked:
 

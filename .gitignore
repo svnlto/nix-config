@@ -23,6 +23,10 @@ result-*
 *.temp
 *.log
 
+# Python bytecode
+__pycache__/
+*.pyc
+
 # Node.js (for semantic-release)
 node_modules/
 package-lock.json

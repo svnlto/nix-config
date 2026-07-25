@@ -1,0 +1,31 @@
+# Tier-2 routing eval cases.  <prompt>\t<expected>
+# expected = exact skill/agent name the router should pick, or "none".
+# Tab-separated. Lines starting with # are ignored.
+# Focus: the trigger collisions tightened in the skill/agent cleanup.
+#
+# --- observability three-way split (monitoring-engineer / datadog-advisor / sre-engineer) ---
+Instrument this Go service with Prometheus metrics and OpenTelemetry traces	monitoring-engineer
+Add dd-trace-go APM spans to our Go HTTP handlers	monitoring-engineer
+What should we monitor for the new payments service in Datadog and how should we tag it?	datadog-advisor
+Design an alerting and dashboard strategy for our platform in Datadog	datadog-advisor
+Define SLOs and an error budget policy for the checkout API	sre-engineer
+Write a Terraform-managed Datadog monitor for high error rate	sre-engineer
+# --- kubernetes-specialist vs helm-generator / k8s-yaml-generator (scaffolding deferred) ---
+My pods are crashlooping, help me debug the deployment	kubernetes-specialist
+Scaffold a new Helm chart for my web app	helm-generator
+Generate a Kubernetes Deployment and Service manifest from scratch	k8s-yaml-generator
+# --- architecture-designer (absorbed cloud-architect) ---
+Design the system architecture and write an ADR for our new microservice	architecture-designer
+Design a multi-region AWS VPC with public/private subnets and least-privilege IAM	architecture-designer
+Plan a cloud migration from on-prem to Azure using the 6Rs framework	architecture-designer
+# --- baseline single-owner routes ---
+Create an Airflow DAG that runs daily and loads data to S3	airflow-engineer
+Write a Vector VRL transform to parse nginx logs	vector-engineer
+Store this API key securely in Azure Key Vault	secrets-management
+Build a Cobra CLI with a Bubbletea TUI	cli-developer
+Set up golden paths and a self-service developer portal	platform-engineer
+Review this pull request before I merge	pr-review
+Write a Temporal workflow with saga compensation	temporal-engineer
+# --- should NOT trigger any skill ---
+What's the capital of France?	none
+Tell me a joke about databases	none

@@ -1,5 +1,5 @@
 ---
-name: Documentation Standards
+name: doc-standards
 description: "Documentation code of conduct. Use when writing, reviewing, or editing documentation for the wiki, ADRs, specs, or any team-facing documents."
 version: 1.0.0
 tags: [documentation, writing, wiki, confluence]

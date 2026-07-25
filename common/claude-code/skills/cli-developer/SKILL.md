@@ -19,7 +19,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: architecture-designer, cloud-architect
+  related-skills: architecture-designer
 ---
 
 # CLI Developer

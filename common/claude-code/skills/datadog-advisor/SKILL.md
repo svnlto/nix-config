@@ -8,7 +8,7 @@ metadata:
   role: specialist
   scope: strategy
   output-format: guidance
-  related-skills: sre-engineer, monitoring-expert, cloud-architect, platform-engineer, strategic-writing, devsecops-expert
+  related-skills: sre-engineer, monitoring-engineer, architecture-designer, platform-engineer, strategic-writing, devsecops-expert
 ---
 
 # Datadog Advisor
@@ -38,7 +38,7 @@ the Constraints block for what execution this skill defers, and to whom.
 | *What* should I monitor and *why*? | `datadog-advisor` |
 | *How* do I execute this via CLI? | `pup:dd-monitors`, `pup:dd-logs`, etc. |
 | *How* do I define this in Terraform? | `sre-engineer` |
-| *How* do I instrument this Go service? | `monitoring-expert` |
+| *How* do I instrument this Go service? | `monitoring-engineer` |
 | *How* do I write a strategy doc about this? | `strategic-writing` + `datadog-advisor` |
 | *How* do I look up Datadog docs? | `pup:dd-docs` |
 
@@ -95,7 +95,7 @@ Example:
 
 - **Never** generate pup command syntax — defer to `pup:dd-*` skills
 - **Never** generate Terraform resources — defer to `sre-engineer`
-- **Never** generate application instrumentation code — defer to `monitoring-expert`
+- **Never** generate application instrumentation code — defer to `monitoring-engineer`
 - **Never** guess at Datadog metric names — verify via
   `pup:dd-docs` or `pup metrics search`
 - **Always** recommend unified service tagging before any other monitoring setup

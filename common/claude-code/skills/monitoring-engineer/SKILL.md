@@ -1,5 +1,5 @@
 ---
-name: monitoring-expert
+name: monitoring-engineer
 description: >-
   Implements application observability in Go: structured logging
   with slog, Prometheus metrics instrumentation, OpenTelemetry

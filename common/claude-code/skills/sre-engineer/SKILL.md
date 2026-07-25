@@ -1,6 +1,6 @@
 ---
 name: sre-engineer
-description: Defines service level objectives, creates error budget policies, designs incident response procedures, develops capacity models, and produces monitoring configurations and automation scripts for production systems. Use when defining SLIs/SLOs, managing error budgets, building reliable systems at scale, incident management, chaos engineering, toil reduction, capacity planning, Datadog monitors, Datadog SLOs, Terraform reliability patterns, or observability-as-code.
+description: Defines service level objectives, creates error budget policies, designs incident response procedures, develops capacity models, and produces monitoring configurations and automation scripts for production systems. Use when defining SLIs/SLOs, managing error budgets, building reliable systems at scale, incident management, chaos engineering, toil reduction, capacity planning, implementing Datadog monitors/SLOs as code (Terraform), reliability patterns, or observability-as-code. For Datadog monitoring strategy (what to monitor, how to alert/tag/structure), defer to datadog-advisor; for Go application instrumentation, defer to monitoring-engineer.
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
@@ -10,7 +10,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: cloud-architect, kubernetes-specialist, secrets-management, devsecops-expert, datadog-advisor, monitoring-expert
+  related-skills: architecture-designer, kubernetes-specialist, secrets-management, devsecops-expert, datadog-advisor, monitoring-engineer
 ---
 
 # SRE Engineer

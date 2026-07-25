@@ -8,7 +8,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: sre-engineer, monitoring-expert, kubernetes-specialist, ci-cd, platform-engineer, secrets-management
+  related-skills: sre-engineer, monitoring-engineer, kubernetes-specialist, ci-cd, platform-engineer, secrets-management
 ---
 
 # Temporal Engineer
