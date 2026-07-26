@@ -5,19 +5,11 @@
     ":semanticCommits",
     ":enableVulnerabilityAlerts"
   ],
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "dependencyDashboard": false,
-  "schedule": ["every weekend"],
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
-      "matchDepNames": ["/^nixpkgs/"],
-      "schedule": ["every 2 weeks on Saturday"]
-    }
-  ]
+  "pre-commit": {
+    "enabled": true
+  }
 }
