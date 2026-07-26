@@ -84,16 +84,42 @@ in
 
         programs.zsh = {
           shellAliases = {
-            refresh-zscaler = ''
-              curl -fsS --proto '=https' https://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
-              && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
-              || cp /tmp/zscaler.crt ~/.zscaler.pem \
-              && echo "Zscaler cert refreshed ✓"'';
             awswho = "aws sts get-caller-identity";
             assume = "source assume";
           };
 
           initContent = ''
+            # Refresh the Zscaler root CA that NODE_EXTRA_CA_CERTS points at.
+            # Only overwrite ~/.zscaler.pem once the download is confirmed to be a
+            # certificate — a failed fetch must leave the existing trusted CA alone.
+            refresh-zscaler() {
+              local url="https://cloud.msg.team/zertifikat/zscaler.crt"
+              local tmp pem
+              tmp=$(mktemp -t zscaler.XXXXXX) || return 1
+              pem="$tmp.pem"
+
+              if ! curl -fsS --proto '=https' "$url" -o "$tmp"; then
+                echo "refresh-zscaler: download failed; existing cert left untouched." >&2
+                rm -f "$tmp"
+                return 1
+              fi
+
+              # Server may hand back DER or PEM; anything else is not a cert.
+              if ! openssl x509 -inform DER -in "$tmp" -out "$pem" 2>/dev/null &&
+                 ! openssl x509 -inform PEM -in "$tmp" -out "$pem" 2>/dev/null; then
+                echo "refresh-zscaler: downloaded file is not a certificate; existing cert left untouched." >&2
+                rm -f "$tmp" "$pem"
+                return 1
+              fi
+
+              install -m 0644 "$pem" "$HOME/.zscaler.pem" || {
+                rm -f "$tmp" "$pem"
+                return 1
+              }
+              rm -f "$tmp" "$pem"
+              echo "Zscaler cert refreshed ✓"
+            }
+
             # Populate ~/.aws/config with SSO profiles from CyberArk-provisioned accounts
             aws-sync-profiles() {
               command -v grant &>/dev/null || { echo "grant-cli not found. Run 'nixswitch' to install." >&2; return 1; }
