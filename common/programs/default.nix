@@ -4,13 +4,10 @@ let
   sharedZsh = import ../zsh/shared.nix;
 in
 {
-  # Shared program configurations that are identical across platforms
   programs = {
-    # Direnv configuration - development environment management
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-      # Reduce verbosity
       config = {
         global = {
           hide_env_diff = true;
@@ -18,29 +15,22 @@ in
       };
     };
 
-    # GitHub CLI configuration
     gh = {
       enable = true;
       settings = {
-        # Default protocol when cloning repositories
         git_protocol = "ssh";
-
-        # Default editor
         editor = "nvim";
-
-        # Prompt for every command
         prompt = "enabled";
       };
     };
 
-    # Base ZSH configuration (platform-specific aliases added separately)
     zsh = {
       enable = true;
       enableCompletion = true;
       autosuggestion = sharedZsh.autosuggestionConfig;
       history = sharedZsh.historyConfig;
 
-      # Common aliases - platform-specific aliases merged separately
+      # Platform-specific aliases are merged in separately
       shellAliases = sharedZsh.aliases;
 
       initContent = ''
@@ -51,7 +41,6 @@ in
         ${sharedZsh.completion}
         ${sharedZsh.keybindings}
 
-        # Load Oh My Posh if available
         if command -v oh-my-posh &> /dev/null; then
           eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/default.omp.json)"
         fi

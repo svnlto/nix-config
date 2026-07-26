@@ -4,7 +4,7 @@ let
   constants = import ../constants.nix;
 in
 {
-  # Ghostty terminal configuration (GUI terminal — skip in containers/servers)
+  # GUI terminal — skip on Linux containers/servers
   home.file.".config/ghostty/config" = lib.mkIf (!pkgs.stdenv.isLinux) {
     text = ''
       theme = Catppuccin Mocha

@@ -1,6 +1,5 @@
 { pkgs }:
 rec {
-  # Core CLI utilities used daily across all environments
   corePackages = with pkgs; [
     oh-my-posh
     eza
@@ -18,15 +17,13 @@ rec {
     nodejs_26
   ];
 
-  # Development and system-administration tooling
   devPackages = with pkgs; [
     gh
     gh-dash
     glab
     lazygit
     direnv
-    # pipx's test suite is broken on nixpkgs 26.05 (cosmetic name-normalization
-    # asserts); skip the checkphase until a backport lands.
+    # pipx's test suite is broken on nixpkgs 26.05 — skip until a backport lands.
     (pipx.overridePythonAttrs (_: {
       doCheck = false;
     }))
@@ -44,15 +41,12 @@ rec {
     devbox
   ];
 
-  # macOS-only packages
   darwinPackages = with pkgs; [ ];
 
-  # Installed at system level on macOS for proper integration
   darwinSystemPackages = with pkgs; [
     git
     tree
   ];
 
-  # Convenient package combination for user-level packages
   allCommonPackages = corePackages ++ devPackages;
 }

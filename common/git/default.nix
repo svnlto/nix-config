@@ -1,4 +1,3 @@
-# Unified cross-platform Git configuration
 {
   config,
   pkgs,
@@ -83,7 +82,6 @@ in
     };
   };
 
-  # Common .gitignore
   home.file.".gitignore".text = ''
     # OS files
     .DS_Store
@@ -120,6 +118,5 @@ in
     result-*
   '';
 
-  # SSH allowed_signers file (both platforms)
   home.file.".ssh/allowed_signers".text = "me@svenlito.com ${signingKey}";
 }

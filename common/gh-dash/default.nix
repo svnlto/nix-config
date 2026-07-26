@@ -1,9 +1,7 @@
 _:
 
 {
-  # gh-dash configuration with Catppuccin Mocha theme.
-  # v4.25+ reads the global config from XDG config, not ~/.gh-dash.yml
-  # (that name is only honoured as a repo-local file inside a git checkout).
+  # v4.25+ reads the global config from XDG config, not ~/.gh-dash.yml.
   xdg.configFile."gh-dash/config.yml".text = ''
     prSections:
       - title: Mine

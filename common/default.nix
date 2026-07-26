@@ -15,12 +15,10 @@ in
         username
       ];
 
-      # Performance optimizations
       max-jobs = "auto";
       cores = 0;
       build-cores = 0;
 
-      # Settings to improve lock handling and build performance
       fallback = true;
       keep-going = true;
       log-lines = 25;
@@ -32,12 +30,10 @@ in
       connect-timeout = constants.performance.connectTimeout;
     };
 
-    # Shared extra options
     extraOptions = ''
       narinfo-cache-negative-ttl = 0
     '';
   };
 
-  # Allow unfree software across platforms
   nixpkgs.config.allowUnfree = true;
 }

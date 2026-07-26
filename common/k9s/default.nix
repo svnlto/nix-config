@@ -1,17 +1,14 @@
 { config, ... }:
 
 {
-  # On macOS, set K9S_CONFIG_DIR=$HOME/.config/k9s so k9s uses the XDG path cross-platform.
-
   xdg.configFile = {
-    # Config and aliases use out-of-store symlinks so k9s can write to them
+    # Out-of-store symlinks so k9s can write back to config and aliases
     "k9s/config.yaml".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/k9s/config.yaml";
 
     "k9s/aliases.yaml".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix/common/k9s/aliases.yaml";
 
-    # Skin is read-only (k9s never writes to it)
     "k9s/skins/catppuccin-mocha.yaml".text = ''
       k9s:
         body:
