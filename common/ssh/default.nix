@@ -13,17 +13,18 @@
   # enableDefaultConfig=false: the HM ssh module now injects a Host * block
   # (Compression no, ServerAliveInterval 0, …) *before* any extraConfig and
   # SSH is first-match-wins, so the defaults would silently override our values.
-  # Declaring matchBlocks."*" directly is the current idiom.
+  # settings.* takes upstream ssh_config(5) directive names verbatim; the
+  # camelCase matchBlocks form and its extraOptions escape hatch are deprecated.
   programs.ssh = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."*" = {
-      addKeysToAgent = "yes";
-      identityAgent = "~/.1password/agent.sock";
-      compression = true;
-      serverAliveInterval = 20;
-      serverAliveCountMax = 10;
-      extraOptions.TCPKeepAlive = "yes";
+    settings."*" = {
+      AddKeysToAgent = "yes";
+      IdentityAgent = "~/.1password/agent.sock";
+      Compression = true;
+      ServerAliveInterval = 20;
+      ServerAliveCountMax = 10;
+      TCPKeepAlive = "yes";
     };
   };
 
