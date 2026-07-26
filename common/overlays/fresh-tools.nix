@@ -10,6 +10,8 @@ let
 
   freshTools = [
     "devbox"
+    "jujutsu"
+    "lazyjj"
   ];
 in
 builtins.listToAttrs (

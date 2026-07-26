@@ -22,6 +22,7 @@ rec {
     gh-dash
     glab
     lazygit
+    lazyjj
     direnv
     # pipx's test suite is broken on nixpkgs 26.05 — skip until a backport lands.
     (pipx.overridePythonAttrs (_: {
