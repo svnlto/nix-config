@@ -1,13 +1,16 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 
 let
-  inherit (pkgs.stdenv) isLinux isDarwin;
   signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYK1c6kxYT6FzMEqckP04e2unQgTvFPyNEFzT/q/eXR";
+  opSshSign =
+    if pkgs.stdenv.isDarwin then
+      "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    else
+      "/opt/1Password/op-ssh-sign";
 in
 {
   programs.git = {
@@ -59,13 +62,10 @@ in
           newHighlight = "green bold 22";
         };
       };
-      gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
-    }
-    // lib.optionalAttrs isLinux {
-      gpg.ssh.program = "/opt/1Password/op-ssh-sign";
-    }
-    // lib.optionalAttrs isDarwin {
-      gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      gpg.ssh = {
+        allowedSignersFile = "~/.ssh/allowed_signers";
+        program = opSshSign;
+      };
     };
 
     includes = [
