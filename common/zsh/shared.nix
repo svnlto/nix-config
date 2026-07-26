@@ -1,5 +1,8 @@
 # Shared ZSH config that works unmodified in both nix-darwin and home-manager
 
+let
+  constants = import ../constants.nix;
+in
 # Return a simple attribute set for direct import by other modules
 rec {
   aliases = {
@@ -55,8 +58,8 @@ rec {
 
   # Declarative history configuration for home-manager
   historyConfig = {
-    size = 50000;
-    save = 50000;
+    size = constants.history.shellHistorySize;
+    save = constants.history.shellHistorySize;
     path = "$HOME/.zsh_history";
     ignoreAllDups = true;
     share = true;

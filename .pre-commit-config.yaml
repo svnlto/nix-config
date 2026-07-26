@@ -16,7 +16,7 @@ repos:
 
       - id: statix
         name: Lint Nix files
-        entry: bash -c 'if command -v statix &>/dev/null; then statix check .; else echo "⚠️  statix not found, skipping (run in nix develop for linting)"; fi'
+        entry: bash -c 'if command -v statix &>/dev/null; then statix check .; else nix shell nixpkgs#statix -c statix check .; fi'
         language: system
         files: \.nix$
         pass_filenames: false
@@ -25,7 +25,7 @@ repos:
 
       - id: deadnix
         name: Find dead Nix code
-        entry: bash -c 'if command -v deadnix &>/dev/null; then deadnix --fail "$@"; else echo "⚠️  deadnix not found, skipping (run in nix develop for dead code detection)"; fi' --
+        entry: bash -c 'if command -v deadnix &>/dev/null; then deadnix --fail "$@"; else nix shell nixpkgs#deadnix -c deadnix --fail "$@"; fi' --
         language: system
         files: \.nix$
         description: Detect unused Nix code

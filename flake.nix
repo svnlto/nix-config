@@ -76,9 +76,6 @@
       ...
     }:
     let
-      # Centralized version management
-      versions = import ./common/versions.nix;
-
       # Default username across all configurations
       defaultUsername = "svenlito";
 
@@ -169,13 +166,9 @@
           pkgs = mkNixpkgs system;
           modules = [
             ./systems/aarch64-linux
-            {
-              home = {
-                username = validUsername;
-                inherit homeDirectory;
-                stateVersion = versions.homeManagerStateVersion;
-              };
-            }
+            # username and stateVersion are owned by common/home-manager-base.nix;
+            # homeDirectory is the one value this builder supplies.
+            { home = { inherit homeDirectory; }; }
           ]
           ++ extraModules;
           extraSpecialArgs = {

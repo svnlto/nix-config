@@ -1,7 +1,6 @@
 # Generic aarch64-linux Home Manager config for any Linux ARM64 environment (VMs, containers, cloud instances)
 {
   pkgs,
-  username ? "user",
   ...
 }:
 
@@ -16,8 +15,7 @@ in
     ../../common/ssh
   ];
 
-  # Linux-specific home directory
-  home.homeDirectory = "/home/${username}";
+  # homeDirectory is supplied by mkHomeManagerConfig in flake.nix.
 
   # Linux-specific nix settings
   nix = {

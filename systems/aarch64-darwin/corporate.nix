@@ -75,7 +75,7 @@ in
                 esac
                 URL="https://github.com/aaearon/grant-cli/releases/download/v$GRANT_VERSION/grant-cli_''${GRANT_VERSION}_darwin_''${ARCH}.tar.gz"
                 echo "Installing grant-cli v$GRANT_VERSION..."
-                /usr/bin/curl -skL "$URL" | /usr/bin/tar xz -C "$HOME/.local/bin" grant
+                /usr/bin/curl -fsSL "$URL" | /usr/bin/tar xz -C "$HOME/.local/bin" grant
                 chmod +x "$GRANT_BIN"
               fi
             '';
@@ -85,7 +85,7 @@ in
         programs.zsh = {
           shellAliases = {
             refresh-zscaler = ''
-              curl -s http://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
+              curl -fsS --proto '=https' https://cloud.msg.team/zertifikat/zscaler.crt -o /tmp/zscaler.crt \
               && openssl x509 -inform DER -in /tmp/zscaler.crt -out ~/.zscaler.pem 2>/dev/null \
               || cp /tmp/zscaler.crt ~/.zscaler.pem \
               && echo "Zscaler cert refreshed ✓"'';

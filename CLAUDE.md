@@ -74,7 +74,7 @@ common/
   constants.nix                  # Centralized tuning values (performance, history, cleanup)
   versions.nix                   # State version pinning (rarely change!)
   overlays/fresh-tools.nix       # Pulls hand-picked tools from nixpkgs-unstable
-  git/                           # Cross-platform git config (SSH signing on Linux only)
+  git/                           # Cross-platform git config (SSH signing on both, via 1Password)
   zsh/shared.nix                 # Aliases, session vars, PATH, tool init
   zsh/default.omp.json           # Oh My Posh theme
   claude-code/                   # Claude Code settings, hooks, commands, skills, statusline
