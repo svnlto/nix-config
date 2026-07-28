@@ -86,7 +86,7 @@ in
         ];
         retrunk = [
           "rebase"
-          "-d"
+          "-o"
           "trunk()"
         ];
         sync = [
