@@ -24,7 +24,8 @@ reset=$'\033[0m'
 
 # Nerd Font icons — matching default.omp.json segments
 icon_apple=$''    # nf-fa-apple        os segment
-icon_branch=$''   # nf-dev-git_branch  git branch_icon
+icon_branch=$''   # nf-dev-git_branch  git branch_icon / jj bookmark
+icon_commit=$''   # nf-oct-git_commit  jj change id
 icon_worktree=$'' # nf-fa-folder_open  worktree
 icon_modified=$'' # nf-fa-pencil_square git working changes
 icon_staged=$''   # nf-fa-check_square git staged changes
@@ -53,9 +54,37 @@ short_path() {
 }
 path_part="${pink}$(short_path "$cwd")${reset}"
 
+# Jujutsu segment (OMP jujutsu segment, p:lavender) — wins over git when colocated
+jj_root=""
+d="$cwd"
+while [ -n "$d" ] && [ "$d" != "/" ]; do
+  if [ -d "$d/.jj" ]; then jj_root="$d"; break; fi
+  d=$(dirname "$d")
+done
+
+jj_part=""
+if [ -n "$jj_root" ] && command -v jj > /dev/null 2>&1; then
+  jj_cmd=(jj -R "$jj_root" --ignore-working-copy --no-pager --color never log --no-graph)
+  bookmarks=$("${jj_cmd[@]}" -r 'heads(::@ & bookmarks())' \
+              -T 'bookmarks.map(|b| b.name()).join("\n")' 2>/dev/null \
+              | awk '!seen[$0]++' | paste -sd' ' -)
+  if [ -n "$bookmarks" ]; then
+    # closest bookmarks are equidistant from @, so one count suffices for all
+    ahead=$("${jj_cmd[@]}" -r "${bookmarks%% *}..@" -T '"."' 2>/dev/null | tr -cd '.')
+    label=""
+    for bookmark in $bookmarks; do
+      label="${label}${label:+ }${bookmark}${ahead:+⇡${#ahead}}"
+    done
+    jj_part=" ${lavender}${icon_branch} ${label}${reset}"
+  else
+    change_id=$("${jj_cmd[@]}" -r '@' -T 'change_id.shortest(8)' 2>/dev/null)
+    [ -n "$change_id" ] && jj_part=" ${lavender}${icon_commit} ${change_id}${reset}"
+  fi
+fi
+
 # Git segment (OMP git segment, p:lavender, branch_icon + dirty status)
 git_part=""
-if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
+if [ -z "$jj_root" ] && git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
   branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null \
            || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
   if [ -n "$branch" ]; then
@@ -137,11 +166,12 @@ if [ -n "$five_hour_resets_at" ]; then
   fi
 fi
 
-printf '%s %s %s%s%s %s  %s[%s]%s%s%s%s\n' \
+printf '%s %s %s%s%s%s %s  %s[%s]%s%s%s%s\n' \
   "$os_part" \
   "$user_host" \
   "$path_part" \
   "$wt_part" \
+  "$jj_part" \
   "$git_part" \
   "$sep" \
   "$os" "$model" "$reset" \
