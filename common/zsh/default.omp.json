@@ -52,7 +52,7 @@
             "fetch_status": true,
             "ignore_working_copy": true
           },
-          "template": "{{ if .ClosestBookmarks }}\ue725 {{ .ClosestBookmarks }}{{ else }}\uf417 {{ .ChangeID }}{{ end }}",
+          "template": "{{ $b := list }}{{ range (splitList \" \" .ClosestBookmarks) }}{{ $b = append $b (regexReplaceAll \"@[^\u21e1]+\" . \"\") }}{{ end }}{{ $b = uniq $b }}{{ if .ClosestBookmarks }}\ue725 {{ join \" \" $b }}{{ else }}\uf417 {{ .ChangeID }}{{ end }}",
           "foreground": "p:lavender",
           "type": "jujutsu",
           "style": "plain"
