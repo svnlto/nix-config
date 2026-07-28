@@ -32,14 +32,13 @@ gray=$'\033[38;2;108;112;134m'     # p:overlay0 #6C7086
 reset=$'\033[0m'
 
 # Nerd Font icons — matching default.omp.json segments
-icon_branch=$''   # nf-dev-git_branch  git branch_icon / jj bookmark
-icon_commit=$''   # nf-oct-git_commit  jj change id
-icon_worktree=$'' # nf-fa-folder_open  worktree
-icon_modified=$'' # nf-fa-pencil_square git working changes
-icon_staged=$''   # nf-fa-check_square git staged changes
-icon_chevron=$''  # nf-fa-angle_right  closer segment
-icon_tokens=$'󰀋'  # nf-md-counter  session token count
-icon_clock=$''    # nf-fa-clock_o      time remaining
+icon_branch=$''   # nf-dev-git_branch  git branch_icon / jj bookmark
+icon_commit=$''   # nf-oct-git_commit  jj change id
+icon_worktree=$'' # nf-fa-folder_open  worktree
+icon_modified=$'' # nf-fa-pencil_square git working changes
+icon_staged=$''   # nf-fa-check_square git staged changes
+icon_chevron=$''  # nf-fa-angle_right  closer segment
+icon_clock=$''    # nf-fa-clock_o      time remaining
 
 # Shortened path (OMP path segment, p:pink, agnoster_short max_depth 3)
 short_path() {
@@ -149,7 +148,7 @@ if [ -n "$five_hour_used_pct" ]; then
   else
     usage_color="$green"
   fi
-  usage_part=" ${usage_color}${icon_tokens} 5h ${used_int}%${reset}"
+  usage_part=" ${usage_color}5h ${used_int}%${reset}"
 
   if [ -n "$five_hour_resets_at" ]; then
     now=$EPOCHSECONDS
@@ -188,10 +187,10 @@ if [ -n "$seven_day_used_pct" ]; then
   else
     day_color="$green"
   fi
-  seven_day_part=" ${day_color}${icon_tokens} 7d ${day_int}%${reset}"
+  seven_day_part=" ${day_color}7d ${day_int}%${reset}"
 fi
 
-printf '%s%s%s%s %s  %s[%s]%s%s%s%s\n' \
+printf '%s%s%s%s %s %s[%s]%s%s%s%s\n' \
   "$path_part" \
   "$wt_part" \
   "$jj_part" \
