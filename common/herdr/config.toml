@@ -8,6 +8,24 @@ key = "prefix+alt+g"
 type = "pane"
 command = "lazygit"
 
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "nathanflurry.jj-workspace.new-tab"
+description = "new jj workspace (in tab)"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "nathanflurry.jj-workspace.new"
+description = "new jj workspace"
+
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "nathanflurry.jj-workspace.remove"
+description = "remove jj workspace"
+
 [theme]
 name = "terminal"
 
@@ -21,6 +39,24 @@ default_shell = "zsh"
 
 [ui]
 mouse_scroll_lines = 5
+agent_panel_sort = "priority"
+
+# Third row is populated by the mroth.jj-status plugin; it collapses on
+# non-jj workspaces, leaving the built-in git row untouched there.
+[ui.sidebar.spaces]
+rows = [
+  [
+    "state_icon",
+    "workspace",
+  ],
+  [
+    "branch",
+    "git_status",
+  ],
+  [
+    "$jj_bookmark",
+  ],
+]
 
 [ui.toast]
 delivery = "system"

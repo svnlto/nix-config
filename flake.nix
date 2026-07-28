@@ -65,6 +65,17 @@
       url = "github:obra/the-elements-of-style";
       flake = false;
     };
+
+    # Herdr plugin sources. flake=false: consumed by common/herdr/plugins.nix
+    # and pinned in flake.lock like the skill inputs above.
+    herdr-plugin-jj-workspace = {
+      url = "github:NathanFlurry/herdr-plugin-jj-workspace";
+      flake = false;
+    };
+    herdr-plugin-jj-status = {
+      url = "github:mroth/herdr-jj-status";
+      flake = false;
+    };
   };
 
   outputs =

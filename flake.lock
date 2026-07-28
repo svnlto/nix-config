@@ -112,6 +112,38 @@
         "type": "github"
       }
     },
+    "herdr-plugin-jj-status": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785204317,
+        "narHash": "sha256-oKq7ch+dklo8YFGM3r2soV94KoMJU/sGnZvEeT2SZB8=",
+        "owner": "mroth",
+        "repo": "herdr-jj-status",
+        "rev": "40588ef743e1dd6a252b2e39765616584fd2e39e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mroth",
+        "repo": "herdr-jj-status",
+        "type": "github"
+      }
+    },
+    "herdr-plugin-jj-workspace": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783487155,
+        "narHash": "sha256-xspdQfcwTEdUwZ0nWAfrdvz5IBVNVyMkmpmpzkUl0LE=",
+        "owner": "NathanFlurry",
+        "repo": "herdr-plugin-jj-workspace",
+        "rev": "a9f1d3bcdaa2354e336a5173da85cbe4970c0f2e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NathanFlurry",
+        "repo": "herdr-plugin-jj-workspace",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -195,6 +227,8 @@
         "cc-herdr": "cc-herdr",
         "cc-skills-generator": "cc-skills-generator",
         "cc-terraform-skill": "cc-terraform-skill",
+        "herdr-plugin-jj-status": "herdr-plugin-jj-status",
+        "herdr-plugin-jj-workspace": "herdr-plugin-jj-workspace",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
