@@ -11,6 +11,7 @@ let
   freshTools = [
     "devbox"
     "jujutsu"
+    "jjui"
     "lazyjj"
   ];
 in
