@@ -137,8 +137,11 @@ flake-check, trailing-whitespace, check-yaml, detect-private-key.
 
 1. **`nix.optimise` is nix-darwin only** — never set in
    `common/default.nix`, only in `systems/aarch64-darwin/`
-2. **Nix flakes require git tracking** — `git add` new files
-   before `nixswitch` or builds silently fail
+2. **Nix flakes only see git-tracked files** — this repo is
+   colocated with jj, which registers new paths in git's index on
+   any jj command, so no `git add` is needed. In a pure-git
+   checkout, `git add` new files before `nixswitch` or builds
+   silently miss them
 3. **No NixOS support** — no `boot.*`, `services.*`,
    `virtualisation.*` modules
 4. **Platform detection** — use
