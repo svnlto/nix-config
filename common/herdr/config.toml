@@ -21,6 +21,12 @@ command = "nathanflurry.jj-workspace.new"
 description = "new jj workspace"
 
 [[keys.command]]
+key = "prefix+space"
+type = "plugin_action"
+command = "kichel.muster.open"
+description = "muster: pick project"
+
+[[keys.command]]
 key = "prefix+d"
 type = "plugin_action"
 command = "nathanflurry.jj-workspace.remove"

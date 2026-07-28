@@ -76,6 +76,10 @@
       url = "github:mroth/herdr-jj-status";
       flake = false;
     };
+    herdr-plugin-muster = {
+      url = "github:marcoskichel/herdr-muster";
+      flake = false;
+    };
   };
 
   outputs =
