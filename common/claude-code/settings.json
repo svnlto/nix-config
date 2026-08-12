@@ -49,7 +49,7 @@
     ],
     "additionalDirectories": []
   },
-  "model": "claude-opus-5[1m]",
+  "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "SessionStart": [
@@ -143,7 +143,7 @@
   "outputStyle": "Concise",
   "skipWebFetchPreflight": true,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "medium",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
