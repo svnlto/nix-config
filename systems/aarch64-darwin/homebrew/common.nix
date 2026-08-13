@@ -24,6 +24,7 @@ _:
       "setapp"
       "obsidian"
       "marked-app"
+      "caskhub"
 
       # Communication & Collaboration
       "claude" # desktop
@@ -41,6 +42,7 @@ _:
 
       # Media & Entertainment
       "vlc"
+      "betterdisplay"
     ];
     masApps = { };
     onActivation = {

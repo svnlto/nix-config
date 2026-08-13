@@ -38,3 +38,8 @@ Open stacked PRs for this chain	jujutsu
 Run git stash, then pull, then pop the stash	jujutsu
 Show me the last 10 commits	none
 What changed in this file?	none
+# --- eng-manager (people leadership) — guards "performance"/"team" collisions ---
+Structure my first one-to-one with a new report	eng-manager
+My senior engineer is underperforming — help me start a PIP	eng-manager
+Improve the performance of this slow Postgres query	none
+Our team's pods are crashlooping in production	kubernetes-specialist
