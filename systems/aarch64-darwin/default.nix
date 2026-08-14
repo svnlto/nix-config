@@ -63,8 +63,8 @@ in
       # Create necessary directories
       createDirectories.text = ''
         echo "Creating user directories..." >&2
-        mkdir -p /Users/${username}/Desktop/screenshots
-        chown ${username}:staff /Users/${username}/Desktop/screenshots
+        mkdir -p /Users/${username}/Documents/Screenshots
+        chown ${username}:staff /Users/${username}/Documents/Screenshots
       '';
 
       postActivation.text = lib.mkAfter ''

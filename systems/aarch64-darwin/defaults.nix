@@ -5,7 +5,7 @@
     finder.FXPreferredViewStyle = "clmv";
     loginwindow.GuestEnabled = false;
 
-    screencapture.location = "/Users/${username}/Desktop/screenshots";
+    screencapture.location = "/Users/${username}/Documents/Screenshots";
 
     NSGlobalDomain = {
       AppleShowAllExtensions = true;
