@@ -70,7 +70,7 @@ in
 
     includes = [
       {
-        condition = "gitdir:~/projects/msg/";
+        condition = "gitdir:~/projects/work/";
         path = "${config.home.homeDirectory}/.gitconfig-local";
       }
     ];
