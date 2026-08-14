@@ -17,15 +17,12 @@ _:
 
     # Fitness & Entertainment
     "zwift"
+    "spotify"
 
     # Virtualization & Networking
-    "utm"
-    "vagrant-vmware-utility"
     "winbox"
 
     # Networking & VPN
     "tailscale-app"
-
-    "spotify"
   ];
 }
