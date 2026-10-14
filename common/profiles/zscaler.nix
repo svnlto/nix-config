@@ -6,53 +6,51 @@
 # their own CA store and ignore the keychain — so they fail with cert errors
 # until pointed at a bundle that includes those internal roots.
 #
-# This module, on activation (which already runs as root), does two things:
+# On activation (which already runs as root) this module:
 #
-#   1. If the proxy client app is not yet installed AND a local, untracked URL
-#      file exists, fetch and run the employer's installer. The installer puts
-#      the client in /Applications and trusts the internal CAs in the System
-#      keychain. The installer URL is NOT in this repo — drop it in the file
-#      below so no employer identifiers are committed:
+#   1. If the proxy client app is not yet installed, fetches and runs the
+#      employer's installer, which puts the client in /Applications and trusts
+#      the internal CAs in the System keychain. Gated on the app being absent,
+#      so it is a one-shot, not every switch.
 #
-#        sudo sh -c 'echo "<installer-url>" > /etc/corp-proxy-installer-url'
+#      SECURITY: this executes a remote script as root. The URL is a public
+#      employer blob (no secrets, no identifying names), kept here so the setup
+#      is self-contained. Set installerUrl to "" to disable auto-install and
+#      provision the client by hand.
 #
-#      SECURITY: when the app is absent this executes a remote script as root.
-#      It is gated on the app being missing, so it runs once, not every switch.
-#      Leave the URL file absent to disable auto-install and provision by hand.
-#
-#   2. Rebuild a CA bundle = public roots + whatever the System keychain trusts,
-#      and repoint the toolchain at it. With nothing extra trusted the bundle is
-#      just the public roots, so nothing breaks.
+#   2. Rebuilds a CA bundle = public roots + whatever the System keychain trusts
+#      and repoints the toolchain at it. With nothing extra trusted the bundle
+#      is just the public roots, so nothing breaks.
 #
 # Not automatable here, still manual after install: approving the client's macOS
-# System Extension (GUI) and the SSO/MFA login.
+# System Extension (GUI) and the SSO/MFA login. ZPA access also requires a
+# supported antivirus running + the firewall on, or device posture blocks it.
 #
 # Wired into `rick` via extraModules in flake.nix.
 { pkgs, lib, ... }:
 
 let
   bundle = "/etc/ssl/certs/corp-ca-bundle.crt";
-  urlFile = "/etc/corp-proxy-installer-url";
   appPath = "/Applications/Zscaler/Zscaler.app";
+  installerUrl = "https://blobintunestore.blob.core.windows.net/sources/Install-FastSTD-Zscaler.sh";
 in
 {
   # nix-darwin only runs a fixed set of activation hooks (postActivation, ...);
   # arbitrary custom keys are silently dropped, so this must ride postActivation.
   system.activationScripts.postActivation.text = lib.mkAfter ''
-    # 1. One-shot install from a local, untracked URL file (if present).
-    if [ ! -e "${appPath}" ] && [ -r "${urlFile}" ]; then
-      url=$(/usr/bin/head -n1 "${urlFile}" | /usr/bin/tr -d '[:space:]')
-      if [ -n "$url" ]; then
-        echo "Corp proxy client absent; running installer from ${urlFile}..." >&2
+    # 1. One-shot install of the proxy client (if absent).
+    ${lib.optionalString (installerUrl != "") ''
+      if [ ! -e "${appPath}" ]; then
+        echo "Corp proxy client absent; running installer..." >&2
         tmp=$(mktemp)
-        if /usr/bin/curl -fsSL "$url" -o "$tmp"; then
+        if /usr/bin/curl -fsSL "${installerUrl}" -o "$tmp"; then
           /bin/bash "$tmp" >&2 || echo "  installer exited non-zero" >&2
         else
           echo "  installer download failed; skipping" >&2
         fi
         rm -f "$tmp"
       fi
-    fi
+    ''}
 
     # 2. Rebuild the CA bundle for CLI tooling from the System keychain.
     echo "Building corporate CA bundle..." >&2
