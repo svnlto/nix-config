@@ -36,7 +36,9 @@ let
   appPath = "/Applications/Zscaler/Zscaler.app";
 in
 {
-  system.activationScripts.corpProxyClient.text = ''
+  # nix-darwin only runs a fixed set of activation hooks (postActivation, ...);
+  # arbitrary custom keys are silently dropped, so this must ride postActivation.
+  system.activationScripts.postActivation.text = lib.mkAfter ''
     # 1. One-shot install from a local, untracked URL file (if present).
     if [ ! -e "${appPath}" ] && [ -r "${urlFile}" ]; then
       url=$(/usr/bin/head -n1 "${urlFile}" | /usr/bin/tr -d '[:space:]')
