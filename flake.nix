@@ -198,7 +198,10 @@
         "rick" = mkDarwinSystem {
           hostname = "rick";
           username = defaultUsername;
-          extraModules = [ ./systems/aarch64-darwin/homebrew/personal.nix ];
+          extraModules = [
+            ./systems/aarch64-darwin/homebrew/personal.nix
+            ./common/profiles/zscaler.nix
+          ];
         };
         # Work macOS host — add once the machine identifier is known:
         #   "<HOSTNAME>" = mkDarwinSystem {
