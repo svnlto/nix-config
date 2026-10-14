@@ -6,33 +6,45 @@
 # their own CA store and ignore the keychain — so they fail with cert errors
 # until pointed at a bundle that includes those internal roots.
 #
-# On activation (which already runs as root) this module:
+# Three layers, because each tool reads its trust store differently:
 #
-#   1. If the proxy client app is not yet installed, fetches and runs the
-#      employer's installer, which puts the client in /Applications and trusts
-#      the internal CAs in the System keychain. Gated on the app being absent,
-#      so it is a one-shot, not every switch.
+#   1. system.activationScripts (root): install the client if absent, then
+#      build a CA bundle = public roots + whatever the System keychain trusts.
+#   2. nix.settings.ssl-cert-file: on macOS multi-user Nix this sets the
+#      nix-daemon's launchd NIX_SSL_CERT_FILE (the daemon ignores shell env).
+#   3. home-manager (user): nix-darwin's environment.variables do NOT reach
+#      login shells on this setup, so the CLI env + git config are set through
+#      home-manager instead, which writes the user's shell + ~/.gitconfig.
 #
-#      SECURITY: this executes a remote script as root. The URL is a public
-#      employer blob (no secrets, no identifying names), kept here so the setup
-#      is self-contained. Set installerUrl to "" to disable auto-install and
-#      provision the client by hand.
+# SECURITY: the installer runs a remote script as root. The URL is a public
+# employer blob (no secrets/identifiers), gated on the app being absent so it
+# runs once. Set installerUrl to "" to disable auto-install.
 #
-#   2. Rebuilds a CA bundle = public roots + whatever the System keychain trusts
-#      and repoints the toolchain at it. With nothing extra trusted the bundle
-#      is just the public roots, so nothing breaks.
-#
-# Not automatable here, still manual after install: approving the client's macOS
-# System Extension (GUI) and the SSO/MFA login. ZPA access also requires a
-# supported antivirus running + the firewall on, or device posture blocks it.
+# Still manual after install: approving the client's macOS System Extension
+# (GUI) and the SSO/MFA login. ZPA access also needs a supported antivirus
+# running + the firewall on, or device posture blocks it.
 #
 # Wired into `rick` via extraModules in flake.nix.
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  username,
+  ...
+}:
 
 let
   bundle = "/etc/ssl/certs/corp-ca-bundle.crt";
   appPath = "/Applications/Zscaler/Zscaler.app";
   installerUrl = "https://blobintunestore.blob.core.windows.net/sources/Install-FastSTD-Zscaler.sh";
+  certEnv = {
+    NIX_SSL_CERT_FILE = bundle;
+    SSL_CERT_FILE = bundle;
+    CURL_CA_BUNDLE = bundle;
+    GIT_SSL_CAINFO = bundle;
+    NODE_EXTRA_CA_CERTS = bundle;
+    REQUESTS_CA_BUNDLE = bundle;
+    AWS_CA_BUNDLE = bundle;
+  };
 in
 {
   # nix-darwin only runs a fixed set of activation hooks (postActivation, ...);
@@ -63,17 +75,14 @@ in
     echo "  wrote ${bundle} ($(grep -c 'BEGIN CERT' ${bundle}) certs)" >&2
   '';
 
-  # The nix daemon runs as root and reads this from nix.conf, not the user env.
+  # The nix daemon runs as root and reads this from its launchd plist, not the
+  # shell env.
   nix.settings.ssl-cert-file = bundle;
 
-  environment.variables = {
-    # Override the public-only default set in systems/aarch64-darwin/default.nix.
-    NIX_SSL_CERT_FILE = lib.mkForce bundle;
-    SSL_CERT_FILE = bundle;
-    CURL_CA_BUNDLE = bundle;
-    GIT_SSL_CAINFO = bundle;
-    NODE_EXTRA_CA_CERTS = bundle;
-    REQUESTS_CA_BUNDLE = bundle;
-    AWS_CA_BUNDLE = bundle;
+  # Shell env + git trust for the user (nix-darwin environment.variables do not
+  # reach login shells here; home-manager owns the user's shell).
+  home-manager.users.${username} = {
+    home.sessionVariables = certEnv;
+    programs.git.extraConfig.http.sslCAInfo = bundle;
   };
 }
