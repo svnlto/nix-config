@@ -9,6 +9,8 @@ _:
 
     # Communication & Collaboration
     "granola"
+    "microsoft-teams"
+    "microsoft-outlook"
 
     # Communication
     "whatsapp"
