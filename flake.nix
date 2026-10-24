@@ -200,7 +200,6 @@
           username = defaultUsername;
           extraModules = [
             ./systems/aarch64-darwin/homebrew/personal.nix
-            ./common/profiles/zscaler.nix
             ./systems/aarch64-darwin/vm-host.nix
           ];
         };
