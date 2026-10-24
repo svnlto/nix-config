@@ -1,7 +1,6 @@
 _:
 
-# rick (personal host) Homebrew. Merges with common.nix (taps/brews/casks are
-# concatenated by nix-darwin). No shared-real-mac layer by design.
+# rick (personal host) Homebrew. No shared-real-mac layer by design.
 {
   homebrew = {
     taps = [ "datadog-labs/pack" ];

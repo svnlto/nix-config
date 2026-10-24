@@ -1,8 +1,6 @@
 _:
 
-# Every-host baseline only. Host-specific apps live in personal.nix / work.nix.
-# The shared import in default.nix pulls this onto every host (incl. the morty
-# VM), so keep it minimal — a Zscaler appliance wants nothing GUI here.
+# Every-host baseline — pulled onto every host incl the morty VM, so keep minimal.
 {
   homebrew = {
     enable = true;
