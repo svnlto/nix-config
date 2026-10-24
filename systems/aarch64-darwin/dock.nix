@@ -20,6 +20,8 @@ let
       "/Applications/Obsidian.app"
       "/Applications/Granola.app"
     ];
+    # morty (Zscaler VM) has no GUI apps — empty dock.
+    "morty" = [ ];
   };
 
   # Select the dock apps for the current hostname or fall back to default
@@ -37,7 +39,7 @@ let
         ${dockutil} --add "${app}" --no-restart
       '') apps
     )}
-    killall Dock
+    killall Dock || true
   '';
 in
 {

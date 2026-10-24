@@ -203,15 +203,20 @@
             ./common/profiles/zscaler.nix
           ];
         };
-        # Work macOS host — add once the machine identifier is known:
-        #   "<HOSTNAME>" = mkDarwinSystem {
-        #     hostname = "<HOSTNAME>";
-        #     username = "<WORK_USER>";
-        #     extraModules = [
-        #       ./systems/aarch64-darwin/homebrew/work.nix
-        #       ./systems/aarch64-darwin/corporate.nix
-        #     ];
-        #   };
+        # morty — Zscaler-only appliance VM (Tart). Runs ZCC + posture + Tailscale
+        # + sshd; the host tunnels to it (ProxyJump / ssh -D). corporate.nix stays
+        # out. Built via Packer (systems/aarch64-darwin/vm/morty.pkr.hcl).
+        "morty" = mkDarwinSystem {
+          hostname = "morty";
+          username = defaultUsername;
+          extraModules = [
+            ./systems/aarch64-darwin/homebrew/work.nix
+            ./common/profiles/zscaler.nix
+            ./systems/aarch64-darwin/vm/proxy.nix
+            ./systems/aarch64-darwin/vm/morty-overrides.nix
+            (_: { networking.applicationFirewall.enable = true; })
+          ];
+        };
       };
 
       # Linux Home Manager configurations
