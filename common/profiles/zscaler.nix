@@ -16,9 +16,13 @@
 #      login shells on this setup, so the CLI env + git config are set through
 #      home-manager instead, which writes the user's shell + ~/.gitconfig.
 #
-# SECURITY: the installer runs a remote script as root. The URL is a public
-# employer blob (no secrets/identifiers), gated on the app being absent so it
-# runs once. Set installerUrl to "" to disable auto-install.
+# SECURITY: the installer runs a remote script as root. The URL is read at
+# activation RUNTIME from an untracked root-owned file (installerUrlFile), never
+# baked into the world-readable /nix/store, and the whole block is gated on that
+# file's presence + the app being absent (so it runs once, and not at all on a
+# host without the file). The downloaded WRAPPER is SHA256-pinned and verified
+# before it runs; its downstream payload is NOT pinned (accepted risk). Remove
+# the file to disable auto-install.
 #
 # Still manual after install: approving the client's macOS System Extension
 # (GUI) and the SSO/MFA login. ZPA access also needs a supported antivirus
@@ -35,7 +39,16 @@
 let
   bundle = "/etc/ssl/certs/corp-ca-bundle.crt";
   appPath = "/Applications/Zscaler/Zscaler.app";
-  installerUrl = "https://blobintunestore.blob.core.windows.net/sources/Install-FastSTD-Zscaler.sh";
+  # The installer URL is read at activation RUNTIME from this untracked file
+  # (root:root 0600), never baked into the world-readable /nix/store. The file
+  # is absent on rick's default and on the golden-image build, so the whole
+  # install block self-skips there. Write it on the VM in first-run (Phase 5).
+  installerUrlFile = "/etc/morty/zscaler-installer-url";
+  # SHA256 of the installer WRAPPER script only. The wrapper then downloads and
+  # runs its payload as root UNPINNED (accepted; documented). A vendor republish
+  # changes this hash and must be re-captured:
+  #   curl -fsSL "$(cat /etc/morty/zscaler-installer-url)" | shasum -a 256
+  installerSha256 = "f9e167400c04b2690ca70ef743af96dd18784416c09b53cdbe00b98fdc2081e3";
   certEnv = {
     NIX_SSL_CERT_FILE = bundle;
     SSL_CERT_FILE = bundle;
@@ -50,19 +63,32 @@ in
   # nix-darwin only runs a fixed set of activation hooks (postActivation, ...);
   # arbitrary custom keys are silently dropped, so this must ride postActivation.
   system.activationScripts.postActivation.text = lib.mkAfter ''
-    # 1. One-shot install of the proxy client (if absent).
-    ${lib.optionalString (installerUrl != "") ''
-      if [ ! -e "${appPath}" ]; then
-        echo "Corp proxy client absent; running installer..." >&2
-        tmp=$(mktemp)
-        if /usr/bin/curl -fsSL "${installerUrl}" -o "$tmp"; then
-          /bin/bash "$tmp" >&2 || echo "  installer exited non-zero" >&2
-        else
-          echo "  installer download failed; skipping" >&2
-        fi
+    # 1. One-shot install of the proxy client. Gated on the untracked runtime
+    #    URL file existing AND the app being absent, so a URL-less host (rick
+    #    default, golden-image build) self-skips and still succeeds. The wrapper
+    #    is SHA-pinned and verified before the root run.
+    if [ -f "${installerUrlFile}" ] && [ ! -e "${appPath}" ]; then
+      echo "Corp proxy client absent; fetching installer..." >&2
+      url=$(/bin/cat "${installerUrlFile}")
+      tmp=$(mktemp)
+      if ! /usr/bin/curl -fsSL "$url" -o "$tmp"; then
         rm -f "$tmp"
+        echo "  installer download failed" >&2
+        exit 1
       fi
-    ''}
+      got=$(/usr/bin/shasum -a 256 "$tmp" | /usr/bin/awk '{print $1}')
+      if [ "$got" != "${installerSha256}" ]; then
+        rm -f "$tmp"
+        echo "  installer SHA mismatch: got $got want ${installerSha256}" >&2
+        exit 1
+      fi
+      /bin/bash "$tmp" >&2
+      rm -f "$tmp"
+      if [ ! -d "${appPath}" ]; then
+        echo "  installer ran but ${appPath} absent" >&2
+        exit 1
+      fi
+    fi
 
     # 2. Rebuild the CA bundle for CLI tooling from the System keychain.
     echo "Building corporate CA bundle..." >&2
