@@ -70,7 +70,10 @@ in
 
     includes = [
       {
-        condition = "gitdir:~/projects/work/";
+        # case-insensitive: macOS APFS is case-insensitive, so the real dir may
+        # be ~/Projects even when typed as ~/projects. Plain gitdir: is
+        # case-sensitive and would silently not match.
+        condition = "gitdir/i:~/projects/work/";
         path = "${config.home.homeDirectory}/.gitconfig-local";
       }
     ];

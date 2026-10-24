@@ -83,6 +83,6 @@ in
   # reach login shells here; home-manager owns the user's shell).
   home-manager.users.${username} = {
     home.sessionVariables = certEnv;
-    programs.git.extraConfig.http.sslCAInfo = bundle;
+    programs.git.settings.http.sslCAInfo = bundle;
   };
 }

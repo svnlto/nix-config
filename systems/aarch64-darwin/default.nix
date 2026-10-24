@@ -50,23 +50,6 @@ in
     primaryUser = username;
 
     activationScripts = {
-      # Set desktop wallpaper
-      setWallpaper.text =
-        let
-          wallpaper = ../../common/profiles/wallpapers/bg.jpg;
-        in
-        ''
-          echo "Setting desktop wallpaper..." >&2
-          su ${username} -c 'osascript -e "tell application \"System Events\" to tell every desktop to set picture to POSIX file \"${wallpaper}\""' >&2 || true
-        '';
-
-      # Create necessary directories
-      createDirectories.text = ''
-        echo "Creating user directories..." >&2
-        mkdir -p /Users/${username}/Documents/Screenshots
-        chown ${username}:staff /Users/${username}/Documents/Screenshots
-      '';
-
       postActivation.text = lib.mkAfter ''
         # Homebrew update/upgrade is handled by nix-darwin onActivation (common.nix homebrew.onActivation, corporate.nix override).
 

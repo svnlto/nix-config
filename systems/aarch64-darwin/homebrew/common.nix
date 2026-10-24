@@ -1,48 +1,16 @@
 _:
 
+# Every-host baseline only. Host-specific apps live in personal.nix / work.nix.
+# The shared import in default.nix pulls this onto every host (incl. the morty
+# VM), so keep it minimal — a Zscaler appliance wants nothing GUI here.
 {
   homebrew = {
     enable = true;
-    taps = [ "datadog-labs/pack" ];
     brews = [
-      "mas"
-      "dockutil"
-      "pre-commit"
-      "datadog-labs/pack/pup"
-      "herdr"
+      "dockutil" # dock.nix needs it
     ];
     casks = [
-      # Fonts
       "font-sf-pro"
-
-      # Security & Password Management
-      "1password"
-      "1password-cli"
-
-      # Productivity Tools
-      "raycast"
-      "setapp"
-      "obsidian"
-      "marked-app"
-      "caskhub"
-
-      # Communication & Collaboration
-      "claude" # desktop
-
-      # Development & Terminal
-      "orbstack"
-      "ghostty"
-      "claude-code"
-      "claude-devtools"
-      "antigravity-cli"
-
-      # Networking & VPN
-      "arc"
-      "google-chrome"
-
-      # Media & Entertainment
-      "vlc"
-      "betterdisplay"
     ];
     masApps = { };
     onActivation = {

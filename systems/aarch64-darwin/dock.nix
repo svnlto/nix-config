@@ -15,7 +15,7 @@ let
     # Default configuration (used if no host-specific config exists)
     "default" = [
       "/Applications/Ghostty.app"
-      "/Applications/Arc.app"
+      "/Applications/Dia.app"
       "/Applications/Claude.app"
       "/Applications/Obsidian.app"
       "/Applications/Granola.app"
