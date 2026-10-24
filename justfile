@@ -80,27 +80,24 @@ clean-deep:
 
 # --- morty (Zscaler VM) ----------------------------------------------------
 
-# Build the morty-work golden image at <rev> via Packer. <operator_pub> is the
-# SSH public key authorized for svenlito. Pass force=1 to rebuild over an
-# existing image. The real build needs the <rev> pushed to origin.
-build-work-vm rev operator_pub force="":
+# Build the morty-work golden image via Packer from the WORKING TREE (no push
+# needed). <operator_pub> is the SSH public key authorized for svenlito. Pass
+# force=1 to rebuild over an existing image.
+build-work-vm operator_pub force="":
     #!/usr/bin/env bash
     set -euo pipefail
     command -v packer >/dev/null || { echo "packer missing (nixswitch to install)" >&2; exit 1; }
     [ -f "{{ operator_pub }}" ] || { echo "operator pubkey {{ operator_pub }} not found" >&2; exit 1; }
-    sha=$(git rev-parse --verify "{{ rev }}^{commit}") || { echo "bad rev {{ rev }}" >&2; exit 1; }
-    git fetch -q origin
-    [ -n "$(git branch -r --contains "$sha" 2>/dev/null)" ] || { echo "$sha not on origin — push first" >&2; exit 1; }
     if tart list --format json | jq -e '.[]|select(.Name=="morty-work")' >/dev/null; then
       [ -n "{{ force }}" ] || { echo "morty-work exists; pass force=1 to rebuild" >&2; exit 1; }
       tart delete morty-work
     fi
     tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
-    git show "$sha:systems/aarch64-darwin/vm/bootstrap.sh" > "$tmp/bootstrap.sh"
+    tar czf "$tmp/nix-config.tgz" --exclude=.git --exclude=result --exclude='result-*' -C "$(git rev-parse --show-toplevel)" .
     cp "{{ operator_pub }}" "$tmp/operator.pub"
     packer init systems/aarch64-darwin/vm/morty.pkr.hcl
     packer build \
-      -var "rev=$sha" -var "bootstrap=$tmp/bootstrap.sh" -var "operator_pub=$tmp/operator.pub" \
+      -var "repo_tar=$tmp/nix-config.tgz" -var "operator_pub=$tmp/operator.pub" \
       systems/aarch64-darwin/vm/morty.pkr.hcl
 
 # CoW-clone the daily VM from the golden image. Never clone morty after sign-in.

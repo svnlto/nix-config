@@ -3,11 +3,10 @@
 # Content only — Packer owns boot/ssh/shutdown/cleanup. See morty.pkr.hcl.
 set -euo pipefail
 cd /
-: "${REV:?REV must be set}"
 
-REPO="https://github.com/svnlto/nix-config.git"
 USER_NAME="svenlito"
 CLONE_DIR="/Users/${USER_NAME}/.config/nix"
+REPO_TAR="/tmp/nix-config.tgz" # working-tree tarball uploaded by packer
 
 # 1. Create svenlito as an admin with a SecureToken (via the admin creds). The
 #    password is a throwaway echoed ONCE to the Packer log; it is reset at
@@ -43,17 +42,20 @@ for f in /etc/nix/nix.conf /etc/zshrc /etc/bashrc; do
   [ -e "$f" ] && mv "$f" "$f.before-nix-darwin" || true
 done
 
-# 5. Clone the repo as svenlito at the pinned commit (public HTTPS, no creds).
-sudo -u "${USER_NAME}" -H git clone "${REPO}" "${CLONE_DIR}"
-sudo -u "${USER_NAME}" -H git -C "${CLONE_DIR}" checkout "${REV}"
+# 5. Install the uploaded working-tree repo at ~/.config/nix, owned by svenlito.
+install -d -m 755 "/Users/${USER_NAME}/.config"
+rm -rf "${CLONE_DIR}"
+mkdir -p "${CLONE_DIR}"
+tar xzf "${REPO_TAR}" -C "${CLONE_DIR}"
+chown -R "${USER_NAME}" "/Users/${USER_NAME}/.config"
 
 # 6. Hostname before the switch so the flake selects #morty.
 scutil --set LocalHostName morty
 scutil --set ComputerName morty
 scutil --set HostName morty
 
-# 7. First switch. Use the `path:` flakeref (not git+file://): the switch runs as
-#    root over svenlito's clone, and Nix's libgit2 fetcher would reject it for
+# 7. First switch via a `path:` flakeref (not git+file://): the switch runs as
+#    root over the copy, and Nix's libgit2 fetcher would reject a git repo for
 #    dubious ownership. `path:` copies the directory and skips that check.
 #    Zscaler install self-gates on /etc/morty/... absent, so it does NOT run here.
 nix --extra-experimental-features 'nix-command flakes' run \

@@ -2,10 +2,9 @@
 // Packer's tart plugin owns clone -> boot -> SSH -> provision -> shutdown ->
 // artifact -> cleanup-on-failure. Provisioning content lives in bootstrap.sh.
 //
-// Driven by `just build-work-vm <rev> <operator_pub> [force]`, which pins the
-// provisioner script to a git commit and runs `packer init && packer build`.
-// The real build is gated on the Phase 0 spike passing and on the `#morty`
-// flake host existing.
+// Driven by `just build-work-vm <operator_pub> [force]`, which tars the working
+// tree and runs `packer init && packer build`. The VM switches the uploaded
+// working-tree copy via a `path:` flakeref (no git fetch, no push needed).
 
 packer {
   required_plugins {
@@ -16,14 +15,9 @@ packer {
   }
 }
 
-variable "rev" {
+variable "repo_tar" {
   type        = string
-  description = "Git commit the provisioner clones/switches to"
-}
-
-variable "bootstrap" {
-  type        = string
-  description = "Path to bootstrap.sh extracted at <rev>"
+  description = "Path to a tarball of the nix-config working tree"
 }
 
 variable "operator_pub" {
@@ -33,7 +27,7 @@ variable "operator_pub" {
 
 variable "base" {
   type    = string
-  // Immutable digest captured from the Phase 0 spike clone (2026-10-24).
+  // Immutable digest captured from the base clone (2026-10-24).
   default = "ghcr.io/cirruslabs/macos-sequoia-base@sha256:eee659985b01e4df2a6c0754bd8d25e54969933c43fdcd4edef8bea337b3d354"
 }
 
@@ -50,8 +44,7 @@ source "tart-cli" "morty" {
   ssh_password = "admin"
   ssh_timeout  = "300s"
   headless     = true
-
-  shutdown_command = "sudo shutdown -h now"
+  // The tart builder stops the VM itself after provisioning; no shutdown_command.
 }
 
 build {
@@ -63,11 +56,16 @@ build {
   }
 
   provisioner "file" {
-    source      = var.bootstrap
+    source      = var.repo_tar
+    destination = "/tmp/nix-config.tgz"
+  }
+
+  provisioner "file" {
+    source      = "systems/aarch64-darwin/vm/bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
   }
 
   provisioner "shell" {
-    inline = ["sudo -n env REV=${var.rev} bash /tmp/bootstrap.sh"]
+    inline = ["sudo -n bash /tmp/bootstrap.sh"]
   }
 }
