@@ -1,12 +1,24 @@
-{ pkgs, username, ... }:
+{
+  pkgs,
+  username,
+  lib,
+  hostname ? "",
+  ...
+}:
 
+let
+  # morty (Zscaler appliance VM): keep git + ssh, drop the jj/lazygit workstation bits.
+  isAppliance = hostname == "morty";
+in
 {
   imports = [
     ../../common/home-manager-base.nix
-    ../../common/lazygit/default.nix
     ../../common/git
-    ../../common/jujutsu
     ../../common/ssh
+  ]
+  ++ lib.optionals (!isAppliance) [
+    ../../common/lazygit/default.nix
+    ../../common/jujutsu
   ];
 
   # macOS-specific home directory

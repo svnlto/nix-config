@@ -43,10 +43,7 @@ rec {
     devbox
   ];
 
-  darwinPackages = with pkgs; [
-    tart # macOS VM host (nixpkgs; cirruslabs brew formula is broken on current Homebrew)
-    packer # builds the morty golden image via the tart plugin (BUSL, unfree)
-  ];
+  darwinPackages = with pkgs; [ ];
 
   darwinSystemPackages = with pkgs; [
     git

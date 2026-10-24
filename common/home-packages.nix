@@ -1,10 +1,17 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  hostname ? "",
+  ...
+}:
 
 let
   packages = import ./packages.nix { inherit pkgs; };
+  # morty (Zscaler appliance VM): corePackages only, no workstation modules.
+  isAppliance = hostname == "morty";
 in
 {
-  imports = [
+  imports = lib.optionals (!isAppliance) [
     ./neovim
     ./ghostty
     ./herdr
@@ -12,5 +19,5 @@ in
     ./gh-dash
   ];
 
-  home.packages = packages.allCommonPackages;
+  home.packages = if isAppliance then packages.corePackages else packages.allCommonPackages;
 }

@@ -145,7 +145,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = false; # Must be false on macOS to create user profiles
                 extraSpecialArgs = {
-                  inherit inputs;
+                  inherit inputs hostname;
                   username = validUsername;
                 };
                 backupFileExtension = "backup";
@@ -201,6 +201,7 @@
           extraModules = [
             ./systems/aarch64-darwin/homebrew/personal.nix
             ./common/profiles/zscaler.nix
+            ./systems/aarch64-darwin/vm-host.nix
           ];
         };
         # morty — Zscaler-only appliance VM (Tart). Runs ZCC + posture + Tailscale
