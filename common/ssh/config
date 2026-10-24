@@ -1,3 +1,6 @@
+# Host-local overrides (untracked; e.g. corp hosts routed through the morty VM).
+Include ~/.ssh/config.local
+
 Host github.com
   IdentityFile ~/.ssh/keys/github.pub
   IdentitiesOnly yes
