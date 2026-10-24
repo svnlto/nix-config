@@ -80,9 +80,9 @@ clean-deep:
 
 # --- morty (Zscaler VM) ----------------------------------------------------
 
-# Build the morty-work golden image via Packer from the WORKING TREE (no push
-# needed). <operator_pub> is the SSH public key authorized for svenlito. Pass
-# force=1 to rebuild over an existing image.
+# Build the morty-work golden image via Packer (plain Zscaler appliance, no nix).
+# <operator_pub> is the SSH public key authorized on the VM. Pass force=1 to
+# rebuild over an existing image.
 build-work-vm operator_pub force="":
     #!/usr/bin/env bash
     set -euo pipefail
@@ -92,13 +92,8 @@ build-work-vm operator_pub force="":
       [ -n "{{ force }}" ] || { echo "morty-work exists; pass force=1 to rebuild" >&2; exit 1; }
       tart delete morty-work
     fi
-    tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
-    tar czf "$tmp/nix-config.tgz" --exclude=.git --exclude=result --exclude='result-*' -C "$(git rev-parse --show-toplevel)" .
-    cp "{{ operator_pub }}" "$tmp/operator.pub"
     packer init systems/aarch64-darwin/vm/morty.pkr.hcl
-    packer build \
-      -var "repo_tar=$tmp/nix-config.tgz" -var "operator_pub=$tmp/operator.pub" \
-      systems/aarch64-darwin/vm/morty.pkr.hcl
+    packer build -var "operator_pub={{ operator_pub }}" systems/aarch64-darwin/vm/morty.pkr.hcl
 
 # CoW-clone the daily VM from the golden image. Never clone morty after sign-in.
 spawn-morty:

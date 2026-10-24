@@ -1,10 +1,9 @@
-// Builds the `morty-work` golden image: a Zscaler-only appliance VM.
-// Packer's tart plugin owns clone -> boot -> SSH -> provision -> shutdown ->
-// artifact -> cleanup-on-failure. Provisioning content lives in bootstrap.sh.
+// Builds the `morty-work` golden image: a plain Zscaler appliance (NOT
+// nix-managed). Packer's tart plugin owns clone -> boot -> SSH -> provision ->
+// shutdown -> artifact -> cleanup-on-failure. Provisioning is bootstrap.sh
+// (installs ZCC + guest agent + firewall + operator key on the stock base).
 //
-// Driven by `just build-work-vm <operator_pub> [force]`, which tars the working
-// tree and runs `packer init && packer build`. The VM switches the uploaded
-// working-tree copy via a `path:` flakeref (no git fetch, no push needed).
+// Driven by `just build-work-vm <operator_pub> [force]`.
 
 packer {
   required_plugins {
@@ -15,14 +14,9 @@ packer {
   }
 }
 
-variable "repo_tar" {
-  type        = string
-  description = "Path to a tarball of the nix-config working tree"
-}
-
 variable "operator_pub" {
   type        = string
-  description = "Path to the operator SSH public key to authorize for svenlito"
+  description = "Path to the operator SSH public key to authorize on the VM"
 }
 
 variable "base" {
@@ -38,8 +32,7 @@ source "tart-cli" "morty" {
   memory_gb    = 8
   disk_size_gb = 80
 
-  // admin/admin is the cirruslabs base default; it is the build communicator and
-  // must survive the build (the first-boot daemon removes it on the daily clone).
+  // admin/admin is the cirruslabs base default; it stays (local VM).
   ssh_username = "admin"
   ssh_password = "admin"
   ssh_timeout  = "300s"
@@ -53,11 +46,6 @@ build {
   provisioner "file" {
     source      = var.operator_pub
     destination = "/tmp/operator.pub"
-  }
-
-  provisioner "file" {
-    source      = var.repo_tar
-    destination = "/tmp/nix-config.tgz"
   }
 
   provisioner "file" {

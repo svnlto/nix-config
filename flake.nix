@@ -145,7 +145,7 @@
                 useGlobalPkgs = true;
                 useUserPackages = false; # Must be false on macOS to create user profiles
                 extraSpecialArgs = {
-                  inherit inputs hostname;
+                  inherit inputs;
                   username = validUsername;
                 };
                 backupFileExtension = "backup";
@@ -203,17 +203,9 @@
             ./systems/aarch64-darwin/vm-host.nix
           ];
         };
-        "morty" = mkDarwinSystem {
-          hostname = "morty";
-          username = "admin";
-          extraModules = [
-            ./systems/aarch64-darwin/homebrew/work.nix
-            ./common/profiles/zscaler.nix
-            ./systems/aarch64-darwin/vm/proxy.nix
-            ./systems/aarch64-darwin/vm/morty-overrides.nix
-            (_: { networking.applicationFirewall.enable = true; })
-          ];
-        };
+        # morty (Zscaler VM) is NOT nix-managed — it's a plain appliance (ZCC +
+        # sshd + guest agent) built by packer from a stock base; see
+        # systems/aarch64-darwin/vm/.
       };
 
       # Linux Home Manager configurations

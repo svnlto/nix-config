@@ -1,23 +1,14 @@
-{
-  username,
-  lib,
-  hostname ? "",
-  ...
-}:
+{ username, ... }:
 
 let
   sharedZsh = import ./zsh/shared.nix;
   versions = import ./versions.nix;
-  # morty is a Zscaler appliance VM — skip the workstation modules.
-  isAppliance = hostname == "morty";
 in
 {
   imports = [
     ./home-packages.nix
-    ./programs/default.nix
-  ]
-  ++ lib.optionals (!isAppliance) [
     ./claude-code/default.nix
+    ./programs/default.nix
   ];
 
   # homeDirectory is set per platform
