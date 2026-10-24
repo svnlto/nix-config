@@ -43,7 +43,9 @@ rec {
     devbox
   ];
 
-  darwinPackages = with pkgs; [ ];
+  darwinPackages = with pkgs; [
+    tart # macOS VM host (nixpkgs; cirruslabs brew formula is broken on current Homebrew)
+  ];
 
   darwinSystemPackages = with pkgs; [
     git
