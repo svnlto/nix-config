@@ -46,20 +46,19 @@ done
 # 5. Clone the repo as svenlito at the pinned commit (public HTTPS, no creds).
 sudo -u "${USER_NAME}" -H git clone "${REPO}" "${CLONE_DIR}"
 sudo -u "${USER_NAME}" -H git -C "${CLONE_DIR}" checkout "${REV}"
-# The switch runs as root over svenlito's checkout; mark both safe.
-git config --global --add safe.directory "${CLONE_DIR}"
-sudo -u "${USER_NAME}" -H git config --global --add safe.directory "${CLONE_DIR}"
 
 # 6. Hostname before the switch so the flake selects #morty.
 scutil --set LocalHostName morty
 scutil --set ComputerName morty
 scutil --set HostName morty
 
-# 7. First switch. Zscaler install self-gates on /etc/morty/... absent, so it
-#    does NOT run at build; pin darwin-rebuild to the repo's own nix-darwin input.
+# 7. First switch. Use the `path:` flakeref (not git+file://): the switch runs as
+#    root over svenlito's clone, and Nix's libgit2 fetcher would reject it for
+#    dubious ownership. `path:` copies the directory and skips that check.
+#    Zscaler install self-gates on /etc/morty/... absent, so it does NOT run here.
 nix --extra-experimental-features 'nix-command flakes' run \
-  --inputs-from "${CLONE_DIR}" nix-darwin#darwin-rebuild -- \
-  switch --flake "${CLONE_DIR}#morty"
+  --inputs-from "path:${CLONE_DIR}" nix-darwin#darwin-rebuild -- \
+  switch --flake "path:${CLONE_DIR}#morty"
 
 # 8. Authorize the operator public key (packer uploaded it).
 install -d -m 700 "/Users/${USER_NAME}/.ssh"
