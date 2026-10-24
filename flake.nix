@@ -204,12 +204,9 @@
             ./systems/aarch64-darwin/vm-host.nix
           ];
         };
-        # morty — Zscaler-only appliance VM (Tart). Runs ZCC + posture + Tailscale
-        # + sshd; the host tunnels to it (ProxyJump / ssh -D). corporate.nix stays
-        # out. Built via Packer (systems/aarch64-darwin/vm/morty.pkr.hcl).
         "morty" = mkDarwinSystem {
           hostname = "morty";
-          username = defaultUsername;
+          username = "admin";
           extraModules = [
             ./systems/aarch64-darwin/homebrew/work.nix
             ./common/profiles/zscaler.nix
