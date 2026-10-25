@@ -65,11 +65,15 @@ and Linux dev environments (home-manager). No NixOS support.
 Defined in `flake.nix`:
 
 - `rick` — personal macOS (user `svenlito`, personal Homebrew)
-- Work macOS — not yet wired. Add a `mkDarwinSystem` entry once the machine
-  identifier is known, pulling `homebrew/work.nix` +
+- `schwifty` — music studio macOS (user `svenlito`, `homebrew/schwifty.nix`)
+- Work macOS (Accor) — not yet wired. Add a `mkDarwinSystem` entry once the
+  machine identifier is known, pulling `homebrew/work.nix` +
   `systems/aarch64-darwin/corporate.nix` (a vendor-agnostic managed-Mac
   skeleton — fill in the employer's VPN CA / SSO / tooling there)
 - `minimal-x86` / `minimal-arm` — Linux home-manager (containers, cloud)
+
+Every macOS host shares `homebrew/common.nix` (baseline) + its own
+`homebrew/<host>.nix` (host-specific brews/casks).
 
 macOS builds via `mkDarwinSystem`, Linux via `mkHomeManagerConfig`.
 Both validate the username and apply the fresh-tools overlay.

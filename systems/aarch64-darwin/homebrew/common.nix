@@ -1,6 +1,7 @@
 _:
 
-# Every-host baseline — pulled onto every host incl the morty VM, so keep minimal.
+# Shared baseline for every macOS host (rick, studio, future corp). Keep minimal;
+# per-host brews/casks live in their own homebrew/<host>.nix.
 {
   homebrew = {
     enable = true;

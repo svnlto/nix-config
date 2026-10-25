@@ -43,8 +43,6 @@ rec {
     devbox
   ];
 
-  darwinPackages = with pkgs; [ ];
-
   darwinSystemPackages = with pkgs; [
     git
     tree

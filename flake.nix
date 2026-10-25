@@ -203,6 +203,13 @@
             ./systems/aarch64-darwin/vm-host.nix
           ];
         };
+        "schwifty" = mkDarwinSystem {
+          hostname = "schwifty";
+          username = defaultUsername;
+          extraModules = [
+            ./systems/aarch64-darwin/homebrew/schwifty.nix
+          ];
+        };
         # morty (Zscaler VM) is NOT nix-managed — it's a plain appliance (ZCC +
         # sshd + guest agent) built by packer from a stock base; see
         # systems/aarch64-darwin/vm/.
