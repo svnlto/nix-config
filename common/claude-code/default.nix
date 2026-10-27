@@ -20,6 +20,13 @@ let
             CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
           };
         };
+        # Atlassian Rovo (Jira/Confluence) — replaces the confluence-sync skill.
+        # OAuth 2.1 runs interactively via /mcp on first use; tokens are stored by
+        # Claude Code and survive the deep-merge, so no secret lives in nix.
+        atlassian = {
+          type = "http";
+          url = "https://mcp.atlassian.com/v2/mcp";
+        };
       };
     }
   );

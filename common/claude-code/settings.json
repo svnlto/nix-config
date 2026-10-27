@@ -109,7 +109,6 @@
     "caveman@caveman": true,
     "context7@claude-plugins-official": true,
     "obsidian@obsidian-skills": true,
-    "pup@datadog-pup": true,
     "superpowers@claude-plugins-official": true,
     "terragrunt-skill@jfr992": true,
     "frontend-design@claude-plugins-official": true
@@ -119,12 +118,6 @@
       "source": {
         "source": "github",
         "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "datadog-pup": {
-      "source": {
-        "source": "github",
-        "repo": "DataDog/pup"
       }
     },
     "jfr992": {

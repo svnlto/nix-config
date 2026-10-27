@@ -10,6 +10,7 @@ _:
     ];
     casks = [
       "font-sf-pro"
+      "homebrew-app" # BrewUI — Homebrew's official GUI (needs macOS >= 26)
     ];
     masApps = { };
     onActivation = {

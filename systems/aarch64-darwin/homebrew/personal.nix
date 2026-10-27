@@ -3,12 +3,9 @@ _:
 # rick (personal host) Homebrew. No shared-real-mac layer by design.
 {
   homebrew = {
-    taps = [ "datadog-labs/pack" ];
-
     brews = [
       "mas"
       "pre-commit"
-      "datadog-labs/pack/pup"
       "herdr"
     ];
 
