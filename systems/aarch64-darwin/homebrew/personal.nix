@@ -15,6 +15,7 @@ _:
       "1password-cli"
       "proton-pass"
       "proton-drive"
+      "macpass"
       "ledger-wallet"
 
       # Productivity
