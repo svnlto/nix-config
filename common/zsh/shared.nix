@@ -140,5 +140,11 @@ rec {
       xattr -cr "$target" && codesign --force --deep --sign - "$target"
       echo "Unquarantined: $target"
     }
+
+    # glab (Go) ignores the macOS system PAC, so route its API/git calls through
+    # the morty SOCKS tunnel (corp ZPA resolves DNS at morty; socks5 = remote DNS).
+    glab() {
+      https_proxy=socks5://127.0.0.1:1080 command glab "$@"
+    }
   '';
 }
