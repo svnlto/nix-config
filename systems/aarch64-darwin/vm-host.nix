@@ -32,9 +32,18 @@ let
             s.send_response(200)
             s.send_header("Content-Type", "application/x-ns-proxy-autoconfig")
             s.send_header("Content-Length", str(len(b)))
-            s.end_headers(); s.wfile.write(b)
+            s.end_headers()
+            try:
+                s.wfile.write(b)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
         def log_message(s, *a): pass
-    http.server.HTTPServer(("127.0.0.1", 8099), H).serve_forever()
+    # Threaded: every app on the host resolves this PAC, so requests arrive
+    # concurrently; a single-threaded server head-of-line-blocks on one slow
+    # client and wedges every other PAC fetch.
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 8099), H)
+    srv.daemon_threads = True
+    srv.serve_forever()
   '';
 in
 {
