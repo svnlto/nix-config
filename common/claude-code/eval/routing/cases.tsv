@@ -38,3 +38,9 @@ Structure my first one-to-one with a new report	eng-manager
 My senior engineer is underperforming — help me start a PIP	eng-manager
 Improve the performance of this slow Postgres query	none
 Our team's pods are crashlooping in production	kubernetes-specialist
+# --- gitlab-engineer (CI/CD authoring) vs gitlab (glab ops) collision ---
+Write a .gitlab-ci.yml with SAST and a reusable secret-detection component	gitlab-engineer
+Set up hosted runners on our GitLab Dedicated instance	gitlab-engineer
+Build a CI/CD component and publish it to the catalog	gitlab-engineer
+Create a merge request from my current branch	gitlab
+Check the status of the last pipeline run and show failing job logs	gitlab
