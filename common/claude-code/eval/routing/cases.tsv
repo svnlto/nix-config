@@ -44,3 +44,8 @@ Set up hosted runners on our GitLab Dedicated instance	gitlab-engineer
 Build a CI/CD component and publish it to the catalog	gitlab-engineer
 Create a merge request from my current branch	gitlab
 Check the status of the last pipeline run and show failing job logs	gitlab
+# --- copier (template authoring + consume) ---
+Write a copier.yml to scaffold a Go service with conditional questions	copier
+How do I update an existing project when its Copier template changes?	copier
+Add a _migrations entry to my Copier template for a breaking rename	copier
+Scaffold a new repo from our Copier template	copier

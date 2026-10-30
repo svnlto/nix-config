@@ -41,6 +41,7 @@ rec {
     tree-sitter
     gnused
     devbox
+    copier
   ];
 
   darwinSystemPackages = with pkgs; [
