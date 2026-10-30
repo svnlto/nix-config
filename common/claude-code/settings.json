@@ -4,6 +4,7 @@
     "CAVEMAN_DEFAULT_MODE": "lite",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "MCP_TIMEOUT": "60000"
   },
   "includeCoAuthoredBy": false,
@@ -148,5 +149,39 @@
   "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
+  },
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: Not queryable here (org/repo not derivable from origin remote). Remote host is gitlab.softfactory-accor.net, a self-hosted GitLab instance — treat as private unless shown otherwise",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: VAULT_ADDR marker found in repo; gitleaks (`just secrets`) used for secret scanning",
+      "**Default / protected branches**: Default branch is `next`; CLAUDE.md states never push to `next` or `main` — a push to the default branch triggers a release; work on a branch and open an MR",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: The trusted repo (gitlab.softfactory-accor.net:ngw/component/cicd.git) and its remote only (no additional orgs configured)",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: .env/.envrc/test.env/myaccortest.env files, cicd/images/terraform/terraformrc, probe-credentials and secrets-scan CI templates, VAULT_ADDR-related config — share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment; also the terraform-gitops-image-updater module and examples/*/deploy terraform configs in this repo",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (GitLab CI/CD component platform: bash wrappers, Go tools, YAML templates, Next.js docs)",
+      "**Trusted repo**: /Users/svenlito/projects/work/accor/cicd-wt-tooling (remote gitlab.softfactory-accor.net:ngw/component/cicd.git)",
+      "**Org-specific CLIs**: None configured — devbox, direnv, just, terragrunt, talosctl, glab, tart, herdr, op, tailscale, vagrant, osxphotos seen in shell history but not confirmed org-specific"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(git push:*) — pushes to `next` or `main` on gitlab.softfactory-accor.net:ngw/component/cicd.git (triggers a release per CLAUDE.md)",
+      "Bash(kubectl delete:*)",
+      "Bash(terragrunt destroy:*)"
+    ]
   }
 }
