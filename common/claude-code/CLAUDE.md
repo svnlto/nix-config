@@ -19,9 +19,9 @@
 
 ## Work Environment
 
-- Git hosting: Azure DevOps (not GitHub)
-  — use ADO conventions for PRs, checks, policies
-- SSH keys: RSA required (ADO rejects ED25519)
+- Git hosting: GitLab Dedicated, Ultimate tier (not GitHub)
+  — use GitLab conventions for MRs, pipelines, CI/CD
+- SSH keys: ED25519
 - Personal repos (like nix config): GitHub
 
 ## Documentation Editing

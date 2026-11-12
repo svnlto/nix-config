@@ -19,7 +19,6 @@ Create an Airflow DAG that runs daily and loads data to S3	airflow-engineer
 Store this API key securely in Azure Key Vault	secrets-management
 Build a Cobra CLI with a Bubbletea TUI	cli-developer
 Set up golden paths and a self-service developer portal	platform-engineer
-Review this pull request before I merge	pr-review
 Write a Temporal workflow with saga compensation	temporal-engineer
 # --- should NOT trigger any skill ---
 What's the capital of France?	none
