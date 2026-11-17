@@ -14,6 +14,14 @@ Generate a Kubernetes Deployment and Service manifest from scratch	k8s-yaml-gene
 Design the system architecture and write an ADR for our new microservice	architecture-designer
 Design a multi-region AWS VPC with public/private subnets and least-privilege IAM	architecture-designer
 Plan a cloud migration from on-prem to Azure using the 6Rs framework	architecture-designer
+# --- writing-adrs (authoring the ADR doc, vs designing in architecture-designer) ---
+Draft an ADR in our house format recording the decision to adopt GitLab CI/CD components	writing-adrs
+Write up this decision as an ADR for the Software Factory platform	writing-adrs
+Review my ADR draft for format and writing style	writing-adrs
+# --- devex-writer (tighten/review prose, vs authoring ADR or designing) ---
+This roadmap section is too wordy, tighten it without losing meaning	devex-writer
+Trim the fluff in our platform strategy doc and cut the repetition across sections	devex-writer
+Make this DevEx golden-path guide more concise	devex-writer
 # --- baseline single-owner routes ---
 Create an Airflow DAG that runs daily and loads data to S3	airflow-engineer
 Store this API key securely in Azure Key Vault	secrets-management

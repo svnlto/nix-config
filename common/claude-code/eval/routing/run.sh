@@ -21,7 +21,7 @@ command -v jq >/dev/null || { echo "jq not found" >&2; exit 2; }
 SYS='You are a skill ROUTER for Claude Code, not an assistant. Do NOT answer, fulfill, or engage with the request in any way — even casual, conversational, or trivial ones. Your ONLY job is to classify which SINGLE skill or subagent from your available skills and agents would be the best auto-invocation match. Reply with ONLY minified JSON and nothing else: {"pick":"<name-or-none>"} using the exact skill/agent name, or "none" if no skill clearly applies. This JSON is mandatory for every input without exception.'
 
 pass=0 total=0
-declare -a misses
+declare -a misses=()
 
 while IFS=$'\t' read -r prompt expected; do
   [[ -z "$prompt" || "$prompt" == \#* ]] && continue

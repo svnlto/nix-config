@@ -21,7 +21,7 @@ DESC_MAX = 1536
 
 # Agent `skills:` bindings that resolve to upstream repos merged at build time
 # (see common/claude-code/default.nix), not the local skills/ tree.
-KNOWN_EXTERNAL_SKILLS = {"terraform-skill"}
+KNOWN_EXTERNAL_SKILLS = {"terraform-skill", "writing-clearly-and-concisely"}
 
 ROOT = Path(__file__).resolve().parent.parent  # common/claude-code
 SKILLS_DIR = ROOT / "skills"
