@@ -108,7 +108,7 @@
   },
   "enabledPlugins": {
     "caveman@caveman": true,
-    "context7@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true,
     "terragrunt-skill@jfr992": true,
