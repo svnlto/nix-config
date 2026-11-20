@@ -25,12 +25,5 @@ jobs:
           path: ~/.cache/pre-commit
           key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Install Dependencies with Nix
-        run: |
-          # Install all dependencies via Nix
-          nix profile install nixpkgs#pre-commit nixpkgs#nixfmt nixpkgs#statix nixpkgs#deadnix nixpkgs#shellcheck nixpkgs#markdownlint-cli
-
       - name: Run pre-commit hooks
-        run: |
-          # Run pre-commit hooks
-          pre-commit run --all-files
+        run: nix develop -c pre-commit run --all-files
