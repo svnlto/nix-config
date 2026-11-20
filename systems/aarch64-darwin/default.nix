@@ -67,10 +67,10 @@ in
           echo "ℹ️  Skipping automatic cleanup (set CLEANUP_ON_REBUILD=true to enable)"
         fi >&2
 
-        # Desktop wallpaper — nix-darwin has no native option, so drive it via
-        # System Events. First run needs Automation (TCC) approval for the
-        # controlling process; only sets currently-attached displays.
+        # No nix-darwin option for wallpaper. First run needs Automation (TCC)
+        # approval; sets attached displays only.
         echo "==== Setting desktop wallpaper ====" >&2
+        # || true: a TCC denial must not fail activation.
         su ${username} -c 'osascript -e "tell application \"System Events\" to set picture of every desktop to \"${../../common/profiles/wallpapers/bg.jpg}\""' >&2 || true
       '';
 

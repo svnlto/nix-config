@@ -67,10 +67,8 @@ in
         program = opSshSign;
       };
 
-      # Strip the runtime-written autoMode block from Claude Code's settings.json
-      # on stage, so auto-mode-setup's work-context never reaches the public
-      # repo. The working file keeps autoMode (auto mode needs it); only the
-      # committed blob is cleaned. Scoped to the file via .gitattributes.
+      # Cleans the committed blob only (working file keeps autoMode); scoped
+      # to settings.json via .gitattributes.
       filter."strip-automode" = {
         clean = "${pkgs.jq}/bin/jq --indent 2 'del(.autoMode)'";
         smudge = "cat";

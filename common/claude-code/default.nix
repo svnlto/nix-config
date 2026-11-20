@@ -11,7 +11,7 @@ let
   userMcpJson = pkgs.writeText "claude-user-mcp.json" (
     builtins.toJSON {
       mcpServers = {
-        # Atlassian Rovo (Jira/Confluence) — replaces the confluence-sync skill.
+        # Atlassian Rovo (Jira/Confluence): replaces the confluence-sync skill.
         # OAuth 2.1 runs interactively via /mcp on first use; tokens are stored by
         # Claude Code and survive the deep-merge, so no secret lives in nix.
         atlassian = {
@@ -31,7 +31,7 @@ let
     for skill in devsecops-expert rest-api-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
-    # Ships with malformed frontmatter so it never auto-invokes — rewrite the
+    # Ships with malformed frontmatter, so it never auto-invokes; rewrite the
     # header. Guard no-ops if upstream fixes it; chmod because store dirs copy read-only.
     chmod -R u+w "$out/rest-api-design"
     rest=$out/rest-api-design/SKILL.md

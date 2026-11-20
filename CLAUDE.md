@@ -152,7 +152,11 @@ in shared lists — they break Linux builds.
 Located in `common/claude-code/`, managed via `default.nix`:
 
 - **Settings**: `settings.json` (writable out-of-store symlink) — also
-  holds the hook definitions
+  holds the hook definitions. A `strip-automode` git clean filter
+  (`.gitattributes` + `common/git`) drops the runtime-written `autoMode`
+  block on stage so it never reaches this public repo — but only once
+  `home-manager` has installed the filter config, so a fresh checkout
+  before the first switch has no guard
 - **Hooks**: defined in `settings.json`, scripts in `hooks/` —
   SessionStart (herdr agent state), PreToolUse on Bash
   (`block-destructive.sh`), PostToolUse pre-commit on edited files, Stop
@@ -165,12 +169,11 @@ Located in `common/claude-code/`, managed via `default.nix`:
 Upstream skill and herdr-plugin sources are `flake = false` inputs
 (`cc-*`, `herdr-plugin-*` in `flake.nix`), so their revs and hashes live
 in `flake.lock` and bump via `nix flake update` / Renovate rather than
-drifting as inline `fetchFromGitHub` pins. One exception:
-
-- Global MCP servers are jq-deep-merged into `~/.claude.json` by the
-  `claudeUserMcpServers` activation script. Claude Code reads global MCP
-  definitions only from that file's top-level `mcpServers` key, never
-  from `settings.json`
+drifting as inline `fetchFromGitHub` pins. The one exception: global MCP
+servers are jq-deep-merged into `~/.claude.json` by the
+`claudeUserMcpServers` activation script, since Claude Code reads global
+MCP definitions only from that file's top-level `mcpServers` key, never
+from `settings.json`.
 
 ## Pre-commit Hooks and CI
 
