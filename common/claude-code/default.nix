@@ -11,15 +11,6 @@ let
   userMcpJson = pkgs.writeText "claude-user-mcp.json" (
     builtins.toJSON {
       mcpServers = {
-        chrome-devtools = {
-          command = "${chrome-devtools-mcp}/bin/chrome-devtools-mcp";
-          args = [ "--browser-url=http://127.0.0.1:9222" ];
-          # Update checks and telemetry both stall under corporate VPN SSL inspection.
-          env = {
-            CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS = "1";
-            CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS = "1";
-          };
-        };
         # Atlassian Rovo (Jira/Confluence) — replaces the confluence-sync skill.
         # OAuth 2.1 runs interactively via /mcp on first use; tokens are stored by
         # Claude Code and survive the deep-merge, so no secret lives in nix.
@@ -34,50 +25,15 @@ let
   skills-repo = inputs.cc-skills-generator;
   terraform-skill-repo = inputs.cc-terraform-skill;
   herdr-repo = inputs.cc-herdr;
-  agno-skills-repo = inputs.cc-agno-skills;
-  hashicorp-skills-repo = inputs.cc-hashicorp-skills;
-  cc-devops-skills-repo = inputs.cc-devops-skills;
   elements-of-style-repo = inputs.cc-elements-of-style;
-  # Version-coupled to the npm tarball below, so pinned here rather than as a flake input.
-  chrome-devtools-mcp-repo = pkgs.fetchFromGitHub {
-    owner = "ChromeDevTools";
-    repo = "chrome-devtools-mcp";
-    rev = "chrome-devtools-mcp-v1.6.0";
-    sha256 = "0vi24yml8017i400fp5p96dmv6hry532c7qm2miy35nvrync2xk8";
-  };
-  # Built from the tarball because npx registry resolution intermittently failed with ETARGET, killing the server for the whole session.
-  chrome-devtools-mcp = pkgs.stdenv.mkDerivation {
-    pname = "chrome-devtools-mcp";
-    version = "1.6.0";
-    src = pkgs.fetchurl {
-      url = "https://registry.npmjs.org/chrome-devtools-mcp/-/chrome-devtools-mcp-1.6.0.tgz";
-      hash = "sha256-HmMsLZcUtPgrTPq077nOV1CFx1/+XpdyODEprwEsnIQ=";
-    };
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    dontBuild = true;
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/lib/chrome-devtools-mcp
-      cp -r . $out/lib/chrome-devtools-mcp/
-      makeWrapper ${pkgs.nodejs_22}/bin/node $out/bin/chrome-devtools-mcp \
-        --add-flags $out/lib/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js
-      runHook postInstall
-    '';
-  };
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
-    for skill in devsecops-expert rest-api-design security-auditing \
-                 cloud-api-integration database-design talos-os-expert; do
+    for skill in devsecops-expert rest-api-design talos-os-expert; do
       cp -r ${skills-repo}/skills/$skill $out/
     done
-    # These two ship with malformed frontmatter so they never auto-invoke — rewrite
-    # the header. Guards no-op if upstream fixes it; chmod because store dirs copy read-only.
-    chmod -R u+w "$out/security-auditing" "$out/rest-api-design"
-    sec=$out/security-auditing/SKILL.md
-    if [ "$(head -1 "$sec")" = "# Security Auditing Skill" ]; then
-      sed -i '/^---$/,$!d' "$sec"
-      sed -i '0,/^---$/s//---\ndescription: Security auditing and compliance logging — GDPR, HIPAA, PCI-DSS, SOC2, ISO27001. Use for audit trails, tamper-evident logs, and compliance controls./' "$sec"
-    fi
+    # Ships with malformed frontmatter so it never auto-invokes — rewrite the
+    # header. Guard no-ops if upstream fixes it; chmod because store dirs copy read-only.
+    chmod -R u+w "$out/rest-api-design"
     rest=$out/rest-api-design/SKILL.md
     if [ "$(head -1 "$rest")" = "# REST API Design Skill" ]; then
       sed -i '/^```yaml$/,$!d' "$rest"
@@ -87,20 +43,6 @@ let
     cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
     mkdir -p $out/herdr
     cp ${herdr-repo}/SKILL.md $out/herdr/
-    cp -r ${agno-skills-repo}/plugins/agno/skills/agno $out/
-    cp -r ${chrome-devtools-mcp-repo}/skills/* $out/
-    for skill in azure-verified-modules terraform-search-import \
-                 terraform-test terraform-style-guide; do
-      cp -r ${hashicorp-skills-repo}/terraform/code-generation/skills/$skill $out/
-    done
-    for skill in terraform-stacks refactor-module; do
-      cp -r ${hashicorp-skills-repo}/terraform/module-generation/skills/$skill $out/
-    done
-    for skill in ansible azure-pipelines dockerfile bash-script \
-                 k8s-yaml helm terragrunt; do
-      cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-generator $out/
-      cp -r ${cc-devops-skills-repo}/devops-skills-plugin/skills/$skill-validator $out/
-    done
     cp -r ${elements-of-style-repo}/skills/writing-clearly-and-concisely $out/
     cp -r ${./skills}/* $out/
   '';

@@ -165,11 +165,8 @@ Located in `common/claude-code/`, managed via `default.nix`:
 Upstream skill and herdr-plugin sources are `flake = false` inputs
 (`cc-*`, `herdr-plugin-*` in `flake.nix`), so their revs and hashes live
 in `flake.lock` and bump via `nix flake update` / Renovate rather than
-drifting as inline `fetchFromGitHub` pins. Two exceptions:
+drifting as inline `fetchFromGitHub` pins. One exception:
 
-- `chrome-devtools-mcp` is pinned inline in `claude-code/default.nix` as
-  a version-coupled pair (npm tarball + repo rev for its skills) — move
-  both together or the skills desync from the binary
 - Global MCP servers are jq-deep-merged into `~/.claude.json` by the
   `claudeUserMcpServers` activation script. Claude Code reads global MCP
   definitions only from that file's top-level `mcpServers` key, never

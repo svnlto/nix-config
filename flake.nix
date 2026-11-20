@@ -49,18 +49,6 @@
       url = "github:ogulcancelik/herdr";
       flake = false;
     };
-    cc-agno-skills = {
-      url = "github:agno-agi/agno-skills";
-      flake = false;
-    };
-    cc-hashicorp-skills = {
-      url = "github:hashicorp/agent-skills";
-      flake = false;
-    };
-    cc-devops-skills = {
-      url = "github:akin-ozer/cc-devops-skills";
-      flake = false;
-    };
     cc-elements-of-style = {
       url = "github:obra/the-elements-of-style";
       flake = false;

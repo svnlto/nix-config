@@ -4,11 +4,16 @@
     "CAVEMAN_DEFAULT_MODE": "lite",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "MCP_TIMEOUT": "60000"
+    "DISABLE_AUTOUPDATER": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_FEEDBACK_COMMAND": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "MCP_TIMEOUT": "60000",
+    "NIX_CONFIG": "experimental-features = nix-command flakes"
   },
   "includeCoAuthoredBy": false,
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "Bash(git status:*)",
       "Bash(git diff:*)",
@@ -111,7 +116,7 @@
     "context7@claude-plugins-official": false,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true,
-    "terragrunt-skill@jfr992": true,
+    "terragrunt-skill@jfr992": false,
     "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {

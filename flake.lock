@@ -1,37 +1,5 @@
 {
   "nodes": {
-    "cc-agno-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1771212918,
-        "narHash": "sha256-zWk9SWcD/PWRXW1ezMNPUs6ShzFYrg2RWcojeY/97ec=",
-        "owner": "agno-agi",
-        "repo": "agno-skills",
-        "rev": "0ed7d1c92570384030184a6dfa18d275a9b5f694",
-        "type": "github"
-      },
-      "original": {
-        "owner": "agno-agi",
-        "repo": "agno-skills",
-        "type": "github"
-      }
-    },
-    "cc-devops-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1783752484,
-        "narHash": "sha256-RSUkDMyn37BfjbgENydpsVwJQ0v0dJnP+njJLLuKunc=",
-        "owner": "akin-ozer",
-        "repo": "cc-devops-skills",
-        "rev": "276af751e659315aaf56d3ad13d7c26f4e72e28a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "akin-ozer",
-        "repo": "cc-devops-skills",
-        "type": "github"
-      }
-    },
     "cc-elements-of-style": {
       "flake": false,
       "locked": {
@@ -45,22 +13,6 @@
       "original": {
         "owner": "obra",
         "repo": "the-elements-of-style",
-        "type": "github"
-      }
-    },
-    "cc-hashicorp-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1784153118,
-        "narHash": "sha256-+vUP2LGCTXF5vxC8noviigXp0gSVLQ4Hp/0EGWDdVr4=",
-        "owner": "hashicorp",
-        "repo": "agent-skills",
-        "rev": "8c6573abbd21e8094fab8f538eb5f97db63133fd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hashicorp",
-        "repo": "agent-skills",
         "type": "github"
       }
     },
@@ -236,10 +188,7 @@
     },
     "root": {
       "inputs": {
-        "cc-agno-skills": "cc-agno-skills",
-        "cc-devops-skills": "cc-devops-skills",
         "cc-elements-of-style": "cc-elements-of-style",
-        "cc-hashicorp-skills": "cc-hashicorp-skills",
         "cc-herdr": "cc-herdr",
         "cc-skills-generator": "cc-skills-generator",
         "cc-terraform-skill": "cc-terraform-skill",
