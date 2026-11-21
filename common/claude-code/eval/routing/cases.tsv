@@ -56,3 +56,15 @@ Write a copier.yml to scaffold a Go service with conditional questions	copier
 How do I update an existing project when its Copier template changes?	copier
 Add a _migrations entry to my Copier template for a breaking rename	copier
 Scaffold a new repo from our Copier template	copier
+# --- devex-reviewer (consumer persona evaluation) vs devex-writer (prose tightening) ---
+Review this blueprint doc from the consumer's perspective	devex-reviewer
+Evaluate the golden path docs through backend and cloud engineer personas	devex-reviewer
+Run a friction review on our generated repo's CONTRIBUTING	devex-reviewer
+Review this ADR from a devex perspective — will app teams understand the impact?	devex-reviewer
+This roadmap is too wordy, tighten it	devex-writer
+# --- devex-persona-* standalone routes ---
+Review create-a-repo.md as a backend developer who just cloned the repo	devex-persona-backend
+Evaluate the infra docs as a cloud engineer who needs to run tofu plan locally	devex-persona-cloud
+Review the manifest reference as a tech lead writing a manifest for the first time	devex-persona-lead
+Check whether the bun scaffold path is documented as well as the Java path	devex-persona-frontend
+Review this pipeline from an SRE debugging perspective	devex-persona-ops
