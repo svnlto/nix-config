@@ -113,10 +113,8 @@
   },
   "enabledPlugins": {
     "caveman@caveman": true,
-    "context7@claude-plugins-official": false,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true,
-    "terragrunt-skill@jfr992": false,
     "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
@@ -124,12 +122,6 @@
       "source": {
         "source": "github",
         "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "jfr992": {
-      "source": {
-        "source": "github",
-        "repo": "jfr992/terragrunt-skill"
       }
     },
     "obsidian-skills": {
