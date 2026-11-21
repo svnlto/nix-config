@@ -5,7 +5,6 @@
     ../../common/home-manager-base.nix
     ../../common/lazygit/default.nix
     ../../common/git
-    ../../common/jujutsu
     ../../common/ssh
   ];
 

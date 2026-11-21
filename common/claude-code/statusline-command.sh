@@ -32,8 +32,7 @@ gray=$'\033[38;2;108;112;134m'     # p:overlay0 #6C7086
 reset=$'\033[0m'
 
 # Nerd Font icons — matching default.omp.json segments
-icon_branch=$''   # nf-dev-git_branch  git branch_icon / jj bookmark
-icon_commit=$''   # nf-oct-git_commit  jj change id
+icon_branch=$''   # nf-dev-git_branch  git branch_icon
 icon_worktree=$'' # nf-fa-folder_open  worktree
 icon_modified=$'' # nf-fa-pencil_square git working changes
 icon_staged=$''   # nf-fa-check_square git staged changes
@@ -55,47 +54,9 @@ short_path() {
 }
 path_part="${pink}$(short_path "$cwd")${reset}"
 
-# Jujutsu segment (OMP jujutsu segment, p:lavender) — wins over git when colocated
-jj_root=""
-d="$cwd"
-while [ -n "$d" ] && [ "$d" != "/" ]; do
-  if [ -d "$d/.jj" ]; then
-    jj_root="$d"
-    break
-  fi
-  d="${d%/*}"
-done
-
-jj_part=""
-if [ -n "$jj_root" ] && command -v jj >/dev/null 2>&1; then
-  jj_cmd=(jj -R "$jj_root" --ignore-working-copy --no-pager --color never log --no-graph)
-  bookmarks_raw=$("${jj_cmd[@]}" -r 'heads(::@ & bookmarks())' \
-    -T 'bookmarks.map(|b| b.name()).join("\n")' 2>/dev/null)
-  bookmarks=""
-  declare -A seen=()
-  while IFS= read -r b; do
-    [ -z "$b" ] && continue
-    [ -n "${seen[$b]:-}" ] && continue
-    seen[$b]=1
-    bookmarks="${bookmarks}${bookmarks:+ }${b}"
-  done <<<"$bookmarks_raw"
-  if [ -n "$bookmarks" ]; then
-    # closest bookmarks are equidistant from @, so one count suffices for all
-    ahead=$("${jj_cmd[@]}" -r "${bookmarks%% *}..@" -T '"."' 2>/dev/null | tr -cd '.')
-    label=""
-    for bookmark in $bookmarks; do
-      label="${label}${label:+ }${bookmark}${ahead:+⇡${#ahead}}"
-    done
-    jj_part=" ${lavender}${icon_branch} ${label}${reset}"
-  else
-    change_id=$("${jj_cmd[@]}" -r '@' -T 'change_id.shortest(8)' 2>/dev/null)
-    [ -n "$change_id" ] && jj_part=" ${lavender}${icon_commit} ${change_id}${reset}"
-  fi
-fi
-
 # Git segment (OMP git segment, p:lavender, branch_icon + dirty status)
 git_part=""
-if [ -z "$jj_root" ] && git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
+if git -C "$cwd" rev-parse --git-dir >/dev/null 2>&1; then
   branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null ||
     git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
   if [ -n "$branch" ]; then
@@ -190,10 +151,9 @@ if [ -n "$seven_day_used_pct" ]; then
   seven_day_part=" ${day_color}7d ${day_int}%${reset}"
 fi
 
-printf '%s%s%s%s %s %s[%s]%s%s%s%s\n' \
+printf '%s%s%s %s %s[%s]%s%s%s%s\n' \
   "$path_part" \
   "$wt_part" \
-  "$jj_part" \
   "$git_part" \
   "$sep" \
   "$os" "$model" "$reset" \

@@ -12,7 +12,6 @@ in
     ../../common/home-manager-base.nix
     ../../common/default.nix
     ../../common/git
-    ../../common/jujutsu
     ../../common/ssh
   ];
 

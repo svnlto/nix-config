@@ -72,8 +72,7 @@ stable base and the fresh channel independently (`nix flake update` vs
 `mkNixpkgs` AND re-applied inside `mkDarwinSystem` (nix-darwin builds its
 own pkgs) — add it in both places if you change how pkgs is constructed.
 
-Current fresh tools: `devbox`, `jujutsu`, `jjui`, `lazyjj` — the jj
-toolchain moves fast, which is why this repo tracks it off-stable.
+The current list is `freshTools` in that file.
 
 ### Directory Structure
 
@@ -95,7 +94,6 @@ common/
   claude-code/                   # Claude Code settings, hooks, commands, skills, statusline
   claude-code/eval/              # Skill/agent lint (Tier 1) + routing eval (Tier 2)
   neovim/                        # Neovim config
-  jujutsu/                       # jj config (signing, difftastic, git colocation)
   ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
   lazygit/                       # Cross-platform via xdg.configFile
   ssh/ k9s/ herdr/ gh-dash/      # Additional tool configs
@@ -156,11 +154,8 @@ push and PR to `main`. Renovate bumps flake inputs and pre-commit revs.
 
 1. **`nix.optimise` is nix-darwin only** — never set in
    `common/default.nix`, only in `systems/aarch64-darwin/`
-2. **Nix flakes only see git-tracked files** — this repo is
-   colocated with jj, which registers new paths in git's index on
-   any jj command, so no `git add` is needed. In a pure-git
-   checkout, `git add` new files before `nixswitch` or builds
-   silently miss them
+2. **Nix flakes only see git-tracked files** — `git add` new files
+   before `nixswitch` or builds silently miss them
 3. **No NixOS support** — no `boot.*`, `services.*`,
    `virtualisation.*` modules
 4. **Platform detection** — use
