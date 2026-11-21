@@ -40,7 +40,6 @@ _:
       "claude" # desktop
       "claude-code"
       "claude-devtools"
-      "antigravity-cli"
 
       # Browsers
       "google-chrome"
