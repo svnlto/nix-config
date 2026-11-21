@@ -11,6 +11,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/markdownlint-prewrite.sh\"",
+            "statusMessage": "markdownlint (pre-write)"
+          }
+        ]
+      }
     ]
   }
 }
