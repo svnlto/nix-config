@@ -10,6 +10,7 @@ let
 
   freshTools = [
     "devbox"
+    "glab"
   ];
 in
 builtins.listToAttrs (
