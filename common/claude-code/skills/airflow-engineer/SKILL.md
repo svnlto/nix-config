@@ -8,7 +8,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: sre-engineer, datadog-advisor, devsecops-expert, secrets-management, ci-cd
+  related-skills: sre-engineer, datadog-advisor, secrets-management, ci-cd
 ---
 
 # Airflow Engineer

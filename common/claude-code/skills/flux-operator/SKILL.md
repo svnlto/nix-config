@@ -11,7 +11,7 @@ description: >-
 metadata:
   domain: kubernetes
   role: specialist
-  related-skills: kubernetes-specialist, helm-generator, talos-os-expert
+  related-skills: kubernetes-specialist, helm-generator
 ---
 
 # Flux Operator

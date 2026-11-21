@@ -22,24 +22,11 @@ let
     }
   );
   # Skill sources are flake inputs (flake=false) so rev + hash live in flake.lock.
-  skills-repo = inputs.cc-skills-generator;
   terraform-skill-repo = inputs.cc-terraform-skill;
   herdr-repo = inputs.cc-herdr;
   elements-of-style-repo = inputs.cc-elements-of-style;
   selectedSkills = pkgs.runCommand "claude-skills" { } ''
     mkdir -p $out
-    for skill in devsecops-expert rest-api-design talos-os-expert; do
-      cp -r ${skills-repo}/skills/$skill $out/
-    done
-    # Ships with malformed frontmatter, so it never auto-invokes; rewrite the
-    # header. Guard no-ops if upstream fixes it; chmod because store dirs copy read-only.
-    chmod -R u+w "$out/rest-api-design"
-    rest=$out/rest-api-design/SKILL.md
-    if [ "$(head -1 "$rest")" = "# REST API Design Skill" ]; then
-      sed -i '/^```yaml$/,$!d' "$rest"
-      sed -i '0,/^```yaml$/s//---/' "$rest"
-      sed -i '0,/^```$/s//---/' "$rest"
-    fi
     cp -r ${terraform-skill-repo}/skills/terraform-skill $out/
     mkdir -p $out/herdr
     cp ${herdr-repo}/SKILL.md $out/herdr/

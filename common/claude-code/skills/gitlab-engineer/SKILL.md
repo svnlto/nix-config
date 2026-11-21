@@ -17,7 +17,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: gitlab, secrets-management, devsecops-expert
+  related-skills: gitlab, secrets-management
 ---
 
 # GitLab Engineer

@@ -34,7 +34,6 @@ metadata:
     - sre-engineer
     - kubernetes-specialist
     - temporal-engineer
-    - rest-api-design
     - platform-engineer
 ---
 

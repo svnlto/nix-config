@@ -9,7 +9,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: sre-engineer, architecture-designer, kubernetes-specialist, terraform-skill, ci-cd, devsecops-expert, datadog-advisor
+  related-skills: sre-engineer, architecture-designer, kubernetes-specialist, terraform-skill, ci-cd, datadog-advisor
 ---
 
 # Platform Engineer

@@ -32,22 +32,6 @@
         "type": "github"
       }
     },
-    "cc-skills-generator": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1764868959,
-        "narHash": "sha256-QwWGxt9gcwvSk395yD75TSThqWXYegu4MGqYatmLG+o=",
-        "owner": "martinholovsky",
-        "repo": "claude-skills-generator",
-        "rev": "1086ef25672acba2916220c6ce032a612cd9dc98",
-        "type": "github"
-      },
-      "original": {
-        "owner": "martinholovsky",
-        "repo": "claude-skills-generator",
-        "type": "github"
-      }
-    },
     "cc-terraform-skill": {
       "flake": false,
       "locked": {
@@ -190,7 +174,6 @@
       "inputs": {
         "cc-elements-of-style": "cc-elements-of-style",
         "cc-herdr": "cc-herdr",
-        "cc-skills-generator": "cc-skills-generator",
         "cc-terraform-skill": "cc-terraform-skill",
         "herdr-plugin-jj-status": "herdr-plugin-jj-status",
         "herdr-plugin-jj-workspace": "herdr-plugin-jj-workspace",

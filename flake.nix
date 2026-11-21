@@ -37,10 +37,6 @@
     # trees by common/claude-code. Locked in flake.lock (rev + hash) and
     # bumped via `nix flake update` / Renovate lock maintenance, so they
     # can't drift silently the way inline fetchFromGitHub pins do.
-    cc-skills-generator = {
-      url = "github:martinholovsky/claude-skills-generator";
-      flake = false;
-    };
     cc-terraform-skill = {
       url = "github:antonbabenko/terraform-skill";
       flake = false;

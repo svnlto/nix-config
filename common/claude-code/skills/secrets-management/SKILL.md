@@ -77,6 +77,4 @@ Load detailed guidance based on context:
 ## Related Skills
 
 - `ado-standards` — ADO pipeline design, variable groups, service connections
-- `devsecops-expert` — Shift-left security, IaC scanning, supply chain protection
 - `security-auditing` — Code and infrastructure security review
-- `talos-os-expert` — Kubernetes cluster security
