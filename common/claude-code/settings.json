@@ -88,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path'); [ -n \"$f\" ] || exit 0; root=$(git -C \"$(dirname \"$f\")\" rev-parse --show-toplevel 2>/dev/null) || exit 0; [ -f \"$root/.pre-commit-config.yaml\" ] || exit 0; out=$(cd \"$root\" && pre-commit run --files \"$f\" 2>&1); [ $? -eq 0 ] && exit 0; echo \"$out\" >&2; exit 2",
+            "command": "f=$(jq -r '.tool_input.file_path'); [ -n \"$f\" ] || exit 0; root=$(git -C \"$(dirname \"$f\")\" rev-parse --show-toplevel 2>/dev/null) || exit 0; [ -f \"$root/.pre-commit-config.yaml\" ] || exit 0; out=$(cd \"$root\" && if command -v direnv >/dev/null && direnv exec \"$root\" true >/dev/null 2>&1; then SKIP=flake-check direnv exec \"$root\" pre-commit run --files \"$f\"; else SKIP=flake-check pre-commit run --files \"$f\"; fi 2>&1); [ $? -eq 0 ] && exit 0; echo \"$out\" >&2; exit 2",
             "timeout": 30
           }
         ]
@@ -115,7 +115,7 @@
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -147,5 +147,9 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
   },
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skillOverrides": {
+    "jira": "off",
+    "adhd": "off"
+  }
 }
