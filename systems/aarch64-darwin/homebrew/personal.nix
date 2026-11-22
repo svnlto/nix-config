@@ -53,6 +53,7 @@ _:
 
       # Networking & Virtualization
       "tailscale-app"
+      "protonvpn"
       "winbox"
     ];
   };
