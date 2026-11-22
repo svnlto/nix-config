@@ -61,3 +61,7 @@ Evaluate the infra docs as a cloud engineer who needs to run tofu plan locally	d
 Review the manifest reference as a tech lead writing a manifest for the first time	devex-persona-lead
 Check whether the bun scaffold path is documented as well as the Java path	devex-persona-frontend
 Review this pipeline from an SRE debugging perspective	devex-persona-ops
+#
+# --- cc-spex (spec-driven development: spec-kit + superpowers) ---
+Set up cc-spex and run the spec-driven loop on this repo	cc-spex
+How do I drive a spec-kit specify-plan-tasks-implement loop with the spex plugin	cc-spex
