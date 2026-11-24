@@ -40,6 +40,7 @@ rec {
     gnused
     devbox
     copier
+    spec-kit
   ];
 
   darwinSystemPackages = with pkgs; [

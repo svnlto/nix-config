@@ -11,6 +11,7 @@ let
   freshTools = [
     "devbox"
     "glab"
+    "spec-kit"
   ];
 in
 builtins.listToAttrs (
