@@ -57,6 +57,10 @@
   },
   "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
+  "skillOverrides": {
+    "jira": "off",
+    "adhd": "off"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -129,12 +133,23 @@
         "source": "github",
         "repo": "kepano/obsidian-skills"
       }
+    },
+    "cc-rhuss-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "rhuss/cc-rhuss-marketplace"
+      }
     }
   },
   "outputStyle": "Concise",
   "skipWebFetchPreflight": true,
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-opus-4-8": {
+      "autoCompactWindow": 500000
+    }
+  },
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
@@ -142,14 +157,10 @@
   "fileCheckpointingEnabled": true,
   "terminalProgressBarEnabled": true,
   "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754125509075
-  },
-  "agentPushNotifEnabled": true,
-  "skillOverrides": {
-    "jira": "off",
-    "adhd": "off"
   }
 }
