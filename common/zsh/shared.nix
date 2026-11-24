@@ -80,6 +80,7 @@ rec {
     DIRENV_LOG_FORMAT = ""; # silences direnv
     K9S_CONFIG_DIR = "$HOME/.config/k9s"; # XDG path on all platforms
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+    GLAB_DUO_CLI_AUTO_RUN = "true";
     LANG = "en_GB.UTF-8";
     LC_ALL = "en_GB.UTF-8";
     # FZF Catppuccin Mocha theme
