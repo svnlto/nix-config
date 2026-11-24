@@ -3,11 +3,11 @@ name: writing-adrs
 description: >-
   Authoring, drafting, or reviewing an Architecture Decision Record (ADR):
   the decision document itself, in the house format. Use when writing an
-  ADR for Software Factory / accor platform work, recording a decision and
-  its alternatives, reviewing an ADR draft for format and writing style, or
-  superseding or deprecating an existing decision. Triggers: ADR,
-  architecture decision record, decision record, Work/accor/adrs, SF ADR
-  template, alternatives considered, consequences, supersede a decision.
+  ADR for team platform work, recording a decision and its alternatives,
+  reviewing an ADR draft for format and writing style, or superseding or
+  deprecating an existing decision. Triggers: ADR, architecture decision
+  record, decision record, Work/*/adrs, team ADR template, alternatives
+  considered, consequences, supersede a decision.
   NOT for designing the architecture or evaluating a technology trade-off
   from scratch, that is the `architecture-designer` skill; this one writes
   up a decision already in view.
@@ -34,20 +34,21 @@ is `architecture-designer`. This skill writes up a decision already in view.
 
 ```dot
 digraph pick {
-  "Software Factory / accor decision,\nor attaches to an Epic?" [shape=diamond];
-  "SF template (11 sections)" [shape=box];
+  "Team platform decision,\nor attaches to an Epic?" [shape=diamond];
+  "Team template (11 sections)" [shape=box];
   "Lean template (6 sections)" [shape=box];
-  "Software Factory / accor decision,\nor attaches to an Epic?" -> "SF template (11 sections)" [label="yes / unsure"];
-  "Software Factory / accor decision,\nor attaches to an Epic?" -> "Lean template (6 sections)" [label="no, small/personal scope"];
+  "Team platform decision,\nor attaches to an Epic?" -> "Team template (11 sections)" [label="yes / unsure"];
+  "Team platform decision,\nor attaches to an Epic?" -> "Lean template (6 sections)" [label="no, small/personal scope"];
 }
 ```
 
-- SF template: `references/sf-template.md`
+- Team template: `references/team-template.md`
 - Lean template: `references/lean-template.md`
 
 ## Location and naming
 
-- Live in `Work/accor/adrs/` in the vault (canonical, indexed).
+- Live in `Work/<project>/adrs/` in the vault (canonical, indexed). Find the
+  existing project folder with a glob on `Work/*/adrs/`.
 - Filename `YYYY-MM-DD-slug.md`, date-prefixed. Not number-prefixed.
 - Title line `# ADR - 00XX - Title`. The number stays `00XX` until the
   decision is accepted and a number is assigned.
@@ -59,7 +60,7 @@ digraph pick {
 type: decision
 date: YYYY-MM-DD
 domain: work
-project: accor
+project: <project>   # the Work/<project>/ folder name
 status: proposed   # proposed | accepted | superseded | deprecated
 tags: [adr, ...]
 ---

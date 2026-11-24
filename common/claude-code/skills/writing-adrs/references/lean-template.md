@@ -1,15 +1,15 @@
 # Lean ADR template (6 sections)
 
 A lightweight format for small or personal decisions that do not warrant the
-full SF template. For Software Factory / accor platform work, prefer the SF
-template (`sf-template.md`).
+full team template. For team platform work, prefer the team template
+(`team-template.md`).
 
 ```markdown
 ---
 type: decision
 date: YYYY-MM-DD
 domain: work
-project: accor
+project: <project>
 status: proposed
 tags: [adr, ...]
 ---

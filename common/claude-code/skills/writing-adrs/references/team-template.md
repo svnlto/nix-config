@@ -1,9 +1,8 @@
-# SF ADR template (11 sections)
+# Team ADR template (11 sections)
 
-The Software Factory format. Source of truth is the "SF ADR Documentation
-template" in the Confluence SOFTWARE FACTORY space; this mirrors it for
-in-vault authoring. Use for Software Factory / accor platform decisions and
-any ADR that attaches to an Epic.
+The team's ADR format. Source of truth is the ADR documentation template in
+the team's Confluence space; this mirrors it for in-vault authoring. Use for
+team platform decisions and any ADR that attaches to an Epic.
 
 Copy the skeleton below. Keep the section numbers. Drop a section only when it
 genuinely does not apply; prefer a one-line "None" over deleting it.
@@ -13,7 +12,7 @@ genuinely does not apply; prefer a one-line "None" over deleting it.
 type: decision
 date: YYYY-MM-DD
 domain: work
-project: accor
+project: <project>
 status: proposed
 tags: [adr, ...]
 ---

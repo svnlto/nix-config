@@ -50,7 +50,7 @@ Defined in `flake.nix`:
 
 - `rick` — personal macOS (user `svenlito`, personal Homebrew)
 - `schwifty` — music studio macOS (user `svenlito`, `homebrew/schwifty.nix`)
-- Work macOS (Accor) — not yet wired. Add a `mkDarwinSystem` entry once the
+- Work macOS — not yet wired. Add a `mkDarwinSystem` entry once the
   machine identifier is known, pulling `homebrew/work.nix` +
   `systems/aarch64-darwin/corporate.nix` (a vendor-agnostic managed-Mac
   skeleton — fill in the employer's VPN CA / SSO / tooling there)
