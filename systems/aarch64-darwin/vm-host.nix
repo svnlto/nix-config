@@ -1,4 +1,9 @@
-{ pkgs, username, ... }:
+{
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
 # Host-side VM tooling for rick (NOT the morty guest). Imported only in rick's
 # extraModules so it never lands inside the VM.
@@ -13,6 +18,13 @@ let
   keepAliveWhileEnabled = {
     PathState.${flag} = true;
   };
+
+  # Untracked file naming one corp HTTPS host (e.g. GitLab). The tunnel forwards
+  # it to 127.0.0.1:8443 (resolved at morty, so ZPA DNS applies), a root socat
+  # relays loopback :443 -> :8443, and /etc/hosts pins the name to 127.0.0.1.
+  # Every client (CLIs, WebSockets) then reaches it with no proxy settings; TLS
+  # stays end-to-end because the hostname and SNI are unchanged.
+  forwardHost = "/Users/${username}/.config/corp/forward-host";
 
   # Resolves morty's current IP and holds open a SOCKS proxy on :1080. Waits for
   # the VM to boot + sshd to accept before launching ssh, so a transient empty IP
@@ -30,7 +42,11 @@ let
       sleep 2
     done
     [ -n "$ip" ] || { echo "morty not reachable after 60s" >&2; exit 1; }
-    exec /usr/bin/ssh -N -D 127.0.0.1:1080 \
+    fwd=()
+    if [ -s "${forwardHost}" ]; then
+      fwd=(-L "127.0.0.1:8443:$(tr -d '[:space:]' < "${forwardHost}"):443")
+    fi
+    exec /usr/bin/ssh -N -D 127.0.0.1:1080 "''${fwd[@]}" \
       -i "$HOME/.ssh/morty_operator" \
       -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
       -o ServerAliveInterval=20 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes \
@@ -95,6 +111,40 @@ in
     pkgs.packer
     mortyCtl
   ];
+
+  # nix-darwin no longer manages /etc/hosts, and Docker edits it too, so own
+  # only a marked block.
+  system.activationScripts.postActivation.text = lib.mkAfter ''
+    begin="# BEGIN corp-forward (nix-darwin)"
+    end="# END corp-forward (nix-darwin)"
+    tmp=$(mktemp)
+    sed "/^$begin\$/,/^$end\$/d" /etc/hosts > "$tmp"
+    if [ -s "${forwardHost}" ]; then
+      printf '%s\n127.0.0.1 %s\n%s\n' "$begin" "$(tr -d '[:space:]' < "${forwardHost}")" "$end" >> "$tmp"
+    fi
+    if ! cmp -s "$tmp" /etc/hosts; then
+      echo "updating corp-forward block in /etc/hosts" >&2
+      cat "$tmp" > /etc/hosts
+      dscacheutil -flushcache
+      killall -HUP mDNSResponder || true
+    fi
+    rm -f "$tmp"
+  '';
+
+  # Unprivileged processes can bind :443 only on 0.0.0.0 (LAN-exposed), so a
+  # root relay owns loopback :443 and drops to nobody after binding.
+  launchd.daemons.corp-https-forward.serviceConfig = {
+    ProgramArguments = [
+      "${pkgs.socat}/bin/socat"
+      "TCP-LISTEN:443,bind=127.0.0.1,reuseaddr,fork,su=nobody"
+      "TCP:127.0.0.1:8443"
+    ];
+    RunAtLoad = false;
+    KeepAlive = keepAliveWhileEnabled;
+    ThrottleInterval = 10;
+    StandardOutPath = "/var/log/corp-https-forward.log";
+    StandardErrorPath = "/var/log/corp-https-forward.log";
+  };
 
   launchd.user.agents = {
     # Run the morty VM (graphics on, so clipboard + ZCC reauth work) only while
