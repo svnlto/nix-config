@@ -6,10 +6,10 @@
 # --- monitoring-engineer (Go observability) ---
 Instrument this Go service with Prometheus metrics and OpenTelemetry traces	monitoring-engineer
 Add dd-trace-go APM spans to our Go HTTP handlers	monitoring-engineer
-# --- kubernetes-specialist vs helm-generator / k8s-yaml-generator (scaffolding deferred) ---
+# --- kubernetes-specialist (workloads, debugging, chart and manifest authoring) ---
 My pods are crashlooping, help me debug the deployment	kubernetes-specialist
-Scaffold a new Helm chart for my web app	helm-generator
-Generate a Kubernetes Deployment and Service manifest from scratch	k8s-yaml-generator
+Scaffold a new Helm chart for my web app	kubernetes-specialist
+Generate a Kubernetes Deployment and Service manifest from scratch	kubernetes-specialist
 # --- architecture-designer (absorbed cloud-architect) ---
 Design the system architecture and write an ADR for our new microservice	architecture-designer
 Design a multi-region AWS VPC with public/private subnets and least-privilege IAM	architecture-designer

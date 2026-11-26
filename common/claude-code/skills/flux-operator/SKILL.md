@@ -11,7 +11,7 @@ description: >-
 metadata:
   domain: kubernetes
   role: specialist
-  related-skills: kubernetes-specialist, helm-generator
+  related-skills: kubernetes-specialist
 ---
 
 # Flux Operator

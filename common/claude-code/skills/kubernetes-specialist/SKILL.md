@@ -1,6 +1,6 @@
 ---
 name: kubernetes-specialist
-description: Kubernetes workload management, Helm release deployment and troubleshooting, cluster troubleshooting, custom operators, configuration management, and multi-cluster administration. Use when deploying workloads, debugging pods and Helm releases, creating operators, managing ConfigMaps/Secrets/RBAC, or working with multi-cluster setups. For scaffolding new Helm charts or generating Kubernetes YAML from scratch, use helm-generator / k8s-yaml-generator.
+description: Kubernetes workload management, Helm chart development and release troubleshooting, cluster troubleshooting, custom operators, configuration management, and multi-cluster administration. Use when deploying workloads, writing Helm charts or manifests, debugging pods and Helm releases, creating operators, managing ConfigMaps/Secrets/RBAC, or working with multi-cluster setups.
 license: MIT
 metadata:
   author: https://github.com/Jeffallan
