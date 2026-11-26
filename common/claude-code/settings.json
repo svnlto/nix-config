@@ -119,7 +119,8 @@
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": false
+    "frontend-design@claude-plugins-official": false,
+    "gitlab-mr-pane@gitlab-mr-pane": false
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -138,6 +139,12 @@
       "source": {
         "source": "github",
         "repo": "rhuss/cc-rhuss-marketplace"
+      }
+    },
+    "gitlab-mr-pane": {
+      "source": {
+        "source": "github",
+        "repo": "svnlto/claude-desktop-gitlab-mr-pane"
       }
     }
   },
