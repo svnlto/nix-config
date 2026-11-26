@@ -5,7 +5,8 @@ return {
 		priority = 1000,
 		lazy = false,
 		opts = {
-			flavour = "mocha",
+			flavour = "auto",
+			background = { light = "latte", dark = "mocha" },
 			transparent_background = true,
 			term_colors = false, -- Disable terminal color overrides to preserve terminal cursor color
 			integrations = {

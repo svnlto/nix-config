@@ -235,31 +235,37 @@ return {
 				end,
 			})
 
-			-- Custom highlights for minimal Catppuccin Mocha theme
+			-- Custom highlights for minimal Catppuccin theme (follows the active flavour)
 			vim.api.nvim_create_autocmd("ColorScheme", {
 				callback = function()
-					vim.cmd([[
-            highlight NvimTreeNormal guifg=#7f849c guibg=NONE
-            highlight NvimTreeFolderName guifg=#6c7086 gui=NONE
-            highlight NvimTreeFolderIcon guifg=#6c7086 gui=NONE
-            highlight NvimTreeOpenedFolderName guifg=#6c7086 gui=NONE
-            highlight NvimTreeEmptyFolderName guifg=#585b70 gui=NONE
-            highlight NvimTreeIndentMarker guifg=#585b70 gui=NONE
-            highlight NvimTreeWinSeparator guifg=#313244 guibg=NONE
-            highlight NvimTreeRootFolder guifg=#6c7086 gui=NONE
-            highlight NvimTreeSymlink guifg=#89dceb gui=NONE
-            highlight NvimTreeFolderArrowClosed guifg=#585b70 gui=NONE
-            highlight NvimTreeFolderArrowOpen guifg=#585b70 gui=NONE
-
-            " Git status colors
-            highlight NvimTreeGitDirty guifg=#a6adc8 gui=NONE
-            highlight NvimTreeGitStaged guifg=#94e2d5 gui=NONE
-            highlight NvimTreeGitMerge guifg=#f9e2af gui=NONE
-            highlight NvimTreeGitRenamed guifg=#89dceb gui=NONE
-            highlight NvimTreeGitNew guifg=#fab387 gui=NONE
-            highlight NvimTreeGitDeleted guifg=#f5c2e7 gui=NONE
-            highlight NvimTreeGitIgnored guifg=#585b70 gui=NONE
-          ]])
+					local ok, palettes = pcall(require, "catppuccin.palettes")
+					if not ok then
+						return
+					end
+					local c = palettes.get_palette()
+					local highlights = {
+						NvimTreeNormal = { fg = c.overlay1, bg = "NONE" },
+						NvimTreeFolderName = { fg = c.overlay0 },
+						NvimTreeFolderIcon = { fg = c.overlay0 },
+						NvimTreeOpenedFolderName = { fg = c.overlay0 },
+						NvimTreeEmptyFolderName = { fg = c.surface2 },
+						NvimTreeIndentMarker = { fg = c.surface2 },
+						NvimTreeWinSeparator = { fg = c.surface0, bg = "NONE" },
+						NvimTreeRootFolder = { fg = c.overlay0 },
+						NvimTreeSymlink = { fg = c.sky },
+						NvimTreeFolderArrowClosed = { fg = c.surface2 },
+						NvimTreeFolderArrowOpen = { fg = c.surface2 },
+						NvimTreeGitDirty = { fg = c.subtext0 },
+						NvimTreeGitStaged = { fg = c.teal },
+						NvimTreeGitMerge = { fg = c.yellow },
+						NvimTreeGitRenamed = { fg = c.sky },
+						NvimTreeGitNew = { fg = c.peach },
+						NvimTreeGitDeleted = { fg = c.pink },
+						NvimTreeGitIgnored = { fg = c.surface2 },
+					}
+					for group, spec in pairs(highlights) do
+						vim.api.nvim_set_hl(0, group, spec)
+					end
 				end,
 			})
 
