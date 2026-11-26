@@ -65,3 +65,10 @@ Review this pipeline from an SRE debugging perspective	devex-persona-ops
 # --- cc-spex (spec-driven development: spec-kit + superpowers) ---
 Set up cc-spex and run the spec-driven loop on this repo	cc-spex
 How do I drive a spec-kit specify-plan-tasks-implement loop with the spex plugin	cc-spex
+# --- harness-engineer (Harness.io) vs gitlab-engineer / platform-engineer / terraform-specialist ---
+Write a Harness pipeline with a CI stage and a canary Kubernetes deploy stage	harness-engineer
+Create a Harness stage template and reference it from two pipelines	harness-engineer
+Why does my Harness delegate not pick up this connector?	harness-engineer
+Write a Harness IDP self-service workflow that triggers an onboarding pipeline	harness-engineer
+Use the harness Terraform provider to create a project and a GitHub connector	harness-engineer
+Compare Backstage and Port for our developer portal strategy	platform-engineer
