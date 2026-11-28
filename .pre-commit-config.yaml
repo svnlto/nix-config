@@ -44,9 +44,9 @@ repos:
         entry: markdownlint
         language: system
         files: \.md$
-        # Agent definitions and Jira issue-body templates are machine-consumed
-        # content, not docs — they intentionally lead with prose, not an H1 (MD041).
-        exclude: ^common/claude-code/(agents/|skills/jira/references/templates/)
+        # Agent definitions are machine-consumed content, not docs — they
+        # intentionally lead with prose, not an H1 (MD041).
+        exclude: ^common/claude-code/agents/
         description: Lint Markdown files using markdownlint-cli
 
       - id: claude-skills-lint

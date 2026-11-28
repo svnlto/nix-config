@@ -142,10 +142,9 @@ flake-check, markdownlint, claude-skills-lint, trailing-whitespace,
 end-of-file-fixer, check-yaml, check-added-large-files,
 detect-private-key.
 
-markdownlint excludes `common/claude-code/agents/` and the jira
-reference templates — machine-consumed content that intentionally leads
-with prose instead of an H1 (MD041). Prose wraps at 80 chars (MD013);
-tables and code blocks are exempt.
+markdownlint excludes `common/claude-code/agents/` — machine-consumed
+content that intentionally leads with prose instead of an H1 (MD041).
+Prose wraps at 80 chars (MD013); tables and code blocks are exempt.
 
 `.github/workflows/pre-commit.yml` runs `pre-commit run --all-files` on
 push and PR to `main`. Renovate bumps flake inputs and pre-commit revs.

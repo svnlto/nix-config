@@ -7,8 +7,6 @@ description: >-
   reading or filing issues, or managing releases on GitLab.
 version: 1.0.0
 tags: [gitlab, glab, merge-requests, pipelines, ci, issues]
-metadata:
-  related-skills: jira
 ---
 
 # GitLab

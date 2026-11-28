@@ -58,7 +58,6 @@
   "model": "claude-opus-4-8[1m]",
   "enableAllProjectMcpServers": false,
   "skillOverrides": {
-    "jira": "off",
     "adhd": "off"
   },
   "hooks": {
