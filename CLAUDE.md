@@ -6,20 +6,8 @@ working with code in this repository.
 ## Core Commands
 
 The `justfile` is the canonical command surface — run recipes from the
-repo root. Tools come from `nix develop` (direnv loads it automatically).
-
-```bash
-just              # list every recipe
-just switch       # apply config (detects Darwin/Linux and arch)
-just check        # nix flake check --no-build
-just update       # update all flake inputs
-just update-fresh # advance only nixpkgs-unstable (fresh-tools channel)
-just fmt          # nixfmt on git-tracked *.nix
-just pre-commit   # run every hook against all files
-just lint-skills  # Tier 1 skill/agent frontmatter lint
-just route-eval   # Tier 2 routing eval (model calls, on demand)
-just clean        # GC generations older than 7d
-```
+repo root (`just` lists them). Tools come from `nix develop` (direnv
+loads it automatically).
 
 `just` runs recipes in a non-interactive bash that does not inherit the
 user's `nix.conf`, so its recipes invoke nix with
@@ -74,52 +62,6 @@ own pkgs) — add it in both places if you change how pkgs is constructed.
 
 The current list is `freshTools` in that file.
 
-### Directory Structure
-
-```text
-flake.nix                        # Entry point — mkDarwinSystem, mkHomeManagerConfig
-justfile                         # Task runner — canonical command surface
-common/
-  default.nix                    # Shared Nix settings (performance, experimental features)
-  home-manager-base.nix          # Shared HM base (imports home-packages, claude-code, programs)
-  programs/default.nix           # Shared program configs (direnv, gh, zsh)
-  packages.nix                   # All package definitions (core, dev, darwin, system)
-  home-packages.nix              # HM package imports
-  constants.nix                  # Centralized tuning values (performance, history, cleanup)
-  versions.nix                   # State version pinning (rarely change!)
-  overlays/fresh-tools.nix       # Pulls hand-picked tools from nixpkgs-unstable
-  git/                           # Cross-platform git config (SSH signing on both, via 1Password)
-  zsh/shared.nix                 # Aliases, session vars, PATH, tool init
-  zsh/default.omp.json           # Oh My Posh theme
-  claude-code/                   # Claude Code settings, hooks, commands, skills, statusline
-  claude-code/eval/              # Skill/agent lint (Tier 1) + routing eval (Tier 2)
-  neovim/                        # Neovim config
-  ghostty/                       # Ghostty terminal (macOS only — guarded with mkIf)
-  lazygit/                       # Cross-platform via xdg.configFile
-  ssh/ k9s/ herdr/ gh-dash/      # Additional tool configs
-  profiles/                      # Optional opt-in modules
-systems/
-  aarch64-darwin/                # macOS: home.nix, homebrew/, defaults.nix, dock.nix, corporate.nix
-  aarch64-linux/default.nix      # Linux: minimal HM config for containers
-```
-
-### Configuration Flow
-
-1. `flake.nix` defines `darwinConfigurations` and `homeConfigurations`
-2. `common/home-manager-base.nix` imports shared modules
-   (home-packages, claude-code, programs)
-3. `common/programs/default.nix` configures direnv, gh, zsh
-4. `common/default.nix` sets Nix performance settings
-5. `systems/{arch}/` adds only platform-specific settings
-6. `packages.nix` centralizes all package definitions
-
-### Import Chain
-
-```text
-flake.nix -> systems/{arch}/home.nix -> common/home-manager-base.nix -> specialized modules
-                                     -> common/default.nix (Linux only, for nix settings)
-```
-
 ## Package Management
 
 - **Shared packages**: `common/packages.nix` (`corePackages`, `devPackages`)
@@ -135,19 +77,11 @@ Conventions for `common/claude-code/` (settings, skills, evals) live in
 `.claude/rules/claude-code.md`, which loads when working under that
 directory.
 
-## Pre-commit Hooks and CI
-
-Installed via `pre-commit install`. Hooks: nixfmt, statix, deadnix,
-flake-check, markdownlint, claude-skills-lint, trailing-whitespace,
-end-of-file-fixer, check-yaml, check-added-large-files,
-detect-private-key.
+## Pre-commit Hooks
 
 markdownlint excludes `common/claude-code/agents/` — machine-consumed
 content that intentionally leads with prose instead of an H1 (MD041).
 Prose wraps at 80 chars (MD013); tables and code blocks are exempt.
-
-`.github/workflows/pre-commit.yml` runs `pre-commit run --all-files` on
-push and PR to `main`. Renovate bumps flake inputs and pre-commit revs.
 
 ## Critical Pitfalls
 

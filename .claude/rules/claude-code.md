@@ -28,16 +28,7 @@ from `settings.json`.
 
 ## Skill & Agent Evals
 
-Two tiers guard `common/claude-code/{skills,agents}` — see
-`common/claude-code/eval/README.md`:
-
-- **Tier 1** `lint-skills.py` — deterministic, runs in pre-commit
-  (`claude-skills-lint`). Checks frontmatter presence, `name` ==
-  directory (skills) / filename stem (agents), `description` ≤ 1536
-  chars, and that agent `skills:` bindings resolve. An agent binding to
-  a skill merged from a flake input must be added to
-  `KNOWN_EXTERNAL_SKILLS` in the script or the lint fails
-- **Tier 2** `routing/run.sh` — probabilistic, makes `claude` CLI model
-  calls, never in pre-commit. `routing/cases.tsv` maps prompt →
-  expected skill. Treat a single miss as a prompt to tune a
-  `description`, then re-run
+Three tiers guard `common/claude-code/{skills,agents}` — see
+`common/claude-code/eval/README.md`. An agent binding to a skill merged
+from a flake input must be added to `KNOWN_EXTERNAL_SKILLS` in
+`eval/lint-skills.py` or the pre-commit lint fails.

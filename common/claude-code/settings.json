@@ -118,9 +118,7 @@
   "enabledPlugins": {
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
-    "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": false,
-    "gitlab-mr-pane@gitlab-mr-pane": false
+    "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
