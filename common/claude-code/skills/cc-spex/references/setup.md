@@ -24,6 +24,10 @@ config has not been switched yet; tell the user to run `just switch`. Do not
 install it with `uv tool install` or `pipx`, and do not run
 `specify self upgrade` — bump it with `just update-fresh`.
 
+The extension scripts also call `git`, `jq` and `yq` (mikefarah yq-go), all
+in `devPackages`. `yq` is optional: without it spex-worktrees ignores a custom
+`worktrees.base_path` and uses `.claude/worktrees/`.
+
 ## 2. Initialise spec-kit
 
 Pass `--non-interactive` and `--integration claude`, or it silently defaults
