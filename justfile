@@ -65,6 +65,10 @@ lint-skills:
 route-eval *ARGS:
     common/claude-code/eval/routing/run.sh {{ ARGS }}
 
+# Tier 3: functional eval (headless runs with tool use; on demand). e.g. `just func-eval bugfix`
+func-eval *ARGS:
+    common/claude-code/eval/functional/run.sh {{ ARGS }}
+
 # Run every deterministic eval (currently Tier 1)
 eval: lint-skills
 

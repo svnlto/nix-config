@@ -4,15 +4,8 @@
     "allow": [
       "Bash(git:*)",
       "Bash(ls:*)",
-      "mcp__code-reasoning__code-reasoning",
-      "mcp__sequential-thinking__sequentialthinking",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "Bash(zsh:*)",
       "WebSearch",
       "WebFetch",
-      "Bash(curl:*)",
-      "Bash(gh api:*)",
       "Bash(python3 -m json.tool)"
     ],
     "deny": []

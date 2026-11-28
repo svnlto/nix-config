@@ -5,7 +5,7 @@ description: >-
   checking CI/CD pipeline status and logs, reading or filing issues, managing
   releases. Trigger on GitLab, glab, merge request, MR, pipeline.
   Prefer over general-purpose for GitLab tasks.
-model: sonnet
+model: haiku
 color: orange
 skills: gitlab
 ---

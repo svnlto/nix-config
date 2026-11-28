@@ -62,9 +62,22 @@ Review the manifest reference as a tech lead writing a manifest for the first ti
 Check whether the bun scaffold path is documented as well as the Java path	devex-persona-frontend
 Review this pipeline from an SRE debugging perspective	devex-persona-ops
 #
-# --- cc-spex (spec-driven development: spec-kit + superpowers) ---
-Set up cc-spex and run the spec-driven loop on this repo	cc-spex
-How do I drive a spec-kit specify-plan-tasks-implement loop with the spex plugin	cc-spex
+# --- cc-spex base vs lane skills vs jira-intake vs spex agent ---
+Set up spec-kit and the spex plugin in this repo	cc-spex
+Which spex extensions should I enable, and why does the review-spec hook not fire?	cc-spex
+Spec out this new feature with spec-kit: brainstorm first, then specify	spex-feature
+Run plan and tasks for the spec we just wrote	spex-feature
+Fix this bug: the login endpoint returns 500 when the email contains a plus sign	spex-bugfix
+This test started failing after yesterday's merge, find and fix the regression	spex-bugfix
+Should we move our packages from Nexus to the GitLab package registry? Assess it before we spec anything	spex-discovery
+Roll the new LTS CI template out to 120 repos in batches with a rollback plan	migration-rollout
+Pull Jira epic ABC-123 with its stories and comments and draft questions for the product owner	jira-intake
+Do the groundwork on ticket ABC-77 in the background and report back which lane it is	spex
+Design the target architecture for moving our services to event-driven messaging	architecture-designer
+# guards: lane skills must not swallow generic debugging, brainstorming or strategy work
+Why does this test fail? Just explain the cause, don't change anything	superpowers:systematic-debugging
+Brainstorm ideas for a small personal CLI tool, no spec-kit involved	superpowers:brainstorming
+Write the platform strategy document for next year	strategic-writing
 # --- harness-engineer (Harness.io) vs gitlab-engineer / platform-engineer / terraform-specialist ---
 Write a Harness pipeline with a CI stage and a canary Kubernetes deploy stage	harness-engineer
 Create a Harness stage template and reference it from two pipelines	harness-engineer

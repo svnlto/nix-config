@@ -4,6 +4,7 @@
     "CAVEMAN_DEFAULT_MODE": "lite",
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
     "DISABLE_AUTOUPDATER": "1",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_FEEDBACK_COMMAND": "1",
@@ -55,7 +56,7 @@
     "defaultMode": "auto",
     "additionalDirectories": []
   },
-  "model": "claude-opus-4-8[1m]",
+  "model": "opus",
   "enableAllProjectMcpServers": false,
   "skillOverrides": {
     "adhd": "off"
@@ -117,9 +118,7 @@
   "enabledPlugins": {
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
-    "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": false,
-    "gitlab-mr-pane@gitlab-mr-pane": false
+    "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -152,7 +151,7 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
   "modelSettings": {
-    "claude-opus-4-8": {
+    "claude-opus-5-5": {
       "autoCompactWindow": 500000
     }
   },

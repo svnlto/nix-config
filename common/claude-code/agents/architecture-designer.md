@@ -6,7 +6,7 @@ description: >-
   IAM/RBAC, compute/storage, cost optimization, DR, multi-cloud, migrations).
   Trigger on architecture, system design, ADR, cloud architecture, AWS/Azure,
   migration. Prefer over general-purpose for architecture tasks.
-model: sonnet
+model: opus
 color: purple
 skills: architecture-designer
 ---
