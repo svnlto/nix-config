@@ -116,6 +116,7 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
+    "cache-tax@claude-code-mods": true,
     "caveman@caveman": true,
     "obsidian@obsidian-skills": true,
     "superpowers@claude-plugins-official": true
@@ -143,6 +144,12 @@
       "source": {
         "source": "github",
         "repo": "svnlto/claude-desktop-gitlab-mr-pane"
+      }
+    },
+    "claude-code-mods": {
+      "source": {
+        "source": "github",
+        "repo": "karanb192/claude-code-mods"
       }
     }
   },
