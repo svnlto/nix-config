@@ -72,3 +72,16 @@ project.
 The user runs `/spex:init` in the session: a three-question prompt for
 quality, workflow, and permissions. Recommend `spex-gates` +
 `spex-worktrees` to start. The selection persists to `.specify/spex.json`.
+
+## 5. Optional: bug and assess lanes
+
+Only when the team wants the extension-backed `spex-bugfix` or
+`spex-discovery` paths; both lanes work without them. Each needs the
+extension and its workflow:
+
+```bash
+specify extension add bug && specify workflow add bugfix --version <exact>
+specify extension add assess && specify workflow add assess --version <exact>
+```
+
+Pin workflows to an exact catalog release with `--version`.

@@ -1,116 +1,107 @@
 ---
 name: cc-spex
 description: >-
-  Operating cc-spex — spec-driven development that pairs GitHub spec-kit
-  (the WHAT: constitution, spec, plan, tasks artifacts) with Superpowers
-  (the HOW: TDD, git worktrees, review gates) — on a local or team project.
-  Use when running cc-spex or spec-kit, driving a /speckit-* or
-  /speckit-spex-* loop (brainstorm, constitution, specify, clarify, plan,
-  tasks, implement, finish, evolve, ship), running the bundled bugfix or
-  assess workflows, choosing spex extensions, deciding how spec-driven
-  development fits the workflow, or when the user explicitly asks to set up
-  spec-kit or the spex plugin in a project. Triggers: cc-spex, spex,
-  spec-kit, spec-driven development, SDD, /speckit, speckit-spex-ship,
-  speckit-spex-brainstorm, speckit-spex-finish, specify workflow run, bugfix
-  workflow, specify init, spex-gates, spex-worktrees, spex.json,
-  constitution.md, .specify/specs, .specify/bugs. NOT the raw Superpowers
-  brainstorming / writing-plans / executing-plans skills used for ordinary
-  feature work without spec-kit —
-  those stand alone; this skill is for the cc-spex-integrated spec-driven
-  loop.
+  Use when configuring or troubleshooting cc-spex itself in a spec-kit
+  project: choosing or installing spex and spec-kit extensions, debugging a
+  hook or gate that did or did not fire, running spex headless or in CI,
+  landing a spex branch on GitLab, setting up spec-kit or the spex plugin in
+  a repo, or deciding which lane a piece of work belongs to. Triggers:
+  cc-spex, spex, spec-kit, SDD, specify CLI, specify init, /spex:init,
+  spex.json, extensions.yml, spex-gates, spex-worktrees, constitution.md,
+  speckit hooks, which lane. For doing the work, use a lane skill:
+  `spex-feature`, `spex-bugfix`, `spex-discovery` or `migration-rollout`.
 license: MIT
 metadata:
-  version: "2.1.0"
+  version: "3.0.0"
   domain: devops
-  triggers: cc-spex, spex, spec-kit, spec-driven development, SDD, speckit, specify CLI, spex-gates, spex-worktrees, ship, constitution, brainstorm, finish, evolve, bugfix
+  triggers: cc-spex, spex, spec-kit, SDD, specify CLI, spex-gates, spex-worktrees, extensions, hooks, constitution, lane
   role: workflow
   scope: process
-  related-skills: platform-engineer, copier, writing-adrs
+  related-skills: spex-feature, spex-bugfix, spex-discovery, migration-rollout, jira-intake
 ---
 
-# cc-spex: spec-driven development
+# cc-spex: shared base
 
-cc-spex ([rhuss/cc-spex](https://github.com/rhuss/cc-spex), Apache-2.0) is a
-Claude Code plugin that fuses two upstream projects:
+cc-spex ([rhuss/cc-spex](https://github.com/rhuss/cc-spex), Apache-2.0) fuses
+**spec-kit** (GitHub; the WHAT: constitution, spec, plan, tasks) with
+**Superpowers** (Jesse Vincent; the HOW: TDD, worktrees, verification
+gates). spec-kit plans `tasks.md`; implementation runs under Superpowers
+discipline; cc-spex runs the quality gates as lifecycle hooks.
 
-- **spec-kit** (GitHub) — the WHAT. Artifact-centric, linear: each command
-  emits a durable document (constitution, spec, plan, tasks).
-- **Superpowers** (Jesse Vincent) — the HOW. Process discipline: TDD, git
-  worktrees, verification gates, anti-rationalization.
+This skill holds what every lane shares. Loading it is not a request to
+install anything: a project is set up when `.specify/` exists.
 
-The boundary is the task list. spec-kit plans `tasks.md`; the implementation
-runs under Superpowers discipline. cc-spex wires them together and runs its
-quality gates as lifecycle hooks.
+## Pick the lane
 
-This skill is a reference for operating the loop. Loading it is not a request
-to install anything. A project is already set up when `.specify/` exists; work
-with it as it is. Read `references/setup.md` only when the user explicitly asks
-to set up spec-kit or spex in a project that lacks them.
+| Work | Skill |
+|---|---|
+| New or changed behaviour, including building migration tooling | `spex-feature` |
+| A defect in shipped behaviour to fix and land as an MR | `spex-bugfix` |
+| An open question that must end in a go/no-go verdict | `spex-discovery` |
+| Batched rollout of existing tooling across many repos | `migration-rollout` |
 
-## The loop
+Starting from a ticket, any lane may run `jira-intake` for a brief. If the
+tracker is unavailable, work from the ticket text the user pastes.
 
-Run in a live session (the plugin's `UserPromptSubmit` hook injects a
-`<spex-context>`; a `PreToolUse` gate enforces skill use):
+## Who does what
 
-`/speckit-constitution` once per repo, then per feature:
-
-`/speckit-spex-brainstorm` → decision record (ADR/HLD) → `/speckit-specify`
-→ `/speckit-clarify` (optional) → `/speckit-plan` → `/speckit-tasks` →
-`/speckit-implement` → `/speckit-spex-finish` → merge request.
-`/speckit-spex-evolve` reconciles spec and code when they drift.
-
-- **Brainstorm** settles the WHAT and WHY through one-at-a-time questions and
-  2–3 approaches, then writes `brainstorm/NN-topic.md`. It never writes code
-  or specs.
-- **The decision record is the input to specify.** The agreed approach is
-  written up as an ADR or HLD first and passed to `/speckit-specify` (the
-  spec's `**Input**` line cites it). It is not an output of plan.
-- **Gates fire as hooks:** `review-spec` after specify, `review-plan` after
-  tasks (not after plan), `review-code` after implement. specify also creates
-  the worktree and feature branch first.
-
-Other bundled first-party lanes, each a `specify workflow run <id>`:
-
-| Workflow | Steps | Use for |
+| Role | Owns | Never |
 |---|---|---|
-| `bugfix` | `bug.assess` → review gate → `bug.fix` → `bug.test`, under `.specify/bugs/<slug>/` | A defect in shipped behaviour; needs the `bug` extension. Follow with evolve if the spec was wrong. |
-| `assess` | intake → research → define → shape → decide → verdict gate | Discovery or feasibility questions; a go verdict hands off to brainstorm/specify manually |
+| Product owner | Stories, acceptance criteria, priority; answers business questions by editing the ticket; accepts at the demo | Edits the repo; decides the HOW |
+| Tech lead | Runs the loop; writes ADRs/HLDs after consulting the architect; owns plan and tasks | Answers a business question for the PO |
+| Architect | Advises on and reviews ADRs/HLDs; says when a security review is needed | Writes the team's ADR |
+| Team | Implementation, MR review, technical clarify questions | Changes scope without the PO |
 
-Neither extension's commands carry the spex worktree or review hooks; register
-them in `.specify/extensions.yml` if the gates should apply.
+## Project anatomy
 
-spec-kit's workflow lives in project-local skills under
-`.claude/skills/speckit-*/SKILL.md`, invoked as `/speckit-*` (hyphen, not a
-dot). `.specify/` holds `memory/constitution.md`, `scripts/`, `templates/`, and
-the extension selection in `spex.json`.
+- `.specify/memory/constitution.md` — rules every plan is checked against.
+- `.specify/spex.json` — extension selection; `.specify/extensions.yml` —
+  hook registry (`before_*`/`after_*` per command).
+- `.claude/skills/speckit-*/SKILL.md` — commands, invoked as `/speckit-*`
+  (hyphen). Extension commands follow `/speckit-<extension>-<command>`;
+  check `.claude/skills/` for exact names.
+- `specs/NNN-slug/` — one folder per feature; `brainstorm/` — brainstorm
+  docs and the idea inbox.
+
+## Optional first-party extensions
+
+`bug` and `assess` ship with spec-kit but are not part of spex. Installed
+when `.specify/extensions/<name>/` exists. To add one, the extension and its
+workflow are separate steps:
+
+```bash
+specify extension add bug      # commands: /speckit-bug-*
+specify workflow add bugfix    # then: specify workflow run bugfix
+```
+
+(`assess` likewise: `specify extension add assess`, `specify workflow add
+assess`.) Their commands carry no spex worktree or review hooks unless
+registered in `extensions.yml`.
 
 ## Rules that bite
 
-- **Run `/speckit-implement`.** In cc-spex it IS the Superpowers-coupled TDD
-  executor (test tasks before implementation). The "never run
-  `/speckit.implement`, Superpowers replaces it" rule applies only to a
-  *manual* spec-kit + Superpowers combine, not to cc-spex.
-- **GitLab: no `submit`, finish with Keep branch.** `/speckit-spex-submit`
-  and the PR path in `/speckit-spex-finish` call only `gh` (`gh pr create`,
-  `gh pr merge`). On GitLab, run finish and pick **Keep branch** (verify,
-  walkthrough, squash, force-push), then open the MR with `glab mr create`.
-  Never pick "Merge to default branch": it fast-forwards `main` locally,
-  outside the MR.
-- **`speckit-spex-ship`** (the autonomous one-shot) **requires
-  `spex-deep-review`** (a 5-agent review swarm). For the lean loop, drive the
-  stages individually rather than enabling deep-review.
 - **Start with minimal extensions** — `spex-gates` + `spex-worktrees`. Leave
   `spex-deep-review`, `spex-collab`, `spex-teams`, `spex-detach` off until the
   core loop is understood.
-- **cc-spex is interactive-first.** Its gated stages run mandatory shell
-  hooks (worktree prepare, template resolve) that need live approval.
-  Headless `claude -p --permission-mode acceptEdits` stalls at the first hook
-  (it auto-approves edits, not Bash); `bypassPermissions` is correctly
-  oversight-blocked. For semi-autonomous or CI runs, add a **scoped Bash
-  allowlist** for `.specify/scripts/*` and the plugin's worktree script —
-  never a blanket bypass.
-- Keep subagents scoped to one task; don't hand them the whole `.specify/`
-  tree. Update the spec when behavior changes — drift breaks the audit trail.
+- **GitLab: skip `submit`; finish, then "Keep branch as-is".**
+  `/speckit-spex-submit` requires `gh` and opens a GitHub PR. Finish always
+  verifies, runs the walkthrough gate, squashes and force-pushes, then offers
+  a choice; it uses `gh` only to find and merge an existing PR. On GitLab
+  pick **Keep branch as-is**, then open the MR with `glab mr create` (the
+  `gitlab` skill has a template). Never pick "Merge to default branch": it
+  runs a local `git merge --ff-only` into `main`, outside the MR.
+- **cc-spex is interactive-first.** Gated stages run shell hooks (worktree
+  prepare, template resolve) that need live approval. Headless
+  `claude -p --permission-mode acceptEdits` stalls at the first hook (it
+  auto-approves edits, not Bash); bypassing permissions is not the answer.
+  For semi-autonomous or CI runs, add a **scoped Bash allowlist** for
+  `.specify/scripts/*` and the plugin's worktree script.
+- **`speckit-spex-ship`** (the autonomous one-shot) **requires
+  `spex-deep-review`** (six review agents). For the lean loop, drive the
+  stages individually.
+- Keep subagents scoped to one question; don't hand them the whole
+  `.specify/` tree. Update the spec when behaviour changes — drift breaks the
+  audit trail.
 
 ## Reference
 
@@ -120,6 +111,6 @@ the extension selection in `spex.json`.
 
 ## When not to use
 
-Ordinary feature work with no spec-kit project — use the standalone
-Superpowers skills (`brainstorming`, `writing-plans`, `executing-plans`)
-directly.
+Feature work in a repo without spec-kit: use `superpowers:brainstorming` and
+the other Superpowers skills directly. Pure investigation with no fix to
+land: `superpowers:systematic-debugging`.
