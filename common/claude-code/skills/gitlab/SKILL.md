@@ -5,7 +5,7 @@ description: >-
   pipelines, issues, and releases via the glab CLI. Use when
   viewing or creating an MR, checking CI pipeline status,
   reading or filing issues, or managing releases on GitLab.
-version: 1.0.0
+version: 1.1.0
 tags: [gitlab, glab, merge-requests, pipelines, ci, issues]
 ---
 
@@ -53,7 +53,9 @@ or pipeline reference and none is given, ask.
 | repo    | `references/repo-releases.md`  | Clone, browse, release, variables  |
 | setup   | `references/setup.md`          | Auth or host troubleshooting       |
 
-Drafting an MR description: see `references/templates.md`.
+Drafting an MR description: see `references/templates.md`,
+including the variants for cc-spex feature and bug fix
+branches.
 
 ## Safety
 

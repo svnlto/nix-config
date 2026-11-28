@@ -7,7 +7,8 @@ description: >-
   reviewing an ADR draft for format and writing style, or superseding or
   deprecating an existing decision. Triggers: ADR, architecture decision
   record, decision record, Work/*/adrs, team ADR template, alternatives
-  considered, consequences, supersede a decision.
+  considered, consequences, supersede a decision, ADR from brainstorm,
+  ADR as specify input.
   NOT for designing the architecture or evaluating a technology trade-off
   from scratch, that is the `architecture-designer` skill; this one writes
   up a decision already in view.
@@ -86,6 +87,21 @@ on top of it:
   possible. Small examples for illustration only, do not mirror code.
 - Obsidian native: cross-reference with wikilinks `[[note]]`, not bare paths.
   **REQUIRED: use the `obsidian:obsidian-markdown` skill.**
+
+## In the cc-spex loop
+
+The ADR sits between brainstorm and specify. It is the input to
+`/speckit-specify`, not an output of plan.
+
+- Source: the agreed approach in the brainstorm document. Carry its
+  alternatives into "alternatives considered"; do not reopen them.
+- Decision section: concrete enough to specify from. If an ADR holds several
+  decisions, label them (Decision A, B) so a spec can take one.
+- Link the brainstorm document and the Jira keys the decision serves.
+- The spec's `**Input**` line cites the ADR by date and title, plus the
+  decision label when there is more than one.
+- If implementation later contradicts the decision, supersede the ADR and
+  run `/speckit-spex-evolve`; never edit an accepted decision in place.
 
 ## Reviewing an ADR
 
