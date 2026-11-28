@@ -65,6 +65,8 @@ rec {
     devbox
     copierWithExtensions
     spec-kit
+    jq
+    yq-go
   ];
 
   darwinSystemPackages = with pkgs; [
