@@ -9,6 +9,7 @@
 #   KEEP=1 common/claude-code/eval/functional/run.sh     # keep fixture dirs
 #   LOCAL=1 common/claude-code/eval/functional/run.sh    # use the uncommitted
 #     skill tree as project-level .claude/ (same-name personal skills win)
+#   MODEL=opus common/claude-code/eval/functional/run.sh # run on the session model
 #
 # Exit 0 only if every assertion in every selected scenario passes.
 set -uo pipefail
@@ -17,6 +18,7 @@ command -v claude >/dev/null || { echo "claude CLI not found" >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq not found" >&2; exit 2; }
 
 ONLY="${1:-}"
+MODEL="${MODEL:-sonnet}"
 TREE="$(cd "$(dirname "$0")/../.." && pwd)"   # common/claude-code
 ROOT="$(mktemp -d "${TMPDIR:-/tmp}/skill-functional.XXXXXX")"
 [[ -n "${KEEP:-}" ]] || trap 'rm -rf "$ROOT"' EXIT
@@ -56,6 +58,8 @@ fixture() { # fixture <name> -> prints path of a fresh git repo
 run_claude() { # run_claude <dir> <prompt> -> writes <dir>/.out.txt
   local dir="$1" prompt="$2"
   (cd "$dir" && claude -p "$prompt" \
+      --model "$MODEL" \
+      --strict-mcp-config \
       --permission-mode acceptEdits \
       --allowedTools "Read Write Edit Glob Grep Skill Bash(git:*) Bash(python3:*) Bash(ls:*) Bash(cat:*)" \
       --disallowedTools "Bash(git push:*) Bash(glab:*) Bash(gh:*)" \
