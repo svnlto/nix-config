@@ -8,7 +8,9 @@
   "labels": [
     "dependencies"
   ],
-  "dependencyDashboard": false,
+  "dependencyDashboard": {
+    "enabled": false
+  },
   "pre-commit": {
     "enabled": true
   }
