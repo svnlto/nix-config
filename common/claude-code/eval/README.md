@@ -38,3 +38,25 @@ rate. Cases target the trigger collisions tightened in the cleanup
 (observability three-way split, k8s vs helm/yaml generators, architecture vs
 cloud). Routing is non-deterministic — treat a single miss as a prompt to tune a
 `description`, then re-run before concluding.
+
+`FILTER='<regex>'` runs only cases whose expected pick matches. `LOCAL=1` routes
+against the uncommitted skill tree, loaded as project-level `.claude/` in a temp
+workspace, so drafts can be tested before a switch. Installed personal skills
+with the same name still win over the local copy.
+
+## Tier 3 — functional eval (`functional/`)
+
+Probabilistic and the most expensive: runs workflow skills headless with tool
+use against throwaway fixture repos, then asserts on files, git state and the
+reply. Run on demand:
+
+```bash
+common/claude-code/eval/functional/run.sh            # or: just func-eval
+common/claude-code/eval/functional/run.sh bugfix     # one scenario
+LOCAL=1 KEEP=1 VERBOSE=1 common/claude-code/eval/functional/run.sh
+```
+
+Scenarios guard the stop conditions that matter most: `spex-bugfix` stops at
+its approval gate without touching source; `migration-rollout` refuses to run
+without a rollback; `spex-discovery` leaves the verdict to the user; the `spex`
+agent reports without changing code or switching the checkout.
